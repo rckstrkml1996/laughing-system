@@ -1,0 +1,8 @@
+aiohttp
+aiogram
+emojize
+uvicorn
+peewee
+pytz
+python-multipart
+telethon

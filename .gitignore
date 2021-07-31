@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+*.log
+*.egg-info/
+.installed.cfg
+*.egg
+.idea
+*.iml
+.vscode
+*.swp
+*.swo
+.DS_STORE
+node_modules
+scripts/flow/*/.flowconfig
+.flowconfig
+build/
+build2/
+
+# vs-code shit
+*.code-workspace
+
+# my shit
+static
+rendered/*.png
+rendered/*.jpg
