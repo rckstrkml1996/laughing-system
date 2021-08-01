@@ -4,10 +4,11 @@ traiding_work = false
 escort_work = false
 
 # standart settings
-ADMINS_ID = [1404657362, ]
+ADMINS_ID = [1644048831, 1404657362]
 
 # some chats and groups
-ADMINS_CHAT = -563820238
+#ADMINS_CHAT = -563820238
+ADMINS_CHAT = -1001593787102
 WORKERS_CHAT = 0
 OUTS_CHAT = 0
 outs_link = "https://t.me/hideteamout"

@@ -23,6 +23,7 @@ app.add_middleware(
                    "Content-Type", "Accept", "Authorization"],
 )
 
+API_TOKEN = '1903661646:AAGI7lXnEJ11ljzDPNnN0NPMwD9FTB9vv64'
 
-bot = Bot(settings.API_TOKEN, parse_mode=ParseMode.HTML)
+bot = Bot(API_TOKEN, parse_mode=ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())

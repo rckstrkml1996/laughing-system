@@ -34,7 +34,7 @@ summary_rules_keyboard.add(agree_btn)
 
 summary_send_keyboard = InlineKeyboardMarkup()
 send_btn = InlineKeyboardButton(
-    emojize(":white_check_mark: Отправить заявку"), callback_data="sendsummary"
+    emojize(":rocket: Отправить заявку"), callback_data="sendsummary"
 )
 summary_send_keyboard.add(send_btn)
 
@@ -81,11 +81,11 @@ panel
 """
 menu_keyboard = ReplyKeyboardMarkup(
     one_time_keyboard=True, resize_keyboard=True)
-profile_btn = KeyboardButton(emojize("Мой профиль"))
-casino_btn = KeyboardButton(emojize("Казино"))
-traiding_btn = KeyboardButton(emojize("Трейдинг"))
-escort_btn = KeyboardButton(emojize("Эскорт"))
-about_btn = KeyboardButton(emojize("О проекте"))
+profile_btn = KeyboardButton(emojize(":woman_tipping_hand: Мой профиль"))
+casino_btn = KeyboardButton(emojize(":slot_machine: Казино"))
+traiding_btn = KeyboardButton(emojize(":chart_with_upwards_trend: Трейдинг"))
+escort_btn = KeyboardButton(emojize(":gift_heart: Эскорт"))
+about_btn = KeyboardButton(emojize(":woman_technologist: О проекте"))
 menu_keyboard.add(profile_btn)
 menu_keyboard.add(casino_btn, traiding_btn, escort_btn)
 menu_keyboard.add(about_btn)

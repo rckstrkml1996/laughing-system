@@ -6,14 +6,16 @@ import peewee
 from utils.executional import datetime_local_now
 
 
-base = peewee.MySQLDatabase(
-    'bot',
-    user='belicoff',
-    password='belicoffdev',
-    host='127.0.0.1',
-    port=3306,
-    charset='utf8mb4'  # for emoji and symbols)
-)
+# base = peewee.MySQLDatabase(
+#     'bot',
+#     user='belicoff',
+#     password='belicoffdev',
+#     host='127.0.0.1',
+#     port=3306,
+#     charset='utf8mb4'  # for emoji and symbols)
+# )
+
+base = peewee.SqliteDatabase('people.db')
 
 
 class BaseModel(peewee.Model):

@@ -5,6 +5,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types.input_file import InputFile
 from aiogram.utils.emoji import emojize
+from peewee import DoesNotExist
 
 from loader import dp
 from config import StatusNames, Rates
@@ -24,19 +25,19 @@ async def worker_menu(query: types.CallbackQuery):
     if query.message.photo:  # it cant edit when photo!
         await worker_welcome(query.message)
     else:
-        worker.username = message.chat.username
+        worker.username = query.message.chat.username
         worker.save()  # update worker username
         await query.message.edit_text(
             payload.worker_menu_text.format(
-                chat_id=message.chat.id,
+                chat_id=query.message.chat.id,
                 status=StatusNames[worker.status],
                 all_balance=sum(map(lambda prft: prft.amount, worker.profits)),
                 ref_balance=worker.ref_balance,
                 middle_profits=0,
                 len_profits=len(worker.profits),
-                in_team=in_team.days,
+                in_team=in_team.day,
                 warns=0,
-                team_status="Ворк"
+                team_status=emojize(":full_moon: <b>Всё работает</b>, воркаем!")
             ),
             reply_markup=panel_keyboard(worker.username_hide),
         )
@@ -48,7 +49,7 @@ async def worker_welcome(message: types.Message):
         worker = Worker.get(cid=message.chat.id)
         worker.username = message.chat.username
         worker.save()  # update worker username
-        in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
+        in_team = datetime_local_now().replace(tzinfo=None) 
 
         await message.answer(emojize(":zap:"), reply_markup=menu_keyboard)
         await message.answer(
@@ -59,15 +60,33 @@ async def worker_welcome(message: types.Message):
                 ref_balance=worker.ref_balance,
                 middle_profits=0,
                 len_profits=len(worker.profits),
-                in_team=in_team.days,
+                in_team=in_team.day,
                 warns=0,
-                team_status="Ворк"
+                team_status=emojize(":full_moon: <b>Всё работает</b>, воркаем!")
             ),
             reply_markup=panel_keyboard(worker.username_hide),
         )
     except Worker.DoesNotExist:
         pass
 
+
+@dp.message_handler(regexp="проект")
+async def project_info(message: types.Message):
+    try:
+        worker = Worker.get(cid=message.chat.id)
+        profit, xprofit, refund = Rates[worker.rate]
+        await message.answer(payload.about_project_text.format(team_status="ВОРК",
+                                                        profit=profit, 
+                                                        xprofit=xprofit, 
+                                                        refund=refund),
+                                                        reply_markup=menu_keyboard)
+    except Worker.DoesNotExist:
+        pass
+
+@dp.message_handler(regexp="профил")
+async def project_info(message: types.Message):
+    await message.answer(payload.worker_menu_text,
+                        reply_markup=menu_keyboard)                        
 
 @dp.callback_query_handler(text="profits")
 async def profits(query: types.CallbackQuery):
