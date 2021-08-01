@@ -1,6 +1,6 @@
 from aiogram.utils.emoji import emojize
 
-from data.config import Rates
+from config import Rates
 
 
 startup_text = emojize(
@@ -135,13 +135,23 @@ summary_blockfin_text = emojize(
 """
 
 worker_menu_text = emojize(
-    "<a href='https://telegra.ph/file/540dc139ad0ac47d5f27a.png'>:snake:</a> <b>Hide Panel</b> [<code>{chat_id}</code>]\n\n"
-    ":keycap_number_sign: <b>Secret-ID:</b> <code>{secret_id}</code>\n"
-    ":capital_abcd: <b>Ник в выплатах:</b> {username_hide}\n"
-    ":arrow_up: <b>Уровень:</b> {level}\n\n"
-    ":dollar: <b>Сумма скама:</b> {all_balance} RUB\n"
-    ":credit_card: <b>Общий чек:</b> {ref_balance} RUB\n\n"
-    ":calendar: <b>В комманде:</b> {in_team} дней"
+    ":snake: <b>Твой профиль</b>\n\n"
+    "Telegram ID: <b>{chat_id}</b>\n"
+    "Реф баланс: <b>{ref_balance} RUB</b>\n\n"
+    "У тебя {} профитов на сумму <b>{all_balance} RUB</b>\n"
+    "Средний профит ~ <b>{middle_profits}</b>\n\n"
+    "Приглашено: <b>0 воркеров</b>\n\n"
+    "Пригласил: <a href=tg://user?id=635493524>635493524</a>\n"
+    "Статус: {status}\n\n"
+    "Предупреждений: <b>[{warns}/3]</b>\n"
+    "В команде: <b>{in_team} дней</b>\n\n"
+    "{team_status}"
+    # ":keycap_number_sign: <b>Secret-ID:</b> <code>{secret_id}</code>\n"
+    # ":capital_abcd: <b>Ник в выплатах:</b> {username_hide}\n"
+    # ":arrow_up: <b>Уровень:</b> {level}\n\n"
+    # ":dollar: <b>Сумма скама:</b> {all_balance} RUB\n"
+    # ":credit_card: <b>Общий чек:</b> {ref_balance} RUB\n\n"
+    # ":calendar: <b>В комманде:</b> {in_team} дней"
 )
 
 

@@ -6,8 +6,7 @@ from aiogram.types import ParseMode
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from data import config
-
+from config import settings
 
 """
 Обьявление приложения fastapi
@@ -25,5 +24,5 @@ app.add_middleware(
 )
 
 
-bot = Bot(config.API_TOKEN, parse_mode=ParseMode.HTML)
+bot = Bot(settings.API_TOKEN, parse_mode=ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())

@@ -1,0 +1,20 @@
+# dynamic settings, changing in the future
+casino_work = false
+traiding_work = false
+escort_work = false
+
+# standart settings
+ADMINS_ID = [1404657362, ]
+
+# some chats and groups
+ADMINS_CHAT = -563820238
+WORKERS_CHAT = 0
+OUTS_CHAT = 0
+outs_link = "https://t.me/hideteamout"
+workers_link = "https://t.me/joinchat/Ripr9Br_8UcEw-fg"
+reviews_link = "https://t.me/joinchat/xdsxXRzqhFhmNDAy"
+
+HOST = "http://127.0.0.1"
+
+# useless
+SKIP_UPDATES = true

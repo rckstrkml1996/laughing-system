@@ -7,9 +7,9 @@ from aiogram.types.input_file import InputFile
 from aiogram.utils.emoji import emojize
 
 from loader import dp
+from config import LevelNames, Rates
 from data import payload
 from data.states import Render, Panel
-from data.config import LevelNames, Rates
 from data.keyboards import *
 from utils.render import *
 from utils.executional import datetime_local_now

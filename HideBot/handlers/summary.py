@@ -4,7 +4,7 @@ from aiogram.dispatcher import FSMContext
 from loader import dp
 from data.states import Summary
 from data import payload
-from data.config import ADMINS_CHAT
+from config import settings  # ADMINS_CHAT
 from data.keyboards import *
 from models import Worker
 
@@ -74,7 +74,7 @@ async def summary_send(query: types.CallbackQuery, state: FSMContext):
             username = f"@{worker.username} " if worker.username else " "
 
             await dp.bot.send_message(  # message to admins chat
-                ADMINS_CHAT,
+                settings.ADMINS_CHAT,
                 payload.summary_check_text().format(
                     name=query.message.chat.full_name,
                     username=username,

@@ -8,7 +8,6 @@ from uvicorn import Config, Server
 from loguru import logger
 
 from loader import dp, app
-from data.config import SKIP_UPDATES
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 from utils.filters import IsWorker, SendSummary

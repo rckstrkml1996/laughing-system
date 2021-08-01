@@ -2,7 +2,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
-from data.config import outs_link, workers_link, reviews_link, Rates
+from config import Rates, settings  # outs_link, workers_link, reviews_link, Rates
 from utils.executional import num2emoji
 
 
@@ -64,13 +64,13 @@ summary_blocked_keyboard.add(fuckurself_btn)
 
 summary_accepted_keyboard = InlineKeyboardMarkup()
 outs_btn = InlineKeyboardButton(
-    emojize(":revolving_hearts: Канал выплат"), url=outs_link
+    emojize(":revolving_hearts: Канал выплат"), url=settings.outs_link
 )
 workers_btn = InlineKeyboardButton(
-    emojize(":busts_in_silhouette: Чат воркеров"), url=workers_link
+    emojize(":busts_in_silhouette: Чат воркеров"), url=settings.workers_link
 )
 reviews_btn = InlineKeyboardButton(
-    emojize(":page_with_curl: Канал отзывов"), url=reviews_link
+    emojize(":page_with_curl: Канал отзывов"), url=settings.reviews_link
 )
 summary_accepted_keyboard.add(outs_btn)
 summary_accepted_keyboard.add(workers_btn)
@@ -85,18 +85,28 @@ menu_keyboard = ReplyKeyboardMarkup(
 panel_btn = KeyboardButton(emojize(":snake: Hide Panel"))
 menu_keyboard.add(panel_btn)
 
-panel_keyboard = InlineKeyboardMarkup()
-tools_btn = InlineKeyboardButton(
-    emojize(":hammer_and_wrench: Инструменты"), callback_data="tools"
-)
-rate_btn = InlineKeyboardButton(
-    emojize(":scales: Ставка"), callback_data="rate"
-)
-profits_btn = InlineKeyboardButton(
-    emojize(":recycle: Профиты"), callback_data="profits"
-)
-panel_keyboard.add(tools_btn, rate_btn)
-panel_keyboard.add(profits_btn)
+# panel_keyboard = InlineKeyboardMarkup()
+# tools_btn = InlineKeyboardButton(
+#     emojize(":hammer_and_wrench: Инструменты"), callback_data="tools"
+# )
+# rate_btn = InlineKeyboardButton(
+#     emojize(":scales: Ставка"), callback_data="rate"
+# )
+# profits_btn = InlineKeyboardButton(
+#     emojize(":recycle: Профиты"), callback_data="profits"
+# )
+# panel_keyboard.add(tools_btn, rate_btn)
+# panel_keyboard.add(profits_btn)
+panel_keyboard = ReplyKeyboardMarkup(
+    one_time_keyboard=True, resize_keyboard=True)
+profile_btn = KeyboardButton(emojize("Мой профиль"))
+casino_btn = KeyboardButton(emojize("Казино"))
+traiding_btn = KeyboardButton(emojize("Трейдинг"))
+escort_btn = KeyboardButton(emojize("Эскорт"))
+about_btn = KeyboardButton(emojize("О проекте"))
+panel_keyboard.add(profile_btn)
+panel_keyboard.add(casino_btn, traiding_btn, escort_btn)
+panel_keyboard.add(about_btn)
 
 backpanel_keyboard = InlineKeyboardMarkup()
 backpanel_btn = InlineKeyboardButton(

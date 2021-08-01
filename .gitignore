@@ -26,3 +26,5 @@ build2/
 static
 rendered/*.png
 rendered/*.jpg
+# Ignore dynaconf secret files
+.secrets.*

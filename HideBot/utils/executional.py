@@ -4,7 +4,7 @@ from datetime import datetime
 import aiohttp
 import pytz
 
-from data.config import TIME_ZONE
+from config import TIME_ZONE
 
 local_tz = pytz.timezone(TIME_ZONE)
 

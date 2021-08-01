@@ -1,23 +1,13 @@
-from os import getenv
+from dynaconf import Dynaconf
 
-SKIP_UPDATES = True
+settings = Dynaconf(
+    envvar_prefix="DYNACONF",
+    settings_files=['../settings.toml', '../.secrets.toml'],
+)
 
-# getenv("BOT_TOKEN")
-API_TOKEN = "1701039985:AAEHbr0waUEnpaFOh-1hGbd5e74ivse0nk8"
 
-ADMINS_ID = [1404657362, ]
+TIME_ZONE = 'Europe/Moscow'  # часовой пояс бота +3utc
 
-JWT_SECRET = "belicoffneloh"  # ur secret text for encoding!
-
-HOST = "http://127.0.0.1"
-
-ADMINS_CHAT = -563820238
-WORKERS_CHAT = 0
-OUTS_CHAT = 0
-
-outs_link = "https://t.me/hideteamout"
-workers_link = "https://t.me/joinchat/Ripr9Br_8UcEw-fg"
-reviews_link = "https://t.me/joinchat/xdsxXRzqhFhmNDAy"
 
 '''
     Кастомизация
@@ -49,5 +39,3 @@ Rates = [  # виды ставок первая - стандартная
     (70, 60, 60),
     (80, 70, 50),
 ]
-
-TIME_ZONE = 'Europe/Moscow'  # часовой пояс бота +3utc
