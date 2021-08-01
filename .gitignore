@@ -24,7 +24,6 @@ build2/
 
 # my shit
 static
-rendered/*.png
-rendered/*.jpg
+rendered/
 # Ignore dynaconf secret files
 .secrets.*
