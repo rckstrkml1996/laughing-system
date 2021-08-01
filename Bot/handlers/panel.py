@@ -5,7 +5,6 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types.input_file import InputFile
 from aiogram.utils.emoji import emojize
-from peewee import DoesNotExist
 
 from loader import dp
 from config import StatusNames, Rates
@@ -49,7 +48,7 @@ async def worker_welcome(message: types.Message):
         worker = Worker.get(cid=message.chat.id)
         worker.username = message.chat.username
         worker.save()  # update worker username
-        in_team = datetime_local_now().replace(tzinfo=None) 
+        in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
 
         await message.answer(emojize(":zap:"), reply_markup=menu_keyboard)
         await message.answer(
