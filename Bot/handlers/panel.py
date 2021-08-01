@@ -7,7 +7,7 @@ from aiogram.types.input_file import InputFile
 from aiogram.utils.emoji import emojize
 
 from loader import dp
-from config import LevelNames, Rates
+from config import StatusNames, Rates
 from data import payload
 from data.states import Render, Panel
 from data.keyboards import *
@@ -20,22 +20,25 @@ from models import Worker, Profit
 async def worker_menu(query: types.CallbackQuery):
     worker = Worker.get(cid=query.message.chat.id)
     in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
-    username_hide = "Скрыт" if worker.username_hide else "Открыт"
 
-    if query.message.photo:
+    if query.message.photo:  # it cant edit when photo!
         await worker_welcome(query.message)
     else:
+        worker.username = message.chat.username
+        worker.save()  # update worker username
         await query.message.edit_text(
             payload.worker_menu_text.format(
-                chat_id=query.message.chat.id,
-                secret_id=worker.secret_id,
-                username_hide=username_hide,
-                level=LevelNames[worker.level],
-                all_balance=worker.all_balance,
+                chat_id=message.chat.id,
+                status=StatusNames[worker.status],
+                all_balance=sum(map(lambda prft: prft.amount, worker.profits)),
                 ref_balance=worker.ref_balance,
+                middle_profits=0,
+                len_profits=len(worker.profits),
                 in_team=in_team.days,
+                warns=0,
+                team_status="Ворк"
             ),
-            reply_markup=panel_keyboard,
+            reply_markup=panel_keyboard(worker.username_hide),
         )
 
 
@@ -46,20 +49,21 @@ async def worker_welcome(message: types.Message):
         worker.username = message.chat.username
         worker.save()  # update worker username
         in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
-        username_hide = "Скрыт" if worker.username_hide else "Открыт"
 
         await message.answer(emojize(":zap:"), reply_markup=menu_keyboard)
         await message.answer(
             payload.worker_menu_text.format(
                 chat_id=message.chat.id,
-                secret_id=worker.secret_id,
-                username_hide=username_hide,
-                level=LevelNames[worker.level],
-                all_balance=worker.all_balance,
+                status=StatusNames[worker.status],
+                all_balance=sum(map(lambda prft: prft.amount, worker.profits)),
                 ref_balance=worker.ref_balance,
+                middle_profits=0,
+                len_profits=len(worker.profits),
                 in_team=in_team.days,
+                warns=0,
+                team_status="Ворк"
             ),
-            reply_markup=panel_keyboard,
+            reply_markup=panel_keyboard(worker.username_hide),
         )
     except Worker.DoesNotExist:
         pass
@@ -151,13 +155,8 @@ async def toggle_username(query: types.CallbackQuery):
         worker = Worker.get(cid=query.message.chat.id)
         worker.username_hide = not worker.username_hide
         worker.save()
-        status = "Скрыт" if worker.username_hide else "Открыт"
-        await query.answer(f"Юзернейм - {status}")
-        await query.message.edit_text(
-            emojize(":hammer_and_wrench: Инструменты") +
-            " ",  # + " " - telegram api on edit error
-            reply_markup=tools_keyboard(worker.username_hide)
-        )
+        status = "Скрыли" if worker.username_hide else "Открыли"
+        await query.answer(f"Вы {status} никнейм")
     except Worker.DoesNotExist:
         pass
 

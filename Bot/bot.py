@@ -34,8 +34,8 @@ async def api_shutdown():
     await shutdown_polling(dp)
 
 
-async def on_shutdown():
-    pass
+# async def on_shutdown():
+#     pass
 
 
 async def shutdown(dispatcher: Dispatcher):
@@ -44,11 +44,12 @@ async def shutdown(dispatcher: Dispatcher):
     await dispatcher.storage.wait_closed()
     await dispatcher.bot.session.close()
 
-    await dispatcher.bot.get_updates()  # to trow error fastly
+    # started_bot.cancel()
+    # await dispatcher.wait_closed()  #
 
 
 async def shutdown_polling(dispatcher: Dispatcher):
-    await on_shutdown()
+    # await on_shutdown()
 
     await shutdown(dispatcher)
 
@@ -67,20 +68,18 @@ async def start_api(server):
 
 
 def main():
-    import api
-    config = Config(app=app, loop=dp.bot.loop, lifespan="on",
-                    reload=True, host="0.0.0.0")
-    server = Server(config=config)
-
+    # import api
+    # config = Config(app=app, loop=dp.bot.loop, lifespan="on",
+    # reload = True, host = "0.0.0.0")
+    # server = Server(config=config)
     loop = asyncio.get_event_loop()
 
-    started_api = loop.create_task(start_api(server))
+    global started_bot
     started_bot = loop.create_task(start_bot(dp, notify=True))
+    # started_api = loop.create_task(start_api(server))
 
-    try:
-        loop.run_until_complete(asyncio.gather(started_api, started_bot))
-    except KeyboardInterrupt:
-        loop.run_until_complete(shutdown_polling(dp))
+    # loop.run_until_complete(asyncio.gather(started_api, started_bot))
+    loop.run_until_complete(started_bot)
 
 
 if __name__ == "__main__":

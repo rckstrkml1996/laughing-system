@@ -79,34 +79,26 @@ summary_accepted_keyboard.add(reviews_btn)
 """
 panel
 """
-
 menu_keyboard = ReplyKeyboardMarkup(
-    resize_keyboard=True, one_time_keyboard=True)
-panel_btn = KeyboardButton(emojize(":snake: Hide Panel"))
-menu_keyboard.add(panel_btn)
-
-# panel_keyboard = InlineKeyboardMarkup()
-# tools_btn = InlineKeyboardButton(
-#     emojize(":hammer_and_wrench: Инструменты"), callback_data="tools"
-# )
-# rate_btn = InlineKeyboardButton(
-#     emojize(":scales: Ставка"), callback_data="rate"
-# )
-# profits_btn = InlineKeyboardButton(
-#     emojize(":recycle: Профиты"), callback_data="profits"
-# )
-# panel_keyboard.add(tools_btn, rate_btn)
-# panel_keyboard.add(profits_btn)
-panel_keyboard = ReplyKeyboardMarkup(
     one_time_keyboard=True, resize_keyboard=True)
 profile_btn = KeyboardButton(emojize("Мой профиль"))
 casino_btn = KeyboardButton(emojize("Казино"))
 traiding_btn = KeyboardButton(emojize("Трейдинг"))
 escort_btn = KeyboardButton(emojize("Эскорт"))
 about_btn = KeyboardButton(emojize("О проекте"))
-panel_keyboard.add(profile_btn)
-panel_keyboard.add(casino_btn, traiding_btn, escort_btn)
-panel_keyboard.add(about_btn)
+menu_keyboard.add(profile_btn)
+menu_keyboard.add(casino_btn, traiding_btn, escort_btn)
+menu_keyboard.add(about_btn)
+
+
+def panel_keyboard(namehide):
+    markup = InlineKeyboardMarkup()
+    username_btn = InlineKeyboardButton(
+        f'{"Открыть" if namehide else "Скрыть"} никнейм в выплатах', callback_data="toggleusername")
+    markup.add(username_btn)
+
+    return markup
+
 
 backpanel_keyboard = InlineKeyboardMarkup()
 backpanel_btn = InlineKeyboardButton(

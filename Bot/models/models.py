@@ -21,9 +21,9 @@ class BaseModel(peewee.Model):
         database = base
 
 
-def random_secret_id():
-    # 4294967295 chance 16(hex) ** 8(digits) - 1(notused)
-    return secrets.token_hex(4)  # hex with 8 digits
+# def random_secret_id():
+#     # 4294967295 chance 16(hex) ** 8(digits) - 1(notused)
+#     return secrets.token_hex(4)  # hex with 8 digits
 
 
 class Worker(BaseModel):
@@ -34,19 +34,8 @@ class Worker(BaseModel):
     username = peewee.CharField(null=True)
     username_hide = peewee.BooleanField(default=False)
     name = peewee.CharField()
-    secret_id = peewee.CharField(
-        unique=True,
-        max_length=8,
-        default=random_secret_id,
-    )
-    ref_link = peewee.CharField(
-        unique=True,
-        max_length=8,
-        default=random_secret_id,
-    )
     rate = peewee.IntegerField(default=0)  # ставка
     ref_balance = peewee.FloatField(default=0)
-    all_balance = peewee.FloatField(default=0)
     status = peewee.IntegerField(default=0)
     level = peewee.IntegerField(default=0)
     send_summary = peewee.BooleanField(default=False)
@@ -54,9 +43,6 @@ class Worker(BaseModel):
     registered = peewee.DateTimeField(default=datetime_local_now)
     sup_key = peewee.BigIntegerField(
         default=random_key, unique=True)  # max 2**63 - 1
-
-    def verify_key(self, hash_key):
-        return hash_key == self.sup_key
 
 
 class CasinoUser(BaseModel):
