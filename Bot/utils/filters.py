@@ -1,10 +1,11 @@
 from aiogram.types import CallbackQuery
 from aiogram.dispatcher.filters import BoundFilter
 
+from config import settings  # ADMINS_ID
 from models import Worker
 
 
-class IsWorker(BoundFilter):
+class IsWorkerFilter(BoundFilter):
     key = "is_worker"  # working for query and message handlers
 
     def __init__(self, is_worker):
@@ -25,7 +26,7 @@ class IsWorker(BoundFilter):
         return False
 
 
-class SendSummary(BoundFilter):
+class SendSummaryFilter(BoundFilter):
     key = "send_summary"  # working for query and message handlers
 
     def __init__(self, send_summary):
@@ -44,3 +45,23 @@ class SendSummary(BoundFilter):
             except Worker.DoesNotExist:
                 pass
         return False
+
+
+class AdminsChatFilter(BoundFilter):
+    key = 'admins_type'
+    required = True
+    default = False
+
+    def get_target(self, obj):
+        if isinstance(obj, CallbackQuery):
+            return obj.message.chat  # if query
+        return obj.chat  # if message
+
+    def __init__(self, admins_type):
+        self.admins_type = admins_type
+
+    async def check(self, obj):
+        chat = self.get_target(obj)
+        if chat.id == settings.ADMINS_CHAT:
+            return self.admins_type
+        return not self.admins_type

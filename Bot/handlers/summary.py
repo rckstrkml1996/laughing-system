@@ -90,7 +90,7 @@ async def summary_send(query: types.CallbackQuery, state: FSMContext):
     await state.finish()
 
 
-@dp.callback_query_handler(lambda cb: cb.data.split('_')[0] == "reject")
+@dp.callback_query_handler(lambda cb: cb.data.split('_')[0] == "reject", admins_type=True)
 async def summary_reject(query: types.CallbackQuery):
     try:
         worker = Worker.get(cid=query.data.split('_')[1])
@@ -119,7 +119,7 @@ async def summary_reject(query: types.CallbackQuery):
         pass
 
 
-@dp.callback_query_handler(lambda cb: cb.data.split('_')[0] == "accept")
+@dp.callback_query_handler(lambda cb: cb.data.split('_')[0] == "accept", admins_type=True)
 async def summary_accepted(query: types.CallbackQuery):
     try:
         worker = Worker.get(cid=query.data.split('_')[1])
@@ -154,7 +154,7 @@ async def summary_accepted(query: types.CallbackQuery):
         pass
 
 
-@dp.callback_query_handler(lambda cb: cb.data.split('_')[0] == "block")
+@dp.callback_query_handler(lambda cb: cb.data.split('_')[0] == "block", admins_type=True)
 async def summary_accepted(query: types.CallbackQuery):
     try:
         worker = Worker.get(cid=query.data.split('_')[1])

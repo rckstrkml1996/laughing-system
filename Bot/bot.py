@@ -10,7 +10,7 @@ from loguru import logger
 from loader import dp, app
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
-from utils.filters import IsWorker, SendSummary
+from utils.filters import IsWorkerFilter, SendSummaryFilter, AdminsChatFilter
 
 
 async def on_startup(dispatcher: Dispatcher, notify=True):
@@ -55,8 +55,9 @@ async def shutdown_polling(dispatcher: Dispatcher):
 
 
 async def start_bot(dispatcher: Dispatcher, notify=True):
-    dispatcher.filters_factory.bind(IsWorker)
-    dispatcher.filters_factory.bind(SendSummary)
+    dispatcher.filters_factory.bind(IsWorkerFilter)
+    dispatcher.filters_factory.bind(SendSummaryFilter)
+    dispatcher.filters_factory.bind(AdminsChatFilter)
 
     await dispatcher.skip_updates()
     await on_startup(dispatcher, notify=notify)
