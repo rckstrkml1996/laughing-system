@@ -5,7 +5,6 @@ from aiogram.dispatcher import FSMContext
 
 from loader import dp
 from data import payload
-# from config import settings
 from data.keyboards import summary_start_keyboard, summary_blocked_keyboard
 from models import Worker, Payment
 from .summary import new_request

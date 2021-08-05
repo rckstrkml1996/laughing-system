@@ -40,7 +40,6 @@ def rules_text(agreed=False):
         "• <code>Запрещено принимать оплату на свои реквизиты</code>\n\n"  \
         "• <code>Разрешено - рофлить над всеми, не зависимо от статуса участника проекта (в пределах нормы)</code>\n\n" \
         "• <code>По усмотрению администрации проекта, лок/скам дропов ОПЛАЧИВАЕТСЯ в размере 25%-50% от успешной оплаты</code>"
-        
 
     if agreed:
         text += ":white_check_mark: <b>Вы ознакомились и согласились с правилами проекта</b>"
@@ -77,7 +76,7 @@ summary_sended_text = emojize(
 )
 
 summary_reviewing_text = emojize(
-    ":warning: <b>Ошибка!</b>"
+    ":warning: <b>Ошибка!</b>\n"
     ":information_source: Ваша заявка уже рассматривается"
 )
 
@@ -91,7 +90,7 @@ def summary_check_text(status="Ожидает проверки"):
     text += emojize(
         "<b>{name}</b> {username}[<code>{chat_id}</code>]\n\n"
         ":one: Откуда Вы узнали о нас: <b>{where}</b>\n"
-        ":two: <b>Ваш опыт работы: <b>{experience}</b>\n\n"
+        ":two: Ваш опыт работы: <b>{experience}</b>\n\n"
         "<b>Статус:</b> "
     )
 
@@ -148,6 +147,19 @@ worker_menu_text = emojize(
     "В команде: <b>{in_team} дней</b>\n\n"
     "{team_status}"
 )
+
+about_project_text = ":woman_tipping_hand: <b>Информация о проекте Hide Team</b>\n\n" \
+    ":fire: Мы открылись: {team_start}\n" \
+    ":fallen_leaf: Количество профитов: {team_profits}\n" \
+    ":moneybag: Общая сумма профитов: {profits_sum} ₽\n" \
+    "<b>Выплаты</b> проекта:\n" \
+    "— Оплата - <b>80%</b>\n" \
+    "— Возврат - <b>70%</b>\n\n" \
+    "<b>Состояние</b> сервисов: \n" \
+    "{casino_status} \n" \
+    "{escort_status} \n" \
+    "{antikino_status} \n" \
+    "{team_status}"
 
 
 """
@@ -207,19 +219,6 @@ rate_text = emojize(
     "<b>Возврат:</b> {refund}%"
 )
 
-about_project_text = emojize(
-    ":woman_tipping_hand: <b>Информация о проекте Hide Team</b>\n\n"
-    ":fire: Мы открылись: ДАТА\n"
-    ":fallen_leaf: Количество профитов: КОЛ-ВО\n"
-    ":moneybag: Общая сумма профитов: СУММА ₽\n"
-    +rate_text+
-    "\n\n<b>Состояние</b> сервисов: \n"
-    ":full_moon: Казино {team_status} \n"
-    ":full_moon: Эскорт {team_status} \n"
-    ":full_moon: Трейдинг {team_status} \n"
-    ":full_moon: Общий статус: {team_status}"
-)
-
 about_rates_text = emojize(
     ":woman_tipping_hand: <b>Выберите ставку</b>\n\n"
     "<b>Оплата  Х-Оплата  Возврат</b>\n"
@@ -240,4 +239,42 @@ week_profit_text = emojize(
     ":chart: Статистика за неделю.\n\n"
     "<b>Средний чек:</b> {middle_profits:.0f} RUB\n"
     "<b>Кол-во залетов:</b> {profits_len}"
+)
+
+
+# for chat commands
+
+# worker commands
+btc_text = emojize(
+    ":money_with_wings: <b>Актуальный</b> курс BTC - {usd} $ (~ {rub} ₽)"
+)
+
+
+help_text = emojize(
+    ":woman_tipping_hand: <b>Команды</b> конфы"
+    "/clc <code>[выражение]</code> - Посчитать на калькуляторе"
+    "/lzt <code>[ник на LZT]<code/> - Найти профить лолза"
+    "/hash <code>[хэш]<code/> - Инфо о BTC хэше"
+    "/btc <code>[адрес]<code/> - Инфо о BTC адресе"
+    "/help - Показать список команд"
+    "/me - Показать инфо о себе"
+    "/btc - Курс биткоина"
+)
+
+me_text = emojize(
+    ":woman_tipping_hand: Воркер <a href='tg://user?id={cid}'>{username}</a>\n"
+    "Telegram ID: {cid}\n\n"
+    "{len_profits} профитов на сумму {sum_profits} ₽\n"
+    "Средний профит ~ {middle_profits} ₽\n\n"
+    "В команде {in_team} дня, 0 варнов"
+)
+
+# admins commands
+
+adm_work_command = emojize(
+    "<b>Состояние</b> сервисов: \n"
+    "{casino_status} \n"
+    "{escort_status} \n"
+    "{antikino_status} \n"
+    "{team_status}"
 )

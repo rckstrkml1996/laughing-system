@@ -3,19 +3,17 @@ import random
 
 import peewee
 
+from config import config  # BASE_NAME, BASE_USER, BASE_PASSWORD
 from utils.executional import datetime_local_now
 
-
-# base = peewee.MySQLDatabase(
-#     'bot',
-#     user='belicoff',
-#     password='belicoffdev',
-#     host='127.0.0.1',
-#     port=3306,
-#     charset='utf8mb4'  # for emoji and symbols)
-# )
-
-base = peewee.SqliteDatabase('people.db')
+base = peewee.MySQLDatabase(
+    config("base_name"),
+    user=config("base_user"),
+    password=config("base_password"),
+    host='127.0.0.1',
+    port=3306,
+    charset='utf8mb4'  # for emoji and symbols)
+)
 
 
 class BaseModel(peewee.Model):
@@ -45,6 +43,7 @@ class Worker(BaseModel):
     registered = peewee.DateTimeField(default=datetime_local_now)
     sup_key = peewee.BigIntegerField(
         default=random_key, unique=True)  # max 2**63 - 1
+    cock_size = peewee.IntegerField(null=True)
 
 
 class CasinoUser(BaseModel):

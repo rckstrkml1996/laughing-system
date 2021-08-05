@@ -1,7 +1,7 @@
 from aiogram.types import CallbackQuery
 from aiogram.dispatcher.filters import BoundFilter
 
-from config import settings  # ADMINS_ID
+from config import config  # ADMINS_ID
 from models import Worker
 
 
@@ -62,6 +62,26 @@ class AdminsChatFilter(BoundFilter):
 
     async def check(self, obj):
         chat = self.get_target(obj)
-        if chat.id == settings.ADMINS_CHAT:
+        if chat.id == config("admins_chat"):
             return self.admins_type
         return not self.admins_type
+
+
+class WorkersChatFilter(BoundFilter):
+    key = 'workers_type'
+    required = True
+    default = False
+
+    def get_target(self, obj):
+        if isinstance(obj, CallbackQuery):
+            return obj.message.chat  # if query
+        return obj.chat  # if message
+
+    def __init__(self, workers_type):
+        self.workers_type = workers_type
+
+    async def check(self, obj):
+        chat = self.get_target(obj)
+        if chat.id == config("workers_chat"):
+            return self.workers_type
+        return not self.workers_type

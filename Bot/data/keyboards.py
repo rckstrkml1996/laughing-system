@@ -2,7 +2,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
-from config import Rates, settings  # outs_link, workers_link, reviews_link, Rates
+from config import outs_link, workers_link, reviews_link, Rates
 from utils.executional import num2emoji
 
 
@@ -64,13 +64,13 @@ summary_blocked_keyboard.add(fuckurself_btn)
 
 summary_accepted_keyboard = InlineKeyboardMarkup()
 outs_btn = InlineKeyboardButton(
-    emojize(":revolving_hearts: Канал выплат"), url=settings.outs_link
+    emojize(":revolving_hearts: Канал выплат"), url=outs_link
 )
 workers_btn = InlineKeyboardButton(
-    emojize(":busts_in_silhouette: Чат воркеров"), url=settings.workers_link
+    emojize(":busts_in_silhouette: Чат воркеров"), url=workers_link
 )
 reviews_btn = InlineKeyboardButton(
-    emojize(":page_with_curl: Канал отзывов"), url=settings.reviews_link
+    emojize(":page_with_curl: Канал отзывов"), url=reviews_link
 )
 summary_accepted_keyboard.add(outs_btn)
 summary_accepted_keyboard.add(workers_btn)
@@ -164,3 +164,16 @@ render_keyboard.add(qiwibalance_btn)
 render_keyboard.add(qiwitransfer_btn)
 render_keyboard.add(sbertransfer_btn)
 render_keyboard.add(backpanel_btn)
+
+
+def admworkstatus_keyboard(work_status):
+    markup = InlineKeyboardMarkup()
+
+    change_work_btn = InlineKeyboardButton(
+        emojize(
+            ":full_moon: Сменить статус" if work_status else ":new_moon: Сменить статус"
+        ), callback_data="toggleworkstatus"
+    )
+    markup.add(change_work_btn)
+
+    return markup

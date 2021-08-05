@@ -28,3 +28,22 @@ def get_random_analog(general: int):
     prices = {"Л. 95 Бензина": 50.15, "Кусков Пиццы": 80, "Коробок Спичек": 20}
     price = random.choice(list(prices.keys()))
     return f"Это ~ {'{:,}'.format(int(general / prices[price])).replace(',', ' ')} {price}"
+
+
+async def get_btcticker():
+    async with aiohttp.ClientSession() as session:
+        async with session.get('https://blockchain.info/ru/ticker') as response:
+            return await response.json()
+
+
+async def rub_usd_btcticker():
+    ticker = await get_btcticker()
+    rub = ticker["RUB"]["last"]
+    usd = ticker["USD"]["last"]
+    return rub, usd
+
+
+async def get_btcmarket_price():
+    async with aiohttp.ClientSession() as session:
+        async with session.get('https://api.blockchain.info/charts/market-price') as response:
+            return await response.json()
