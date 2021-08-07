@@ -22,7 +22,7 @@ summary
 
 summary_start_keyboard = InlineKeyboardMarkup()
 new_summary_btn = InlineKeyboardButton(
-    emojize(":pencil2: Подать заявку"), callback_data="summary"
+    emojize(":rocket: Подать заявку"), callback_data="summary"
 )
 summary_start_keyboard.add(new_summary_btn)
 
@@ -34,7 +34,7 @@ summary_rules_keyboard.add(agree_btn)
 
 summary_send_keyboard = InlineKeyboardMarkup()
 send_btn = InlineKeyboardButton(
-    emojize(":rocket: Отправить заявку"), callback_data="sendsummary"
+    emojize(":rocket: Отправить"), callback_data="sendsummary"
 )
 summary_send_keyboard.add(send_btn)
 

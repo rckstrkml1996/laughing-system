@@ -8,3 +8,4 @@ pytz
 python-multipart
 telethon
 loguru
+py_expression_eval

@@ -5,6 +5,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import ParseMode
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from py_expression_eval import Parser
 
 from config import config
 
@@ -12,6 +13,7 @@ from config import config
 Обьявление приложения fastapi
 Обьявление всех компонентов бота из конфига
 """
+
 app = FastAPI()
 
 app.add_middleware(
@@ -25,3 +27,5 @@ app.add_middleware(
 
 bot = Bot(config("api_token"), parse_mode=ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
+
+exp_parser = Parser()

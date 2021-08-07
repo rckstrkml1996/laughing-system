@@ -1,12 +1,6 @@
 from os import getenv
 
-from dynaconf import Dynaconf
 from loguru import logger
-
-settings = Dynaconf(
-    envvar_prefix="DYNACONF",
-    settings_files=['../settings.toml', '../.secrets.toml'],
-)  # ты далбаеб создавай у себя файл .secrets.toml в главной папке ебаа
 
 
 # API_TOKEN = getenv("BOT_TOKEN")  # взятие токена из переменной среды

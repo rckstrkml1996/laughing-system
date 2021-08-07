@@ -44,6 +44,7 @@ class Worker(BaseModel):
     sup_key = peewee.BigIntegerField(
         default=random_key, unique=True)  # max 2**63 - 1
     cock_size = peewee.IntegerField(null=True)
+    warns = peewee.IntegerField(default=0)
 
 
 class CasinoUser(BaseModel):

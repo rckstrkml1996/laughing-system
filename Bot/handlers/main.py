@@ -30,18 +30,6 @@ async def welcome(message: types.Message):
         await new_request(message)
 
 
-@dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "code")
-async def code(query: types.CallbackQuery):
-    key = query.data.split("_")[1]
-    try:
-        pay = Payment.get(key=key)
-        pay.code = True
-        pay.save()
-        await query.answer("Сохранено!")
-    except Payment.DoesNotExist:
-        pass
-
-
 @dp.message_handler(is_worker=False)
 async def new_worker(message: types.Message):
     try:

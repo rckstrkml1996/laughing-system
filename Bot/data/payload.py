@@ -27,8 +27,8 @@ summary_text = emojize(
 )
 
 new_summary_text = emojize(
-    ":snake: <b>Приветствуем Вас в Hide Team</b>\n\n"
-    "<code>Чтобы попасть в команду - подавайте заявку :point_down:</code>"
+    "Привет, это бот <b>DUREX TEAM</b> :revolving_hearts:\n"
+    "Чтобы начать работу у нас, подай заявку :point_down:"
 )
 
 
@@ -144,7 +144,7 @@ worker_menu_text = emojize(
     ":gem: Приглашено: <b>0 воркеров</b>\n\n"
     "Статус: <b>{status}</b>\n\n"
     ":warning: Предупреждений: <b>[{warns}/3]</b>\n"
-    "В команде: <b>{in_team} дней</b>\n\n"
+    "В команде: <b>{in_team}</b>\n\n"
     "{team_status}"
 )
 
@@ -266,8 +266,20 @@ me_text = emojize(
     "Telegram ID: {cid}\n\n"
     "{len_profits} профитов на сумму {sum_profits} ₽\n"
     "Средний профит ~ {middle_profits} ₽\n\n"
-    "В команде {in_team} дня, 0 варнов"
+    "В команде {in_team}, {warns}"
 )
+
+lzt_text = emojize(
+    "LZT <a href='{permalink}'>{username}</a>\n"
+    "Статус: {user_title}\n"
+    "Регистрация: {reg_date}\n"
+    "Активность: {last_seen_date}\n"
+    "{message_count}, {like_count} симп"
+)
+
+lolz_down_text = "Задержка запроса, скорей всего LOLZ упал :("
+
+cck_size_text = "Мой размер чилена - {size}см {smile}"
 
 # admins commands
 
@@ -278,3 +290,5 @@ adm_work_command = emojize(
     "{antikino_status} \n"
     "{team_status}"
 )
+
+setwork_text = emojize(":white_check_mark: <b>Поставлен</b> ворк")
