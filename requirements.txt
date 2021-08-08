@@ -1,7 +1,7 @@
-dynaconf
 aiohttp
 aiogram
-emojize
+emoji
+fastapi
 uvicorn
 peewee
 pytz
@@ -9,3 +9,6 @@ python-multipart
 telethon
 loguru
 py_expression_eval
+pydantic
+pymysql
+pillow

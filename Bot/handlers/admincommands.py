@@ -5,7 +5,7 @@ from aiogram.utils.exceptions import MessageNotModified
 from loader import dp
 from data.keyboards import *
 from data import payload
-from config import config, edit_config
+from config import config
 
 
 @dp.message_handler(commands="work", admins_type=True)
@@ -40,9 +40,9 @@ async def toggle_work_status(query: types.CallbackQuery):
     escort_work = not config("escort_work")
     antikino_work = not config("antikino_work")
 
-    edit_config("casino_work", casino_work)
-    edit_config("escort_work", escort_work)
-    edit_config("antikino_work", antikino_work)
+    config.edit_config("casino_work", casino_work)
+    config.edit_config("escort_work", escort_work)
+    config.edit_config("antikino_work", antikino_work)
 
     casino_scam = "Казино СКАМ"
     escort_scam = "Эскорт СКАМ"
@@ -67,8 +67,7 @@ async def toggle_work_status(query: types.CallbackQuery):
         await query.message.edit_text(
             text + " ", reply_markup=admworkstatus_keyboard(all_work)
         )
-    if all_work:
-        await dp.bot.send_message(config("workers_chat"), payload.setwork_text)
+    await dp.bot.send_message(config("workers_chat"), payload.setwork_text if all_work else payload.setdontwork_text)
 
 
 """ WORKING FILE IDS AND CHANGING PHOTOS """

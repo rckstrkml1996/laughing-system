@@ -292,3 +292,4 @@ adm_work_command = emojize(
 )
 
 setwork_text = emojize(":white_check_mark: <b>Поставлен</b> ворк")
+setdontwork_text = emojize(":x: <b>Поставлен</b> неворк")

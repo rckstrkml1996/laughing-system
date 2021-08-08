@@ -17,6 +17,7 @@ node_modules
 scripts/flow/*/.flowconfig
 .flowconfig
 build/
+dist/
 build2/
 
 # vs-code shit
@@ -29,3 +30,6 @@ rendered/
 .secrets.*
 # Ignore cfg files
 *.cfg
+
+# shhhihihihihiyttitithihi
+test.py
