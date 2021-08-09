@@ -101,7 +101,7 @@ async def project_info(message: types.Message):
                 antikino_status=f":full_moon: {antikino_scam}" if antikino_work else f":new_moon: <del>{antikino_scam}</del>",
                 team_status=":full_moon: Общий статус: Ворк" if all_work else ":new_moon: Общий статус: Не ворк",
             )),
-            reply_markup=menu_keyboard
+            reply_markup=about_project_keyboard()
         )
     except Worker.DoesNotExist:
         pass
@@ -133,3 +133,14 @@ async def toggle_username(query: types.CallbackQuery):
         await query.answer(f"Вы {status} никнейм")
     except Worker.DoesNotExist:
         pass
+
+@dp.callback_query_handler(text="showrules")
+async def show_rules(query: types.CallbackQuery):
+    await query.message.answer(
+        payload.rules_text(True))
+
+@dp.callback_query_handler(text="refsystem")
+async def ref_system(query: types.CallbackQuery):
+    await query.message.answer(
+        payload.referral_system_text.format(
+            user_id=query.message.chat.id))

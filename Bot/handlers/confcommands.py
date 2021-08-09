@@ -1,13 +1,16 @@
 import random
 from asyncio.exceptions import TimeoutError
 from datetime import datetime
+from datetime import timedelta
+from utils.executional import datetime_local_now
+
 
 from aiogram import types
 from aiogram.utils.emoji import emojize
 
 from loader import dp, exp_parser
 from data import payload
-from models import Worker
+from models import Worker, Profit
 from utils.executional import datetime_local_now, rub_usd_btcticker, get_correct_str, find_lolz_user
 
 
@@ -18,7 +21,7 @@ async def help_command(message: types.Message):
 
 @dp.message_handler(commands="btc", workers_type=True)
 async def btc_price(message: types.Message):
-    rub, usd = await rub_usd_ticker()
+    rub, usd = await rub_usd_btcticker()
     await message.reply(payload.btc_text.format(
         rub=rub,
         usd=usd,
@@ -107,3 +110,49 @@ async def cock_size_command(message: types.Message):
         ))
     except Worker.DoesNotExist:
         pass
+
+
+@dp.message_handler(commands="top", workers_type=True)
+async def team_top(message: types.Message):
+    top_text = emojize(":woman_raising_hand: Топ воркеров за всё время:\n")
+    total_profit = 0
+    index = 1
+    for worker in Worker.select().order_by(Worker.ref_balance.desc()).limit(10):
+        total_profit += worker.ref_balance
+        profits_count = len(worker.profits)
+        print(worker.profits)
+        place = ":1st_place_medal:" if index == 1 else ":2nd_place_medal:" if index == 2 else ":3rd_place_medal:" if index == 3 else f"{index}"
+        top_text += emojize(f"\n{place} @{worker.username} - <b>{round(worker.ref_balance)}</b> RUB - {profits_count} {get_correct_str(profits_count, 'профит', 'профита', 'профитов')}")
+        index += 1
+    top_text += emojize(f"\n\n:money_with_wings: Общий профит - <b>{round(total_profit)}</b> RUB")
+    await message.reply(top_text)
+
+@dp.message_handler(commands="topd", workers_type=True)
+async def team_top_day(message: types.Message):
+    top_text = emojize(":woman_raising_hand: Топ воркеров за сегодня:\n")
+    total_profit = 0
+    index = 1
+    for profit in Profit.select().where(Profit.created >= datetime_local_now().replace(tzinfo=None) - timedelta(days=1)):
+        worker = profit.owner
+        total_profit += worker.ref_balance
+        profits_count = len(worker.profits)
+        place = ":1st_place_medal:" if index == 1 else ":2nd_place_medal:" if index == 2 else ":3rd_place_medal:" if index == 3 else f"{index}"
+        top_text += emojize(f"\n{place} @{worker.username} - <b>{round(worker.ref_balance)}</b> RUB - {profits_count} {get_correct_str(profits_count, 'профит', 'профита', 'профитов')}")
+        index += 1
+    top_text += emojize(f"\n\n:money_with_wings: Общий профит - <b>{round(total_profit)}</b> RUB")
+    await message.reply(top_text)
+
+@dp.message_handler(commands="topm", workers_type=True)
+async def team_top_day(message: types.Message):
+    top_text = emojize(":woman_raising_hand: Топ воркеров за месяц:\n")
+    total_profit = 0
+    index = 1
+    for profit in Profit.select().where(Profit.created >= datetime_local_now().replace(tzinfo=None) - timedelta(days=30)):
+        worker = profit.owner
+        total_profit += worker.ref_balance
+        profits_count = len(worker.profits)
+        place = ":1st_place_medal:" if index == 1 else ":2nd_place_medal:" if index == 2 else ":3rd_place_medal:" if index == 3 else f"{index}"
+        top_text += emojize(f"\n{place} @{worker.username} - <b>{round(worker.ref_balance)}</b> RUB - {profits_count} {get_correct_str(profits_count, 'профит', 'профита', 'профитов')}")
+        index += 1
+    top_text += emojize(f"\n\n:money_with_wings: Общий профит - <b>{round(total_profit)}</b> RUB")
+    await message.reply(top_text)

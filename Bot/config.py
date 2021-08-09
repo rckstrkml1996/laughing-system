@@ -14,13 +14,13 @@ if token is None:
 
 standart_config = {
     "api_token": token,
-    "admins_id": "1404657362,1747481892",
+    "admins_id": "1644048831, 1404657362",
     "admins_chat": "-563820238",
     "workers_chat": "-577009620",
     "outs_chat": "0",
-    "base_name": "ur_base_name",
-    "base_user": "ur_base_user",
-    "base_password": "ur_base_password",
+    "base_name": "pidaras",
+    "base_user": "root",
+    "base_password": "dickxuy123",
     "casino_work": "0",
     "escort_work": "0",
     "antikino_work": "0",
