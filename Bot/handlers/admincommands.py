@@ -5,6 +5,7 @@ from aiogram.utils.exceptions import MessageNotModified
 from loader import dp
 from data.keyboards import *
 from data import payload
+from utils.executional import get_work_status
 from config import config
 
 
@@ -14,19 +15,13 @@ async def work_command(message: types.Message):
     escort_work = config("escort_work")
     antikino_work = config("antikino_work")
 
-    casino_scam = "Казино СКАМ"
-    escort_scam = "Эскорт СКАМ"
-    antikino_scam = "Антикино СКАМ"
-
     all_work = casino_work and escort_work and antikino_work
 
     await message.answer(
-        emojize(payload.adm_work_command.format(
-            casino_status=f":full_moon: {casino_scam}" if casino_work else f":new_moon: <del>{casino_scam}</del>",
-            escort_status=f":full_moon: {escort_scam}" if escort_work else f":new_moon: <del>{escort_scam}</del>",
-            antikino_status=f":full_moon: {antikino_scam}" if antikino_work else f":new_moon: <del>{antikino_scam}</del>",
-            team_status=":full_moon: Общий статус: Ворк" if all_work else ":new_moon: Общий статус: Не ворк",
-        )), reply_markup=admworkstatus_keyboard(all_work)
+        payload.adm_work_command.format(
+            services_status=get_work_status(),
+        ),
+        reply_markup=admworkstatus_keyboard(all_work)
     )
 
 
@@ -44,19 +39,10 @@ async def toggle_work_status(query: types.CallbackQuery):
     config.edit_config("escort_work", escort_work)
     config.edit_config("antikino_work", antikino_work)
 
-    casino_scam = "Казино СКАМ"
-    escort_scam = "Эскорт СКАМ"
-    antikino_scam = "Антикино СКАМ"
-
     all_work = casino_work and escort_work and antikino_work
 
-    text = emojize(
-        payload.adm_work_command.format(
-            casino_status=f":full_moon: {casino_scam}" if casino_work else f":new_moon: <del>{casino_scam}</del>",
-            escort_status=f":full_moon: {escort_scam}" if escort_work else f":new_moon: <del>{escort_scam}</del>",
-            antikino_status=f":full_moon: {antikino_scam}" if antikino_work else f":new_moon: <del>{antikino_scam}</del>",
-            team_status=":full_moon: Общий статус: Ворк" if all_work else ":new_moon: Общий статус: Не ворк",
-        )
+    text = payload.adm_work_command.format(
+        services_status=get_work_status()
     )
 
     try:
@@ -64,9 +50,7 @@ async def toggle_work_status(query: types.CallbackQuery):
             text, reply_markup=admworkstatus_keyboard(all_work)
         )
     except MessageNotModified:
-        await query.message.edit_text(
-            text + " ", reply_markup=admworkstatus_keyboard(all_work)
-        )
+        pass
     await dp.bot.send_message(config("workers_chat"), payload.setwork_text if all_work else payload.setdontwork_text)
 
 

@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from loader import dp
 from data import payload
 from data.keyboards import summary_start_keyboard, summary_blocked_keyboard
-from models import Worker, Payment
+from models import Worker
 from .summary import new_request
 from .panel import worker_welcome
 
@@ -25,8 +25,11 @@ async def welcome(message: types.Message):
         else:  # если чел уже воркер
             await worker_welcome(message)  # workers menu
     except Worker.DoesNotExist:
-        Worker.create(cid=message.chat.id,
-                      username=message.chat.username, name=message.chat.full_name)
+        Worker.create(
+            cid=message.chat.id,
+            username=message.chat.username,
+            name=message.chat.full_name
+        )
         await new_request(message)
 
 

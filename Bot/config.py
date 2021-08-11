@@ -25,9 +25,11 @@ standart_config = {
     "escort_work": "0",
     "antikino_work": "0",
     "adv_team_photo": "AgACAgIAAxkBAAIL-WENYLIp8iRCBBUqsWPZK3Vk7fPPAAKyuDEbA6toSNh2SVkwoqY0AQADAgADeQADIAQ",
+    "pin_path": "pin.txt",
 }
 
 config = Config(section_name, path, standart_config)
+
 
 
 outs_link = "https://t.me/hideteamout"

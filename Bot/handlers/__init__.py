@@ -3,5 +3,6 @@ from .summary import dp
 from .panel import dp
 from .admincommands import dp
 from .confcommands import dp
+from .inline import dp
 
 __all__ = ["dp", ]

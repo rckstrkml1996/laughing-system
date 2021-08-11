@@ -3,8 +3,10 @@ from datetime import datetime
 
 import aiohttp
 import pytz
+from aiogram.utils.emoji import emojize
 
-from config import TIME_ZONE
+from data.payload import services_status, me_text
+from config import config, TIME_ZONE
 
 local_tz = pytz.timezone(TIME_ZONE)
 
@@ -69,3 +71,48 @@ def get_correct_str(num, str1, str2, str3):
             return str2
         else:
             return str3
+
+
+def new_pin_text(text: str):
+    pin_path = config("pin_path")
+    fl = open(pin_path, "w")
+    fl.write(text)
+    fl.close()
+
+
+def get_work_status():
+    casino_work = config("casino_work")
+    escort_work = config("escort_work")
+    antikino_work = config("antikino_work")
+
+    all_work = casino_work and escort_work and antikino_work
+
+    return emojize(
+        services_status.format(
+            casino_status=f":full_moon: Казино СКАМ" if casino_work else f":new_moon: <del>Казино СКАМ</del>",
+            escort_status=f":full_moon: Эскорт СКАМ" if escort_work else f":new_moon: <del>Эскорт СКАМ</del>",
+            antikino_status=f":full_moon: Антикино СКАМ" if antikino_work else f":new_moon: <del>Антикино СКАМ</del>",
+            team_status=":full_moon: Общий статус: Ворк" if all_work else ":new_moon: Общий статус: Не ворк",
+        )
+    )
+
+
+def get_info_about_worker(worker):
+    in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
+
+    len_profits = len(worker.profits)
+    sum_profits = sum(map(lambda prft: prft.amount, worker.profits))
+    try:
+        middle_profits = sum_profits / len_profits
+    except ZeroDivisionError:
+        middle_profits = 0
+
+    return me_text.format(
+        cid=worker.cid,
+        username=worker.username,
+        len_profits=len_profits,
+        sum_profits=sum_profits,
+        middle_profits=middle_profits,
+        in_team=f"{in_team.days} {get_correct_str(in_team.days, 'день', 'дня', 'дней')}",
+        warns=f"{worker.warns} {get_correct_str(worker.warns, 'варн', 'варна', 'варнов')}"
+    )

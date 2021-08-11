@@ -55,10 +55,16 @@ async def shutdown_polling(dispatcher: Dispatcher):
 
 
 async def start_bot(dispatcher: Dispatcher, notify=True):
-    dispatcher.filters_factory.bind(IsWorkerFilter)
-    dispatcher.filters_factory.bind(SendSummaryFilter)
-    dispatcher.filters_factory.bind(AdminsChatFilter)
-    dispatcher.filters_factory.bind(WorkersChatFilter)
+    event_handlers = [
+        dispatcher.message_handlers,
+        dispatcher.edited_message_handlers,
+        dispatcher.callback_query_handlers,
+    ]
+    
+    dispatcher.filters_factory.bind(IsWorkerFilter, event_handlers=event_handlers)
+    dispatcher.filters_factory.bind(SendSummaryFilter, event_handlers=event_handlers)
+    dispatcher.filters_factory.bind(AdminsChatFilter, event_handlers=event_handlers)
+    dispatcher.filters_factory.bind(WorkersChatFilter, event_handlers=event_handlers)
 
     await dispatcher.skip_updates()
     await on_startup(dispatcher, notify=notify)
@@ -70,7 +76,7 @@ async def start_api(server):
 
 
 def main():
-    # import api
+    import api
     config = Config(app=app, loop=dp.bot.loop, lifespan="on",
                     reload=True, host="0.0.0.0")
     server = Server(config=config)

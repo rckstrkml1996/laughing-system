@@ -13,7 +13,7 @@ from data import payload
 from data.states import Render, Panel
 from data.keyboards import *
 from utils.render import *
-from utils.executional import datetime_local_now, get_correct_str
+from utils.executional import datetime_local_now, get_correct_str, get_work_status
 from models import Worker, Profit
 
 
@@ -81,26 +81,13 @@ async def project_info(message: types.Message):
         worker = Worker.get(cid=message.chat.id)
         profits = Profit.select()
 
-        casino_work = config("casino_work")
-        escort_work = config("escort_work")
-        antikino_work = config("antikino_work")
-
-        casino_scam = "Казино СКАМ"
-        escort_scam = "Эскорт СКАМ"
-        antikino_scam = "Антикино СКАМ"
-
-        all_work = casino_work and escort_work and antikino_work
-
         await message.answer(
-            emojize(payload.about_project_text.format(
+            payload.about_project_text.format(
                 team_start=team_start,
                 team_profits=len(profits),
                 profits_sum=sum(map(lambda prft: prft.amount, profits)),
-                casino_status=f":full_moon: {casino_scam}" if casino_work else f":new_moon: <del>{casino_scam}</del>",
-                escort_status=f":full_moon: {escort_scam}" if escort_work else f":new_moon: <del>{escort_scam}</del>",
-                antikino_status=f":full_moon: {antikino_scam}" if antikino_work else f":new_moon: <del>{antikino_scam}</del>",
-                team_status=":full_moon: Общий статус: Ворк" if all_work else ":new_moon: Общий статус: Не ворк",
-            )),
+                services_status=get_work_status()
+            ),
             reply_markup=menu_keyboard
         )
     except Worker.DoesNotExist:

@@ -1,3 +1,3 @@
 from .main import QiwiApi
 
-__all__ = ("QiwiApi", )
+__all__ = ("QiwiApi",)

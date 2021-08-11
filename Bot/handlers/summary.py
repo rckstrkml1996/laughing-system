@@ -18,7 +18,7 @@ async def summary_main(query: types.CallbackQuery):
     await summary_rules(query.message)
 
 
-async def summary_rules(message: types.Message, send_summary=False):
+async def summary_rules(message: types.Message):
     await message.edit_text(payload.rules_text(), reply_markup=summary_rules_keyboard)
 
 

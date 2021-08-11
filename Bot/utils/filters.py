@@ -22,7 +22,7 @@ class IsWorkerFilter(BoundFilter):
             try:
                 return self.is_worker == (Worker.get(cid=chat.id).status >= 2)
             except Worker.DoesNotExist:
-                pass
+                return not self.is_worker  # not worker
         return False
 
 

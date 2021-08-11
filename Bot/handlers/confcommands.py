@@ -8,7 +8,7 @@ from aiogram.utils.emoji import emojize
 from loader import dp, exp_parser
 from data import payload
 from models import Worker
-from utils.executional import datetime_local_now, rub_usd_btcticker, get_correct_str, find_lolz_user
+from utils.executional import rub_usd_btcticker, get_correct_str, find_lolz_user, get_info_about_worker
 
 
 @dp.message_handler(commands="help", workers_type=True)
@@ -39,26 +39,8 @@ async def clc_command(message: types.Message):
 async def me_command(message: types.Message):
     try:
         worker = Worker.get(cid=message.from_user.id)
-        in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
-
-        len_profits = len(worker.profits)
-        sum_profits = sum(map(lambda prft: prft.amount, worker.profits))
-        try:
-            middle_profits = sum_profits / len_profits
-        except ZeroDivisionError:
-            middle_profits = 0
-
-        await message.reply(
-            payload.me_text.format(
-                cid=message.from_user.id,
-                username=message.from_user.username,
-                len_profits=len_profits,
-                sum_profits=sum_profits,
-                middle_profits=middle_profits,
-                in_team=f"{in_team.days} {get_correct_str(in_team.days, 'день', 'дня', 'дней')}",
-                warns=f"{worker.warns} {get_correct_str(worker.warns, 'варн', 'варна', 'варнов')}"
-            )
-        )
+        text = get_info_about_worker(worker)
+        await message.answer(text)
     except Worker.DoesNotExist:
         pass
 

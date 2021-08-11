@@ -59,15 +59,19 @@ class Profit(BaseModel):
     created = peewee.DateTimeField(default=datetime_local_now)
 
 
-class Payment(BaseModel):
-    owner = peewee.ForeignKeyField(Worker, related_name='payments')
-    key = peewee.IntegerField(unique=True)
-    service = peewee.CharField(default="default pays")
+class QiwiPayment(BaseModel):
+    person_id = peewee.CharField()  # наш аккаунт киви
+    account = peewee.CharField(null=True)
     amount = peewee.IntegerField()
-    cardinfo = peewee.CharField(null=True)
-    message_id = peewee.IntegerField(null=True)
-    code = peewee.BooleanField(default=False)
+    comment = peewee.CharField(null=True)
+    date = peewee.DateTimeField()
+    profit = peewee.ForeignKeyField(
+        Profit,
+        backref='profits',
+        unique=True,
+        null=True
+    )
 
 
 base.connect()
-base.create_tables([Worker, CasinoUser, Profit, Payment])
+base.create_tables([Worker, CasinoUser, Profit, QiwiPayment])
