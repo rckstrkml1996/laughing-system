@@ -6,7 +6,7 @@ from data.states import Summary
 from data import payload
 from config import config  # ADMINS_CHAT
 from data.keyboards import *
-from models import Worker
+from customutils.models import Worker
 
 
 async def new_request(message: types.Message):

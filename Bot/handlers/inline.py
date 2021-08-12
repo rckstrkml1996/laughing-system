@@ -5,8 +5,7 @@ from aiogram.types import InlineQuery
 
 from loader import dp
 from config import config, StatusNames
-from models import Worker, Profit
-from models.functional import get_profits_sum
+from customutils.models import Worker, Profit, get_profits_sum
 from data import payload
 from data.inlineresults import tagbot_article, services_status_article, about_worker_article
 from utils.executional import get_work_status, get_correct_str, get_info_about_worker

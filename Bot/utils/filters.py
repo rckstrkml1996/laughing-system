@@ -2,7 +2,7 @@ from aiogram.types import CallbackQuery
 from aiogram.dispatcher.filters import BoundFilter
 
 from config import config  # ADMINS_ID
-from models import Worker
+from customutils.models import Worker
 
 
 class IsWorkerFilter(BoundFilter):

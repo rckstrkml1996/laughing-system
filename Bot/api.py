@@ -9,7 +9,7 @@ from fastapi.security import OAuth2PasswordBearer
 # import jwt
 from qiwiapi.types import Payments
 
-from models import QiwiPayment
+from customutils.models import QiwiPayment
 from loader import app
 
 

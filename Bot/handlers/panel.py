@@ -9,7 +9,7 @@ from aiogram.utils.emoji import emojize
 from loader import dp
 from config import config
 from config import StatusNames, Rates, team_start
-from models import Worker, Profit
+from customutils.models import Worker, Profit, get_profits_sum
 from utils.datefunc import datetime_local_now
 from data import payload
 from data.states import Render, Panel
@@ -24,7 +24,7 @@ async def worker_menu(query: types.CallbackQuery):
     in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
 
     len_profits = len(worker.profits)
-    all_balance = sum(map(lambda prft: prft.amount, worker.profits))
+    all_balance = get_profits_sum(worker.id)
 
     if query.message.photo:  # it cant edit when photo!
         await worker_welcome(query.message)
@@ -37,7 +37,7 @@ async def worker_menu(query: types.CallbackQuery):
                 status=StatusNames[worker.status],
                 all_balance=all_balance,
                 ref_balance=worker.ref_balance,
-                middle_profits=all_balance / len_profits,
+                middle_profits=int(all_balance / len_profits),
                 len_profits=len_profits,
                 in_team=f'{get_correct_str(in_team.days, "день", "дня", "дней")}',
                 warns=worker.warns,
@@ -56,15 +56,18 @@ async def worker_welcome(message: types.Message):
         worker.save()  # update worker username
         in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
 
+        len_profits = len(worker.profits)
+        all_balance = get_profits_sum(worker.id)
+
         await message.answer(emojize(":zap:"), reply_markup=menu_keyboard)
         await message.answer(
             payload.worker_menu_text.format(
                 chat_id=message.chat.id,
                 status=StatusNames[worker.status],
-                all_balance=sum(map(lambda prft: prft.amount, worker.profits)),
+                all_balance=all_balance,
                 ref_balance=worker.ref_balance,
-                middle_profits=0,
-                len_profits=len(worker.profits),
+                middle_profits=int(all_balance / len_profits),
+                len_profits=len_profits,
                 in_team=f'{get_correct_str(in_team.days, "день", "дня", "дней")}',
                 warns=0,
                 team_status=emojize(
@@ -86,7 +89,7 @@ async def project_info(message: types.Message):
             payload.about_project_text.format(
                 team_start=team_start,
                 team_profits=len(profits),
-                profits_sum=sum(map(lambda prft: prft.amount, profits)),
+                profits_sum=get_profits_sum(worker.id),
                 services_status=get_work_status()
             ),
             reply_markup=about_project_keyboard
@@ -102,15 +105,20 @@ async def toggle_username(query: types.CallbackQuery):
         worker.username_hide = not worker.username_hide
         in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
         worker.save()
+
+        len_profits = len(worker.profits)
+        all_balance = get_profits_sum(worker.id)
+
         status = "Скрыли" if worker.username_hide else "Открыли"
+
         await query.message.edit_text(
             payload.worker_menu_text.format(
                 chat_id=query.message.chat.id,
                 status=StatusNames[worker.status],
-                all_balance=sum(map(lambda prft: prft.amount, worker.profits)),
+                all_balance=all_balance,
                 ref_balance=worker.ref_balance,
-                middle_profits=0,
-                len_profits=len(worker.profits),
+                middle_profits=int(all_balance / len_profits),
+                len_profits=len_profits,
                 in_team=f'{get_correct_str(in_team.days, "день", "дня", "дней")}',
                 warns=0,
                 team_status=emojize(

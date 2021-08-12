@@ -4,7 +4,7 @@ import aiohttp
 from aiogram.utils.emoji import emojize
 
 from config import config
-from models.functional import get_profits_sum
+from customutils.models import get_profits_sum
 from data.payload import services_status, me_text
 from utils.datefunc import datetime_local_now
 

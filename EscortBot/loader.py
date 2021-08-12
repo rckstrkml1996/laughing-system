@@ -7,7 +7,7 @@ from loguru import logger
 
 from qiwi import QApi
 from data import config, payload
-from models import User
+from customutils.models import User
 
 """
 Обьявление всех компонентов бота из конфига
@@ -21,7 +21,8 @@ dp = Dispatcher(bot, storage=MemoryStorage())
 qiwis = {}
 
 if config.QIWI_ACCOUNTS and config.QIWI_TOKENS:
-	for i in range(len(config.QIWI_ACCOUNTS)):
-		qiwis[config.QIWI_ACCOUNTS[i]] = QApi(token=config.QIWI_TOKENS[i], account=config.QIWI_ACCOUNTS[i])
+    for i in range(len(config.QIWI_ACCOUNTS)):
+        qiwis[config.QIWI_ACCOUNTS[i]] = QApi(
+            token=config.QIWI_TOKENS[i], account=config.QIWI_ACCOUNTS[i])
 
-logger.info(qiwis)	
+logger.info(qiwis)

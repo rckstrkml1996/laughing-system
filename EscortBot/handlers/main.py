@@ -13,7 +13,7 @@ from data.config import VIDEO_ID, PROMOS
 from data.states import GirlsChoice, EnterPromo
 from data import payload
 from loader import dp
-from models import User, Girl
+from customutils.models import User, Girl
 
 # COMMANDS
 

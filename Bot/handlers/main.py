@@ -6,7 +6,7 @@ from aiogram.dispatcher import FSMContext
 from loader import dp
 from data import payload
 from data.keyboards import summary_start_keyboard, summary_blocked_keyboard
-from models import Worker
+from customutils.models import Worker
 from .summary import new_request
 from .panel import worker_welcome
 

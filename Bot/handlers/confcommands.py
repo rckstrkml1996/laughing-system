@@ -7,7 +7,7 @@ from aiogram import types
 from aiogram.utils.emoji import emojize
 
 from loader import dp, exp_parser
-from models import Worker, Profit
+from customutils.models import Worker, Profit
 from utils.datefunc import datetime_local_now
 from data import payload
 from utils.executional import rub_usd_btcticker, get_correct_str, find_lolz_user, \
