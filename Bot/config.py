@@ -18,9 +18,9 @@ standart_config = {
     "admins_chat": "-563820238",
     "workers_chat": "-577009620",
     "outs_chat": "0",
-    "base_name": "pidaras",
-    "base_user": "root",
-    "base_password": "dickxuy123",
+    "base_name": "ur_base_name",
+    "base_user": "ur_base_user",
+    "base_password": "ur_base_password",
     "casino_work": "0",
     "escort_work": "0",
     "antikino_work": "0",
@@ -31,7 +31,7 @@ config = Config(section_name, path, standart_config)
 
 
 outs_link = "https://t.me/hideteamout"
-workers_link = "https://t.me/joinchat/Ripr9Br_8UcEw-fg"
+workers_link = "https://t.me/joinchat/oV_2yUpUrA1kZThi"
 reviews_link = "https://t.me/joinchat/xdsxXRzqhFhmNDAy"
 
 

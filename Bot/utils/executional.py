@@ -60,12 +60,12 @@ def get_correct_str(num, str1, str2, str3):
     val = num % 100
 
     if val > 10 and val < 20:
-        return str3
+        return f"{num} {str3}"
     else:
         val = num % 10
         if val == 1:
-            return str1
+            return f"{num} {str1}"
         elif val > 1 and val < 5:
-            return str2
+            return f"{num} {str2}"
         else:
-            return str3
+            return f"{num} {str3}"

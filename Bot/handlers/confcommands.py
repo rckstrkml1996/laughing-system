@@ -1,10 +1,8 @@
 import random
 from asyncio.exceptions import TimeoutError
-from datetime import datetime
-from datetime import timedelta
-from utils.executional import datetime_local_now
+from datetime import datetime, timedelta
 
-
+from peewee import fn, JOIN, SQL
 from aiogram import types
 from aiogram.utils.emoji import emojize
 
@@ -58,8 +56,8 @@ async def me_command(message: types.Message):
                 len_profits=len_profits,
                 sum_profits=sum_profits,
                 middle_profits=middle_profits,
-                in_team=f"{in_team.days} {get_correct_str(in_team.days, 'день', 'дня', 'дней')}",
-                warns=f"{worker.warns} {get_correct_str(worker.warns, 'варн', 'варна', 'варнов')}"
+                in_team=f"{get_correct_str(in_team.days, 'день', 'дня', 'дней')}",
+                warns=f"{get_correct_str(worker.warns, 'варн', 'варна', 'варнов')}"
             )
         )
     except Worker.DoesNotExist:
@@ -87,7 +85,7 @@ async def lzt_command(message: types.Message):
             user_title=user["user_title"],
             reg_date=reg_date,
             last_seen_date=last_seen_date,
-            message_count=f"{messages_count} {get_correct_str(messages_count, 'сообщение', 'сообщения', 'сообщений')}",
+            message_count=f"{get_correct_str(messages_count, 'сообщение', 'сообщения', 'сообщений')}",
             like_count=user["user_like_count"],
         ))
     except TimeoutError:
@@ -112,47 +110,133 @@ async def cock_size_command(message: types.Message):
         pass
 
 
+def get_place(i):
+    return emojize(":1st_place_medal:" if i == 1 else ":2nd_place_medal:" if i == 2 else ":3rd_place_medal:" if i == 3 else f" {i}")
+
+
 @dp.message_handler(commands="top", workers_type=True)
 async def team_top(message: types.Message):
-    top_text = emojize(":woman_raising_hand: Топ воркеров за всё время:\n")
-    total_profit = 0
-    index = 1
-    for worker in Worker.select().order_by(Worker.ref_balance.desc()).limit(10):
-        total_profit += worker.ref_balance
-        profits_count = len(worker.profits)
-        print(worker.profits)
-        place = ":1st_place_medal:" if index == 1 else ":2nd_place_medal:" if index == 2 else ":3rd_place_medal:" if index == 3 else f"{index}"
-        top_text += emojize(f"\n{place} @{worker.username} - <b>{round(worker.ref_balance)}</b> RUB - {profits_count} {get_correct_str(profits_count, 'профит', 'профита', 'профитов')}")
-        index += 1
-    top_text += emojize(f"\n\n:money_with_wings: Общий профит - <b>{round(total_profit)}</b> RUB")
-    await message.reply(top_text)
+    query = (
+        Worker
+        .select(
+            Worker,
+            fn.SUM(Profit.amount).alias("profits_sum"),
+            fn.COUNT(Profit.id).alias("profits_count")
+        )
+        .join(Profit, JOIN.LEFT_OUTER)
+        .group_by(Worker.id)
+        .order_by(SQL("profits_sum").desc())
+        .limit(15)
+    )
+    all_profits = Profit.select(
+        fn.SUM(Profit.amount).alias("all_profits")
+    ).execute()[0].all_profits or 0
 
-@dp.message_handler(commands="topd", workers_type=True)
-async def team_top_day(message: types.Message):
-    top_text = emojize(":woman_raising_hand: Топ воркеров за сегодня:\n")
-    total_profit = 0
-    index = 1
-    for profit in Profit.select().where(Profit.created >= datetime_local_now().replace(tzinfo=None) - timedelta(days=1)):
-        worker = profit.owner
-        total_profit += worker.ref_balance
-        profits_count = len(worker.profits)
-        place = ":1st_place_medal:" if index == 1 else ":2nd_place_medal:" if index == 2 else ":3rd_place_medal:" if index == 3 else f"{index}"
-        top_text += emojize(f"\n{place} @{worker.username} - <b>{round(worker.ref_balance)}</b> RUB - {profits_count} {get_correct_str(profits_count, 'профит', 'профита', 'профитов')}")
-        index += 1
-    top_text += emojize(f"\n\n:money_with_wings: Общий профит - <b>{round(total_profit)}</b> RUB")
-    await message.reply(top_text)
+    profit_text_list = []
+
+    for i, worker in enumerate(query):
+        if worker.profits_count:
+            username = f"@{worker.username}" if worker.username else "Без юзернейма"
+            count_text = get_correct_str(
+                worker.profits_count, 'профит', 'профита', 'профитов'
+            )
+            profit_text_list.append(
+                f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
+            )
+
+    await message.reply(payload.top_text.format(
+        period='всё время',
+        profits='\n'.join(profit_text_list),
+        all_profits=all_profits,
+    ))
+
 
 @dp.message_handler(commands="topm", workers_type=True)
 async def team_top_day(message: types.Message):
-    top_text = emojize(":woman_raising_hand: Топ воркеров за месяц:\n")
-    total_profit = 0
-    index = 1
-    for profit in Profit.select().where(Profit.created >= datetime_local_now().replace(tzinfo=None) - timedelta(days=30)):
-        worker = profit.owner
-        total_profit += worker.ref_balance
-        profits_count = len(worker.profits)
-        place = ":1st_place_medal:" if index == 1 else ":2nd_place_medal:" if index == 2 else ":3rd_place_medal:" if index == 3 else f"{index}"
-        top_text += emojize(f"\n{place} @{worker.username} - <b>{round(worker.ref_balance)}</b> RUB - {profits_count} {get_correct_str(profits_count, 'профит', 'профита', 'профитов')}")
-        index += 1
-    top_text += emojize(f"\n\n:money_with_wings: Общий профит - <b>{round(total_profit)}</b> RUB")
-    await message.reply(top_text)
+    delta = datetime_local_now().replace(tzinfo=None) - timedelta(days=30)
+    query = (
+        Worker
+        .select(
+            Worker,
+            fn.SUM(Profit.amount).alias("profits_sum"),
+            fn.COUNT(Profit.id).alias("profits_count")
+        )
+        .join(Profit, JOIN.LEFT_OUTER)
+        .where(Profit.created >= delta)
+        .group_by(Worker.id)
+        .order_by(SQL("profits_sum").desc())
+        .limit(15)
+    )
+    all_profits = (
+        Profit
+        .select(fn.SUM(Profit.amount).alias("all_profits"))
+        .where(Profit.created >= delta)
+    ).execute()[0].all_profits or 0
+
+    profit_text_list = []
+
+    for i, worker in enumerate(query):
+        if worker.profits_count:
+            username = f"@{worker.username}" if worker.username else "Без юзернейма"
+            count_text = get_correct_str(
+                worker.profits_count, 'профит', 'профита', 'профитов'
+            )
+            profit_text_list.append(
+                f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
+            )
+
+    await message.reply(payload.top_text.format(
+        period='месяц',
+        profits='\n'.join(profit_text_list),
+        all_profits=all_profits,
+    ))
+
+
+@dp.message_handler(commands="topd", workers_type=True)
+async def team_top_day(message: types.Message):
+    date = datetime_local_now().replace(tzinfo=None)
+    query = (
+        Worker
+        .select(
+            Worker,
+            fn.SUM(Profit.amount).alias("profits_sum"),
+            fn.COUNT(Profit.id).alias("profits_count")
+        )
+        .join(Profit, JOIN.LEFT_OUTER)
+        .where(
+            Profit.created.day == date.day,
+            Profit.created.month == date.month,
+            Profit.created.year == date.year
+        )
+        .group_by(Worker.id)
+        .order_by(SQL("profits_sum").desc())
+        .limit(15)
+    )
+
+    all_profits = (
+        Profit
+        .select(fn.SUM(Profit.amount).alias("all_profits"))
+        .where(
+            Profit.created.day == date.day,
+            Profit.created.month == date.month,
+            Profit.created.year == date.year,
+        )
+    ).execute()[0].all_profits or 0
+
+    profit_text_list = []
+
+    for i, worker in enumerate(query):
+        if worker.profits_count:
+            username = f"@{worker.username}" if worker.username else "Без юзернейма"
+            count_text = get_correct_str(
+                worker.profits_count, 'профит', 'профита', 'профитов'
+            )
+            profit_text_list.append(
+                f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
+            )
+
+    await message.reply(payload.top_text.format(
+        period='день',
+        profits='\n'.join(profit_text_list),
+        all_profits=all_profits,
+    ))

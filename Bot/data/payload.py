@@ -288,6 +288,12 @@ lolz_down_text = "Задержка запроса, скорей всего LOLZ 
 
 cck_size_text = "Мой размер чилена - {size}см {smile}"
 
+top_text = emojize(
+    ":woman_raising_hand: Топ воркеров за {period}:\n\n"
+    "{profits}\n\n"
+    ":money_with_wings: Общий профит - <b>{all_profits}</b> RUB"
+)
+
 # admins commands
 
 adm_work_command = emojize(
