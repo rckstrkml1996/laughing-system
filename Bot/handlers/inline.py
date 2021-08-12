@@ -4,27 +4,17 @@ from peewee import fn
 from aiogram.types import InlineQuery
 
 from loader import dp
+from config import config, StatusNames
 from models import Worker, Profit
+from models.functional import get_profits_sum
 from data import payload
 from data.inlineresults import tagbot_article, services_status_article, about_worker_article
 from utils.executional import get_work_status, get_correct_str, get_info_about_worker
-from config import config, StatusNames
-
-
-def get_profits_sum(worker_id):
-    return (
-        Profit
-        .select(
-            fn.SUM(Profit.amount).alias("all_profits")
-        )
-        .where(Profit.owner_id == worker_id)
-    ).execute()[0].all_profits or 0
 
 
 @dp.inline_handler()
 async def inline_echo(inline_query: InlineQuery):
     if inline_query.query:
-        # expression = fn.Lower(inline_query.query.lower() in Worker.username)
         finded = Worker.select().where(
             fn.Lower(Worker.username.contains(
                 inline_query.query)
@@ -40,7 +30,7 @@ async def inline_echo(inline_query: InlineQuery):
                     status=StatusNames[worker.status],
                     profits=get_correct_str(
                         len(worker.profits), "профит", "профита", "профитов"),
-                    profits_sum=int(get_profits_sum(worker.id)),
+                    profits_sum=get_profits_sum(worker.id),
                 ),
                 text=get_info_about_worker(worker)
             ) for worker in finded

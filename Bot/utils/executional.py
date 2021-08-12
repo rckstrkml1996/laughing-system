@@ -1,22 +1,16 @@
 import random
-from datetime import datetime
 
 import aiohttp
-import pytz
 from aiogram.utils.emoji import emojize
 
+from config import config
+from models.functional import get_profits_sum
 from data.payload import services_status, me_text
-from config import config, TIME_ZONE
+from utils.datefunc import datetime_local_now
 
-local_tz = pytz.timezone(TIME_ZONE)
 
 num2emojis = [':zero:', ':one:', ':two:', ':three:', ':four:', ':five:',
               ':six:', ':seven:', ':eight:', ':nine:', ':keycap_ten:']
-
-
-def datetime_local_now():
-    local_dt = datetime.utcnow().replace(tzinfo=pytz.utc).astimezone(local_tz)
-    return local_tz.normalize(local_dt)  # return datetime instance
 
 
 def num2emoji(number):
@@ -101,9 +95,10 @@ def get_info_about_worker(worker):
     in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
 
     len_profits = len(worker.profits)
-    sum_profits = sum(map(lambda prft: prft.amount, worker.profits))
+    sum_profits = get_profits_sum(worker.id)
+
     try:
-        middle_profits = sum_profits / len_profits
+        middle_profits = int(sum_profits / len_profits)
     except ZeroDivisionError:
         middle_profits = 0
 
@@ -113,6 +108,6 @@ def get_info_about_worker(worker):
         len_profits=len_profits,
         sum_profits=sum_profits,
         middle_profits=middle_profits,
-        in_team=f"{in_team.days} {get_correct_str(in_team.days, 'день', 'дня', 'дней')}",
-        warns=f"{worker.warns} {get_correct_str(worker.warns, 'варн', 'варна', 'варнов')}"
+        in_team=f"{get_correct_str(in_team.days, 'день', 'дня', 'дней')}",
+        warns=f"{get_correct_str(worker.warns, 'варн', 'варна', 'варнов')}"
     )

@@ -259,13 +259,13 @@ btc_text = emojize(
 
 
 help_text = emojize(
-    ":woman_tipping_hand: <b>Команды</b> конфы"
-    "/clc <code>[выражение]</code> - Посчитать на калькуляторе"
-    "/lzt <code>[ник на LZT]<code/> - Найти профить лолза"
-    "/hash <code>[хэш]<code/> - Инфо о BTC хэше"
-    "/btc <code>[адрес]<code/> - Инфо о BTC адресе"
-    "/help - Показать список команд"
-    "/me - Показать инфо о себе"
+    ":woman_tipping_hand: <b>Команды</b> конфы\n"
+    "/clc <code>[выражение]</code> - Посчитать на калькуляторе\n"
+    "/lzt <code>[ник на LZT]</code> - Найти профить лолза\n"
+    "/hash <code>[хэш]</code> - Инфо о BTC хэше\n"
+    "/btc <code>[адрес]</code> - Инфо о BTC адресе\n"
+    "/help - Показать список команд\n"
+    "/me - Показать инфо о себе\n"
     "/btc - Курс биткоина"
 )
 

@@ -9,12 +9,13 @@ from aiogram.utils.emoji import emojize
 from loader import dp
 from config import config
 from config import StatusNames, Rates, team_start
+from models import Worker, Profit
+from utils.datefunc import datetime_local_now
 from data import payload
 from data.states import Render, Panel
 from data.keyboards import *
 from utils.render import *
-from utils.executional import datetime_local_now, get_correct_str, get_work_status
-from models import Worker, Profit
+from utils.executional import get_correct_str, get_work_status
 
 
 @dp.callback_query_handler(text="menu", is_worker=True)
@@ -88,7 +89,7 @@ async def project_info(message: types.Message):
                 profits_sum=sum(map(lambda prft: prft.amount, profits)),
                 services_status=get_work_status()
             ),
-            reply_markup=menu_keyboard
+            reply_markup=about_project_keyboard
         )
     except Worker.DoesNotExist:
         pass

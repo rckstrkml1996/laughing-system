@@ -7,10 +7,11 @@ from aiogram import types
 from aiogram.utils.emoji import emojize
 
 from loader import dp, exp_parser
-from data import payload
 from models import Worker, Profit
+from utils.datefunc import datetime_local_now
+from data import payload
 from utils.executional import rub_usd_btcticker, get_correct_str, find_lolz_user, \
-    get_info_about_worker, datetime_local_now
+    get_info_about_worker
 
 
 @dp.message_handler(commands="help", workers_type=True)
@@ -42,9 +43,9 @@ async def me_command(message: types.Message):
     try:
         worker = Worker.get(cid=message.from_user.id)
         text = get_info_about_worker(worker)
-        await message.answer(text)
+        await message.reply(text)
     except Worker.DoesNotExist:
-        pass
+        await message.reply("Ты не Воркер!")
 
 
 @dp.message_handler(commands="lzt", workers_type=True)
