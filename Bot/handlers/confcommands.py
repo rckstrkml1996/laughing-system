@@ -8,8 +8,9 @@ from aiogram.utils.emoji import emojize
 
 from loader import dp, exp_parser
 from data import payload
-from models import Worker
-from utils.executional import rub_usd_btcticker, get_correct_str, find_lolz_user, get_info_about_worker
+from models import Worker, Profit
+from utils.executional import rub_usd_btcticker, get_correct_str, find_lolz_user, \
+    get_info_about_worker, datetime_local_now
 
 
 @dp.message_handler(commands="help", workers_type=True)
@@ -93,7 +94,9 @@ async def cock_size_command(message: types.Message):
 
 
 def get_place(i):
-    return emojize(":1st_place_medal:" if i == 1 else ":2nd_place_medal:" if i == 2 else ":3rd_place_medal:" if i == 3 else f" {i}")
+    return emojize(
+        ":1st_place_medal:" if i == 1 else ":2nd_place_medal:" if i == 2 else ":3rd_place_medal:" if i == 3 else f"  {i}" if i < 10 else f"{i}"
+    )
 
 
 @dp.message_handler(commands="top", workers_type=True)
@@ -110,15 +113,15 @@ async def team_top(message: types.Message):
         .order_by(SQL("profits_sum").desc())
         .limit(15)
     )
-    all_profits = Profit.select(
+    all_profits = int(Profit.select(
         fn.SUM(Profit.amount).alias("all_profits")
-    ).execute()[0].all_profits or 0
+    ).execute()[0].all_profits or 0)
 
     profit_text_list = []
 
     for i, worker in enumerate(query):
         if worker.profits_count:
-            username = f"@{worker.username}" if worker.username else "Без юзернейма"
+            username = "Скрыт" if worker.username_hide else f"@{worker.username}" if worker.username else "Без юзернейма"
             count_text = get_correct_str(
                 worker.profits_count, 'профит', 'профита', 'профитов'
             )
@@ -149,17 +152,17 @@ async def team_top_day(message: types.Message):
         .order_by(SQL("profits_sum").desc())
         .limit(15)
     )
-    all_profits = (
+    all_profits = int((
         Profit
         .select(fn.SUM(Profit.amount).alias("all_profits"))
         .where(Profit.created >= delta)
-    ).execute()[0].all_profits or 0
+    ).execute()[0].all_profits or 0)
 
     profit_text_list = []
 
     for i, worker in enumerate(query):
         if worker.profits_count:
-            username = f"@{worker.username}" if worker.username else "Без юзернейма"
+            username = "Скрыт" if worker.username_hide else f"@{worker.username}" if worker.username else "Без юзернейма"
             count_text = get_correct_str(
                 worker.profits_count, 'профит', 'профита', 'профитов'
             )
@@ -195,7 +198,7 @@ async def team_top_day(message: types.Message):
         .limit(15)
     )
 
-    all_profits = (
+    all_profits = int((
         Profit
         .select(fn.SUM(Profit.amount).alias("all_profits"))
         .where(
@@ -203,13 +206,13 @@ async def team_top_day(message: types.Message):
             Profit.created.month == date.month,
             Profit.created.year == date.year,
         )
-    ).execute()[0].all_profits or 0
+    ).execute()[0].all_profits or 0)
 
     profit_text_list = []
 
     for i, worker in enumerate(query):
         if worker.profits_count:
-            username = f"@{worker.username}" if worker.username else "Без юзернейма"
+            username = "Скрыт" if worker.username_hide else f"@{worker.username}" if worker.username else "Без юзернейма"
             count_text = get_correct_str(
                 worker.profits_count, 'профит', 'профита', 'профитов'
             )

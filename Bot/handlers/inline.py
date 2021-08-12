@@ -11,16 +11,26 @@ from utils.executional import get_work_status, get_correct_str, get_info_about_w
 from config import config, StatusNames
 
 
-def correct_profits(n):
-    return f'{n} {get_correct_str(n, "профит", "профита", "профитов")}'
+def get_profits_sum(worker_id):
+    return (
+        Profit
+        .select(
+            fn.SUM(Profit.amount).alias("all_profits")
+        )
+        .where(Profit.owner_id == worker_id)
+    ).execute()[0].all_profits or 0
 
 
 @dp.inline_handler()
 async def inline_echo(inline_query: InlineQuery):
     if inline_query.query:
         # expression = fn.Lower(inline_query.query.lower() in Worker.username)
-        finded = Worker.select().where(fn.Lower(Worker.username.contains(
-            inline_query.query)), Worker.username_hide == False)
+        finded = Worker.select().where(
+            fn.Lower(Worker.username.contains(
+                inline_query.query)
+            ),
+            Worker.username_hide == False
+        )
 
         results = [
             about_worker_article(
@@ -28,10 +38,9 @@ async def inline_echo(inline_query: InlineQuery):
                 title=worker.username,
                 description=payload.about_worker_text.format(
                     status=StatusNames[worker.status],
-                    profits=correct_profits(len(worker.profits)),
-                    profits_sum=sum(
-                        map(lambda prft: prft.amount, worker.profits)
-                    ),
+                    profits=get_correct_str(
+                        len(worker.profits), "профит", "профита", "профитов"),
+                    profits_sum=int(get_profits_sum(worker.id)),
                 ),
                 text=get_info_about_worker(worker)
             ) for worker in finded
