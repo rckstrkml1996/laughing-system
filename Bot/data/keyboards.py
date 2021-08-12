@@ -177,3 +177,22 @@ def admworkstatus_keyboard(work_status):
     markup.add(change_work_btn)
 
     return markup
+
+
+def about_project_keyboard():
+    keyboard = InlineKeyboardMarkup()
+    ref_btn = InlineKeyboardButton(
+        emojize(":handshake: Реф. система"), callback_data="refsystem")
+    rules_btn = InlineKeyboardButton(
+        emojize(":scroll: Правила"), callback_data="showrules")
+    out_btn = InlineKeyboardButton(
+        emojize(":money_with_wings: Выплаты"), url=outs_link)
+    info_btn = InlineKeyboardButton(
+        emojize(":wastebasket: Инфоканал"), url=reviews_link)
+    chat_btn = InlineKeyboardButton(
+        emojize(":dolphin: Чат воркеров"), url=workers_link)
+    keyboard.add(ref_btn, rules_btn)
+    keyboard.add(info_btn, out_btn)
+    keyboard.add(chat_btn)
+
+    return keyboard

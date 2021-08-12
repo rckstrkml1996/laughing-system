@@ -38,7 +38,7 @@ async def worker_menu(query: types.CallbackQuery):
                 ref_balance=worker.ref_balance,
                 middle_profits=all_balance / len_profits,
                 len_profits=len_profits,
-                in_team=f'{in_team.days} {get_correct_str(in_team.days, "день", "дня", "дней")}',
+                in_team=f'{get_correct_str(in_team.days, "день", "дня", "дней")}',
                 warns=worker.warns,
                 team_status=emojize(
                     ":full_moon: <b>Всё работает</b>, воркаем!")
@@ -64,7 +64,7 @@ async def worker_welcome(message: types.Message):
                 ref_balance=worker.ref_balance,
                 middle_profits=0,
                 len_profits=len(worker.profits),
-                in_team=f'{in_team.days} {get_correct_str(in_team.days, "день", "дня", "дней")}',
+                in_team=f'{get_correct_str(in_team.days, "день", "дня", "дней")}',
                 warns=0,
                 team_status=emojize(
                     ":full_moon: <b>Всё работает</b>, воркаем!")
@@ -110,7 +110,7 @@ async def toggle_username(query: types.CallbackQuery):
                 ref_balance=worker.ref_balance,
                 middle_profits=0,
                 len_profits=len(worker.profits),
-                in_team=f'{in_team.days} {get_correct_str(in_team.days, "день", "дня", "дней")}',
+                in_team=f'{get_correct_str(in_team.days, "день", "дня", "дней")}',
                 warns=0,
                 team_status=emojize(
                     ":full_moon: <b>Всё работает</b>, воркаем!")
@@ -120,3 +120,16 @@ async def toggle_username(query: types.CallbackQuery):
         await query.answer(f"Вы {status} никнейм")
     except Worker.DoesNotExist:
         pass
+
+
+@dp.callback_query_handler(text="showrules")
+async def show_rules(query: types.CallbackQuery):
+    await query.message.answer(
+        payload.rules_text(True))
+
+
+@dp.callback_query_handler(text="refsystem")
+async def ref_system(query: types.CallbackQuery):
+    await query.message.answer(
+        payload.referral_system_text.format(
+            user_id=query.message.chat.id))

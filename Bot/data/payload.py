@@ -162,6 +162,14 @@ about_project_text = emojize(
     "{services_status}"
 )
 
+referral_system_text = emojize(
+    ":woman_tipping_hand: <b>Реферальная</b> система\n\n"
+    "Приглашайте новых пользователей!\n\n"
+    "Чтобы пользователь стал вашим рефералом, при заполнении анкеты,\
+    он должен указать в пункте <b>«Кто вас пригласил?»</b> ваш Telegram ID - <b>{user_id}</b> \n\n"
+    "В случае принятия данного пользователя в команду, он становится вашим рефералом."
+)
+
 """
 
 render
@@ -301,6 +309,12 @@ def pin_text():
     fl.close()
     return pin
 
+
+top_text = emojize(
+    ":woman_raising_hand: Топ воркеров за {period}:\n\n"
+    "{profits}\n\n"
+    ":money_with_wings: Общий профит - <b>{all_profits}</b> RUB"
+)
 
 # admins commands
 
