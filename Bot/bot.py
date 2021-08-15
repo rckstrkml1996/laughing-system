@@ -4,8 +4,7 @@ from aiogram import Dispatcher
 from uvicorn import Config, Server
 from loguru import logger
 
-from loader import bot, dp, app
-from utils.pinner import dynapins
+from loader import dp, app
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 from utils.filters import IsWorkerFilter, SendSummaryFilter, AdminsChatFilter, WorkersChatFilter

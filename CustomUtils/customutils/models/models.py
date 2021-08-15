@@ -3,8 +3,8 @@ import random
 
 import peewee
 
-from config import config  # BASE_NAME, BASE_USER, BASE_PASSWORD
-from utils.datefunc import datetime_local_now
+from Bot.config import config  # BASE_NAME, BASE_USER, BASE_PASSWORD
+from Bot.utils.datefunc import datetime_local_now
 
 base = peewee.MySQLDatabase(
     config("base_name"),

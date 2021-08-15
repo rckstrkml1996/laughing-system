@@ -211,15 +211,34 @@ new_pin_keyboard.add(oldpin_btn)
 casino_keyboard = InlineKeyboardMarkup()
 
 my_mamoths_btn = InlineKeyboardButton(
-    emojize("Мои мамонтята :elephant:"), callback_data="none")
+    emojize(":elephant: Мои мамонтята :elephant:"), callback_data="none")
 promos_btn = InlineKeyboardButton(
-    emojize("Мои промокоды :receipt:"), callback_data="none")
+    emojize(":receipt: Мои промокоды :receipt:"), callback_data="none")
 msgspam_btn = InlineKeyboardButton(
-    emojize("Массовая рассылка :envelope:"), callback_data="none")
+    emojize(":diamond_shape_with_a_dot_inside: Массовая рассылка :diamond_shape_with_a_dot_inside:"), callback_data="none")
 deleteall_btn = InlineKeyboardButton(
-    emojize("Удалить всех :warning:"), callback_data="none")
+    emojize(":warning: Удалить всех :warning:"), callback_data="none")
 
 casino_keyboard.add(my_mamoths_btn)
 casino_keyboard.add(promos_btn)
 casino_keyboard.add(msgspam_btn)
 casino_keyboard.add(deleteall_btn)
+
+
+escort_keyboard = InlineKeyboardMarkup()
+create_form = InlineKeyboardButton(
+    emojize(":envelope: Создать анкету :envelope:"), callback_data="none")
+    
+escort_keyboard.add(my_mamoths_btn)
+escort_keyboard.add(create_form)
+escort_keyboard.add(msgspam_btn)
+escort_keyboard.add(deleteall_btn)
+
+trading_keyboard = InlineKeyboardMarkup()
+my_phrases = InlineKeyboardButton(
+    emojize(":open_book: Свои фразы при выводе :open_book:"), callback_data="none")
+    
+trading_keyboard.add(my_mamoths_btn)
+trading_keyboard.add(my_phrases)
+trading_keyboard.add(msgspam_btn)
+trading_keyboard.add(deleteall_btn)

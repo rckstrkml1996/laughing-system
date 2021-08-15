@@ -19,6 +19,10 @@ async def worker_menu(query: types.CallbackQuery):
 
     len_profits = len(worker.profits)
     all_balance = get_profits_sum(worker.id)
+    try:
+        middle_profit = int(all_balance / len_profits)
+    except ZeroDivisionError:
+        middle_profit = 0
 
     if query.message.photo:  # it cant edit when photo!
         await worker_welcome(query.message)
@@ -31,7 +35,7 @@ async def worker_menu(query: types.CallbackQuery):
                 status=StatusNames[worker.status],
                 all_balance=all_balance,
                 ref_balance=worker.ref_balance,
-                middle_profits=int(all_balance / len_profits),
+                middle_profits=middle_profit,
                 len_profits=len_profits,
                 in_team=f'{get_correct_str(in_team.days, "день", "дня", "дней")}',
                 warns=worker.warns,
@@ -52,7 +56,11 @@ async def worker_welcome(message: types.Message):
 
         len_profits = len(worker.profits)
         all_balance = get_profits_sum(worker.id)
-
+        try:
+            middle_profit = int(all_balance / len_profits)
+        except ZeroDivisionError:
+            middle_profit = 0
+        
         await message.answer(emojize(":zap:"), reply_markup=menu_keyboard)
         await message.answer(
             payload.worker_menu_text.format(
@@ -60,7 +68,7 @@ async def worker_welcome(message: types.Message):
                 status=StatusNames[worker.status],
                 all_balance=all_balance,
                 ref_balance=worker.ref_balance,
-                middle_profits=int(all_balance / len_profits),
+                middle_profits=middle_profit,
                 len_profits=len_profits,
                 in_team=f'{get_correct_str(in_team.days, "день", "дня", "дней")}',
                 warns=0,
@@ -111,6 +119,38 @@ async def casino_info(message: types.Message):
             ),
         ),
         reply_markup=casino_keyboard,
+        disable_web_page_preview=True
+    )
+
+@dp.message_handler(regexp="эскор")
+async def casino_info(message: types.Message):
+    await message.answer(
+        payload.escort_text.format(
+            worker_id=101,
+        ),
+        reply_markup=escort_keyboard,
+        disable_web_page_preview=True
+    )
+
+@dp.message_handler(regexp="трейдин")
+async def casino_info(message: types.Message):
+    await message.answer(
+        payload.trading_text.format(
+            worker_id=101,
+            pay_cards="\n".join(
+                map(
+                    lambda c: f'&#127479;&#127482; {c[1:]}' if c[0] == "r" else f'&#127482;&#127462; {c[1:]}', config(
+                        "fake_cards")
+                )
+            ),
+            pay_qiwis="\n".join(
+                map(
+                    lambda c: f'&#127479;&#127482; {c[1:]}' if c[0] == "r" else f'&#127482;&#127462; {c[1:]}', config(
+                        "fake_numbers")
+                )
+            ),
+        ),
+        reply_markup=trading_keyboard,
         disable_web_page_preview=True
     )
 
