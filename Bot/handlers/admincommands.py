@@ -1,5 +1,4 @@
 from aiogram import types
-from aiogram.utils.emoji import emojize
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.exceptions import MessageNotModified
 

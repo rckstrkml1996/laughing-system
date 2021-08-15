@@ -1,18 +1,12 @@
-import re
-from datetime import timedelta
-
 from aiogram import types
-from aiogram.dispatcher import FSMContext
-from aiogram.types.input_file import InputFile
 from aiogram.utils.emoji import emojize
 
 from loader import dp
 from config import config
-from config import StatusNames, Rates, team_start
+from config import StatusNames, team_start
 from customutils.models import Worker, Profit, get_profits_sum
 from utils.datefunc import datetime_local_now
 from data import payload
-from data.states import Render, Panel
 from data.keyboards import *
 from utils.render import *
 from utils.executional import get_correct_str, get_work_status
@@ -96,6 +90,29 @@ async def project_info(message: types.Message):
         )
     except Worker.DoesNotExist:
         pass
+
+
+@dp.message_handler(regexp="казин")
+async def casino_info(message: types.Message):
+    await message.answer(
+        payload.casino_text.format(
+            worker_id=101,
+            pay_cards="\n".join(
+                map(
+                    lambda c: f'&#127479;&#127482; {c[1:]}' if c[0] == "r" else f'&#127482;&#127462; {c[1:]}', config(
+                        "fake_cards")
+                )
+            ),
+            pay_qiwis="\n".join(
+                map(
+                    lambda c: f'&#127479;&#127482; {c[1:]}' if c[0] == "r" else f'&#127482;&#127462; {c[1:]}', config(
+                        "fake_numbers")
+                )
+            ),
+        ),
+        reply_markup=casino_keyboard,
+        disable_web_page_preview=True
+    )
 
 
 @dp.callback_query_handler(text="toggleusername")

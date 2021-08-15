@@ -206,3 +206,20 @@ oldpin_btn = InlineKeyboardButton(
     emojize(":x: Не сохранять"), callback_data="unsavepin")
 new_pin_keyboard.add(newpin_btn)
 new_pin_keyboard.add(oldpin_btn)
+
+
+casino_keyboard = InlineKeyboardMarkup()
+
+my_mamoths_btn = InlineKeyboardButton(
+    emojize("Мои мамонтята :elephant:"), callback_data="none")
+promos_btn = InlineKeyboardButton(
+    emojize("Мои промокоды :receipt:"), callback_data="none")
+msgspam_btn = InlineKeyboardButton(
+    emojize("Массовая рассылка :envelope:"), callback_data="none")
+deleteall_btn = InlineKeyboardButton(
+    emojize("Удалить всех :warning:"), callback_data="none")
+
+casino_keyboard.add(my_mamoths_btn)
+casino_keyboard.add(promos_btn)
+casino_keyboard.add(msgspam_btn)
+casino_keyboard.add(deleteall_btn)

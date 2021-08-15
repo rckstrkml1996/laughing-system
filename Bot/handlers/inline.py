@@ -4,8 +4,8 @@ from peewee import fn
 from aiogram.types import InlineQuery
 
 from loader import dp
-from config import config, StatusNames
-from customutils.models import Worker, Profit, get_profits_sum
+from config import StatusNames
+from customutils.models import Worker, get_profits_sum
 from data import payload
 from data.inlineresults import tagbot_article, services_status_article, about_worker_article
 from utils.executional import get_work_status, get_correct_str, get_info_about_worker

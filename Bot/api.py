@@ -1,15 +1,10 @@
-import re
-from typing import Optional
-from hashlib import md5
-from typing import Optional
-
 from fastapi import Depends
-from fastapi import HTTPException, status
+# from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 # import jwt
 from qiwiapi.types import Payments
 
-from customutils.models import QiwiPayment
+# from customutils.models import QiwiPayment
 from loader import app
 
 
