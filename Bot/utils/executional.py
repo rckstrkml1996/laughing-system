@@ -69,9 +69,19 @@ def get_correct_str(num, str1, str2, str3):
 
 def new_pin_text(text: str):
     pin_path = config("pin_path")
-    fl = open(pin_path, "w")
+    fl = open(pin_path, "w", encoding="utf-8")
     fl.write(text)
     fl.close()
+
+
+def get_work_moon():
+    casino_work = config("casino_work")
+    escort_work = config("escort_work")
+    antikino_work = config("antikino_work")
+
+    all_work = casino_work and escort_work and antikino_work
+
+    return ":full_moon:" if all_work else ":new_moon:"
 
 
 def get_work_status():

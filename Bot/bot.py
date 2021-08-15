@@ -7,7 +7,8 @@ from aiogram.utils.exceptions import NetworkError
 from uvicorn import Config, Server
 from loguru import logger
 
-from loader import dp, app
+from loader import bot, dp, app
+from utils.pinner import dynapins
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 from utils.filters import IsWorkerFilter, SendSummaryFilter, AdminsChatFilter, WorkersChatFilter
@@ -18,7 +19,7 @@ async def on_startup(dispatcher: Dispatcher, notify=True):
     Настройка всех компонентов для работы бота,
     Запуск бота
     """
-    setup_logger(level="DEBUG")
+    setup_logger(level="INFO")
     logger.info("Setuping handlers...")
     import handlers
 
@@ -44,7 +45,8 @@ async def shutdown(dispatcher: Dispatcher):
     await dispatcher.storage.wait_closed()
     await dispatcher.bot.session.close()
 
-    started_bot.cancel()
+    for task in asyncio.all_tasks():
+        task.cancel()
     # await dispatcher.wait_closed()  #
 
 
@@ -60,11 +62,15 @@ async def start_bot(dispatcher: Dispatcher, notify=True):
         dispatcher.edited_message_handlers,
         dispatcher.callback_query_handlers,
     ]
-    
-    dispatcher.filters_factory.bind(IsWorkerFilter, event_handlers=event_handlers)
-    dispatcher.filters_factory.bind(SendSummaryFilter, event_handlers=event_handlers)
-    dispatcher.filters_factory.bind(AdminsChatFilter, event_handlers=event_handlers)
-    dispatcher.filters_factory.bind(WorkersChatFilter, event_handlers=event_handlers)
+
+    dispatcher.filters_factory.bind(
+        IsWorkerFilter, event_handlers=event_handlers)
+    dispatcher.filters_factory.bind(
+        SendSummaryFilter, event_handlers=event_handlers)
+    dispatcher.filters_factory.bind(
+        AdminsChatFilter, event_handlers=event_handlers)
+    dispatcher.filters_factory.bind(
+        WorkersChatFilter, event_handlers=event_handlers)
 
     await dispatcher.skip_updates()
     await on_startup(dispatcher, notify=notify)
@@ -82,13 +88,19 @@ def main():
     server = Server(config=config)
     loop = asyncio.get_event_loop()
 
-    global started_bot
+    loop.create_task(dynapins(bot))  # it runs in dispatcher)
+
     started_bot = loop.create_task(start_bot(dp, notify=True))
     started_api = loop.create_task(start_api(server))
 
-    # loop.run_until_complete(started_bot)
     try:
-        loop.run_until_complete(asyncio.gather(started_api, started_bot))
+        loop.run_until_complete(
+            asyncio.gather(
+                started_api, started_bot
+            )
+        )
+    except asyncio.exceptions.CancelledError:
+        pass
     except KeyboardInterrupt:
         print("GG Boy!")  # not used!
 

@@ -20,3 +20,8 @@ class Render(StatesGroup):
     qiwibalance = State()
     qiwitransfer = State()
     sbertransfer = State()
+
+
+class Pin(StatesGroup):
+    change = State()
+    new = State()

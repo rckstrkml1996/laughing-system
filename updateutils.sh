@@ -1,0 +1,3 @@
+cd ./CustomUtils
+python3 setup.py install --user
+cd ..

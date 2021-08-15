@@ -193,3 +193,16 @@ chat_btn = InlineKeyboardButton(
 about_project_keyboard.add(ref_btn, rules_btn)
 about_project_keyboard.add(info_btn, out_btn)
 about_project_keyboard.add(chat_btn)
+
+change_pin_keyboard = InlineKeyboardMarkup()
+changeit_btn = InlineKeyboardButton(
+    emojize(":pencil2: Изменить закреп"), callback_data="change_pin")
+change_pin_keyboard.add(changeit_btn)
+
+new_pin_keyboard = InlineKeyboardMarkup()
+newpin_btn = InlineKeyboardButton(
+    emojize(":white_check_mark: Сохранить изменения"), callback_data="savepin")
+oldpin_btn = InlineKeyboardButton(
+    emojize(":x: Не сохранять"), callback_data="unsavepin")
+new_pin_keyboard.add(newpin_btn)
+new_pin_keyboard.add(oldpin_btn)
