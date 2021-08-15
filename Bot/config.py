@@ -2,7 +2,7 @@ import configparser
 import os
 
 from loguru import logger
-from confparse import Config
+from customutils.confparse import Config
 
 
 path = '../config.cfg'
@@ -14,7 +14,7 @@ if token is None:
 
 standart_config = {
     "api_token": token,
-    "admins_id": "1644048831, 1404657362",
+    "admins_id": "1644048831,1404657362",
     "admins_chat": "-563820238",
     "workers_chat": "-577009620",
     "outs_chat": "0",
@@ -27,6 +27,8 @@ standart_config = {
     "adv_team_photo": "AgACAgIAAxkBAAIL-WENYLIp8iRCBBUqsWPZK3Vk7fPPAAKyuDEbA6toSNh2SVkwoqY0AQADAgADeQADIAQ",
     "pin_path": "pin.txt",
     "pin_update_time": "15",
+    "fake_cards": "u5375414101206471,r5469490010637672",
+    "fake_numbers": "u380972412167,r79916219242,r79916675522,r79621768186",
 }
 
 config = Config(section_name, path, standart_config)
