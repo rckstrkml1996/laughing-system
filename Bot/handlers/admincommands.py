@@ -129,3 +129,8 @@ async def unsave_pin(query: types.CallbackQuery, state: FSMContext):
 async def unsave_pin(message: types.Message, state: FSMContext):
     await message.answer("Закреп останется прежним.")
     await state.finish()
+
+
+@dp.message_handler(commands="qiwi", admins_type=True)
+async def qiwi_command(message: types.Message):
+    await message.answer(payload.qiwi_command_text)
