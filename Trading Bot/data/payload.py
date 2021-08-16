@@ -1,4 +1,5 @@
 from aiogram.utils.emoji import emojize
+from data.config import MIN_WITHDRAW, MIN_DEPOSIT
 
 
 startup_text = "* Бот запущен!"
@@ -37,4 +38,25 @@ my_profile_text = emojize(
 withdraw_text = emojize(
     ":money_bag: Введите сумму вывода\n"
     "У вас на балансе {balance}₽"
+)
+
+withdraw_error_text = emojize(
+    ":x: Сумма должна быть числом.\n\nВведите сумму пополнения:"
+)
+
+withdraw_min_text = emojize(
+    f":x: Минимальная сумма вывода - {MIN_WITHDRAW} рублей!"
+)
+
+withdraw_done_text = emojize(
+    ":white_check_mark: <b>Заявка на вывод успешно создана!</b>\n\nВывод будет произведен в течении 15 минут."
+)
+
+deposit_start_text = emojize(
+    f"Введите сумму депозита.\n\nМинимальная сумма: {MIN_DEPOSIT}"
+)
+
+deposit_minerror_text = emojize(
+    ":money_bag: Введите сумму пополнения.\n\n"
+    f"Минимальная сумма: {MIN_DEPOSIT}"
 )

@@ -5,13 +5,11 @@ from aiogram import Dispatcher
 from asyncio import sleep
 
 from data.payload import startup_text
-
-
-admins = ["1644048831,1404657362"]
+from data.config import ADMINS_ID
 
 async def on_startup_notify(dp: Dispatcher):
     logger.info("Admins notify...")
-    for admin_id in admins:
+    for admin_id in ADMINS_ID:
         try:
             await dp.bot.send_message(admin_id, startup_text, disable_notification=True)
             logger.debug(f"Message send to - [{admin_id}]")
