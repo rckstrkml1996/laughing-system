@@ -6,7 +6,7 @@ from loader import dp
 from data import payload
 from aiogram.dispatcher import FSMContext
 from data.keyboards import *
-from models.models import Worker
+from customutils.models import Worker
 from random import randint
 from data.states import Withdraw, Deposit
 from data.config import MIN_WITHDRAW, MIN_DEPOSIT
