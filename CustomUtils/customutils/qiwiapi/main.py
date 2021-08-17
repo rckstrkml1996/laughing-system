@@ -3,7 +3,7 @@ from time import time
 import aiohttp
 from pydantic.error_wrappers import ValidationError
 
-from .exceptions import InvalidToken
+from .exceptions import InvalidToken, InvalidAccount
 from .types import Accounts, Payments, PaymentInfo
 
 
@@ -41,6 +41,8 @@ class QiwiApi:
         response = await self.session.get(url)
         if response.status == 401:
             raise InvalidToken
+        elif response.status == 403:
+            raise InvalidAccount
         json = await response.json()
 
         return Accounts(**json).accounts
@@ -51,6 +53,8 @@ class QiwiApi:
         response = await self.session.get(url, params={"rows": rows})
         if response.status == 401:
             raise InvalidToken
+        elif response.status == 403:
+            raise InvalidAccount
         json = await response.json()
 
         return Payments(**json)
@@ -77,6 +81,8 @@ class QiwiApi:
         response = await self.session.post(url, json=params)
         if response.status == 401:
             raise InvalidToken
+        elif response.status == 403:
+            raise InvalidAccount
         json = await response.json()
 
         try:

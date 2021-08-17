@@ -13,19 +13,30 @@ class Config:  # section and path must not be different, standart setting not
         self.check_config_file()
         self.restrict_config()
 
-    def __call__(self, what):
+    def right_type(self, val: str, type_as=None):
+        if type_as is not None:
+            try:
+                return type_as(val)
+            except ValueError:
+                pass
+        elif val == "0" or val == "1":
+            return bool(val)
+        return int(val) if val.replace("-", "").isdigit() else val
+
+    def __call__(self, what, type_as=None):
         self.config.read(self.path)
 
         value = self.config.get(self.section, what)
         if "," in value:
-            return list(map(lambda i: int(i) if i.replace("-", "").isdigit() else i, value.split(",")))
-        try:
-            value = int(value)
-            if value == 1 or value == 0:
-                return bool(value)
-            return value
-        except ValueError:
-            return value
+            return list(map(lambda v: self.right_type(v, type_as=type_as), value.split(",")))
+        elif type_as is not None:
+            try:
+                return type_as(value)
+            except ValueError:
+                pass
+        elif value == "0" or value == "1":
+            return bool(value)
+        return int(value) if value.replace("-", "").isdigit() else value
 
     def check_config_file(self):
         if not os.path.exists(self.path):
@@ -55,14 +66,17 @@ class Config:  # section and path must not be different, standart setting not
     def edit_config(self, setting, value):
         self.config.read(self.path)
 
-        if isinstance(value, bool):
-            value = str(int(value))
-        elif isinstance(value, int):
-            value = str(int(value))
-        elif isinstance(value, list):
-            value = ",".join(map(lambda i: str(i), value))
+        if value is None:
+            self.config.remove_option(self.section, setting)
+        else:
+            if isinstance(value, bool):
+                value = str(int(value))
+            elif isinstance(value, int):
+                value = str(value)
+            elif isinstance(value, list):
+                value = ",".join(map(lambda i: str(i), value))
 
-        self.config.set(self.section, setting, value)
+            self.config.set(self.section, setting, value)
 
         with open(self.path, "w") as config_file:
             self.config.write(config_file)
