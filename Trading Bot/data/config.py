@@ -105,3 +105,12 @@ SKIP_UPDATES = True
 
 
 logger.debug("Setup succes!")
+
+currencies = {
+	"Bitcoin" : "btc",
+	"Qtum" : "qtm",
+	"Ethereum" : "eth",
+	"Tron" : "trx",
+	"Litecoin" : "ltc",
+	"Ripple" : "xrp"
+}

@@ -8,5 +8,5 @@ from data import payload
 async def welcome(message: types.Message):
     await message.answer(payload.welcome_text.format(
                                 username=message.chat.username), 
-                        reply_markup=rules_keyboard())
+                        reply_markup=rules_keyboard)
 

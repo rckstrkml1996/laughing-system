@@ -46,6 +46,22 @@ async def my_profile(message: types.Message):
     except Worker.DoesNotExist:
         pass
 
+@dp.message_handler(regexp="счёт")
+async def ecn_show(message: types.Message):
+    try:
+        await message.answer(payload.ecn_show_text, 
+                            reply_markup=actives_keyboard)
+    except Worker.DoesNotExist:
+        pass
+
+@dp.message_handler(regexp="настройк")
+async def settings_show(message: types.Message):
+    try:
+        await message.answer("Выберите меню", 
+                            reply_markup=settings_keyboard)
+    except Worker.DoesNotExist:
+        pass
+
 @dp.message_handler(state=Deposit.count)
 async def deposit_entered(message: types.Message, state: FSMContext):
     try:

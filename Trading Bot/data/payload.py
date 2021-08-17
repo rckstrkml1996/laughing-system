@@ -64,3 +64,5 @@ deposit_minerror_text = emojize(
     ":money_bag: Введите сумму пополнения.\n\n"
     f"Минимальная сумма: {MIN_DEPOSIT}₽"
 )
+
+ecn_show_text = "Выберите актив:"
