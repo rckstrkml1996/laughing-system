@@ -30,8 +30,8 @@ welcome_text = emojize(
 
 my_profile_text = emojize(
     ":chart_with_upwards_trend: ЛИЧНЫЙ КАБИНЕТ :mantelpiece_clock: \n\n"
-    ":dollar: Баланс: {balance} ₽\n"
-    ":id: Ваш пользовательский ID: {cid}\n"
+    ":dollar: Баланс: {balance}₽\n"
+    ":id: Ваш пользовательский ID: <code>{cid}</code>\n"
     ":small_red_triangle: Число сделок онлайн: {deals_count}"
 )
 
@@ -40,12 +40,16 @@ withdraw_text = emojize(
     "У вас на балансе {balance}₽"
 )
 
-withdraw_error_text = emojize(
-    ":x: Сумма должна быть числом.\n\nВведите сумму пополнения:"
+withdraw_overprice = emojize(
+    ":x: Недостаточно средств. Ваш баланс: {balance}₽"
+)
+
+int_error_text = emojize(
+    ":x: Сумма должна быть числом!:"
 )
 
 withdraw_min_text = emojize(
-    f":x: Минимальная сумма вывода - {MIN_WITHDRAW} рублей!"
+    f":x: Минимальная сумма вывода - {MIN_WITHDRAW}₽!"
 )
 
 withdraw_done_text = emojize(
@@ -53,10 +57,10 @@ withdraw_done_text = emojize(
 )
 
 deposit_start_text = emojize(
-    f"Введите сумму депозита.\n\nМинимальная сумма: {MIN_DEPOSIT}"
+    f"Введите сумму депозита.\n\nМинимальная сумма: {MIN_DEPOSIT}₽"
 )
 
 deposit_minerror_text = emojize(
     ":money_bag: Введите сумму пополнения.\n\n"
-    f"Минимальная сумма: {MIN_DEPOSIT}"
+    f"Минимальная сумма: {MIN_DEPOSIT}₽"
 )
