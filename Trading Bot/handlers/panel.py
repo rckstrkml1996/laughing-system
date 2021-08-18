@@ -1,6 +1,5 @@
 from aiogram import types
 import loguru
-from peewee import DoesNotExist
 
 from loader import dp
 from data import payload
@@ -46,6 +45,7 @@ async def my_profile(message: types.Message):
     except Worker.DoesNotExist:
         pass
 
+@dp.message_handler(regexp="счет")
 @dp.message_handler(regexp="счёт")
 async def ecn_show(message: types.Message):
     try:
@@ -103,6 +103,7 @@ async def requisites_entered(message: types.Message, state: FSMContext):
         worker = Worker(cid=message.chat.id)
         async with state.proxy() as data:
             worker.ref_balance -= int(data["count"])
+            worker.save()
         await message.reply(payload.withdraw_done_text)
     except Worker.DoesNotExist:
         pass
