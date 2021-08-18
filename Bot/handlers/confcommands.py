@@ -1,14 +1,13 @@
 import random
 from asyncio.exceptions import TimeoutError
-from datetime import datetime, timedelta
+from datetime import datetime
 
-from peewee import fn, JOIN, SQL
 from aiogram import types
 from aiogram.utils.emoji import emojize
 
-from loader import dp, exp_parser
+from loader import dp, exp_parser, db_commands
 from customutils.models import Worker, Profit
-from utils.datefunc import datetime_local_now
+from customutils.datefunc import datetime_local_now
 from data import payload
 from utils.executional import rub_usd_btcticker, get_correct_str, find_lolz_user, \
     get_info_about_worker
@@ -102,21 +101,8 @@ def get_place(i):
 
 @dp.message_handler(commands="top", workers_type=True)
 async def team_top(message: types.Message):
-    query = (
-        Worker
-        .select(
-            Worker,
-            fn.SUM(Profit.amount).alias("profits_sum"),
-            fn.COUNT(Profit.id).alias("profits_count")
-        )
-        .join(Profit, JOIN.LEFT_OUTER)
-        .group_by(Worker.id)
-        .order_by(SQL("profits_sum").desc())
-        .limit(15)
-    )
-    all_profits = int(Profit.select(
-        fn.SUM(Profit.amount).alias("all_profits")
-    ).execute()[0].all_profits or 0)
+    query = db_commands.get_topworkers_all()  # limit = 15
+    all_profits = db_commands.get_profits_all()
 
     profit_text_list = []
 
@@ -139,25 +125,8 @@ async def team_top(message: types.Message):
 
 @dp.message_handler(commands="topm", workers_type=True)
 async def team_top_day(message: types.Message):
-    delta = datetime_local_now().replace(tzinfo=None) - timedelta(days=30)
-    query = (
-        Worker
-        .select(
-            Worker,
-            fn.SUM(Profit.amount).alias("profits_sum"),
-            fn.COUNT(Profit.id).alias("profits_count")
-        )
-        .join(Profit, JOIN.LEFT_OUTER)
-        .where(Profit.created >= delta)
-        .group_by(Worker.id)
-        .order_by(SQL("profits_sum").desc())
-        .limit(15)
-    )
-    all_profits = int((
-        Profit
-        .select(fn.SUM(Profit.amount).alias("all_profits"))
-        .where(Profit.created >= delta)
-    ).execute()[0].all_profits or 0)
+    query = db_commands.get_topworkers_month()  # limit = 15 autodelta
+    all_profits = db_commands.get_profits_month()
 
     profit_text_list = []
 
@@ -180,34 +149,8 @@ async def team_top_day(message: types.Message):
 
 @dp.message_handler(commands="topd", workers_type=True)
 async def team_top_day(message: types.Message):
-    date = datetime_local_now().replace(tzinfo=None)
-    query = (
-        Worker
-        .select(
-            Worker,
-            fn.SUM(Profit.amount).alias("profits_sum"),
-            fn.COUNT(Profit.id).alias("profits_count")
-        )
-        .join(Profit, JOIN.LEFT_OUTER)
-        .where(
-            Profit.created.day == date.day,
-            Profit.created.month == date.month,
-            Profit.created.year == date.year
-        )
-        .group_by(Worker.id)
-        .order_by(SQL("profits_sum").desc())
-        .limit(15)
-    )
-
-    all_profits = int((
-        Profit
-        .select(fn.SUM(Profit.amount).alias("all_profits"))
-        .where(
-            Profit.created.day == date.day,
-            Profit.created.month == date.month,
-            Profit.created.year == date.year,
-        )
-    ).execute()[0].all_profits or 0)
+    query = db_commands.get_topworkers_day()  # limit = 15
+    all_profits = db_commands.get_profits_day()
 
     profit_text_list = []
 

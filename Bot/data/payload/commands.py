@@ -21,7 +21,7 @@ help_text = emojize(
 me_text = emojize(
     ":woman_tipping_hand: Воркер <a href='tg://user?id={cid}'>{username}</a>\n"
     "Telegram ID: {cid}\n\n"
-    "{len_profits} профитов на сумму {sum_profits} ₽\n"
+    "{profits} на сумму {sum_profits} ₽\n"
     "Средний профит ~ {middle_profits} ₽\n\n"
     "В команде {in_team}, {warns}"
 )
@@ -49,5 +49,43 @@ setwork_text = emojize(":white_check_mark: <b>Поставлен</b> ворк")
 setdontwork_text = emojize(":x: <b>Поставлен</b> неворк")
 
 qiwi_command_text = emojize(
-    "Команда киви епта"
+    "Информация по киви кошелькам.\n\n"
+    "Общий баланс: <b>{all_balance} RUB</b>"
+)
+
+no_qiwis_text = emojize(
+    "У вас нету привязанных кошельков!"
+)
+
+qiwi_error_text = emojize(
+    "Какая то ошибка в киви, попробуй еще раз или позови кодера) :warning:"
+)
+
+add_qiwis_text = emojize(
+    "Введите <b>Номер</b> и <b>Токен</b>, пример:\n"
+    "<code>79008882211</code>\n"
+    "<code>f420543a9430065db1264535ff4eb1ae</code>"
+)
+
+invalid_newqiwi_text = emojize(
+    "Допущена ошибка при вводе! :warning:\n"
+    "Введите <b>Номер</b> и <b>Токен</b>, пример:\n"
+    "<code>79008882211</code>\n"
+    "<code>f420543a9430065db1264535ff4eb1ae</code>"
+)
+
+qiwi_info_text = emojize(
+    "Кошелек: <b>+{number}</b> :kiwi_fruit:\n"
+    "Баланс: <b>{balance}</b>\n"
+    "Последние транзакции :point_down:\n"
+    "{last_actions}"
+)
+
+same_qiwi_text = emojize(
+    "Похоже вы пытаетесь добавить такой же киви кошелек)"
+)
+
+qiwi_delete = emojize(
+    "Удаляю кошелек {account}\n"
+    "Токен: {token}"
 )

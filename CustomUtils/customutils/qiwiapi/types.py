@@ -30,7 +30,7 @@ class Accounts(BaseModel):
 
 class TransactionSumData(BaseModel):
     amount: int
-    currency: str
+    currency: int
 
 
 class TransactionInfo(BaseModel):
@@ -49,7 +49,7 @@ class Transaction(BaseModel):
     date: datetime
     errorCode: int
     error: str = None
-    transactionType: str = Field(alias='type')  # in api 'type'
+    trnsType: str = Field(alias='type')  # in api 'type'
     status: str
     statusText: str
     trmTxnld: str = None

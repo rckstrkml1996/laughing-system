@@ -1,15 +1,18 @@
 import asyncio
+from configparser import NoOptionError
 
 from peewee import fn, SQL, JOIN
 from aiogram import Bot
 from aiogram.utils.emoji import emojize
-from aiogram.utils.exceptions import MessageNotModified, MessageToEditNotFound, MessageTextIsEmpty
+from aiogram.utils.exceptions import MessageNotModified, MessageToEditNotFound, \
+    MessageTextIsEmpty, MessageToPinNotFound
 
+from loader import db_commands
 from config import config
 from customutils.models import Worker, Profit
 from data.payload import pin_text
 from utils.executional import get_work_status, get_work_moon, rub_usd_btcticker
-from utils.datefunc import datetime_local_now
+from customutils.datefunc import datetime_local_now
 
 
 async def format_pin_text(text):
@@ -18,23 +21,7 @@ async def format_pin_text(text):
 
     rub, usd = await rub_usd_btcticker()
 
-    date = datetime_local_now().replace(tzinfo=None)
-    query = (
-        Worker
-        .select(
-            Worker,
-            fn.SUM(Profit.amount).alias("profits_sum"),
-        )
-        .join(Profit, JOIN.LEFT_OUTER)
-        .where(
-            Profit.created.day == date.day,
-            Profit.created.month == date.month,
-            Profit.created.year == date.year
-        )
-        .group_by(Worker.id)
-        .order_by(SQL("profits_sum").desc())
-        .limit(1)
-    )
+    query = db_commands.get_topworkers_day(limit=1)
     try:
         worker = query.execute()[0]
         topd_worker = f"<a href='tg://user?id={worker.cid}'>{worker.name}</a>"
@@ -65,8 +52,20 @@ async def dynapins(bot: Bot):
     update_time = config("pin_update_time")
     text = await format_pin_text(pin_text())
     if text:
-        message = await bot.send_message(workers_chat, text)
-        await bot.pin_chat_message(workers_chat, message.message_id, disable_notification=True)
+        try:
+            message_id = config("pinned_msg_id")
+        except NoOptionError:
+            message = await bot.send_message(workers_chat, text)
+            message_id = message.message_id
+            config.edit_config("pinned_msg_id", message_id)
+
+        try:
+            await bot.pin_chat_message(workers_chat, message_id, disable_notification=True)
+        except MessageToPinNotFound:
+            message = await bot.send_message(workers_chat, text)
+            message_id = message.message_id
+            config.edit_config("pinned_msg_id", message_id)
+            await bot.pin_chat_message(workers_chat, message_id, disable_notification=True)
 
     while True:
         await asyncio.sleep(update_time)
@@ -74,7 +73,7 @@ async def dynapins(bot: Bot):
             text = await format_pin_text(pin_text())
             await bot.edit_message_text(
                 chat_id=workers_chat,
-                message_id=message.message_id,
+                message_id=message_id,
                 text=text
             )
         except MessageNotModified:
@@ -84,4 +83,4 @@ async def dynapins(bot: Bot):
         except MessageToEditNotFound:
             text = await format_pin_text(pin_text())
             message = await bot.send_message(workers_chat, text)
-            await bot.pin_chat_message(workers_chat, message.message_id, disable_notification=True)
+            await bot.pin_chat_message(workers_chat, message_id, disable_notification=True)

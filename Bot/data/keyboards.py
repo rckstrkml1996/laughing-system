@@ -223,3 +223,29 @@ casino_keyboard.add(my_mamoths_btn)
 casino_keyboard.add(promos_btn)
 casino_keyboard.add(msgspam_btn)
 casino_keyboard.add(deleteall_btn)
+
+
+add_qiwi_keyboard = InlineKeyboardMarkup()
+add_qiwi_btn = InlineKeyboardButton(
+    emojize("Добавить киви :information_source:"), callback_data="add_qiwi")
+add_qiwi_keyboard.add(add_qiwi_btn)
+
+
+def qiwi_keyboard(accounts: list):
+    markup = InlineKeyboardMarkup()
+
+    for acc in accounts:
+        markup.add(InlineKeyboardButton(acc, callback_data=f"qiwi_{acc}"))
+
+    markup.add(add_qiwi_btn)
+
+    return markup
+
+
+cancel_keyboard = InlineKeyboardMarkup()
+cancel_btn = InlineKeyboardButton("Отмена нахуй", callback_data="cancel")
+cancel_keyboard.add(cancel_btn)
+
+backqiwi_keyboard = InlineKeyboardMarkup()
+back_btn = InlineKeyboardButton("Назад", callback_data="backqiwi")
+backqiwi_keyboard.add(back_btn)

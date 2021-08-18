@@ -7,6 +7,10 @@ from .exceptions import InvalidToken, InvalidAccount
 from .types import Accounts, Payments, PaymentInfo
 
 
+def get_currency(currency):
+    return "RUB" if currency == 643 else "USD" if currency == 840 else "EUR"
+
+
 class QiwiApi:
     """
     Манипуляции напрямую с Qiwi API

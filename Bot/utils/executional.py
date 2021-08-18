@@ -4,9 +4,9 @@ import aiohttp
 from aiogram.utils.emoji import emojize
 
 from config import config
-from customutils.models import get_profits_sum
+from loader import db_commands
 from data.payload import services_status, me_text
-from utils.datefunc import datetime_local_now
+from customutils.datefunc import datetime_local_now
 
 
 num2emojis = [':zero:', ':one:', ':two:', ':three:', ':four:', ':five:',
@@ -104,8 +104,8 @@ def get_work_status():
 def get_info_about_worker(worker):
     in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
 
-    len_profits = len(worker.profits)
-    sum_profits = get_profits_sum(worker.id)
+    len_profits = worker.profits.count()
+    sum_profits = db_commands.get_profits_sum(worker.id)
 
     try:
         middle_profits = int(sum_profits / len_profits)
@@ -115,9 +115,9 @@ def get_info_about_worker(worker):
     return me_text.format(
         cid=worker.cid,
         username=worker.username,
-        len_profits=len_profits,
+        profits=get_correct_str(len_profits, "профит", "профита", "профитов"),
         sum_profits=sum_profits,
         middle_profits=middle_profits,
-        in_team=f"{get_correct_str(in_team.days, 'день', 'дня', 'дней')}",
-        warns=f"{get_correct_str(worker.warns, 'варн', 'варна', 'варнов')}"
+        in_team=get_correct_str(in_team.days, 'день', 'дня', 'дней'),
+        warns=get_correct_str(worker.warns, 'варн', 'варна', 'варнов')
     )

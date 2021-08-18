@@ -25,3 +25,7 @@ class Render(StatesGroup):
 class Pin(StatesGroup):
     change = State()
     new = State()
+
+
+class Qiwi(StatesGroup):
+    new = State()

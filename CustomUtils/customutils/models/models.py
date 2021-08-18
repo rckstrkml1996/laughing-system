@@ -49,11 +49,6 @@ class Worker(BaseModel):
     warns = peewee.IntegerField(default=0)
 
 
-class CasinoUser(BaseModel):
-    owner = peewee.ForeignKeyField(Worker, related_name='casusers', null=True)
-    cid = peewee.IntegerField(unique=True)
-
-
 class Profit(BaseModel):
     owner = peewee.ForeignKeyField(Worker, related_name='profits')
     amount = peewee.FloatField()
@@ -75,5 +70,37 @@ class QiwiPayment(BaseModel):
     )
 
 
+class CasinoUser(BaseModel):
+    cid = peewee.IntegerField(unique=True)
+    balance = peewee.IntegerField(default=0)
+    refer = peewee.IntegerField(default=0)
+    ref_balance = peewee.IntegerField(default=0)
+    fort_chance = peewee.IntegerField(default=50)  # val from 0 to 100
+    # premium = peewee.BooleanField(default=True)  # if not add and changed bal
+    username = peewee.CharField(default="Юзернейм скрыт")
+    bonus = peewee.IntegerField(default=0)
+    fuckedup = peewee.BooleanField(default=False)
+    fullname = peewee.CharField(default="Без имени")
+
+    def __str__(self):
+        return f'#{self.id} {self.cid}'
+
+
+# class CasinoPayment(BaseModel):
+#     cid = peewee.IntegerField()
+#     comment = peewee.CharField()
+#     amount = peewee.IntegerField()
+#     done = peewee.BooleanField(default=False)
+
+
+class CasinoUserHistory(BaseModel):
+    cid = peewee.IntegerField()
+    amount = peewee.IntegerField()
+    editor = peewee.IntegerField(default=0)
+    balance = peewee.IntegerField()
+    created = peewee.CharField(default=datetime_local_now)
+
+
 base.connect()
-base.create_tables([Worker, CasinoUser, Profit, QiwiPayment])
+base.create_tables(
+    [Worker, Profit, QiwiPayment, CasinoUser, CasinoUserHistory])
