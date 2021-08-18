@@ -8,7 +8,7 @@ from data.keyboards import *
 from customutils.models import Worker
 from random import randint
 from data.states import Withdraw, Deposit
-from data.config import MIN_WITHDRAW, MIN_DEPOSIT
+from data.config import config
 
 
 @dp.message_handler(regexp="профил")
@@ -67,7 +67,7 @@ async def deposit_entered(message: types.Message, state: FSMContext):
     try:
         worker = Worker.get(cid=message.chat.id)
         try:
-            if int(message.text) < MIN_DEPOSIT:  # NOT REF BALANCE BUT BALANCE.
+            if int(message.text) < config("min_deposit"):  # NOT REF BALANCE BUT BALANCE.
                 await message.answer(payload.deposit_minerror_text)
             else:
                 loguru.logger.info("PAYMENT PROCESSING")
@@ -82,7 +82,7 @@ async def withdraw_entered(message: types.Message, state: FSMContext):
     try:
         worker = Worker.get(cid=message.chat.id)
         try:
-            if int(message.text) < MIN_WITHDRAW:  # NOT REF BALANCE BUT BALANCE.
+            if int(message.text) < config("min_withdraw"):  # NOT REF BALANCE BUT BALANCE.
                 await message.answer(payload.withdraw_min_text)
             elif int(message.text) > worker.ref_balance:
                 await message.reply(payload.withdraw_overprice.format(

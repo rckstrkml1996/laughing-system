@@ -1,5 +1,5 @@
 from aiogram.utils.emoji import emojize
-from data.config import MIN_WITHDRAW, MIN_DEPOSIT
+from data.config import config
 
 
 startup_text = "* Бот запущен!"
@@ -49,7 +49,7 @@ int_error_text = emojize(
 )
 
 withdraw_min_text = emojize(
-    f":x: Минимальная сумма вывода - {MIN_WITHDRAW} RUB!"
+    f":x: Минимальная сумма вывода - {config('min_deposit')} RUB!"
 )
 
 withdraw_done_text = emojize(
@@ -57,12 +57,12 @@ withdraw_done_text = emojize(
 )
 
 deposit_start_text = emojize(
-    f"Введите сумму депозита.\n\nМинимальная сумма: {MIN_DEPOSIT} RUB"
+    f"Введите сумму депозита.\n\nМинимальная сумма: {config('min_deposit')} RUB"
 )
 
 deposit_minerror_text = emojize(
     ":money_bag: Введите сумму пополнения.\n\n"
-    f"Минимальная сумма: {MIN_DEPOSIT} RUB"
+    f"Минимальная сумма: {config('min_deposit')} RUB"
 )
 
 ecn_show_text = "Выберите актив:"
