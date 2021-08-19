@@ -6,8 +6,8 @@ from data.config import currencies
 
 rules_keyboard = InlineKeyboardMarkup()
 agree_btn = InlineKeyboardButton(emojize(":white_check_mark: Я принимаю правила"),
-                                    callback_data="rules_agreed")
-
+                                 callback_data="rules_agreed")
+rules_keyboard.add(agree_btn)
 main_keyboard = ReplyKeyboardMarkup()
 my_ecn_btn = KeyboardButton(emojize(":chart_with_upwards_trend: Мой ECN счёт"))
 profile_btn = KeyboardButton(emojize(":briefcase: Профиль"))
@@ -28,6 +28,6 @@ currency_btn = InlineKeyboardButton(emojize(":moneybag: Валюта"),
 language_btn = InlineKeyboardButton(emojize("🇷🇺 Язык 🇺🇸"),
                                     callback_data="language")
 support_btn = InlineKeyboardButton(emojize(":hammer_and_wrench: Тех. поддержка :hammer_and_wrench:"),
-                                    callback_data="support")
+                                   callback_data="support")
 settings_keyboard.add(currency_btn, language_btn)
 settings_keyboard.add(support_btn)

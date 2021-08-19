@@ -16,10 +16,10 @@ async def my_profile(message: types.Message):
     try:
         worker = Worker.get(cid=message.chat.id)
         await message.answer(payload.my_profile_text.format(
-                balance=worker.ref_balance, # NOT REF BALANCE
-                cid=worker.cid,
-                deals_count=randint(700, 3000)
-            )
+            balance=worker.ref_balance,  # NOT REF BALANCE
+            cid=worker.cid,
+            deals_count=randint(700, 3000)
+        )
         )
     except Worker.DoesNotExist:
         pass
@@ -30,12 +30,13 @@ async def my_profile(message: types.Message):
     try:
         worker = Worker.get(cid=message.chat.id)
         await message.answer(payload.withdraw_text.format(
-                balance=worker.ref_balance # NOT REF BALANCE
-            )
+            balance=worker.ref_balance  # NOT REF BALANCE
+        )
         )
         await Withdraw.count.set()
     except Worker.DoesNotExist:
         pass
+
 
 @dp.message_handler(regexp="пополн")
 async def my_profile(message: types.Message):
@@ -45,29 +46,32 @@ async def my_profile(message: types.Message):
     except Worker.DoesNotExist:
         pass
 
-@dp.message_handler(regexp="счет")
-@dp.message_handler(regexp="счёт")
+
+@dp.message_handler(regexp="счет|счёт")
 async def ecn_show(message: types.Message):
     try:
-        await message.answer(payload.ecn_show_text, 
-                            reply_markup=actives_keyboard)
+        await message.answer(payload.ecn_show_text,
+                             reply_markup=actives_keyboard)
     except Worker.DoesNotExist:
         pass
+
 
 @dp.message_handler(regexp="настройк")
 async def settings_show(message: types.Message):
     try:
-        await message.answer("Выберите меню", 
-                            reply_markup=settings_keyboard)
+        await message.answer("Выберите меню",
+                             reply_markup=settings_keyboard)
     except Worker.DoesNotExist:
         pass
+
 
 @dp.message_handler(state=Deposit.count)
 async def deposit_entered(message: types.Message, state: FSMContext):
     try:
         worker = Worker.get(cid=message.chat.id)
         try:
-            if int(message.text) < config("min_deposit"):  # NOT REF BALANCE BUT BALANCE.
+            # NOT REF BALANCE BUT BALANCE.
+            if int(message.text) < config("min_deposit"):
                 await message.answer(payload.deposit_minerror_text)
             else:
                 loguru.logger.info("PAYMENT PROCESSING")
@@ -77,12 +81,14 @@ async def deposit_entered(message: types.Message, state: FSMContext):
     except Worker.DoesNotExist:
         pass
 
+
 @dp.message_handler(state=Withdraw.count)
 async def withdraw_entered(message: types.Message, state: FSMContext):
     try:
         worker = Worker.get(cid=message.chat.id)
         try:
-            if int(message.text) < config("min_withdraw"):  # NOT REF BALANCE BUT BALANCE.
+            # NOT REF BALANCE BUT BALANCE.
+            if int(message.text) < config("min_withdraw"):
                 await message.answer(payload.withdraw_min_text)
             elif int(message.text) > worker.ref_balance:
                 await message.reply(payload.withdraw_overprice.format(
@@ -96,6 +102,7 @@ async def withdraw_entered(message: types.Message, state: FSMContext):
             await message.reply(payload.int_error_text)
     except Worker.DoesNotExist:
         pass
+
 
 @dp.message_handler(state=Withdraw.requisites)
 async def requisites_entered(message: types.Message, state: FSMContext):
