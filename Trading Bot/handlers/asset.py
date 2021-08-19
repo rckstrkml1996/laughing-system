@@ -1,7 +1,7 @@
 import asyncio
 from aiogram import types
 from customutils.models import Worker
-from data.config import config
+from data.config import config, photos
 from data.states import Asset
 import asyncio
 from data import payload
@@ -12,32 +12,38 @@ from aiogram.dispatcher import FSMContext
 
 @dp.callback_query_handler(text="btc")
 async def btc_choosed(query: types.CallbackQuery):
-    await query.message.answer(payload.bitcoin_info_text,
-                                reply_markup=investing_keyboard)
+    await query.message.answer_photo(photos["btc"], 
+                                    payload.bitcoin_info_text,
+                                    reply_markup=investing_keyboard)
 
 @dp.callback_query_handler(text="eth")
 async def btc_choosed(query: types.CallbackQuery):
-    await query.message.answer(payload.eth_info_text,
-                                reply_markup=investing_keyboard)
+    await query.message.answer_photo(photos["eth"],
+                                    payload.eth_info_text,
+                                    reply_markup=investing_keyboard)
 
 @dp.callback_query_handler(text="trx")
 async def btc_choosed(query: types.CallbackQuery):
-    await query.message.answer(payload.trx_info_text,
+    await query.message.answer_photo(photos["trx"],
+                                payload.trx_info_text,
                                 reply_markup=investing_keyboard)
 
 @dp.callback_query_handler(text="ltc")
 async def btc_choosed(query: types.CallbackQuery):
-    await query.message.answer(payload.ltc_info_text,
-                                reply_markup=investing_keyboard)
+    await query.message.answer_photo(photos["ltc"],
+                                    payload.ltc_info_text,
+                                    reply_markup=investing_keyboard)
 
 @dp.callback_query_handler(text="xrp")
 async def btc_choosed(query: types.CallbackQuery):
-    await query.message.answer(payload.xrp_info_text,
-                                reply_markup=investing_keyboard)
+    await query.message.answer_photo(photos["xrp"],
+                                    payload.xrp_info_text,
+                                    reply_markup=investing_keyboard)
 
 @dp.callback_query_handler(text="qtm")
 async def btc_choosed(query: types.CallbackQuery):
-    await query.message.answer(payload.qtum_info_text, 
+    await query.message.answer_photo(photos["qtm"],
+                                payload.qtum_info_text, 
                                 reply_markup=investing_keyboard)
 
 @dp.callback_query_handler(text="count")

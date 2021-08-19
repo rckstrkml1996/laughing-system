@@ -60,10 +60,20 @@ SKIP_UPDATES = True
 logger.debug("Setup succes!")
 
 currencies = {
-	"Bitcoin" : "btc",
-	"Qtum" : "qtm",
+	"Bitcoin"  : "btc",
+	"Qtum"     : "qtm",
 	"Ethereum" : "eth",
-	"Tron" : "trx",
+	"Tron"     : "trx",
 	"Litecoin" : "ltc",
-	"Ripple" : "xrp"
+	"Ripple"   : "xrp"
 }
+
+photos = {
+    "eth" : "AgACAgIAAxkBAAIER2Ee5pa3AAEl99zE1MpWE8ClvVIU_wACarUxG45a8EiYI8ytJ8__5wEAAwIAA3gAAyAE",
+    "btc" : "AgACAgIAAxkBAAIESWEe5siMGRlXCzWXHQOCKNIN5wnnAAJrtTEbjlrwSOWIXTIpKzIkAQADAgADeAADIAQ",
+    "ltc" : "AgACAgIAAxkBAAIES2Ee5tYEGsrGPuHP_zSFPreRbCgdAAJstTEbjlrwSFOEYGkLcVV_AQADAgADeQADIAQ",
+    "qtm" : "AgACAgIAAxkBAAIETWEe5u4hgnAcLUExP_yluQ00N1cVAAJttTEbjlrwSJMSyVIJiJtTAQADAgADeAADIAQ",
+    "trx" : "AgACAgIAAxkBAAIET2Ee5wdP_WZvPm54vuC30CBtlhq4AAJutTEbjlrwSHavzUQqEGafAQADAgADeAADIAQ",
+    "xrp" : "AgACAgIAAxkBAAIEUWEe5yHruN0VN2R8kxSeTvKPg1jKAAJvtTEbjlrwSC4OfuFLDNhUAQADAgADeQADIAQ"
+}
+
