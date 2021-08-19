@@ -45,8 +45,7 @@ async def my_profile(message: types.Message):
     except Worker.DoesNotExist:
         pass
 
-@dp.message_handler(regexp="счет")
-@dp.message_handler(regexp="счёт")
+@dp.message_handler(regexp="счет|счёт")
 async def ecn_show(message: types.Message):
     try:
         await message.answer(payload.ecn_show_text, 

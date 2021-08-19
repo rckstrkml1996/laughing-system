@@ -34,7 +34,8 @@ standart_config = {
     "base_user": "ur_base_user",
     "base_password": "ur_base_password",
     "min_deposit" : "300",
-    "min_withdraw" : "800"
+    "min_withdraw" : "800",
+    "bet_timer" : "5"
 }
 
 config = Config(section_name, path, standart_config)

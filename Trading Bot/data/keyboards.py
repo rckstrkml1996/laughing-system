@@ -1,5 +1,6 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils import emoji
 from aiogram.utils.emoji import emojize
 from data.config import currencies
 
@@ -31,3 +32,11 @@ support_btn = InlineKeyboardButton(emojize(":hammer_and_wrench: Тех. подд
                                     callback_data="support")
 settings_keyboard.add(currency_btn, language_btn)
 settings_keyboard.add(support_btn)
+
+investing_keyboard = InlineKeyboardMarkup()
+up_btn = InlineKeyboardButton(emojize(":chart_with_upwards_trend: Повышение (X2)"),
+                            callback_data="count")
+down_btn = InlineKeyboardButton(emojize(":chart_with_downwards_trend: Понижение (X2)"),
+                                callback_data="count")
+investing_keyboard.add(up_btn)
+investing_keyboard.add(down_btn)
