@@ -2,7 +2,7 @@ from fastapi import Depends
 # from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 # import jwt
-from qiwiapi.types import Payments
+from customutils.qiwiapi.types import Payments
 
 # from customutils.models import QiwiPayment
 from loader import app
