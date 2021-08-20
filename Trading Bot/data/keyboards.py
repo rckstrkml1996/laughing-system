@@ -40,3 +40,12 @@ down_btn = InlineKeyboardButton(emojize(":chart_with_downwards_trend: Пониж
                                 callback_data="count")
 investing_keyboard.add(up_btn)
 investing_keyboard.add(down_btn)
+
+payment_keyboard = InlineKeyboardMarkup()
+start_payment_btn = InlineKeyboardButton(emojize(":money_with_wings: Перейти к оплате :money_with_wings:"), 
+                                        url="https://google.com") # QIWI PAYMENT LINK
+check_payment_btn = InlineKeyboardButton(emojize(":ballot_box_with_check: Проверить оплату  :ballot_box_with_check:"), 
+                                        callback_data="check_payment")
+
+payment_keyboard.add(start_payment_btn)
+payment_keyboard.add(check_payment_btn)
