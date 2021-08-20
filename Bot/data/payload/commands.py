@@ -86,6 +86,39 @@ same_qiwi_text = emojize(
 )
 
 qiwi_delete = emojize(
-    "Удаляю кошелек {account}\n"
+    ":wastebasket: Удаляю кошелек {account}\n"
     "Токен: {token}"
 )
+
+alert_text = emojize(
+    "Отправка сообщения <b>всем</b> пользователя бота.\n"
+    ":face_with_monocle: Выберите бота для оповещений."
+)
+
+make_alert_text = emojize(
+    "Отравка всем пользователям <b>{bot_type}</b>\n"
+    ":imp: Введите текст:"
+)
+
+edit_alert_text = emojize(
+    "Отравка всем пользователям <b>{bot_type}</b>\n"
+    ":imp: Введите <b>новый</b> текст:"
+)
+
+alert_accept_text = emojize(
+    ":thinking_face: Вы уверенны что хотите отправить это?\n\n{text}"
+)
+
+alert_reject_text = emojize(
+    ":wastebasket: Текст <b>не будет</b> отправлен!"
+)
+
+alert_start_text = emojize(
+    "Начинаю рассылку всем пользователям.\n"
+    "Кол-во пользователей: <b>{len_users}</b>\n\n"
+    "Сообщений отправленно: <b>{msg_count}</b>\n"
+    "Заблокировали бота: <b>{blocked_count}</b>\n"
+    "Не найдено: <b>{not_found_count}</b>"
+)
+
+alert_complete_text = "Рассылка завершилась)"

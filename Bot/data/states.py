@@ -33,3 +33,18 @@ class Qiwi(StatesGroup):
 
 class Casino(StatesGroup):
     commands = State()
+
+
+class Alert(StatesGroup):
+    # for send to bot users
+    bot = State()
+    bot_accept = State()
+    # for send to casino users
+    casino = State()
+    casino_accept = State()
+    # for send to escort users
+    escort = State()
+    escort_accept = State()
+    # for send to trading users
+    trading = State()
+    trading_accept = State()

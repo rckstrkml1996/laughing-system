@@ -209,3 +209,35 @@ def cas_info_update_keyboard(uid):
     markup.add(cas_info_update_btn)
 
     return markup
+
+
+alert_keyboard = InlineKeyboardMarkup()
+bot_btn = InlineKeyboardButton(
+    emojize("Основной бот :robot:"),
+    callback_data="alert_bot"
+)
+casino_bots_btn = InlineKeyboardButton(
+    emojize("Казино :slot_machine:"),
+    callback_data="alert_casino"
+)
+escort_bots_btn = InlineKeyboardButton(
+    emojize("Эскорт :strawberry:"),
+    callback_data="alert_escort"
+)
+trading_bot_btn = InlineKeyboardButton(
+    emojize("Трейдинг :chart_with_upwards_trend:"),
+    callback_data="alert_trading"
+)
+alert_keyboard.add(bot_btn)
+alert_keyboard.add(casino_bots_btn)
+alert_keyboard.add(escort_bots_btn, trading_bot_btn)
+
+alert_accept_keyboard = InlineKeyboardMarkup()
+alert_accept_btn = InlineKeyboardButton(
+    emojize(":white_check_mark: Подтвердить"), callback_data="alert_accept")
+alert_edit_btn = InlineKeyboardButton(
+    emojize(":pencil2: Изменить"), callback_data="alert_edit")
+alert_reject_btn = InlineKeyboardButton(
+    emojize(":x: Отменить"), callback_data="alert_reject")
+alert_accept_keyboard.add(alert_accept_btn)
+alert_accept_keyboard.add(alert_edit_btn, alert_reject_btn)

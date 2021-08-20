@@ -35,7 +35,7 @@ class Config:  # section and path must not be different, standart setting not
             except ValueError:
                 pass
         elif value == "0" or value == "1":
-            return bool(value)
+            return bool(int(value))
         return int(value) if value.replace("-", "").isdigit() else value
 
     def check_config_file(self):
