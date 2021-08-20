@@ -19,7 +19,7 @@ async def my_profile(message: types.Message):
             balance=worker.ref_balance,  # NOT REF BALANCE
             cid=worker.cid,
             deals_count=randint(700, 3000)
-        )
+            )
         )
     except Worker.DoesNotExist:
         pass
@@ -31,7 +31,7 @@ async def my_profile(message: types.Message):
         worker = Worker.get(cid=message.chat.id)
         await message.answer(payload.withdraw_text.format(
             balance=worker.ref_balance  # NOT REF BALANCE
-        )
+            )
         )
         await Withdraw.count.set()
     except Worker.DoesNotExist:
@@ -41,7 +41,10 @@ async def my_profile(message: types.Message):
 @dp.message_handler(regexp="пополн")
 async def my_profile(message: types.Message):
     try:
-        await message.answer(payload.deposit_start_text)
+        worker =Worker.get(cid=message.chat.id)
+        await message.answer(payload.deposit_count_text.format(
+            balance=worker.ref_balance
+        ))
         await Deposit.count.set()
     except Worker.DoesNotExist:
         pass
@@ -74,10 +77,15 @@ async def deposit_entered(message: types.Message, state: FSMContext):
             if int(message.text) < config("min_deposit"):
                 await message.answer(payload.deposit_minerror_text)
             else:
-                loguru.logger.info("PAYMENT PROCESSING")
+                await message.answer(payload.deposit_form_text.format(
+                    count=int(message.text),
+                    qiwi_number=13131313, # QIWI NUMBER
+                    comment=133131        # GENERATE COMMENT???
+                ), reply_markup=payment_keyboard)
                 await state.finish()
         except ValueError:
             await message.reply(payload.int_error_text)
+            await state.finish()
     except Worker.DoesNotExist:
         pass
 
@@ -97,9 +105,11 @@ async def withdraw_entered(message: types.Message, state: FSMContext):
             else:
                 async with state.proxy() as data:
                     data["count"] = message.text.replace(";", " ")
-                Withdraw.requisites.set()
+                await message.answer(payload.withdraw_req_text)
+                await Withdraw.requisites.set()
         except ValueError:
             await message.reply(payload.int_error_text)
+            await state.finish()
     except Worker.DoesNotExist:
         pass
 
@@ -107,10 +117,11 @@ async def withdraw_entered(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Withdraw.requisites)
 async def requisites_entered(message: types.Message, state: FSMContext):
     try:
-        worker = Worker(cid=message.chat.id)
+        worker = Worker.get(cid=message.chat.id)
         async with state.proxy() as data:
             worker.ref_balance -= int(data["count"])
             worker.save()
         await message.reply(payload.withdraw_done_text)
+        await state.finish()
     except Worker.DoesNotExist:
         pass

@@ -73,8 +73,8 @@ async def requisites_entered(message: types.Message, state: FSMContext):
                     worker.ref_balance += int(data['bet_count'])
                     worker.save()
                     await message.answer(payload.ecn_bet_win.format(
-                        win_count=int(data['bet_count']),
-                        balance=worker.ref_balance
+                                        win_count=int(data['bet_count']),
+                                        balance=worker.ref_balance
                     ), reply_markup=investing_keyboard)
                     await state.finish()
             else:
