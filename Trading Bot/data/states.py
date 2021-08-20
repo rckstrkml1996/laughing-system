@@ -7,3 +7,6 @@ class Withdraw(StatesGroup):
 
 class Deposit(StatesGroup):
     count = State()
+
+class Asset(StatesGroup):
+    count = State()
