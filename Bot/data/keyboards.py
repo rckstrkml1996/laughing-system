@@ -100,72 +100,6 @@ def panel_keyboard(namehide):
     return markup
 
 
-backpanel_keyboard = InlineKeyboardMarkup()
-backpanel_btn = InlineKeyboardButton(
-    emojize(":back: Назад"), callback_data="menu"
-)
-backpanel_keyboard.add(backpanel_btn)
-
-profits_keyboard = InlineKeyboardMarkup()
-week_btn = InlineKeyboardButton(
-    emojize(":chart: За неделю"), callback_data="weekprofits"
-)
-profits_keyboard.add(week_btn)
-profits_keyboard.add(backpanel_btn)
-
-rate_keyboard = InlineKeyboardMarkup()
-changerate_btn = InlineKeyboardButton(
-    emojize(":sa: Сменить ставку"), callback_data="changerate")
-rate_keyboard.add(changerate_btn)
-rate_keyboard.add(backpanel_btn)
-
-changerate_keyboard = InlineKeyboardMarkup()
-for i in range(len(Rates)):
-    changerate_keyboard.add(
-        InlineKeyboardButton(
-            emojize(
-                f"{num2emoji(i + 1)} Ставка"
-            ),
-            callback_data=f"cr_{i}"
-        )
-    )
-changerate_keyboard.add(backpanel_btn)
-
-
-def tools_keyboard(hide):
-    status = ":white_check_mark: Открыть ник" if hide else ":negative_squared_cross_mark: Скрыть ник"
-
-    markup = InlineKeyboardMarkup()
-    render_btn = InlineKeyboardButton(
-        emojize(":newspaper: Отрисовка"), callback_data="render"
-    )
-    secretid_btn = InlineKeyboardButton(
-        emojize(":keycap_number_sign: Secret-ID"), callback_data="secretid"
-    )
-    username_btn = InlineKeyboardButton(
-        emojize(status), callback_data="toggleusername"
-    )
-    markup.add(render_btn)
-    markup.add(secretid_btn)
-    markup.add(username_btn)
-    markup.add(backpanel_btn)
-
-    return markup
-
-
-render_keyboard = InlineKeyboardMarkup()
-qiwibalance_btn = InlineKeyboardButton(
-    emojize(":kiwi_fruit: Qiwi Баланс"), callback_data="qiwibalance")
-qiwitransfer_btn = InlineKeyboardButton(
-    emojize(":kiwi_fruit: Qiwi Перевод"),  callback_data="qiwitransfer")
-sbertransfer_btn = InlineKeyboardButton(
-    emojize(":sparkle: Сбер Перевод"),  callback_data="sbertransfer")
-render_keyboard.add(qiwibalance_btn)
-render_keyboard.add(qiwitransfer_btn)
-render_keyboard.add(sbertransfer_btn)
-render_keyboard.add(backpanel_btn)
-
-
 def admworkstatus_keyboard(work_status):
     markup = InlineKeyboardMarkup()
 
@@ -266,3 +200,12 @@ trading_keyboard.add(my_mamoths_btn)
 trading_keyboard.add(my_phrases)
 trading_keyboard.add(msgspam_btn)
 trading_keyboard.add(deleteall_btn)
+
+
+def cas_info_update_keyboard(uid):
+    markup = InlineKeyboardMarkup()
+    cas_info_update_btn = InlineKeyboardButton(
+        emojize(":arrows_counterclockwise:"), callback_data="updateinfo_{}")
+    markup.add(cas_info_update_btn)
+
+    return markup

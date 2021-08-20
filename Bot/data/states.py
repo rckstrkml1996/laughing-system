@@ -29,3 +29,7 @@ class Pin(StatesGroup):
 
 class Qiwi(StatesGroup):
     new = State()
+
+
+class Casino(StatesGroup):
+    commands = State()

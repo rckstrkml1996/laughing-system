@@ -29,10 +29,8 @@ class BaseModel(peewee.Model):
 
 
 class Worker(BaseModel):
-    def random_key():
-        return random.randint(100000000000, 999999999999)
-
     cid = peewee.IntegerField(unique=True)
+    uniq_key = peewee.IntegerField(unique=True)
     username = peewee.CharField(null=True)
     username_hide = peewee.BooleanField(default=False)
     name = peewee.CharField()
@@ -40,13 +38,11 @@ class Worker(BaseModel):
     ref_balance = peewee.FloatField(default=0)
     status = peewee.IntegerField(default=0)
     level = peewee.IntegerField(default=0)
-    send_summary = peewee.BooleanField(default=False)
-    summary_info = peewee.TextField(null=True)
     registered = peewee.DateTimeField(default=datetime_local_now)
-    sup_key = peewee.BigIntegerField(
-        default=random_key, unique=True)  # max 2**63 - 1
     cock_size = peewee.IntegerField(null=True)
     warns = peewee.IntegerField(default=0)
+    send_summary = peewee.BooleanField(default=False)
+    summary_info = peewee.TextField(null=True)
 
 
 class Profit(BaseModel):
@@ -71,9 +67,9 @@ class QiwiPayment(BaseModel):
 
 
 class CasinoUser(BaseModel):
+    owner = peewee.ForeignKeyField(Worker, related_name='cas_users')
     cid = peewee.IntegerField(unique=True)
     balance = peewee.IntegerField(default=0)
-    refer = peewee.IntegerField(default=0)
     ref_balance = peewee.IntegerField(default=0)
     fort_chance = peewee.IntegerField(default=50)  # val from 0 to 100
     # premium = peewee.BooleanField(default=True)  # if not add and changed bal

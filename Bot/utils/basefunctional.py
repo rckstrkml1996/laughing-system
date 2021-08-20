@@ -1,6 +1,7 @@
-from peewee import fn, JOIN, SQL
-
+from random import randint
 from datetime import timedelta
+
+from peewee import fn, JOIN, SQL
 
 from customutils.models import Profit, Worker
 from customutils.datefunc import datetime_local_now
@@ -96,3 +97,21 @@ class BaseCommands:
                 Profit.created.year == date.year,
             )
         ).execute()[0].all_profits or 0)
+
+    def get_uniq_key(self) -> int:
+        key = randint(111111, 999999)
+        try:
+            Worker.get(uniq_key=key)
+            key = self.get_uniq_key()
+        except Worker.DoesNotExist:
+            pass
+
+        return key
+
+    def create_worker(self, chat_id, name, username=None) -> Worker:
+        return Worker.create(
+            cid=chat_id,
+            uniq_key=self.get_uniq_key(),
+            name=name,
+            username=username,
+        )

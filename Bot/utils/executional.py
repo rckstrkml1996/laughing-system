@@ -12,12 +12,20 @@ from customutils.datefunc import datetime_local_now
 num2emojis = [':zero:', ':one:', ':two:', ':three:', ':four:', ':five:',
               ':six:', ':seven:', ':eight:', ':nine:', ':keycap_ten:']
 
+hearts = [":red_heart:", ":orange_heart:", ":yellow_heart:",
+          ":green_heart:", ":blue_heart:", ":purple_heart:",
+          ":black_heart:", ":white_heart:", ":brown_heart:"]
+
 
 def num2emoji(number):
     try:
         return num2emojis[number]
     except IndexError:
         return ":1234:"
+
+
+def random_heart():
+    return emojize(random.choice(hearts))
 
 
 def get_random_analog(general: int):
