@@ -54,7 +54,7 @@ withdraw_overprice = emojize(
 )
 
 int_error_text = emojize(
-    ":x: Сумма должна быть числом!:"
+    ":x: Сумма должна быть числом!"
 )
 
 withdraw_min_text = emojize(
