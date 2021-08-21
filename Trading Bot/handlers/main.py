@@ -6,8 +6,7 @@ from data import payload
 
 @dp.message_handler(commands="start")
 async def welcome(message: types.Message):
-    await message.answer(payload.welcome_text.format(
-                                username=message.chat.username), 
+    await message.answer(payload.welcome_text(message.from_user.full_name), 
                         reply_markup=rules_keyboard)
 
 @dp.message_handler(content_types=["photo"])

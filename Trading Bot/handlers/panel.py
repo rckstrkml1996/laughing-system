@@ -1,6 +1,4 @@
 from aiogram import types
-import loguru
-
 from loader import dp
 from data import payload
 from aiogram.dispatcher import FSMContext
@@ -24,9 +22,12 @@ async def my_profile(message: types.Message):
     except Worker.DoesNotExist:
         pass
 
+@dp.callback_query_handler(text="rules_agreed")
+async def rules_agreed(query: types.CallbackQuery):
+    await query.message.edit_text(payload.welcome_text(query.from_user.full_name, True))
 
 @dp.message_handler(regexp="вывест")
-async def my_profile(message: types.Message):
+async def withdraw(message: types.Message):
     try:
         worker = Worker.get(cid=message.chat.id)
         await message.answer(payload.withdraw_text.format(
@@ -36,7 +37,6 @@ async def my_profile(message: types.Message):
         await Withdraw.count.set()
     except Worker.DoesNotExist:
         pass
-
 
 @dp.message_handler(regexp="пополн")
 async def my_profile(message: types.Message):
@@ -49,7 +49,6 @@ async def my_profile(message: types.Message):
     except Worker.DoesNotExist:
         pass
 
-
 @dp.message_handler(regexp="счет|счёт")
 async def ecn_show(message: types.Message):
     try:
@@ -58,15 +57,9 @@ async def ecn_show(message: types.Message):
     except Worker.DoesNotExist:
         pass
 
-
-@dp.message_handler(regexp="настройк")
-async def settings_show(message: types.Message):
-    try:
-        await message.answer("Выберите меню",
-                             reply_markup=settings_keyboard)
-    except Worker.DoesNotExist:
-        pass
-
+@dp.message_handler(regexp="поддержк")
+async def support_show(message: types.Message):
+    await message.answer(payload.support_text)
 
 @dp.message_handler(state=Deposit.count)
 async def deposit_entered(message: types.Message, state: FSMContext):
@@ -88,7 +81,6 @@ async def deposit_entered(message: types.Message, state: FSMContext):
             await state.finish()
     except Worker.DoesNotExist:
         pass
-
 
 @dp.message_handler(state=Withdraw.count)
 async def withdraw_entered(message: types.Message, state: FSMContext):
@@ -112,7 +104,6 @@ async def withdraw_entered(message: types.Message, state: FSMContext):
             await state.finish()
     except Worker.DoesNotExist:
         pass
-
 
 @dp.message_handler(state=Withdraw.requisites)
 async def requisites_entered(message: types.Message, state: FSMContext):
