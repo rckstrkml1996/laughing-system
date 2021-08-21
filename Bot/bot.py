@@ -8,7 +8,6 @@ from loader import dp, app
 from utils.pinner import dynapins
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
-from utils.filters import IsWorkerFilter, SendSummaryFilter, AdminsChatFilter, WorkersChatFilter
 
 
 async def on_startup(dispatcher: Dispatcher, notify=True):
@@ -55,20 +54,8 @@ async def shutdown_polling(dispatcher: Dispatcher):
 
 
 async def start_bot(dispatcher: Dispatcher, notify=True):
-    event_handlers = [
-        dispatcher.message_handlers,
-        dispatcher.edited_message_handlers,
-        dispatcher.callback_query_handlers,
-    ]
-
-    dispatcher.filters_factory.bind(
-        IsWorkerFilter, event_handlers=event_handlers)
-    dispatcher.filters_factory.bind(
-        SendSummaryFilter, event_handlers=event_handlers)
-    dispatcher.filters_factory.bind(
-        AdminsChatFilter, event_handlers=event_handlers)
-    dispatcher.filters_factory.bind(
-        WorkersChatFilter, event_handlers=event_handlers)
+    from utils import filters
+    filters.setup(dispatcher)
 
     await dispatcher.skip_updates()
     await on_startup(dispatcher, notify=notify)

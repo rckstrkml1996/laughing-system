@@ -39,9 +39,3 @@ async def new_worker(message: types.Message):
             await message.answer(payload.summary_text, reply_markup=summary_start_keyboard)
     except Worker.DoesNotExist:
         await welcome(message)  # new user to base
-
-
-@dp.callback_query_handler(state='*', text='cancel', admins_type=True)
-async def cancel(query: types.CallbackQuery, state: FSMContext):
-    await query.message.delete()
-    await state.finish()
