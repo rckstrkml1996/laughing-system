@@ -205,7 +205,7 @@ trading_keyboard.add(deleteall_btn)
 def cas_info_update_keyboard(uid):
     markup = InlineKeyboardMarkup()
     cas_info_update_btn = InlineKeyboardButton(
-        emojize(":arrows_counterclockwise:"), callback_data="updateinfo_{}")
+        emojize(":arrows_counterclockwise:"), callback_data=f"updateinfo_{uid}")
     markup.add(cas_info_update_btn)
 
     return markup

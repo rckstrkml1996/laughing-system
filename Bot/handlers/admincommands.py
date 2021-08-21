@@ -6,11 +6,11 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.exceptions import MessageNotModified
 from aiogram.utils.exceptions import ChatNotFound, BotBlocked
-from customutils.models import Worker
+from customutils.models import Worker, CasinoUser
 from customutils.qiwiapi import QiwiApi, get_currency
 from customutils.qiwiapi.exceptions import InvalidToken, InvalidAccount
 
-from loader import dp
+from loader import dp, casino_bot
 from data import payload
 from data.states import Pin, Qiwi, Alert
 from data.keyboards import *
@@ -435,6 +435,42 @@ async def text_alert_casino(message: types.Message, state: FSMContext):
 async def alert_edit(query: types.CallbackQuery):
     await query.message.edit_text(payload.edit_alert_text.format(bot_type="Казиков"))
     await Alert.casino.set()
+
+
+@dp.callback_query_handler(text="alert_accept", state=Alert.casino_accept, admins_type=True)
+async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
+    users = CasinoUser.select()
+    len_users = users.count()
+    msg_count = 0
+    blocked_count = 0
+    not_found_count = 0
+
+    for user in users:
+        try:
+            async with state.proxy() as data:
+                await casino_bot.send_message(user.cid, data['text'])
+            await query.message.edit_text(payload.alert_start_text.format(
+                len_users=len_users,
+                msg_count=msg_count,
+                blocked_count=blocked_count,
+                not_found_count=not_found_count,
+            ))
+            msg_count += 1
+        except ChatNotFound:
+            not_fount_count += 1
+        except BotBlocked:
+            blocked_count += 1
+        await sleep(0.2)
+
+    await query.message.edit_text(payload.alert_start_text.format(
+        len_users=len_users,
+        msg_count=msg_count,
+        blocked_count=blocked_count,
+        not_found_count=not_found_count,
+    ))
+    await query.message.reply(payload.alert_complete_text)
+
+    await state.finish()
 
 
 # alert escort
