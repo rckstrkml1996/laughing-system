@@ -132,7 +132,7 @@ async def save_pin(query: types.CallbackQuery, state: FSMContext):
             await msg.reply("Новый закреп.")
             new_pin_text(pin)
         except KeyError as e:
-            await query.message.answer(f"Вы ввели неправильное сокращения для динамического закрепа - {{{str(e)[1:-1]}}}")
+            await query.message.answer(f"Вы ввели неправильное сокращение для динамического закрепа - {{{str(e)[1:-1]}}}")
             await state.finish()
             return
 

@@ -1,4 +1,5 @@
 from aiogram import types
+from peewee import DoesNotExist
 from loader import dp
 from data import payload
 from aiogram.dispatcher import FSMContext
@@ -26,7 +27,16 @@ async def my_profile(message: types.Message):
 async def rules_agreed(query: types.CallbackQuery):
     await query.message.edit_text(payload.welcome_text(query.from_user.full_name, True))
     TradingUser.create(cid=query.message.chat.id, username=query.from_user.username,
-                          fullname=query.from_user.full_name) 
+                          fullname=query.from_user.full_name)
+    try:
+        user = TradingUser.get(cid=query.message.chat.id)
+        await query.message.answer(payload.my_profile_text.format(
+                                    balance=user.balance,
+                                    cid=user.cid,
+                                    deals_count=randint(700, 3000)
+        ), reply_markup=main_keyboard)
+    except TradingUser.DoesNotExist:
+        pass
 
 @dp.message_handler(regexp="вывест")
 async def withdraw(message: types.Message):

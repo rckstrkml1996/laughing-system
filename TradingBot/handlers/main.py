@@ -14,7 +14,7 @@ async def welcome(message: types.Message):
             balance=user.balance,
             cid=user.cid,
             deals_count=randint(700,3000)
-        ))
+        ), reply_markup=main_keyboard)
     except TradingUser.DoesNotExist:
         await message.answer(payload.welcome_text(message.from_user.full_name), 
                         reply_markup=rules_keyboard)

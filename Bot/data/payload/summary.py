@@ -7,7 +7,7 @@ from aiogram.utils.emoji import emojize
 """
 
 summary_text = emojize(
-    ":man_shrugging: <b>Неизвестная комманда.</b>\n"
+    ":man_shrugging: <b>Неизвестная команда.</b>\n"
     ":snake: <b>Хотите подать заявку?</b>"
 )
 

@@ -53,7 +53,7 @@ async def match_command(message: types.Message, regex, on_match):
             if user.owner.cid == message.chat.id:
                 await on_match(message, user, mtch)
             else:
-                await message.answer("у тебя нету такова мамонта")
+                await message.answer("у тебя нет такова мамонта")
         except CasinoUser.DoesNotExist:
             await message.answer("нет такого юзера")
     else:
