@@ -54,11 +54,11 @@ qiwi_command_text = emojize(
 )
 
 no_qiwis_text = emojize(
-    "У вас нету привязанных кошельков!"
+    "У вас нет привязанных кошельков!"
 )
 
 qiwi_error_text = emojize(
-    "Какая то ошибка в киви, попробуй еще раз или позови кодера) :warning:"
+    "Какая-то ошибка в киви, попробуй еще раз или позови кодера) :warning:"
 )
 
 add_qiwis_text = emojize(
@@ -96,7 +96,7 @@ alert_text = emojize(
 )
 
 make_alert_text = emojize(
-    "Отравка всем пользователям <b>{bot_type}</b>\n"
+    "Отправка всем пользователям <b>{bot_type}</b>\n"
     ":imp: Введите текст:"
 )
 
@@ -106,7 +106,7 @@ edit_alert_text = emojize(
 )
 
 alert_accept_text = emojize(
-    ":thinking_face: Вы уверенны что хотите отправить это?\n\n{text}"
+    ":thinking_face: Вы уверены что хотите отправить это?\n\n{text}"
 )
 
 alert_reject_text = emojize(
@@ -116,7 +116,7 @@ alert_reject_text = emojize(
 alert_start_text = emojize(
     "Начинаю рассылку всем пользователям.\n"
     "Кол-во пользователей: <b>{len_users}</b>\n\n"
-    "Сообщений отправленно: <b>{msg_count}</b>\n"
+    "Сообщений отправлено: <b>{msg_count}</b>\n"
     "Заблокировали бота: <b>{blocked_count}</b>\n"
     "Не найдено: <b>{not_found_count}</b>"
 )

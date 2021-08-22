@@ -78,8 +78,12 @@ async def requisites_entered(message: types.Message, state: FSMContext):
                     ), reply_markup=investing_keyboard)
                     await state.finish()
             else:
-                await message.answer(payload.not_enough_balance_text)
+                await message.answer(payload.not_enough_balance_text.format(
+                    balance=user.balance
+                ))
+                await state.finish()
         except ValueError:
             await message.answer(payload.int_error_text)
+            await state.finish()
     except TradingUser.DoesNotExist:
         pass
