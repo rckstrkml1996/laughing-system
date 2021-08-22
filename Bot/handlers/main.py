@@ -1,6 +1,7 @@
 from aiogram import types
+from aiogram.dispatcher import FSMContext
 
-from loader import dp
+from loader import dp, db_commands
 from data import payload
 from data.keyboards import summary_start_keyboard, summary_blocked_keyboard
 from customutils.models import Worker
@@ -22,10 +23,10 @@ async def welcome(message: types.Message):
         else:  # если чел уже воркер
             await worker_welcome(message)  # workers menu
     except Worker.DoesNotExist:
-        Worker.create(
-            cid=message.chat.id,
+        db_commands.create_worker(
+            chat_id=message.chat.id,
+            name=message.chat.full_name,
             username=message.chat.username,
-            name=message.chat.full_name
         )
         await new_request(message)
 
@@ -38,3 +39,9 @@ async def new_worker(message: types.Message):
             await message.answer(payload.summary_text, reply_markup=summary_start_keyboard)
     except Worker.DoesNotExist:
         await welcome(message)  # new user to base
+
+
+@dp.callback_query_handler(state='*', text='cancel', admins_type=True)
+async def cancel(query: types.CallbackQuery, state: FSMContext):
+    await query.message.delete()
+    await state.finish()

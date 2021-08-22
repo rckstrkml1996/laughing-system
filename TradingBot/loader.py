@@ -4,5 +4,5 @@ from aiogram.types import ParseMode
 from data.config import config
 
 
-bot = Bot(config("api_token"), parse_mode=ParseMode.HTML)
+bot = Bot(config("trading_api_token"), parse_mode=ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())

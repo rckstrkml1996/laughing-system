@@ -1,3 +1,3 @@
-from .main import QiwiApi
+from .main import QiwiApi, get_currency
 
-__all__ = ("QiwiApi",)
+__all__ = ("QiwiApi", "get_currency")

@@ -21,7 +21,7 @@ help_text = emojize(
 me_text = emojize(
     ":woman_tipping_hand: Воркер <a href='tg://user?id={cid}'>{username}</a>\n"
     "Telegram ID: {cid}\n\n"
-    "{len_profits} профитов на сумму {sum_profits} ₽\n"
+    "{profits} на сумму {sum_profits} ₽\n"
     "Средний профит ~ {middle_profits} ₽\n\n"
     "В команде {in_team}, {warns}"
 )
@@ -49,5 +49,76 @@ setwork_text = emojize(":white_check_mark: <b>Поставлен</b> ворк")
 setdontwork_text = emojize(":x: <b>Поставлен</b> неворк")
 
 qiwi_command_text = emojize(
-    "Команда киви епта"
+    "Информация по киви кошелькам.\n\n"
+    "Общий баланс: <b>{all_balance} RUB</b>"
 )
+
+no_qiwis_text = emojize(
+    "У вас нету привязанных кошельков!"
+)
+
+qiwi_error_text = emojize(
+    "Какая то ошибка в киви, попробуй еще раз или позови кодера) :warning:"
+)
+
+add_qiwis_text = emojize(
+    "Введите <b>Номер</b> и <b>Токен</b>, пример:\n"
+    "<code>79008882211</code>\n"
+    "<code>f420543a9430065db1264535ff4eb1ae</code>"
+)
+
+invalid_newqiwi_text = emojize(
+    "Допущена ошибка при вводе! :warning:\n"
+    "Введите <b>Номер</b> и <b>Токен</b>, пример:\n"
+    "<code>79008882211</code>\n"
+    "<code>f420543a9430065db1264535ff4eb1ae</code>"
+)
+
+qiwi_info_text = emojize(
+    "Кошелек: <b>+{number}</b> :kiwi_fruit:\n"
+    "Баланс: <b>{balance}</b>\n"
+    "Последние транзакции :point_down:\n"
+    "{last_actions}"
+)
+
+same_qiwi_text = emojize(
+    "Похоже вы пытаетесь добавить такой же киви кошелек)"
+)
+
+qiwi_delete = emojize(
+    ":wastebasket: Удаляю кошелек {account}\n"
+    "Токен: {token}"
+)
+
+alert_text = emojize(
+    "Отправка сообщения <b>всем</b> пользователя бота.\n"
+    ":face_with_monocle: Выберите бота для оповещений."
+)
+
+make_alert_text = emojize(
+    "Отравка всем пользователям <b>{bot_type}</b>\n"
+    ":imp: Введите текст:"
+)
+
+edit_alert_text = emojize(
+    "Отравка всем пользователям <b>{bot_type}</b>\n"
+    ":imp: Введите <b>новый</b> текст:"
+)
+
+alert_accept_text = emojize(
+    ":thinking_face: Вы уверенны что хотите отправить это?\n\n{text}"
+)
+
+alert_reject_text = emojize(
+    ":wastebasket: Текст <b>не будет</b> отправлен!"
+)
+
+alert_start_text = emojize(
+    "Начинаю рассылку всем пользователям.\n"
+    "Кол-во пользователей: <b>{len_users}</b>\n\n"
+    "Сообщений отправленно: <b>{msg_count}</b>\n"
+    "Заблокировали бота: <b>{blocked_count}</b>\n"
+    "Не найдено: <b>{not_found_count}</b>"
+)
+
+alert_complete_text = "Рассылка завершилась)"

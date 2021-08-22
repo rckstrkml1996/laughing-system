@@ -1,0 +1,219 @@
+[33mcommit c5ce86c3d83cca4edd0c2ac80b46e1a7097fcfb0[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Thu Aug 19 03:18:12 2021 +0300
+
+    blyat zaftra nuzhno razobratsa srochna
+
+[33mcommit ef8444b6d1614530d3f224759af8345c9d06d21c[m
+Merge: 57a259b edb217d
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Thu Aug 19 03:12:44 2021 +0300
+
+    piskagriz merged
+
+[33mcommit 57a259bf0a57c2a63ce7645775b42764a37bddc4[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Thu Aug 19 02:19:47 2021 +0300
+
+    KAIF 🤙
+
+[33mcommit edb217d67a7cd15cd9db7875e3c46cdf2c7625d7[m[33m ([m[1;31morigin/Trading[m[33m, [m[1;32mTrading[m[33m)[m
+Author: Shagamaru <>
+Date:   Wed Aug 18 16:46:58 2021 +0300
+
+    Config file fixes
+
+[33mcommit 55beae6b6ad9ae316311c9461e65c77871a6c7d3[m
+Author: Shagamaru <>
+Date:   Wed Aug 18 16:00:15 2021 +0300
+
+    Little fixes
+
+[33mcommit b9bf650b57b8c3e2c8da34b57ea3f957b35655c1[m
+Author: Shagamaru <>
+Date:   Tue Aug 17 16:54:41 2021 +0300
+
+    Keyboards fixed
+
+[33mcommit 30436c521d9895f81ad3383bc8f7c66ed8131946[m
+Author: Shagamaru <>
+Date:   Tue Aug 17 15:51:48 2021 +0300
+
+    Jasper Moglot works
+
+[33mcommit e671a8d96ddbe117d990f9ac15095c63a4c1d77d[m
+Merge: a21555b b9e98c1
+Author: Shagamaru <>
+Date:   Tue Aug 17 15:46:21 2021 +0300
+
+    Merge remote-tracking branch 'origin/master' into Trading
+
+[33mcommit a21555b3678768e3d27a5c026e2ccdb23a4544ad[m
+Author: Shagamaru <>
+Date:   Tue Aug 17 15:43:01 2021 +0300
+
+    Test
+
+[33mcommit b9e98c1dc333f8e1ebec92320a3dfccc085abff5[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Tue Aug 17 15:35:14 2021 +0300
+
+    пизда
+
+[33mcommit fd0d95f20671f63fa557f8136791894f5682c1fb[m
+Author: Shagamaru <>
+Date:   Tue Aug 17 01:14:58 2021 +0300
+
+    some addings
+
+[33mcommit 0475f95cfa87d16fe6b8397717605e4e86cdd9c0[m
+Author: Shagamaru <>
+Date:   Mon Aug 16 02:25:47 2021 +0300
+
+    Trading started. Base bot little fixes
+
+[33mcommit 497bb92353075530804d44fe3e48b673562d75ca[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Sun Aug 15 19:04:57 2021 +0300
+
+    refactor payload into package
+
+[33mcommit 94d4aa3d3399288408c64e3637f9d2cff6d83e33[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Sun Aug 15 18:19:19 2021 +0300
+
+    refactor imports and casino btn work!
+
+[33mcommit f46b2306ec9a00954bab6d5f4c5d7824d1a43bbb[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Sun Aug 15 17:46:10 2021 +0300
+
+    custom suka
+
+[33mcommit 157078d8873af985606b2ba8a1d24b90880ca66f[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Sun Aug 15 16:02:23 2021 +0300
+
+    pinner and sql speed x25
+
+[33mcommit ce47c0d43518dec4c3ea332387695e270c5ca799[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Thu Aug 12 08:48:46 2021 +0300
+
+    made models to custom utils for use in Bot and Casino and ...)|(...
+
+[33mcommit cd89e43ea7ff8f33a715e1e14ec49fbf123b610e[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Thu Aug 12 05:06:18 2021 +0300
+
+    ya otsosal chilen
+
+[33mcommit ed37c8ea70e3d74222c830909df869edf84c3f62[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Thu Aug 12 04:41:02 2021 +0300
+
+    small fix all work all merged!💠💠
+
+[33mcommit 7941759b85bca3db981a5645f09a37fb896012d2[m
+Merge: 0d56f81 59008d7
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Thu Aug 12 04:19:05 2021 +0300
+
+    i think its merge)
+
+[33mcommit 59008d7f254e944e5eddd11a405f60bfd59e69f3[m[33m ([m[1;31morigin/Experimental[m[33m, [m[1;32mExperimental[m[33m)[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Thu Aug 12 04:10:58 2021 +0300
+
+    ti suka ya ne suka ya down!
+
+[33mcommit 0d56f81704d2ce65e1f00c14e243aca63e2efce2[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Wed Aug 11 06:28:27 2021 +0300
+
+    i dont think it working but ok!👍
+
+[33mcommit 9a9cc39ec9b74f4791f215f400fb9eebd300e1ea[m
+Author: Shagamaru <>
+Date:   Tue Aug 10 01:41:45 2021 +0300
+
+    About butttons, top commands added.
+
+[33mcommit 7dcad988c2146bcd564118a9f5ca2ffac89ec807[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Sun Aug 8 05:02:25 2021 +0300
+
+    new custom utils 🖤 and some changes
+
+[33mcommit 2007b7a698ff8ae55b165c403f5468f37fa0af67[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Sat Aug 7 13:26:05 2021 +0300
+
+    piskagriz
+
+[33mcommit 463a3d483d543d1a3d7ae0cea969fb9580a81f58[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Thu Aug 5 21:26:24 2021 +0300
+
+    change panel, add 2 handler files, change payload, project work status changed
+
+[33mcommit 91fc502fbd84837613a42d828ff3b38e2fd20aaa[m
+Author: Shagamaru <shagamaru@yandex.ru>
+Date:   Sun Aug 1 17:22:25 2021 +0300
+
+    Little fix
+
+[33mcommit 81277410ed669be09e4ed25a0d35970f18b4f8a7[m
+Author: Shagamaru <shagamaru@yandex.ru>
+Date:   Sun Aug 1 16:54:18 2021 +0300
+
+    Texts edited; some buttons works;
+    Base, token have to be removed.
+
+[33mcommit 6b979e553178f90a06386cdb62e2723522ac1335[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Sun Aug 1 12:55:40 2021 +0300
+
+    add admins chat filter
+
+[33mcommit 05103960449dfe9f32893d3da885a5c6241a9a03[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Sun Aug 1 12:28:28 2021 +0300
+
+    without api now
+
+[33mcommit e6e7ccb6908509cd9d3a21187a27a9130e862539[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Sun Aug 1 07:47:07 2021 +0300
+
+    test
+
+[33mcommit 8486196b2acdfe3951f4fe136c425f9224088ae2[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Sun Aug 1 06:36:11 2021 +0300
+
+    rename folders
+
+[33mcommit be70df26f7b39b905a917dfe989e2dfc370075c5[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Sun Aug 1 06:32:22 2021 +0300
+
+    hide escort epta
+
+[33mcommit 2538221aa77c6725e6d298043651d24dd10b01b5[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Sun Aug 1 06:30:55 2021 +0300
+
+    i am stupid dibil epta
+
+[33mcommit a5821b4e1df540ce4021e9be990d79ae3ea19081[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Sun Aug 1 00:57:37 2021 +0300
+
+    pusto
+
+[33mcommit def3c4b231f21563403b256d3b531b887fb4339c[m
+Author: 14iq <60758749+14iq@users.noreply.github.com>
+Date:   Sun Aug 1 00:54:22 2021 +0300
+
+    full init

@@ -1,6 +1,6 @@
 import asyncio
 from aiogram import types
-from customutils.models import Worker
+from customutils.models import TradingUser
 from data.config import config, photos
 from data.states import Asset
 import asyncio
@@ -49,37 +49,37 @@ async def btc_choosed(query: types.CallbackQuery):
 @dp.callback_query_handler(text="count")
 async def bet_count(query: types.CallbackQuery):
     try:
-        worker = Worker.get(cid=query.message.chat.id)
+        user = TradingUser.get(cid=query.message.chat.id)
         await query.message.answer(payload.ecn_selected_text.format(
-            balance=worker.ref_balance
+            balance=user.balance
         ))
         await Asset.count.set()
-    except Worker.DoesNotExist:
+    except TradingUser.DoesNotExist:
         pass
 
 @dp.message_handler(state=Asset.count)
 async def requisites_entered(message: types.Message, state: FSMContext):
     try:
-        worker = Worker.get(cid=message.chat.id)
+        user = TradingUser.get(cid=message.chat.id)
         try:
             bet_count = int(message.text)
-            if bet_count <= worker.ref_balance and bet_count >= config("min_deposit"):
+            if bet_count <= user.balance and bet_count >= config("min_deposit"):
                 async with state.proxy() as data:
                     data['bet_count'] = message.text.replace(" ", ";")
                     await message.answer(payload.ecn_bet_start.format(
                         bet_timer = config("bet_timer")
                     ))
                     await asyncio.sleep(config("bet_timer"))
-                    worker.ref_balance += int(data['bet_count'])
-                    worker.save()
+                    user.balance += int(data['bet_count'])
+                    user.save()
                     await message.answer(payload.ecn_bet_win.format(
-                        win_count=int(data['bet_count']),
-                        balance=worker.ref_balance
+                                        win_count=int(data['bet_count']),
+                                        balance=user.balance
                     ), reply_markup=investing_keyboard)
                     await state.finish()
             else:
                 await message.answer(payload.not_enough_balance_text)
         except ValueError:
             await message.answer(payload.int_error_text)
-    except Worker.DoesNotExist:
+    except TradingUser.DoesNotExist:
         pass

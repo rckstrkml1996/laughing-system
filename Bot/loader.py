@@ -5,12 +5,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from py_expression_eval import Parser
 
+from utils.basefunctional import BaseCommands
 from config import config
 
-"""
-Обьявление приложения fastapi
-Обьявление всех компонентов бота из конфига
-"""
+# Обьявление приложения fastapi
+# Обьявление всех компонентов бота из конфига
+# Обьявление expression eval парсера
+# Обьявление functional models
 
 app = FastAPI()
 
@@ -25,5 +26,7 @@ app.add_middleware(
 
 bot = Bot(config("api_token"), parse_mode=ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
+
+db_commands = BaseCommands()
 
 exp_parser = Parser()

@@ -29,10 +29,8 @@ class BaseModel(peewee.Model):
 
 
 class Worker(BaseModel):
-    def random_key():
-        return random.randint(100000000000, 999999999999)
-
     cid = peewee.IntegerField(unique=True)
+    uniq_key = peewee.IntegerField(unique=True)
     username = peewee.CharField(null=True)
     username_hide = peewee.BooleanField(default=False)
     name = peewee.CharField()
@@ -40,18 +38,11 @@ class Worker(BaseModel):
     ref_balance = peewee.FloatField(default=0)
     status = peewee.IntegerField(default=0)
     level = peewee.IntegerField(default=0)
-    send_summary = peewee.BooleanField(default=False)
-    summary_info = peewee.TextField(null=True)
     registered = peewee.DateTimeField(default=datetime_local_now)
-    sup_key = peewee.BigIntegerField(
-        default=random_key, unique=True)  # max 2**63 - 1
     cock_size = peewee.IntegerField(null=True)
     warns = peewee.IntegerField(default=0)
-
-
-class CasinoUser(BaseModel):
-    owner = peewee.ForeignKeyField(Worker, related_name='casusers', null=True)
-    cid = peewee.IntegerField(unique=True)
+    send_summary = peewee.BooleanField(default=False)
+    summary_info = peewee.TextField(null=True)
 
 
 class Profit(BaseModel):
@@ -75,5 +66,47 @@ class QiwiPayment(BaseModel):
     )
 
 
+class CasinoUser(BaseModel):
+    owner = peewee.ForeignKeyField(Worker, related_name='cas_users')
+    cid = peewee.IntegerField(unique=True)
+    balance = peewee.IntegerField(default=0)
+    ref_balance = peewee.IntegerField(default=0)
+    fort_chance = peewee.IntegerField(default=50)  # val from 0 to 100
+    # premium = peewee.BooleanField(default=True)  # if not add and changed bal
+    username = peewee.CharField(default="Юзернейм скрыт")
+    bonus = peewee.IntegerField(default=0)
+    fuckedup = peewee.BooleanField(default=False)
+    fullname = peewee.CharField(default="Без имени")
+
+    def __str__(self):
+        return f'#{self.id} {self.cid}'
+
+class TradingUser(BaseModel):
+    cid = peewee.IntegerField(unique=True)
+    balance = peewee.IntegerField(default=0)
+    fullname = peewee.CharField(default="Без имени")
+    username = peewee.CharField(default="Юзернейм скрыт")
+    
+    def __str__(self):
+        return f'#{self.id} {self.cid}'
+
+
+
+# class CasinoPayment(BaseModel):
+#     cid = peewee.IntegerField()
+#     comment = peewee.CharField()
+#     amount = peewee.IntegerField()
+#     done = peewee.BooleanField(default=False)
+
+
+class CasinoUserHistory(BaseModel):
+    cid = peewee.IntegerField()
+    amount = peewee.IntegerField()
+    editor = peewee.IntegerField(default=0)
+    balance = peewee.IntegerField()
+    created = peewee.CharField(default=datetime_local_now)
+
+
 base.connect()
-base.create_tables([Worker, CasinoUser, Profit, QiwiPayment])
+base.create_tables(
+    [Worker, Profit, QiwiPayment, CasinoUser, CasinoUserHistory, TradingUser])

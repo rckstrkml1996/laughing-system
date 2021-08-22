@@ -7,22 +7,28 @@ from aiogram.dispatcher import FSMContext
 from aiogram.utils.emoji import emojize
 from loguru import logger
 
-from data.config import LICENCE
+from config import LICENCE
 from data.states import SelfCabine
 import keyboards
 from data import payload
 from loader import dp
-from customutils.models import User, UserHistory
+from customutils.models import CasinoUser, CasinoUserHistory
 
 
 async def self_cabine(chat_id: int):
-    user = User.get(cid=chat_id)
-    games = len(UserHistory.select().where(UserHistory.cid == chat_id,
-                (UserHistory.editor == 2) | (UserHistory.editor == 3)))
-    games_win = len(UserHistory.select().where(
-        UserHistory.cid == chat_id, UserHistory.editor == 2))
-    games_lose = len(UserHistory.select().where(
-        UserHistory.cid == chat_id, UserHistory.editor == 3))
+    user = CasinoUser.get(cid=chat_id)
+    games = CasinoUserHistory.select().where(
+        CasinoUserHistory.cid == chat_id,
+        (CasinoUserHistory.editor == 2) | (CasinoUserHistory.editor == 3)
+    ).count()
+    games_win = CasinoUserHistory.select().where(
+        CasinoUserHistory.cid == chat_id,
+        CasinoUserHistory.editor == 2
+    ).count()
+    games_lose = CasinoUserHistory.select().where(
+        CasinoUserHistory.cid == chat_id,
+        CasinoUserHistory.editor == 3
+    ).count()
 
     # Сообщения для личного кабинета, не вынес в payload тк. нужен доступ к базе данных
     return emojize(f":pushpin: Личный кабинет \
@@ -54,48 +60,49 @@ async def main_menu(message: types.Message, state: FSMContext):
     except IndexError:
         logger.debug(f"{message.chat.first_name} #{chat_id} with out ref.")
     try:
-        User.get(cid=chat_id)
+        CasinoUser.get(cid=chat_id)
         await message.answer(emojize("Вы попали в меню бота :clipboard:"),
-                             reply_markup=keyboards.main_keyboard(message.chat.id))
+                             reply_markup=keyboards.main_keyboard())
         current_state = await state.get_state()
         if current_state is None:
             return
         await state.finish()
-    except User.DoesNotExist:
+    except CasinoUser.DoesNotExist:
         await message.answer(payload.welcome_text(message.chat.first_name),
                              reply_markup=keyboards.welcome_keyboard(ref_id))
 
 
 @dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "accept",
                            chat_type=ChatType.PRIVATE, state="*")
-async def accept_user(call: types.CallbackQuery):
+async def accept_user(query: types.CallbackQuery):
     """ Ответ на инлайн кнопку принять Политику """
-    chat_id = call.message.chat.id
+    chat_id = query.message.chat.id
     try:
-        User.get(cid=chat_id)
-    except User.DoesNotExist:
-        username = call.message.chat.username
+        CasinoUser.get(cid=chat_id)
+    except CasinoUser.DoesNotExist:
+        username = query.message.chat.username
         username = f"@{username}" if username else "Нет юзернейма"
         try:
-            refer = User.get(id=call.data.split("_")[1])
+            refer = CasinoUser.get(id=query.data.split("_")[1])
             refer = refer.cid
-        except User.DoesNotExist:
+        except CasinoUser.DoesNotExist:
             refer = 0
-        fullname = call.message.chat.full_name
-        User.create(cid=chat_id, refer=refer, username=username,
-                    fullname=fullname)  # ред на main
-        if refer != 0:
-            try:
-                await dp.bot.send_message(refer, emojize(f":alien: Новый реферал \
-					\n{call.message.chat.full_name} \
-					\nid: <b>{chat_id}</b> - {username}"))
-            except ChatNotFound:
-                logger.warning(f"chat with refer {refer} does not exist")
+        fullname = query.message.chat.full_name
+        CasinoUser.create(cid=chat_id, refer=refer, username=username,
+                          fullname=fullname)  # ред на main
+        # if refer != 0:
+        #     try:
+        #         await dp.bot.send_message(refer, emojize(f":alien: Новый реферал \
+        # 			\n{query.message.chat.full_name} \
+        # 			\nid: <b>{chat_id}</b> - {username}"))
+        #     except ChatNotFound:
+        #         logger.warning(f"chat with refer {refer} does not exist")
     finally:
-        await call.message.delete()
-        await call.message.answer(await self_cabine(chat_id), reply_markup=keyboards.main_keyboard(call.message.chat.id))
+        await query.message.delete()
+        await query.message.answer(await self_cabine(chat_id), reply_markup=keyboards.main_keyboard())
 
 
 @dp.message_handler(Text(startswith="инф", ignore_case=True), chat_type=ChatType.PRIVATE, state="*")
 async def game_support(message: types.Message):
-    await message.answer_photo(photo=LICENCE, caption=payload.info_text(), reply_markup=keyboards.main_keyboard(message.chat.id))
+    # await message.answer_photo(photo=LICENCE, caption=payload.info_text(), reply_markup=keyboards.main_keyboard())
+    await message.answer(payload.info_text(), reply_markup=keyboards.main_keyboard())

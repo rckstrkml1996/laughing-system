@@ -20,6 +20,7 @@ standart_config = {
     "base_name": "ur_base_name",
     "base_user": "ur_base_user",
     "base_password": "ur_base_password",
+    "time_zone": "Europe/Moscow",
     "casino_work": "0",
     "escort_work": "0",
     "antikino_work": "0",
@@ -36,17 +37,6 @@ config = Config(section_name, path, standart_config)
 outs_link = "https://t.me/hideteamout"
 workers_link = "https://t.me/joinchat/oV_2yUpUrA1kZThi"
 reviews_link = "https://t.me/joinchat/xdsxXRzqhFhmNDAy"
-
-
-BASE_NAME = "bot"
-BASE_USER = "belicoff"
-BASE_PASSWORD = "belicoffdev"
-
-ADMINS_CHAT = -563820238
-WORKERS_CHAT = -560381349
-
-
-TIME_ZONE = 'Europe/Moscow'  # часовой пояс бота +3utc
 
 team_start = "1 апреля 1991"
 

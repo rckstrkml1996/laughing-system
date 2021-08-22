@@ -1,11 +1,9 @@
 import secrets
 
-from peewee import fn
 from aiogram.types import InlineQuery
 
-from loader import dp
+from loader import dp, db_commands
 from config import StatusNames
-from customutils.models import Worker, get_profits_sum
 from data import payload
 from data.inlineresults import tagbot_article, services_status_article, about_worker_article
 from utils.executional import get_work_status, get_correct_str, get_info_about_worker
@@ -14,12 +12,7 @@ from utils.executional import get_work_status, get_correct_str, get_info_about_w
 @dp.inline_handler()
 async def inline_echo(inline_query: InlineQuery):
     if inline_query.query:
-        finded = Worker.select().where(
-            fn.Lower(Worker.username.contains(
-                inline_query.query)
-            ),
-            Worker.username_hide == False
-        )
+        finded = db_commands.workers_by_username(inline_query.query)
 
         results = [
             about_worker_article(
@@ -28,8 +21,8 @@ async def inline_echo(inline_query: InlineQuery):
                 description=payload.about_worker_text.format(
                     status=StatusNames[worker.status],
                     profits=get_correct_str(
-                        len(worker.profits), "профит", "профита", "профитов"),
-                    profits_sum=get_profits_sum(worker.id),
+                        worker.profits.count(), "профит", "профита", "профитов"),
+                    profits_sum=db_commands.get_profits_sum(worker.id),
                 ),
                 text=get_info_about_worker(worker)
             ) for worker in finded

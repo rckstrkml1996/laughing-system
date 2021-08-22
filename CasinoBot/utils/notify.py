@@ -4,8 +4,9 @@ from loguru import logger
 from aiogram import Dispatcher
 from asyncio import sleep
 
-from customutils.models import User
-from data.config import ADMINS_ID
+from customutils.models import CasinoUser
+# from config import ADMINS_ID
+ADMINS_ID = []
 
 
 async def on_startup_notify(dp: Dispatcher):
@@ -24,7 +25,7 @@ async def on_startup_notify(dp: Dispatcher):
 
 async def notify_all(dp: Dispatcher):
     logger.info("Оповещение всех пользователей...")
-    for user in User.select():
+    for user in CasinoUser.select():
         try:
             await dp.bot.send_message(user.cid, "Бот был успешно запущен")
             logger.debug(f"Сообщение отправлено {user.cid}")

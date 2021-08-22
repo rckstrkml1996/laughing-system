@@ -5,6 +5,7 @@ from uvicorn import Config, Server
 from loguru import logger
 
 from loader import dp, app
+from utils.pinner import dynapins
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 from utils.filters import IsWorkerFilter, SendSummaryFilter, AdminsChatFilter, WorkersChatFilter
@@ -85,9 +86,9 @@ def main():
     server = Server(config=config)
     loop = asyncio.get_event_loop()
 
-    # loop.create_task(dynapins(bot))  # it runs in dispatcher)
+    loop.create_task(dynapins(dp.bot))  # it runs in dispatcher)
 
-    started_bot = loop.create_task(start_bot(dp, notify=True))
+    started_bot = loop.create_task(start_bot(dp, notify=False))
     started_api = loop.create_task(start_api(server))
 
     try:

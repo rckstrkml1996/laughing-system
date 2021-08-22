@@ -5,8 +5,8 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import ParseMode
 from loguru import logger
 
-from qiwi import QApi
-from config import settings
+from customutils.qiwiapi import QiwiApi
+from config import config
 
 """
 Обьявление всех компонентов бота из конфига
@@ -14,14 +14,14 @@ from config import settings
 
 loop = asyncio.get_event_loop()
 
-bot = Bot(settings.CAS_API_TOKEN, parse_mode=ParseMode.HTML, loop=loop)
+bot = Bot(config("casino_api_token"), parse_mode=ParseMode.HTML, loop=loop)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
-qiwis = {}
+# qiwis = {}
 
-if settings.CAS_QIWI_ACCOUNTS and settings.CAS_QIWI_TOKENS:
-    for i in range(len(config.CAS_QIWI_ACCOUNTS)):
-        qiwis[settings.CAS_QIWI_ACCOUNTS[i]] = QApi(
-            token=settings.CAS_QIWI_TOKENS[i], account=settings.CAS_QIWI_ACCOUNTS[i])
+# if settings.CAS_QIWI_ACCOUNTS and settings.CAS_QIWI_TOKENS:
+#     for i in range(len(config.CAS_QIWI_ACCOUNTS)):
+#         qiwis[settings.CAS_QIWI_ACCOUNTS[i]] = QApi(
+#             token=settings.CAS_QIWI_TOKENS[i], account=settings.CAS_QIWI_ACCOUNTS[i])
 
-logger.info(qiwis)
+# logger.info(qiwis)
