@@ -1,12 +1,14 @@
+import asyncio
+
 from aiogram import Dispatcher
 from aiogram import executor
 
-from data.config import SKIP_UPDATES
+from config import SKIP_UPDATES
 from loguru import logger
 from loader import dp
-
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
+from utils.fileidcreator import file_ids
 
 
 async def on_startup(dispatcher: Dispatcher):
@@ -22,5 +24,7 @@ async def on_shutdown(dispatcher: Dispatcher):
     print("shutdown")
 
 if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.create_task(file_ids())
     executor.start_polling(dp, skip_updates=SKIP_UPDATES,
                            on_startup=on_startup, on_shutdown=on_shutdown)

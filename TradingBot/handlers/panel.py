@@ -7,7 +7,7 @@ from data.keyboards import *
 from customutils.models import TradingUser
 from random import randint
 from data.states import Withdraw, Deposit
-from data.config import config
+from config import config
 
 
 @dp.message_handler(regexp="профил")
@@ -18,25 +18,27 @@ async def my_profile(message: types.Message):
             balance=user.balance,  # NOT REF BALANCE
             cid=user.cid,
             deals_count=randint(700, 3000)
-            )
+        )
         )
     except TradingUser.DoesNotExist:
         pass
+
 
 @dp.callback_query_handler(text="rules_agreed")
 async def rules_agreed(query: types.CallbackQuery):
     await query.message.edit_text(payload.welcome_text(query.from_user.full_name, True))
     TradingUser.create(cid=query.message.chat.id, username=query.from_user.username,
-                          fullname=query.from_user.full_name)
+                       fullname=query.from_user.full_name)
     try:
         user = TradingUser.get(cid=query.message.chat.id)
         await query.message.answer(payload.my_profile_text.format(
-                                    balance=user.balance,
-                                    cid=user.cid,
-                                    deals_count=randint(700, 3000)
+            balance=user.balance,
+            cid=user.cid,
+            deals_count=randint(700, 3000)
         ), reply_markup=main_keyboard)
     except TradingUser.DoesNotExist:
         pass
+
 
 @dp.message_handler(regexp="вывест")
 async def withdraw(message: types.Message):
@@ -44,11 +46,12 @@ async def withdraw(message: types.Message):
         user = TradingUser.get(cid=message.chat.id)
         await message.answer(payload.withdraw_text.format(
             balance=user.balance  # NOT REF BALANCE
-            )
+        )
         )
         await Withdraw.count.set()
     except TradingUser.DoesNotExist:
         pass
+
 
 @dp.message_handler(regexp="пополн")
 async def my_profile(message: types.Message):
@@ -61,6 +64,7 @@ async def my_profile(message: types.Message):
     except TradingUser.DoesNotExist:
         pass
 
+
 @dp.message_handler(regexp="счет|счёт")
 async def ecn_show(message: types.Message):
     try:
@@ -69,9 +73,11 @@ async def ecn_show(message: types.Message):
     except TradingUser.DoesNotExist:
         pass
 
+
 @dp.message_handler(regexp="поддержк")
 async def support_show(message: types.Message):
     await message.answer(payload.support_text)
+
 
 @dp.message_handler(state=Deposit.count)
 async def deposit_entered(message: types.Message, state: FSMContext):
@@ -84,7 +90,7 @@ async def deposit_entered(message: types.Message, state: FSMContext):
             else:
                 await message.answer(payload.deposit_form_text.format(
                     count=int(message.text),
-                    qiwi_number=13131313, # QIWI NUMBER
+                    qiwi_number=13131313,  # QIWI NUMBER
                     comment=133131        # GENERATE COMMENT???
                 ), reply_markup=payment_keyboard)
                 await state.finish()
@@ -93,6 +99,7 @@ async def deposit_entered(message: types.Message, state: FSMContext):
             await state.finish()
     except TradingUser.DoesNotExist:
         pass
+
 
 @dp.message_handler(state=Withdraw.count)
 async def withdraw_entered(message: types.Message, state: FSMContext):
@@ -116,6 +123,7 @@ async def withdraw_entered(message: types.Message, state: FSMContext):
             await state.finish()
     except TradingUser.DoesNotExist:
         pass
+
 
 @dp.message_handler(state=Withdraw.requisites)
 async def requisites_entered(message: types.Message, state: FSMContext):
