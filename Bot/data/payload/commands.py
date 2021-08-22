@@ -62,9 +62,8 @@ qiwi_error_text = emojize(
 )
 
 add_qiwis_text = emojize(
-    "Введите <b>Номер</b> и <b>Токен</b>, пример:\n"
+    "Введите <b>Номер</b>, пример:\n"
     "<code>79008882211</code>\n"
-    "<code>f420543a9430065db1264535ff4eb1ae</code>"
 )
 
 invalid_newqiwi_text = emojize(
@@ -77,7 +76,7 @@ invalid_newqiwi_text = emojize(
 qiwi_info_text = emojize(
     "Кошелек: <b>+{number}</b> :kiwi_fruit:\n"
     "Баланс: <b>{balance}</b>\n"
-    "Последние транзакции :point_down:\n"
+    "Статус: <b>{status}</b>\n\n"
     "{last_actions}"
 )
 
@@ -86,8 +85,8 @@ same_qiwi_text = emojize(
 )
 
 qiwi_delete = emojize(
-    ":wastebasket: Удаляю кошелек {account}\n"
-    "Токен: {token}"
+    ":wastebasket: Удаляю кошелек с токеном:\n"
+    "<code>{token}</code>"
 )
 
 alert_text = emojize(

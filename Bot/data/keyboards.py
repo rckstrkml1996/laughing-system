@@ -168,8 +168,8 @@ add_qiwi_keyboard.add(add_qiwi_btn)
 def qiwi_keyboard(accounts: list):
     markup = InlineKeyboardMarkup()
 
-    for acc in accounts:
-        markup.add(InlineKeyboardButton(acc, callback_data=f"qiwi_{acc}"))
+    for i, acc in enumerate(accounts):
+        markup.add(InlineKeyboardButton(acc, callback_data=f"qiwi_{i}"))
 
     markup.add(add_qiwi_btn)
 

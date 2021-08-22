@@ -4,11 +4,15 @@ import aiohttp
 from pydantic.error_wrappers import ValidationError
 
 from .exceptions import InvalidToken, InvalidAccount
-from .types import Accounts, Payments, PaymentInfo
+from .types import Accounts, Payments, PaymentInfo, Profile
 
 
-def get_currency(currency):
+def get_currency(currency: int):
     return "RUB" if currency == 643 else "USD" if currency == 840 else "EUR"
+
+
+def get_identification_level(level: str):
+    return "Основной" if level == "SIMPLE" or level == "VERIFIED" else "Профессиональный" if level == "FULL" else "Без верификации"
 
 
 class QiwiApi:
@@ -16,11 +20,38 @@ class QiwiApi:
     Манипуляции напрямую с Qiwi API
     """
 
-    def __init__(self, token: str, account: str):
-        self.TOKEN = token
-        self.ACCOUNT = account
-        self.headers = {"authorization": "Bearer " + token}
+    def __init__(self, token: str):
+        self.token = token
+        self.profile = None
         self._session: aiohttp.ClientSession = None
+        self.headers = {"authorization": "Bearer " + token}
+
+    async def get_profile(self):
+        if self.profile is None:
+            url = "https://edge.qiwi.com/person-profile/v1/profile/current"
+
+            response = await self.session.get(url)
+            if response.status == 401:
+                raise InvalidToken
+            elif response.status == 403:
+                raise InvalidAccount
+            json = await response.json()
+
+            self.profile = Profile(**json)
+        return self.profile
+
+    async def get_new_profile(self):
+        url = "https://edge.qiwi.com/person-profile/v1/profile/current"
+
+        response = await self.session.get(url)
+        if response.status == 401:
+            raise InvalidToken
+        elif response.status == 403:
+            raise InvalidAccount
+        json = await response.json()
+
+        self.profile = Profile(**json)
+        return self.profile
 
     @property  # <- уже исполниная функция без абьедка
     def session(self) -> aiohttp.ClientSession:
@@ -40,7 +71,8 @@ class QiwiApi:
         return aiohttp.ClientSession(headers=self.headers)
 
     async def get_balance(self):
-        url = f"https://edge.qiwi.com/funding-sources/v2/persons/{self.ACCOUNT}/accounts"
+        profile = await self.get_profile()
+        url = f"https://edge.qiwi.com/funding-sources/v2/persons/{profile.contractInfo.contractId}/accounts"
 
         response = await self.session.get(url)
         if response.status == 401:
@@ -52,7 +84,8 @@ class QiwiApi:
         return Accounts(**json).accounts
 
     async def get_transactions(self, rows: int = 50):
-        url = f"https://edge.qiwi.com/payment-history/v2/persons/{self.ACCOUNT}/payments"
+        profile = await self.get_profile()
+        url = f"https://edge.qiwi.com/payment-history/v2/persons/{profile.contractInfo.contractId}/payments"
 
         response = await self.session.get(url, params={"rows": rows})
         if response.status == 401:

@@ -1,5 +1,4 @@
 import re
-from configparser import NoOptionError
 from asyncio import sleep
 
 from aiogram import types
