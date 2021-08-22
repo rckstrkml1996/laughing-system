@@ -12,3 +12,4 @@ py_expression_eval
 pydantic
 pymysql
 pillow
+psutil

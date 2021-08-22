@@ -10,6 +10,8 @@ from loader import dp
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 # from utils import life_outs
+from utils.systeminfo import CpuUsage
+CpuUsage.set_current(CpuUsage(123.12))
 
 
 async def on_startup(dispatcher: Dispatcher):

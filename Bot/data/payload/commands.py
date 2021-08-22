@@ -122,3 +122,12 @@ alert_start_text = emojize(
 )
 
 alert_complete_text = "Рассылка завершилась)"
+
+sys_info_text = emojize(
+    ":mechanical_arm: Информация о системе:\n\n"
+    "Кол-во ядер: <b>{cpu_count}</b>\n"
+    "Кол-во ОЗУ: <b>{ram_count} МБ</b>\n\n"
+    "Загруженность ОЗУ: <b>{ram_usage}</b> %\n"
+    "Загруженность ЦП: <b>{cpu_usage}</b> %\n\n"
+    "Время работы компьютера: <b>{computer_work}</b>"
+)

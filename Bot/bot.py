@@ -1,4 +1,5 @@
 import asyncio
+import threading
 
 from aiogram import Dispatcher
 from uvicorn import Config, Server
@@ -8,6 +9,7 @@ from loader import dp, app
 from utils.pinner import dynapins
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
+from utils.systeminfo import update_cpu_usage, exit_event
 
 
 async def on_startup(dispatcher: Dispatcher, notify=True):
@@ -27,12 +29,7 @@ async def on_startup(dispatcher: Dispatcher, notify=True):
 
 @app.on_event("shutdown")
 async def api_shutdown():
-    # print("SUSSUSSSAJAJSJ")
     await shutdown_polling(dp)
-
-
-# async def on_shutdown():
-#     pass
 
 
 async def shutdown(dispatcher: Dispatcher):
@@ -41,10 +38,12 @@ async def shutdown(dispatcher: Dispatcher):
     await dispatcher.storage.wait_closed()
     await dispatcher.bot.session.close()
 
+    exit_event.set()
+
     for task in asyncio.all_tasks():
         task.cancel()
 
-    # await dispatcher.wait_closed()  #
+    # await dispatcher.wait_closed()
 
 
 async def shutdown_polling(dispatcher: Dispatcher):
@@ -71,9 +70,14 @@ def main():
     config = Config(app=app, loop=dp.bot.loop, lifespan="on",
                     reload=True, host="0.0.0.0")
     server = Server(config=config)
+
     loop = asyncio.get_event_loop()
 
     loop.create_task(dynapins(dp.bot))  # it runs in dispatcher)
+
+    c_usage = threading.Thread(target=update_cpu_usage)
+    c_usage.name = "CpuUsageUpdater"
+    c_usage.start()
 
     started_bot = loop.create_task(start_bot(dp, notify=False))
     started_api = loop.create_task(start_api(server))
@@ -86,7 +90,7 @@ def main():
         )
     except asyncio.exceptions.CancelledError:
         pass
-    except KeyboardInterrupt:
+    except:
         print("GG Boy!")  # not used!
 
 

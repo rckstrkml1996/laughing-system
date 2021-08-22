@@ -241,3 +241,11 @@ alert_reject_btn = InlineKeyboardButton(
     emojize(":x: Отменить"), callback_data="alert_reject")
 alert_accept_keyboard.add(alert_accept_btn)
 alert_accept_keyboard.add(alert_edit_btn, alert_reject_btn)
+
+
+update_sysinfo_keyboard = InlineKeyboardMarkup()
+sysinfo_update_btn = InlineKeyboardButton(
+    emojize(":arrows_counterclockwise:"),
+    callback_data="update_sys"
+)
+update_sysinfo_keyboard.add(sysinfo_update_btn)
