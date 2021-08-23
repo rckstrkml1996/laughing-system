@@ -13,7 +13,7 @@ async def welcome(message: types.Message):
         await message.answer(payload.my_profile_text.format(
             balance=user.balance,
             cid=user.cid,
-            deals_count=randint(700,3000)
+            deals_count=randint(1900,3000)
         ), reply_markup=main_keyboard)
     except TradingUser.DoesNotExist:
         await message.answer(payload.welcome_text(message.from_user.full_name), 

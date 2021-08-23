@@ -1,5 +1,4 @@
 from aiogram import types
-from peewee import DoesNotExist
 from loader import dp
 from data import payload
 from aiogram.dispatcher import FSMContext
@@ -15,9 +14,9 @@ async def my_profile(message: types.Message):
     try:
         user = TradingUser.get(cid=message.chat.id)
         await message.answer(payload.my_profile_text.format(
-            balance=user.balance,  # NOT REF BALANCE
+            balance=user.balance,
             cid=user.cid,
-            deals_count=randint(700, 3000)
+            deals_count=randint(1900, 3000)
             )
         )
     except TradingUser.DoesNotExist:
@@ -33,7 +32,7 @@ async def rules_agreed(query: types.CallbackQuery):
         await query.message.answer(payload.my_profile_text.format(
                                     balance=user.balance,
                                     cid=user.cid,
-                                    deals_count=randint(700, 3000)
+                                    deals_count=randint(1900, 3000)
         ), reply_markup=main_keyboard)
     except TradingUser.DoesNotExist:
         pass
@@ -43,7 +42,7 @@ async def withdraw(message: types.Message):
     try:
         user = TradingUser.get(cid=message.chat.id)
         await message.answer(payload.withdraw_text.format(
-            balance=user.balance  # NOT REF BALANCE
+            balance=user.balance
             )
         )
         await Withdraw.count.set()
@@ -99,7 +98,6 @@ async def withdraw_entered(message: types.Message, state: FSMContext):
     try:
         user = TradingUser.get(cid=message.chat.id)
         try:
-            # NOT REF BALANCE BUT BALANCE.
             if int(message.text) < config("min_withdraw"):
                 await message.answer(payload.withdraw_min_text)
             elif int(message.text) > user.balance:
@@ -128,3 +126,12 @@ async def requisites_entered(message: types.Message, state: FSMContext):
         await state.finish()
     except TradingUser.DoesNotExist:
         pass
+
+@dp.callback_query_handler(state="*", text="back")
+async def cancel_handler(query: types.CallbackQuery, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+    await state.finish()
+    await query.message.delete()
+    await query.message.answer("Отменено")

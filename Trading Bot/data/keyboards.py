@@ -8,6 +8,7 @@ rules_keyboard = InlineKeyboardMarkup()
 agree_btn = InlineKeyboardButton(emojize(":white_check_mark: Я принимаю правила"),
                                  callback_data="rules_agreed")
 rules_keyboard.add(agree_btn)
+
 main_keyboard = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
 my_ecn_btn = KeyboardButton(emojize(":chart_with_upwards_trend: Мой ECN счёт"))
 profile_btn = KeyboardButton(emojize(":briefcase: Профиль"))
@@ -27,6 +28,8 @@ up_btn = InlineKeyboardButton(emojize(":chart_with_upwards_trend: Повышен
                             callback_data="count")
 down_btn = InlineKeyboardButton(emojize(":chart_with_downwards_trend: Понижение (X2)"),
                                 callback_data="count")
+back_btn = InlineKeyboardButton(emojize(":heavy_multiplication_x: Назад"), 
+                                    callback_data="back")
 investing_keyboard.add(up_btn)
 investing_keyboard.add(down_btn)
 
