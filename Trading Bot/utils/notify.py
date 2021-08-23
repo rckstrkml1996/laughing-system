@@ -5,7 +5,8 @@ from aiogram import Dispatcher
 from asyncio import sleep
 
 from data.payload import startup_text
-from data.config import config
+from config import config
+
 
 async def on_startup_notify(dp: Dispatcher):
     logger.info("Admins notify...")
@@ -17,5 +18,7 @@ async def on_startup_notify(dp: Dispatcher):
             logger.warning("Chat with admin not found.")
         except BotBlocked:
             logger.warning("Admin blocked bot.")
+        except:
+            logger.warning("Somethink error notify!")
 
         await sleep(0.2)

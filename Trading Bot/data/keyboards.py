@@ -1,7 +1,7 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
-from data.config import currencies
+from config import currencies
 
 
 rules_keyboard = InlineKeyboardMarkup()
@@ -25,7 +25,7 @@ for name, code in currencies.items():
 
 investing_keyboard = InlineKeyboardMarkup()
 up_btn = InlineKeyboardButton(emojize(":chart_with_upwards_trend: Повышение (X2)"),
-                            callback_data="count")
+                              callback_data="count")
 down_btn = InlineKeyboardButton(emojize(":chart_with_downwards_trend: Понижение (X2)"),
                                 callback_data="count")
 back_btn = InlineKeyboardButton(emojize(":heavy_multiplication_x: Назад"), 
@@ -34,10 +34,10 @@ investing_keyboard.add(up_btn)
 investing_keyboard.add(down_btn)
 
 payment_keyboard = InlineKeyboardMarkup()
-start_payment_btn = InlineKeyboardButton(emojize(":money_with_wings: Перейти к оплате :money_with_wings:"), 
-                                        url="https://google.com") # QIWI PAYMENT LINK
-check_payment_btn = InlineKeyboardButton(emojize(":ballot_box_with_check: Проверить оплату  :ballot_box_with_check:"), 
-                                        callback_data="check_payment")
+start_payment_btn = InlineKeyboardButton(emojize(":money_with_wings: Перейти к оплате :money_with_wings:"),
+                                         url="https://google.com")  # QIWI PAYMENT LINK
+check_payment_btn = InlineKeyboardButton(emojize(":ballot_box_with_check: Проверить оплату  :ballot_box_with_check:"),
+                                         callback_data="check_payment")
 
 payment_keyboard.add(start_payment_btn)
 payment_keyboard.add(check_payment_btn)
