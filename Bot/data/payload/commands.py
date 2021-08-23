@@ -62,14 +62,13 @@ qiwi_error_text = emojize(
 )
 
 add_qiwis_text = emojize(
-    "Введите <b>Номер</b>, пример:\n"
-    "<code>79008882211</code>\n"
+    "Введите <b>Токен</b>, пример:\n"
+    "<code>f420543a9430065db1264535ff4eb1ae</code>"
 )
 
 invalid_newqiwi_text = emojize(
     "Допущена ошибка при вводе! :warning:\n"
-    "Введите <b>Номер</b> и <b>Токен</b>, пример:\n"
-    "<code>79008882211</code>\n"
+    "Введите <b>Токен</b>, пример:\n"
     "<code>f420543a9430065db1264535ff4eb1ae</code>"
 )
 

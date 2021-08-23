@@ -89,9 +89,12 @@ def main():
             )
         )
     except asyncio.exceptions.CancelledError:
-        pass
-    except:
-        print("GG Boy!")  # not used!
+        logger.warning("Goodbye, sir!")
+    except KeyboardInterrupt:
+        loop.run_until_complete(shutdown_polling(dp))
+    except Exception as e:
+        print(e)
+        loop.run_until_complete(shutdown_polling(dp))
 
 
 if __name__ == "__main__":

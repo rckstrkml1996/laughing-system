@@ -169,7 +169,10 @@ def qiwi_keyboard(accounts: list):
     markup = InlineKeyboardMarkup()
 
     for i, acc in enumerate(accounts):
-        markup.add(InlineKeyboardButton(acc, callback_data=f"qiwi_{i}"))
+        if i == 0:
+            markup.add(InlineKeyboardButton(emojize(f"{acc} :sparkle:"), callback_data=f"qiwi_{i}"))
+        else:
+            markup.add(InlineKeyboardButton(acc, callback_data=f"qiwi_{i}"))
 
     markup.add(add_qiwi_btn)
 
