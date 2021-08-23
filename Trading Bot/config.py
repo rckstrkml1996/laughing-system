@@ -1,12 +1,11 @@
 from os import getenv
 from loguru import logger
-import os
 from customutils.confparse import Config
 
 path = "../config.cfg"
 section_name = "Settings"
 
-token = os.getenv("BOT_TOKEN")  # or set it into config.cfg file))
+token = getenv("BOT_TOKEN")  # or set it into config.cfg file))
 if token is None:
     logger.warning("TOKEN DOES NOT SET IN ENV")
 
