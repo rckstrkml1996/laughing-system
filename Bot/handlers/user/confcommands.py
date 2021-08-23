@@ -4,6 +4,7 @@ from datetime import datetime
 
 from aiogram import types
 from aiogram.utils.emoji import emojize
+from loguru import logger
 
 from loader import dp, exp_parser, db_commands
 from customutils.models import Worker, Profit
@@ -25,16 +26,19 @@ async def btc_price(message: types.Message):
         rub=rub,
         usd=usd,
     ))
+    logger.debug(f"Chat User - {message.from_user.id}, get btc info")
 
 
 @dp.message_handler(commands="clc", workers_type=True)
 async def clc_command(message: types.Message):
+    text = message.text.replace("/clc ", "")
     try:
-        result = exp_parser.parse(
-            message.text.replace("/clc ", "")).evaluate({})
+        result = exp_parser.parse(text).evaluate({})
     except:
         result = "хз"
     await message.reply(result)
+    logger.debug(
+        f"Chat User - {message.from_user.id}, /clc {text} result: {result}")
 
 
 @dp.message_handler(commands="me", workers_type=True)
@@ -43,8 +47,14 @@ async def me_command(message: types.Message):
         worker = Worker.get(cid=message.from_user.id)
         text = get_info_about_worker(worker)
         await message.reply(text)
+        logger.debug(
+            f"Worker - {message.from_user.id}, /me in chat, succesful."
+        )
     except Worker.DoesNotExist:
         await message.reply("Ты не Воркер!")
+        logger.debug(
+            f"Chat User - {message.from_user.id}, /me and he does not worker"
+        )
 
 
 @dp.message_handler(commands="lzt", workers_type=True)
@@ -71,10 +81,17 @@ async def lzt_command(message: types.Message):
             message_count=f"{get_correct_str(messages_count, 'сообщение', 'сообщения', 'сообщений')}",
             like_count=user["user_like_count"],
         ))
+        logger.debug(f"User - {message.from_user.id}, /lzt get succesfully.")
     except TimeoutError:
         await message.reply(payload.lolz_down_text)
+        logger.info(
+            f"User - {message.from_user.id}, /lzt in chat and TimeoutError was raised."
+        )
     except:
         await message.reply("Ошибка!")
+        logger.info(
+            f"User - {message.from_user.id}, Some Error in chat by /lzt command"
+        )
 
 
 @dp.message_handler(commands="cck", workers_type=True)
@@ -90,7 +107,8 @@ async def cock_size_command(message: types.Message):
             smile=emojize(smile)
         ))
     except Worker.DoesNotExist:
-        pass
+        logger.debug(
+            f"User - {message.from_user.id}, /cck in chat does not Worker.")
 
 
 def get_place(i):
@@ -101,6 +119,7 @@ def get_place(i):
 
 @dp.message_handler(commands="top", workers_type=True)
 async def team_top(message: types.Message):
+    logger.debug(f"User - {message.from_user.id}, wants /top in chat.")
     query = db_commands.get_topworkers_all()  # limit = 15
     all_profits = db_commands.get_profits_all()
 
@@ -121,10 +140,12 @@ async def team_top(message: types.Message):
         profits='\n'.join(profit_text_list),
         all_profits=all_profits,
     ))
+    logger.debug(f"User {message.from_user.id} /top in chat succesfully.")
 
 
 @dp.message_handler(commands="topm", workers_type=True)
 async def team_top_day(message: types.Message):
+    logger.debug(f"User - {message.from_user.id}, wants /topm in chat.")
     query = db_commands.get_topworkers_month()  # limit = 15 autodelta
     all_profits = db_commands.get_profits_month()
 
@@ -145,10 +166,12 @@ async def team_top_day(message: types.Message):
         profits='\n'.join(profit_text_list),
         all_profits=all_profits,
     ))
+    logger.debug(f"User {message.from_user.id} /topm in chat succesfully.")
 
 
 @dp.message_handler(commands="topd", workers_type=True)
 async def team_top_day(message: types.Message):
+    logger.debug(f"User - {message.from_user.id}, wants /topd in chat.")
     query = db_commands.get_topworkers_day()  # limit = 15
     all_profits = db_commands.get_profits_day()
 
@@ -169,3 +192,4 @@ async def team_top_day(message: types.Message):
         profits='\n'.join(profit_text_list),
         all_profits=all_profits,
     ))
+    logger.debug(f"User {message.from_user.id} /topd in chat succesfully.")

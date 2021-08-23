@@ -8,4 +8,4 @@ def setup_logger(level: Union[str, int] = 'DEBUG', colorize: Optional[bool] = Tr
     logger.remove()
     logger.add(sink=stderr, level=level, colorize=colorize, enqueue=True,
                format="<lvl>{level}</lvl> {time:YY.MM.DD HH:mm} - <green>{message}</green>")
-    logger.info("Logging setuped succesfully\n")
+    logger.info("Logging setuped succesfully")

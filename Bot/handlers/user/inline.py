@@ -1,6 +1,7 @@
 import secrets
 
 from aiogram.types import InlineQuery
+from loguru import logger
 
 from loader import dp, db_commands
 from config import StatusNames
@@ -11,6 +12,7 @@ from utils.executional import get_work_status, get_correct_str, get_info_about_w
 
 @dp.inline_handler()
 async def inline_echo(inline_query: InlineQuery):
+    logger.debug(f"Inline Request with text: {inline_query.query} from {inline_query.from_user.id}")
     if inline_query.query:
         finded = db_commands.workers_by_username(inline_query.query)
 

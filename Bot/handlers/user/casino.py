@@ -2,6 +2,7 @@ import random
 import re
 
 from aiogram import types
+from loguru import logger
 from customutils.models import CasinoUser, Worker
 from customutils.datefunc import datetime_local_now
 
@@ -13,8 +14,9 @@ from data.keyboards import *
 from utils.executional import random_heart
 
 
-@dp.message_handler(regexp="казин")
+@dp.message_handler(regexp="казин", is_worker=True)
 async def casino_info(message: types.Message):
+    logger.debug(f"Worker {message.chat.id} want get casino info")
     try:
         worker = Worker.get(cid=message.chat.id)
         await message.answer(
@@ -37,8 +39,9 @@ async def casino_info(message: types.Message):
             disable_web_page_preview=True
         )
         await Casino.commands.set()
+        logger.debug(f"Worker {message.chat.id} get casino info succesfully")
     except Worker.DoesNotExist:
-        pass  # logging
+        logger.debug(f"Worker {message.chat.id} in casino info does not exist")
 
 
 async def match_command(message: types.Message, regex, on_match):

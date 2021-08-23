@@ -8,6 +8,14 @@ from customutils.datefunc import datetime_local_now
 
 
 class BaseCommands:
+    def all_profits_sum(self) -> int:
+        return int((
+            Profit
+            .select(
+                fn.SUM(Profit.amount).alias("all_profits")
+            )
+        ).execute()[0].all_profits or 0)
+
     def get_profits_sum(self, worker_id) -> int:
         return int((
             Profit

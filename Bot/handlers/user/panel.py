@@ -1,5 +1,7 @@
 from aiogram import types
+from aiogram.dispatcher import FSMContext
 from aiogram.utils.emoji import emojize
+from loguru import logger
 
 from loader import dp, db_commands
 from config import config
@@ -11,8 +13,19 @@ from data.keyboards import *
 from utils.executional import get_correct_str, get_work_status
 
 
-@dp.message_handler(regexp="профил", is_worker=True)
+@dp.message_handler(regexp="профил", is_worker=True, state="*")
+async def worker_profile(message: types.Message, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is not None:
+        logger.debug(f'Cancelling state {current_state} in bot profile')
+        await state.finish()
+
+    await worker_welcome(message)
+
+
 async def worker_welcome(message: types.Message):
+    logger.debug(f"Worker - {message.chat.id}, wants get profile")
+
     worker = Worker.get(cid=message.chat.id)
     worker.username = message.chat.username
     worker.save()  # update worker username
@@ -20,10 +33,13 @@ async def worker_welcome(message: types.Message):
 
     len_profits = worker.profits.count()
     all_balance = db_commands.get_profits_sum(worker.id)
-
     middle_profits = 0
     if len_profits:
         middle_profits = int(all_balance / len_profits)
+
+    logger.debug(
+        f"Worker - {message.chat.id} get profile, profits all: {all_balance} len: {len_profits} middle: {middle_profits}"
+    )
 
     await message.answer(emojize(":zap:"), reply_markup=menu_keyboard)
     await message.answer(
@@ -44,20 +60,25 @@ async def worker_welcome(message: types.Message):
     )
 
 
-@dp.message_handler(regexp="проект", is_worker=True)
-async def project_info(message: types.Message):
-    worker = Worker.get(cid=message.chat.id)
+@dp.message_handler(regexp="проект", is_worker=True, state="*")
+async def project_info(message: types.Message, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is not None:
+        logger.debug(f'Cancelling state {current_state} in bot project info')
+        await state.finish()
+
     team_profits = Profit.select().count()
 
     await message.answer(
         payload.about_project_text.format(
             team_start=team_start,
             team_profits=team_profits,
-            profits_sum=db_commands.get_profits_sum(worker.id),
+            profits_sum=db_commands.all_profits_sum(),
             services_status=get_work_status()
         ),
         reply_markup=about_project_keyboard
     )
+    logger.debug(f"Worker - {message.chat.id}, get project info")
 
 
 @dp.message_handler(regexp="эскор")
@@ -94,13 +115,16 @@ async def casino_info(message: types.Message):
     )
 
 
-@dp.callback_query_handler(text="toggleusername")
+@dp.callback_query_handler(text="toggleusername", is_worker=True)
 async def toggle_username(query: types.CallbackQuery):
     try:
         worker = Worker.get(cid=query.message.chat.id)
         worker.username_hide = not worker.username_hide
         in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
         worker.save()
+        logger.debug(
+            f"Worker - {worker.cid}:{worker.id}, change username hide status to {worker.username_hide}"
+        )
 
         len_profits = worker.profits.count()
         all_balance = db_commands.get_profits_sum(worker.id)
@@ -132,13 +156,13 @@ async def toggle_username(query: types.CallbackQuery):
         pass
 
 
-@dp.callback_query_handler(text="showrules")
+@dp.callback_query_handler(text="showrules", is_worker=True)
 async def show_rules(query: types.CallbackQuery):
     await query.message.answer(
         payload.rules_text(True))
 
 
-@dp.callback_query_handler(text="refsystem")
+@dp.callback_query_handler(text="refsystem", is_worker=True)
 async def ref_system(query: types.CallbackQuery):
     await query.message.answer(
         payload.referral_system_text.format(

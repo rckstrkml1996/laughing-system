@@ -4,12 +4,14 @@ import secrets
 import os
 
 from PIL import Image, ImageFont, ImageDraw, ImageFilter
+from loguru import logger
 
 from ..executional import get_random_analog
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
 
 
+@logger.catch
 def render_profit(general: int, profit, share, service, username):
     image = Image.open(
         os.path.join(
@@ -93,6 +95,7 @@ def render_profit(general: int, profit, share, service, username):
     return img_path
 
 
+@logger.catch
 def ligthText(image, pos, text, font, width, fillMain=(0, 0, 0, 255), fillLight=(0, 0, 0, 255)):
     imageligth = Image.new("RGBA", image.size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(imageligth)
@@ -104,6 +107,7 @@ def ligthText(image, pos, text, font, width, fillMain=(0, 0, 0, 255), fillLight=
     image.paste(imageligth, imageligth)
 
 
+@logger.catch
 def textLightEffect(image, pos, text, width, font, fill):
     # Create piece of canvas to draw text on and blur
     blurred = Image.new('RGBA', image.size, (0, 0, 0, 0))

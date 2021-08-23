@@ -4,8 +4,23 @@ from loguru import logger
 from sys import stderr  # stdin, stdout or stderr
 
 
-def setup_logger(level: Union[str, int] = 'DEBUG', colorize: Optional[bool] = True):
+def setup_logger(level: Union[str, int] = 'DEBUG', colorize: Optional[bool] = True, as_session=False):
     logger.remove()
-    logger.add(sink=stderr, level=level, colorize=colorize, enqueue=True,
-               format="<lvl>{level}</lvl> {time:YY.MM.DD HH:mm} - <green>{message}</green>")
-    logger.info("Logging setuped succesfully\n")
+    logger.add(
+        sink=stderr,
+        level=level,
+        colorize=colorize,
+        enqueue=True,
+        format="<lvl>{level}</lvl> - <green>{message}</green>"
+    )
+    log_file = "session.log"
+    if as_session:
+        log_file = "file_{time}.log"
+        level = "DEBUG"
+    logger.add(
+        log_file,
+        format="{time:MM-DD at HH:mm:ss} | {level} | {message}",
+        level=level,
+        rotation="5 MB"
+    )
+    logger.info("Logging setuped succesfully")
