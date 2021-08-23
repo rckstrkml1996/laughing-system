@@ -81,6 +81,16 @@ class CasinoUser(BaseModel):
     def __str__(self):
         return f'#{self.id} {self.cid}'
 
+class TradingUser(BaseModel):
+    cid = peewee.IntegerField(unique=True)
+    balance = peewee.IntegerField(default=0)
+    fullname = peewee.CharField(default="Без имени")
+    username = peewee.CharField(default="Юзернейм скрыт")
+    
+    def __str__(self):
+        return f'#{self.id} {self.cid}'
+
+
 
 # class CasinoPayment(BaseModel):
 #     cid = peewee.IntegerField()
@@ -99,4 +109,4 @@ class CasinoUserHistory(BaseModel):
 
 base.connect()
 base.create_tables(
-    [Worker, Profit, QiwiPayment, CasinoUser, CasinoUserHistory])
+    [Worker, Profit, QiwiPayment, CasinoUser, CasinoUserHistory, TradingUser])

@@ -46,7 +46,7 @@ add_unsuccesful = emojize(
 out_req_text = emojize("Введите реквизиты для вывода :iphone:\
 	\n:warning: Вывод возможен только на реквизиты, с которых пополнялся Ваш баланс!")
 
-out_req_succesful = emojize("Заявка на вывод средств отправленна \
+out_req_succesful = emojize("Заявка на вывод средств отправлена \
 	\n:warning: Средства придут к Вам на счёт в течении от 2 до 30 минут.\nОжидайте!")
 
 out_invreq_text = emojize(f":hammer_and_wrench: Упс.. \
