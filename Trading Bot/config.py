@@ -1,11 +1,14 @@
-from os import getenv
 from loguru import logger
 from customutils.confparse import Config
+import os
+
 
 path = "../config.cfg"
 section_name = "Settings"
 
-token = getenv("BOT_TOKEN")  # or set it into config.cfg file))
+directory = os.path.dirname(os.path.abspath(__file__))
+
+token = os.getenv("BOT_TOKEN")  # or set it into config.cfg file))
 if token is None:
     logger.warning("TOKEN DOES NOT SET IN ENV")
 
@@ -26,18 +29,7 @@ standart_config = {
 
 config = Config(section_name, path, standart_config)
 
-
-outs_link = "https://t.me/hideteamout"
-workers_link = "https://t.me/joinchat/oV_2yUpUrA1kZThi"
-reviews_link = "https://t.me/joinchat/xdsxXRzqhFhmNDAy"
-
 TIME_ZONE = 'Europe/Moscow'  # часовой пояс бота +3utc
-
-'''
-    Кастомизация
-        Уровни
-    
-'''
 
 # useless
 SKIP_UPDATES = True
@@ -55,10 +47,10 @@ currencies = {
 }
 
 photos = {
-    "eth": "./data/images/etc.jpg",
-    "btc": "./data/images/btc.jpg",
-    "ltc": "./data/images/ltc.jpg",
-    "qtm": "./data/images/otm.jpg",
-    "trx": "./data/images/trn.jpg",
-    "xrp": "./data/images/rpl.jpg"
+    "eth": os.path.join(directory, 'data', 'images', 'etc.jpg'),
+    "btc": os.path.join(directory, 'data', 'images', 'btc.jpg'),
+    "ltc": os.path.join(directory, 'data', 'images', 'ltc.jpg'),
+    "qtm": os.path.join(directory, 'data', 'images', 'otm.jpg'),
+    "trx": os.path.join(directory, 'data', 'images', 'trn.jpg'),
+    "xrp": os.path.join(directory, 'data', 'images', 'rpl.jpg')
 }

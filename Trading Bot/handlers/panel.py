@@ -6,7 +6,7 @@ from data.keyboards import *
 from customutils.models import TradingUser
 from random import randint
 from data.states import Withdraw, Deposit
-from data.config import config
+from config import config
 
 
 @dp.message_handler(regexp="профил")
@@ -77,7 +77,6 @@ async def deposit_entered(message: types.Message, state: FSMContext):
     try:
         user = TradingUser.get(cid=message.chat.id)
         try:
-            # NOT REF BALANCE BUT BALANCE.
             if int(message.text) < config("min_deposit"):
                 await message.answer(payload.deposit_minerror_text)
             else:
