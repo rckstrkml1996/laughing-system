@@ -29,8 +29,6 @@ standart_config = {
 
 config = Config(section_name, path, standart_config)
 
-TIME_ZONE = "Europe/Moscow"  # часовой пояс бота +3utc
-
 # useless
 SKIP_UPDATES = True
 
