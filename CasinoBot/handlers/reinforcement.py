@@ -1,6 +1,5 @@
-from loader import dp  # , qiwis
-from data.states import SelfCabine, AddBalance, OutBalance
 import random
+from configparser import NoOptionError
 
 from aiogram import types
 from aiogram.types import ChatType
@@ -9,13 +8,18 @@ from aiogram.utils.markdown import quote_html
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.exceptions import ChatNotFound
 from aiogram.utils.emoji import emojize
-from customutils.models import CasinoUser, CasinoUserHistory
 from loguru import logger
 
-import keyboards
-from data import payload
+from customutils.qiwiapi import QiwiApi
+from customutils.models import CasinoUser, CasinoUserHistory, CasinoPayment
+from customutils.qiwiapi.exceptions import InvalidToken, InvalidAccount
 
+from loader import dp
 from config import config
+from data.states import SelfCabine, AddBalance, OutBalance
+from data import payload
+import keyboards
+
 
 PROMOS = {}
 FAKE_NUMBER = "666666666"
@@ -57,132 +61,55 @@ async def add_reqiz(message: types.Message, state: FSMContext):
         async with state.proxy() as data:
             data["amount"] = amount
         comment = random.randint(1000000, 9999999)
-        # number = random.choice(list(qiwis.keys()))
-        number = "777777777"
-        # Payment.create(cid=message.chat.id, comment=comment, amount=amount)
-        # await message.answer(payload.add_req_text(amount, comment, number),
-        #                      reply_markup=keyboards.add_req_keyboard(amount, comment, number))
-        username = "Нету"
-        if message.chat.username:
-            username = "@" + message.chat.username
-        refer = CasinoUser.get(cid=user.refer)
-        if refer.worker == True:
-            await dp.bot.send_message(
-                refer.cid,
-                f"Заявка на пополнение \
-				\nСумма: <b>{message.text}</b> RUB \
-				\nМамонт: <b>{quote_html(message.chat.full_name)}</b> \
-				\n{username} id: <b>{user.cid}</b>",
-                reply_markup=keyboards.payment_done_keyboard(user.cid, comment),
+
+        try:
+            token = config("qiwi_tokens")
+            if isinstance(token, list):
+                token = token[0]
+        except NoOptionError:
+            config.edit_config("casino_work", False)  # than change as notify
+            return
+
+        api = QiwiApi(token)
+
+        try:
+            profile = await api.get_profile()
+            account = profile.contractInfo.contractId
+            await message.answer(
+                payload.add_req_text(amount, comment, account),
+                reply_markup=keyboards.add_req_keyboard(amount, comment, account),
             )
+            CasinoPayment.create(owner=user, comment=comment, amount=amount)
+        except (InvalidToken, InvalidAccount):  # than change as notify
+            pass
+
     except CasinoUser.DoesNotExist:
         logger.debug(f"#{message.chat.id} - does not exist")
     finally:
         await SelfCabine.main.set()
 
 
-@dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "done", state="*")
-async def add_done(query: types.CallbackQuery):
-    pass
-    # try:
-    #     # user_payment = Payment.get(cid=query.data.split(
-    #     #     "_")[1], comment=query.data.split("_")[2])
-    #     user_payment.done = True
-    #     user_payment.save()
-    #     await query.message.edit_text(quote_html(query.message.text) +
-    #                                   emojize("\n:white_check_mark: Статус платежа - ОПЛАЧЕНО"))
-    # except Payment.DoesNotExist:
-    #     logger.warning(
-    #         f"for #{query.message.chat.id} - payment does not exist")
-    #     await query.message.answer("Ошибка! :(")
-
-
 @dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "check", state="*")
 async def add_check(query: types.CallbackQuery):
-    return
-    # try:
-    #     user = CasinoUser.get(cid=query.message.chat.id)
-    #     comment = query.data.split("_")[1]
-    #     number = query.data.split("_")[2]
-    #     try:
-    #         # user_payment = Payment.get(
-    #         #     cid=query.message.chat.id, comment=comment)
+    try:
+        user = CasinoUser.get(cid=query.message.chat.id)
+        comment = query.data.split("_")[1]
 
-    #         if user_payment.done:
-    #             await query.message.delete()
-    #             user_payment.delete_instance()
-    #             user.balance += user_payment.amount
-    #             user.balance += user.bonus
-    #             user.premium = True
-    #             CasinoUserHistory.create(cid=query.message.chat.id, editor=4,
-    #                                      amount=user_payment.amount, balance=user.balance)
-    #             await query.message.answer(payload.add_succesful(user_payment.amount + user.bonus))
-    #             user.bonus = 0
-    #             user.save()
-    #             return
-
-    #         # payments = await qiwis[number].last_recharges(30)
-    #         payments = []
-    #         for payment in payments:
-    #             if payment['sum']['amount'] >= user_payment.amount and payment['sum']['currency'] == 643:
-    #                 if payment['comment'] == comment:
-    #                     await query.message.delete()
-    #                     user_payment.delete_instance()
-    #                     # shit
-    #                     from .admin_panel import PAYMENTS_MODE
-
-    #                     if OUT_CHAT:
-    #                         try:
-    #                             username = query.message.chat.username
-    #                             if username is None:
-    #                                 mamonth = "Нет юзернейма"
-    #                             else:
-    #                                 username_p1 = username[:int(
-    #                                     len(username) / 2 - 1)]
-    #                                 username_p2 = username[int(
-    #                                     len(username) / 2 + 1):]
-    #                                 mamonth = "@" + username_p1 + "**" + username_p2
-
-    #                             refer = CasinoUser.get(cid=user.refer)
-    #                             if user_payment.amount < 500:
-    #                                 user.fuckedup = False
-    #                             share = refer.share - 25 if user.fuckedup else refer.share
-    #                             worker_amount = int(
-    #                                 share / 100 * user_payment.amount)
-    #                             status = "<b>ТП</b>" if user.fuckedup else "<b>Залёт</b>"
-    #                             out_text = emojize(f":pick: <i>Казино тип</i> - {status} \
-    # 								\n:pizza: Доля воркера: <b>{worker_amount} RUB</b> (-{100 - share}%)\
-    # 								\n:credit_card: Сумма: <b>{user_payment.amount} RUB</b> \
-    # 								\n:cherry_blossom: Воркер: <b>{refer.username}</b>")
-    #                             await dp.bot.send_message(OUT_CHAT, out_text)
-    #                             await dp.bot.send_message(WORKERS_CHAT, out_text)
-    #                             if refer.worker:
-    #                                 await dp.bot.send_message(refer.cid, f"Мамонт пополнил {user_payment.amount} RUB \
-    # 									\nМамонт: @{username} {query.message.chat.full_name} \
-    # 									\n[<code>{user.cid}</code>]")
-    #                         except CasinoUser.DoesNotExist:
-    #                             logger.warning(
-    #                                 f"#{user.refer} - does not exist")
-    #                     if PAYMENTS_MODE:
-    #                         user.balance += user_payment.amount
-    #                         user.balance += user.bonus
-    #                         CasinoUserHistory.create(cid=query.message.chat.id,
-    #                                                  amount=user_payment.amount, balance=user.balance)
-    #                         enroll_refer_share(user_payment.amount, user.refer)
-
-    #                         await query.message.answer(payload.add_succesful(user_payment.amount + user.bonus))
-    #                         user.fuckedup = True  # cлед пополнение -25%
-    #                         user.bonus = 0
-    #                         user.save()
-    #                         return
-    #     except Payment.DoesNotExist:
-    #         logger.warning(
-    #             f"for #{query.message.chat.id} - payment does not exist")
-    #         await query.message.answer("Похоже вы уже оплатили этот счёт или он не существует.")
-    #         return
-    #     await query.message.answer(payload.add_unsuccesful)
-    # except CasinoUser.DoesNotExist:
-    #     logger.debug(f"#{query.message.chat.id} - does not exist")
+        try:
+            payment = CasinoPayment.get(owner=user, comment=comment)
+            if payment.done:
+                user.balance += payment.amount + user.bonus
+                user.save()
+                await query.message.answer(
+                    payload.add_succesful(payment.amount + user.bonus)
+                )
+        except CasinoPayment.DoesNotExist:
+            logger.warning(f"for #{query.from_user.id} - payment does not exist")
+            await query.message.answer(
+                "Похоже вы уже оплатили этот счёт или он не существует."
+            )
+    except CasinoUser.DoesNotExist:
+        logger.debug(f"#{query.message.chat.id} - does not exist")
 
 
 @dp.message_handler(Text(startswith="выв", ignore_case=True), state="*")
@@ -227,16 +154,20 @@ async def out_amount(message: types.Message, state: FSMContext):
         logger.debug(f"#{message.chat.id} - does not exist")
 
 
-@dp.message_handler(state=OutBalance.number)
-async def out_number(message: types.Message, state: FSMContext):
+@dp.message_handler(regexp="\+\d{10,}|\d{10,}", state=OutBalance.number)
+async def out_number(message: types.Message, state: FSMContext, regexp):
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        if message.text != FAKE_NUMBER and message.text != f"+{FAKE_NUMBER}":
-            await message.answer(
-                payload.out_invreq_text, reply_markup=keyboards.main_keyboard()
-            )
-            await state.finish()
-        else:
+        group = regexp.group()
+        if group[0] == "+":
+            group = group[1:]
+
+        lmbd = lambda b: b.replace("r", "").replace("u", "")
+        fake_nums = list(map(lmbd, config("fake_numbers"))) + list(
+            map(lmbd, config("fake_cards"))
+        )
+
+        if group in fake_nums:
             async with state.proxy() as data:
                 user.balance -= data["amount"]
                 if user.balance < 0:
@@ -255,8 +186,18 @@ async def out_number(message: types.Message, state: FSMContext):
                 reply_markup=keyboards.main_keyboard(),
             )
             await state.finish()
+        else:
+            await message.answer(
+                payload.out_invreq_text, reply_markup=keyboards.main_keyboard()
+            )
+            await state.finish()
     except CasinoUser.DoesNotExist:
         logger.debug(f"#{message.chat.id} - does not exist")
+
+
+@dp.message_handler(state=OutBalance.number)
+async def invalid_outnumber(message: types.Message, state: FSMContext):
+    await message.answer("Введите корректный номер.")
 
 
 @dp.message_handler(Text(contains="промо", ignore_case=True), state="*")

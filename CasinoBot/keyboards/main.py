@@ -3,6 +3,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
 from customutils.models import CasinoUser
+
 # from config import QIWI_ACCOUNTS
 
 # cancel button
@@ -12,8 +13,7 @@ cancel_button = KeyboardButton(emojize("Назад :arrow_up:"))
 
 
 def main_keyboard():
-    main_keyboard = ReplyKeyboardMarkup(
-        one_time_keyboard=True, resize_keyboard=True)
+    main_keyboard = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     play_button = KeyboardButton(emojize("Играть :four_leaf_clover:"))
     sup_button = KeyboardButton(emojize("Информация :bulb:"))
     selfcab_button = KeyboardButton(emojize("Личный кабинет :briefcase:"))
@@ -23,8 +23,7 @@ def main_keyboard():
     return main_keyboard
 
 
-selfcab_keyboard = ReplyKeyboardMarkup(
-    one_time_keyboard=True, resize_keyboard=True)
+selfcab_keyboard = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
 in_button = KeyboardButton(emojize("Пополнить :moneybag:"))
 promo_button = KeyboardButton(emojize("Ввести промокод :key:"))
 out_button = KeyboardButton(emojize("Вывести :money_with_wings:"))
@@ -35,8 +34,9 @@ selfcab_keyboard.row(cancel_button)
 
 def welcome_keyboard(ref_id: int):
     welcome_keyboard = InlineKeyboardMarkup()
-    accept_button = InlineKeyboardButton(emojize(":white_check_mark: Принять правила"),
-                                         callback_data=f"accept_{ref_id}")
+    accept_button = InlineKeyboardButton(
+        emojize(":white_check_mark: Принять правила"), callback_data=f"accept_{ref_id}"
+    )
     welcome_keyboard.add(accept_button)
     return welcome_keyboard
 
@@ -46,18 +46,22 @@ def add_req_keyboard(amount: int, comment: int, number):
 	&amountFraction=0&extra['account']={number}&extra['comment']={comment}"
 
     markup = InlineKeyboardMarkup(
-        one_time_keyboard=True, resize_keyboard=True, row_width=1)
+        one_time_keyboard=True, resize_keyboard=True, row_width=1
+    )
     goto_button = InlineKeyboardButton(
-        emojize("Перейти к оплате :arrow_heading_up:"), url=url)
-    check_button = InlineKeyboardButton(emojize(
-        "Проверить оплату :recycle:"), callback_data=f"check_{comment}_{number}")
+        emojize("Перейти к оплате :arrow_heading_up:"), url=url
+    )
+    check_button = InlineKeyboardButton(
+        emojize("Проверить оплату :recycle:"), callback_data=f"check_{comment}"
+    )
     markup.add(goto_button, check_button)
 
     return markup
 
 
 qiwi_keyboard = InlineKeyboardMarkup(
-    one_time_keyboard=True, resize_keyboard=True, row_width=1)
+    one_time_keyboard=True, resize_keyboard=True, row_width=1
+)
 # for acc in QIWI_ACCOUNTS:
 qiwi_keyboard.add(InlineKeyboardButton("acc", callback_data=f"qiwi_acc"))
 
@@ -65,6 +69,7 @@ qiwi_keyboard.add(InlineKeyboardButton("acc", callback_data=f"qiwi_acc"))
 def payment_done_keyboard(cid, comment):
     markup = InlineKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     accept_button = InlineKeyboardButton(
-        emojize("Пополнить :sparkle:"), callback_data=f"done_{cid}_{comment}")
+        emojize("Пополнить :sparkle:"), callback_data=f"done_{cid}_{comment}"
+    )
     markup.add(accept_button)
     return markup

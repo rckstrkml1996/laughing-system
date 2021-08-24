@@ -197,12 +197,10 @@ async def casino_bet(message: types.Message, state: FSMContext, regexp):
         rand = randint(0, 99)
 
         win = False
+        bet = regexp.group(0)
 
-        print(rand)
-        print(user.fort_chance)
-        if regexp.group(0)[0] == "=":
+        if bet[0] == "=":
             c = randint(0, 4950)
-            print(c)
             if user.fort_chance == 100:
                 win = True
             elif c < user.fort_chance:
@@ -212,25 +210,34 @@ async def casino_bet(message: types.Message, state: FSMContext, regexp):
                 win = True
 
         if win:
-            if regexp.group(0)[0] == ">":
+            if bet[0] == ">":
                 number = randint(51, 99)
-            elif regexp.group(0)[0] == "<":
+            elif bet[0] == "<":
                 number = randint(1, 49)
-            elif regexp.group(0)[0] == "=":
+            elif bet[0] == "=":
                 number = 50
+
+            moll = 10 if number == 50 else 2
+            async with state.proxy() as data:
+                user.balance += data["stake"] * moll - data["stake"]
+                user.save()
 
             await message.answer(f"Победа! Выпало число {number}")
         else:
-            if regexp.group(0)[0] == ">":
+            if bet[0] == ">":
                 number = randint(1, 49)
-            elif regexp.group(0)[0] == "<":
+            elif bet[0] == "<":
                 number = randint(51, 99)
-            elif regexp.group(0)[0] == "=":
+            elif bet[0] == "=":
                 onetwo = randint(1, 2)
                 if onetwo == 1:
                     number = randint(1, 49)
                 else:
                     number = randint(51, 99)
+
+            async with state.proxy() as data:
+                user.balance -= data["stake"]
+                user.save()
 
             await message.answer(
                 emojize(f"Вы проиграли :confused: Выпало число {number}")
