@@ -24,18 +24,16 @@ standart_config = {
     "min_deposit": "300",
     "min_withdraw": "800",
     "bet_timer": "5",
-    "support_username": "@tradesup_bot"
+    "support_username": "@tradesup_bot",
 }
 
 config = Config(section_name, path, standart_config)
 
-TIME_ZONE = 'Europe/Moscow'  # часовой пояс бота +3utc
+TIME_ZONE = "Europe/Moscow"  # часовой пояс бота +3utc
 
 # useless
 SKIP_UPDATES = True
 
-
-logger.debug("Setup succes!")
 
 currencies = {
     "Bitcoin": "btc",
@@ -43,14 +41,14 @@ currencies = {
     "Ethereum": "eth",
     "Tron": "trx",
     "Litecoin": "ltc",
-    "Ripple": "xrp"
+    "Ripple": "xrp",
 }
 
 photos = {
-    "eth": os.path.join(directory, 'data', 'images', 'etc.jpg'),
-    "btc": os.path.join(directory, 'data', 'images', 'btc.jpg'),
-    "ltc": os.path.join(directory, 'data', 'images', 'ltc.jpg'),
-    "qtm": os.path.join(directory, 'data', 'images', 'otm.jpg'),
-    "trx": os.path.join(directory, 'data', 'images', 'trn.jpg'),
-    "xrp": os.path.join(directory, 'data', 'images', 'rpl.jpg')
+    "eth": os.path.join(directory, "data", "images", "etc.jpg"),
+    "btc": os.path.join(directory, "data", "images", "btc.jpg"),
+    "ltc": os.path.join(directory, "data", "images", "ltc.jpg"),
+    "qtm": os.path.join(directory, "data", "images", "otm.jpg"),
+    "trx": os.path.join(directory, "data", "images", "trn.jpg"),
+    "xrp": os.path.join(directory, "data", "images", "rpl.jpg"),
 }
