@@ -14,23 +14,32 @@ from loader import dp
 from customutils.models import CasinoUser, CasinoUserHistory
 
 
-@dp.message_handler(commands=["game", "games"], state="*", chat_type=ChatType.PRIVATE)
-@dp.message_handler(Text(startswith="игр", ignore_case=True),
-                    state="*", chat_type=ChatType.PRIVATE)
+@dp.message_handler(regexp="закон", state=Game)
+async def cancel_game(message: types.Message, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is not None:
+        await state.finish()
+
+    await play_game(message)
+
+
+@dp.message_handler(commands=["game", "games"], state="*")
+@dp.message_handler(Text(startswith="игр", ignore_case=True), state="*")
 async def play_game(message: types.Message):
     """
     Начало игры, перевод на стартовый стейт
     """
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        await message.answer("Выберите интересующую Вас игру", reply_markup=keyboards.games_keyboard)
+        await message.answer(
+            "Выберите интересующую Вас игру", reply_markup=keyboards.games_keyboard
+        )
         await Game.chose_game.set()
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id} - does not exist")
 
 
-@dp.message_handler(Text(startswith="кост", ignore_case=True),
-                    chat_type=ChatType.PRIVATE, state=Game.chose_game)
+@dp.message_handler(Text(startswith="кост", ignore_case=True), state=Game.chose_game)
 async def dice_game(message: types.Message):
     """
     Начало dice, перевод на стейт
@@ -43,26 +52,31 @@ async def dice_game(message: types.Message):
         logger.debug(f"{message.chat.id} - does not exist")
 
 
-@dp.message_handler(chat_type=ChatType.PRIVATE, state=Game.dice_anymes)
+@dp.message_handler(state=Game.dice_anymes)
 async def dice_any(message: types.Message):
     """
     Любое сообщение для старта
     """
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        await message.answer(payload.game_amount(user.balance), reply_markup=keyboards.play_keyboard)
+        await message.answer(
+            payload.game_amount(user.balance), reply_markup=keyboards.play_keyboard
+        )
         await Game.dice_stake.set()
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id} - does not exist")
 
 
-@dp.message_handler(lambda mes: not mes.text.isdigit() or mes.text == '0',
-                    chat_type=ChatType.PRIVATE, state=Game.dice_stake)
+@dp.message_handler(
+    lambda mes: not mes.text.isdigit() or mes.text == "0", state=Game.dice_stake
+)
 async def dice_stake_invalid(message: types.Message):
-    await message.reply("Некорректное значение ставки!", reply_markup=keyboards.play_keyboard)
+    await message.reply(
+        "Некорректное значение ставки!", reply_markup=keyboards.play_keyboard
+    )
 
 
-@dp.message_handler(chat_type=ChatType.PRIVATE, state=Game.dice_stake)
+@dp.message_handler(state=Game.dice_stake)
 async def dice_stake(message: types.Message, state: FSMContext):
     """
     Принимаем ставку
@@ -74,31 +88,46 @@ async def dice_stake(message: types.Message, state: FSMContext):
             user_dice = await message.answer_dice()
             bot_dice = await message.answer_dice()
             if user_dice.dice.value > bot_dice.dice.value:
-                await message.answer(emojize(f":heart: Вы победили! \
-					\nВаше число - {user_dice.dice.value}, число бота - {bot_dice.dice.value}"))
+                await message.answer(
+                    emojize(
+                        f":heart: Вы победили! \
+					\nВаше число - {user_dice.dice.value}, число бота - {bot_dice.dice.value}"
+                    )
+                )
                 user.balance += amount
                 user.save()
                 CasinoUserHistory.create(
-                    cid=message.chat.id, amount=amount, balance=user.balance, editor=2)
+                    owner=user, amount=amount, balance=user.balance, editor=2
+                )
             elif bot_dice.dice.value > user_dice.dice.value:
-                await message.answer(emojize(f":broken_heart: Вы проиграли! \
-					\nВаше число - {user_dice.dice.value}, число бота - {bot_dice.dice.value}"))
+                await message.answer(
+                    emojize(
+                        f":broken_heart: Вы проиграли! \
+					\nВаше число - {user_dice.dice.value}, число бота - {bot_dice.dice.value}"
+                    )
+                )
                 user.balance -= amount
                 user.save()
                 CasinoUserHistory.create(
-                    cid=message.chat.id, amount=amount, balance=user.balance, editor=3)
+                    owner=user, amount=amount, balance=user.balance, editor=3
+                )
             else:
-                await message.answer(emojize(f":white_heart: Ничья! \
-					\nВаше число - {user_dice.dice.value}, число бота - {bot_dice.dice.value}"))
+                await message.answer(
+                    emojize(
+                        f":white_heart: Ничья! \
+					\nВаше число - {user_dice.dice.value}, число бота - {bot_dice.dice.value}"
+                    )
+                )
             await dice_any(message)
         else:
-            await message.answer("Недостачно средств для ставки!", reply_markup=keyboards.play_keyboard)
+            await message.answer(
+                "Недостачно средств для ставки!", reply_markup=keyboards.play_keyboard
+            )
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id} - does not exist")
 
 
-@dp.message_handler(Text(startswith="чис", ignore_case=True),
-                    chat_type=ChatType.PRIVATE, state=Game.chose_game)
+@dp.message_handler(Text(startswith="чис", ignore_case=True), state=Game.chose_game)
 async def casino_game(message: types.Message):
     """
     Начало casino, перевод на стейт
@@ -111,26 +140,31 @@ async def casino_game(message: types.Message):
         logger.debug(f"{message.chat.id} - does not exist")
 
 
-@dp.message_handler(chat_type=ChatType.PRIVATE, state=Game.casino_anymes)
+@dp.message_handler(state=Game.casino_anymes)
 async def casino_any(message: types.Message):
     """
     Любое сообщение для старта
     """
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        await message.answer(payload.game_amount(user.balance), reply_markup=keyboards.play_keyboard)
+        await message.answer(
+            payload.game_amount(user.balance), reply_markup=keyboards.play_keyboard
+        )
         await Game.casino_stake.set()
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id} - does not exist")
 
 
-@dp.message_handler(lambda mes: not mes.text.isdigit() or mes.text == '0',
-                    chat_type=ChatType.PRIVATE, state=Game.casino_stake)
+@dp.message_handler(
+    lambda mes: not mes.text.isdigit() or mes.text == "0", state=Game.casino_stake
+)
 async def casino_stake_invalid(message: types.Message):
-    await message.reply("Некорректное значение ставки!", reply_markup=keyboards.play_keyboard)
+    await message.reply(
+        "Некорректное значение ставки!", reply_markup=keyboards.play_keyboard
+    )
 
 
-@dp.message_handler(chat_type=ChatType.PRIVATE, state=Game.casino_stake)
+@dp.message_handler(state=Game.casino_stake)
 async def casino_stake(message: types.Message, state: FSMContext):
     """
     Принимаем ставку
@@ -139,16 +173,18 @@ async def casino_stake(message: types.Message, state: FSMContext):
         user = CasinoUser.get(cid=message.chat.id)
         if user.balance >= int(message.text):
             async with state.proxy() as data:
-                data['stake'] = int(message.text)
+                data["stake"] = int(message.text)
             await message.answer(payload.game_bet, reply_markup=keyboards.bet_keyboard)
             await Game.casino_bet.set()
         else:
-            await message.answer("Недостачно средств для ставки!", reply_markup=keyboards.play_keyboard)
+            await message.answer(
+                "Недостачно средств для ставки!", reply_markup=keyboards.play_keyboard
+            )
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id} - does not exist")
 
 
-@dp.message_handler(regexp="(>|=|<)\s*50", chat_type=ChatType.PRIVATE, state=Game.casino_bet)
+@dp.message_handler(regexp="(>|=|<)\s*50", state=Game.casino_bet)
 async def casino_bet(message: types.Message, state: FSMContext, regexp):
     """
     В зависимости от статуса игрока - придумываем число
@@ -196,14 +232,18 @@ async def casino_bet(message: types.Message, state: FSMContext, regexp):
                 else:
                     number = randint(51, 99)
 
-            await message.answer(emojize(f"Вы проиграли :confused: Выпало число {number}"))
+            await message.answer(
+                emojize(f"Вы проиграли :confused: Выпало число {number}")
+            )
 
         await casino_any(message)
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id} - does not exist")
 
 
-@dp.message_handler(chat_type=ChatType.PRIVATE, state=Game.casino_bet)
+@dp.message_handler(state=Game.casino_bet)
 async def casino_bet_invalid(message: types.Message):
-    await message.answer("Вы ввели некоректное значение ставки \
-		\n\n&lt; 50 - x2\n= 50 - x10\n&gt; 50 - x2")
+    await message.answer(
+        "Вы ввели некоректное значение ставки \
+		\n\n&lt; 50 - x2\n= 50 - x10\n&gt; 50 - x2"
+    )

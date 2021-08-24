@@ -14,20 +14,20 @@ from loguru import logger
 
 import keyboards
 from data import payload
-# from config import FAKE_NUMBER, OUT_CHAT, WORKERS_CHAT, PROMOS, MINIK
+
+from config import config
+
 PROMOS = {}
 FAKE_NUMBER = "666666666"
 WORKERS_CHAT = "None"
 OUT_CHAT = "None"
-MINIK = 122
 
 """
 Пополнение, вывод - тут
 """
 
 
-@dp.message_handler(Text(startswith="пополн", ignore_case=True),
-                    chat_type=ChatType.PRIVATE, state="*")
+@dp.message_handler(Text(startswith="пополн", ignore_case=True), state="*")
 async def add_in_game(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
@@ -37,17 +37,20 @@ async def add_in_game(message: types.Message):
         logger.debug(f"#{message.chat.id} - does not exist")
 
 
-@dp.message_handler(lambda mes: not mes.text.isdigit(),
-                    chat_type=ChatType.PRIVATE, state=AddBalance.amount)
+@dp.message_handler(
+    lambda mes: not mes.text.isdigit(),
+    state=AddBalance.amount,
+)
 async def add_reqiz_invalid(message: types.Message):
     await message.reply("Сумма должна быть числом.\n\nВведите сумму пополнения")
 
 
-@dp.message_handler(chat_type=ChatType.PRIVATE, state=AddBalance.amount)
+@dp.message_handler(state=AddBalance.amount)
 async def add_reqiz(message: types.Message, state: FSMContext):
+    min_depos = config("min_deposit")
     amount = int(message.text)
-    if amount < MINIK:
-        await message.answer(f"Минимальная сумма депозита - <b>{MINIK} RUB</b>")
+    if amount < min_depos:
+        await message.answer(f"Минимальная сумма депозита - <b>{min_depos} RUB</b>")
         return
     try:
         user = CasinoUser.get(cid=message.chat.id)
@@ -64,19 +67,21 @@ async def add_reqiz(message: types.Message, state: FSMContext):
             username = "@" + message.chat.username
         refer = CasinoUser.get(cid=user.refer)
         if refer.worker == True:
-            await dp.bot.send_message(refer.cid, f"Заявка на пополнение \
+            await dp.bot.send_message(
+                refer.cid,
+                f"Заявка на пополнение \
 				\nСумма: <b>{message.text}</b> RUB \
 				\nМамонт: <b>{quote_html(message.chat.full_name)}</b> \
 				\n{username} id: <b>{user.cid}</b>",
-                                      reply_markup=keyboards.payment_done_keyboard(user.cid, comment))
+                reply_markup=keyboards.payment_done_keyboard(user.cid, comment),
+            )
     except CasinoUser.DoesNotExist:
         logger.debug(f"#{message.chat.id} - does not exist")
     finally:
         await SelfCabine.main.set()
 
 
-@dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "done",
-                           chat_type=ChatType.PRIVATE, state="*")
+@dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "done", state="*")
 async def add_done(query: types.CallbackQuery):
     pass
     # try:
@@ -92,8 +97,7 @@ async def add_done(query: types.CallbackQuery):
     #     await query.message.answer("Ошибка! :(")
 
 
-@dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "check",
-                           chat_type=ChatType.PRIVATE, state="*")
+@dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "check", state="*")
 async def add_check(query: types.CallbackQuery):
     return
     # try:
@@ -181,86 +185,109 @@ async def add_check(query: types.CallbackQuery):
     #     logger.debug(f"#{query.message.chat.id} - does not exist")
 
 
-@dp.message_handler(Text(startswith="выв", ignore_case=True), chat_type=ChatType.PRIVATE, state="*")
+@dp.message_handler(Text(startswith="выв", ignore_case=True), state="*")
 async def out_game(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        await message.answer(emojize(f"Введите сумму вывода :money_with_wings: \
-			\nВаш баланс: <b>{user.balance} RUB</b>"),
-                             reply_markup=keyboards.cancel_keyboard)
+        await message.answer(
+            emojize(
+                f"Введите сумму вывода :money_with_wings: \
+			\nВаш баланс: <b>{user.balance} RUB</b>"
+            ),
+            reply_markup=keyboards.cancel_keyboard,
+        )
         await OutBalance.amount.set()
     except CasinoUser.DoesNotExist:
         logger.debug(f"#{message.chat.id} - does not exist")
 
 
-@dp.message_handler(lambda mes: not mes.text.isdigit() or mes.text == "0",
-                    chat_type=ChatType.PRIVATE, state=OutBalance.amount)
+@dp.message_handler(
+    lambda mes: not mes.text.isdigit() or mes.text == "0",
+    state=OutBalance.amount,
+)
 async def out_amount_invalid(message: types.Message):
     await message.reply(quote_html("Вы ввели некорректную сумму вывода!"))
 
 
-@dp.message_handler(chat_type=ChatType.PRIVATE, state=OutBalance.amount)
+@dp.message_handler(state=OutBalance.amount)
 async def out_amount(message: types.Message, state: FSMContext):
     try:
         user = CasinoUser.get(cid=message.chat.id)
         if user.balance >= int(message.text):
             async with state.proxy() as data:
-                data['amount'] = int(message.text)
+                data["amount"] = int(message.text)
             await message.answer(payload.out_req_text)
             await OutBalance.number.set()
         elif user.balance < int(message.text):
-            await message.answer("Недостаточно средств для вывода",
-                                 reply_markup=keyboards.cancel_keyboard)
+            await message.answer(
+                "Недостаточно средств для вывода",
+                reply_markup=keyboards.cancel_keyboard,
+            )
     except CasinoUser.DoesNotExist:
         logger.debug(f"#{message.chat.id} - does not exist")
 
 
-@dp.message_handler(chat_type=ChatType.PRIVATE, state=OutBalance.number)
+@dp.message_handler(state=OutBalance.number)
 async def out_number(message: types.Message, state: FSMContext):
     try:
         user = CasinoUser.get(cid=message.chat.id)
         if message.text != FAKE_NUMBER and message.text != f"+{FAKE_NUMBER}":
-            await message.answer(payload.out_invreq_text,
-                                 reply_markup=keyboards.main_keyboard())
+            await message.answer(
+                payload.out_invreq_text, reply_markup=keyboards.main_keyboard()
+            )
             await state.finish()
         else:
             async with state.proxy() as data:
-                user.balance -= data['amount']
+                user.balance -= data["amount"]
                 if user.balance < 0:
                     await message.answer("Ошибка!")
                     return
                 user.save()
-                CasinoUserHistory.create(cid=message.chat.id, amount=data['amount'],
-                                         editor=1, balance=user.balance)
+                CasinoUserHistory.create(
+                    owner=user,
+                    amount=data["amount"],
+                    editor=1,
+                    balance=user.balance,
+                )
 
-            await message.answer(f"Баланс: <b>{user.balance} RUB</b>\n" + payload.out_req_succesful,
-                                 reply_markup=keyboards.main_keyboard())
+            await message.answer(
+                f"Баланс: <b>{user.balance} RUB</b>\n" + payload.out_req_succesful,
+                reply_markup=keyboards.main_keyboard(),
+            )
             await state.finish()
     except CasinoUser.DoesNotExist:
         logger.debug(f"#{message.chat.id} - does not exist")
 
 
-@dp.message_handler(Text(contains="промо", ignore_case=True),
-                    chat_type=ChatType.PRIVATE, state="*")
+@dp.message_handler(Text(contains="промо", ignore_case=True), state="*")
 async def insert_promo(message: types.Message):
     await message.answer("Введите промокод", reply_markup=keyboards.cancel_keyboard)
     await OutBalance.promo.set()
 
 
-@dp.message_handler(chat_type=ChatType.PRIVATE, state=OutBalance.promo)
+@dp.message_handler(state=OutBalance.promo)
 async def promo_complete(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
         if message.text in PROMOS:
             amount = PROMOS[message.text]
             if user.bonus == amount:
-                await message.answer("Такой промокод уже активирован", reply_markup=keyboards.selfcab_keyboard)
+                await message.answer(
+                    "Такой промокод уже активирован",
+                    reply_markup=keyboards.selfcab_keyboard,
+                )
                 return
             user.bonus = amount
             user.save()
-            await message.answer(f"Промокод на {amount} RUB активирован!", reply_markup=keyboards.selfcab_keyboard)
+            await message.answer(
+                f"Промокод на {amount} RUB активирован!",
+                reply_markup=keyboards.selfcab_keyboard,
+            )
         else:
-            await message.answer("Такой промокод не удалось найти", reply_markup=keyboards.selfcab_keyboard)
+            await message.answer(
+                "Такой промокод не удалось найти",
+                reply_markup=keyboards.selfcab_keyboard,
+            )
     except CasinoUser.DoesNotExist:
         logger.info(f"CasinoUser {message.chat.id} does not exist")
     finally:
