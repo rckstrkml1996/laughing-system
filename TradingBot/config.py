@@ -1,10 +1,12 @@
-from os import getenv
 from loguru import logger
-import os
 from customutils.confparse import Config
+import os
+
 
 path = "../config.cfg"
 section_name = "Settings"
+
+directory = os.path.dirname(os.path.abspath(__file__))
 
 token = os.getenv("BOT_TOKEN")  # or set it into config.cfg file))
 if token is None:
@@ -22,29 +24,14 @@ standart_config = {
     "min_deposit": "300",
     "min_withdraw": "800",
     "bet_timer": "5",
-    "support_username": "@tradesup_bot"
+    "support_username": "@tradesup_bot",
 }
 
 config = Config(section_name, path, standart_config)
 
-
-outs_link = "https://t.me/hideteamout"
-workers_link = "https://t.me/joinchat/oV_2yUpUrA1kZThi"
-reviews_link = "https://t.me/joinchat/xdsxXRzqhFhmNDAy"
-
-TIME_ZONE = 'Europe/Moscow'  # часовой пояс бота +3utc
-
-'''
-    Кастомизация
-        Уровни
-    
-'''
-
 # useless
 SKIP_UPDATES = True
 
-
-logger.debug("Setup succes!")
 
 currencies = {
     "Bitcoin": "btc",
@@ -52,14 +39,14 @@ currencies = {
     "Ethereum": "eth",
     "Tron": "trx",
     "Litecoin": "ltc",
-    "Ripple": "xrp"
+    "Ripple": "xrp",
 }
 
 photos = {
-    "eth": "./data/images/etc.jpg",
-    "btc": "./data/images/btc.jpg",
-    "ltc": "./data/images/ltc.jpg",
-    "qtm": "./data/images/otm.jpg",
-    "trx": "./data/images/trn.jpg",
-    "xrp": "./data/images/rpl.jpg"
+    "eth": os.path.join(directory, "data", "images", "etc.jpg"),
+    "btc": os.path.join(directory, "data", "images", "btc.jpg"),
+    "ltc": os.path.join(directory, "data", "images", "ltc.jpg"),
+    "qtm": os.path.join(directory, "data", "images", "otm.jpg"),
+    "trx": os.path.join(directory, "data", "images", "trn.jpg"),
+    "xrp": os.path.join(directory, "data", "images", "rpl.jpg"),
 }

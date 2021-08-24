@@ -1,5 +1,4 @@
 from aiogram import types
-from peewee import DoesNotExist
 from loader import dp
 from data import payload
 from aiogram.dispatcher import FSMContext
@@ -15,43 +14,40 @@ async def my_profile(message: types.Message):
     try:
         user = TradingUser.get(cid=message.chat.id)
         await message.answer(payload.my_profile_text.format(
-            balance=user.balance,  # NOT REF BALANCE
+            balance=user.balance,
             cid=user.cid,
-            deals_count=randint(700, 3000)
-        )
+            deals_count=randint(1900, 3000)
+            )
         )
     except TradingUser.DoesNotExist:
         pass
-
 
 @dp.callback_query_handler(text="rules_agreed")
 async def rules_agreed(query: types.CallbackQuery):
     await query.message.edit_text(payload.welcome_text(query.from_user.full_name, True))
     TradingUser.create(cid=query.message.chat.id, username=query.from_user.username,
-                       fullname=query.from_user.full_name)
+                          fullname=query.from_user.full_name)
     try:
         user = TradingUser.get(cid=query.message.chat.id)
         await query.message.answer(payload.my_profile_text.format(
-            balance=user.balance,
-            cid=user.cid,
-            deals_count=randint(700, 3000)
+                                    balance=user.balance,
+                                    cid=user.cid,
+                                    deals_count=randint(1900, 3000)
         ), reply_markup=main_keyboard)
     except TradingUser.DoesNotExist:
         pass
-
 
 @dp.message_handler(regexp="вывест")
 async def withdraw(message: types.Message):
     try:
         user = TradingUser.get(cid=message.chat.id)
         await message.answer(payload.withdraw_text.format(
-            balance=user.balance  # NOT REF BALANCE
-        )
+            balance=user.balance
+            )
         )
         await Withdraw.count.set()
     except TradingUser.DoesNotExist:
         pass
-
 
 @dp.message_handler(regexp="пополн")
 async def my_profile(message: types.Message):
@@ -64,7 +60,6 @@ async def my_profile(message: types.Message):
     except TradingUser.DoesNotExist:
         pass
 
-
 @dp.message_handler(regexp="счет|счёт")
 async def ecn_show(message: types.Message):
     try:
@@ -73,24 +68,21 @@ async def ecn_show(message: types.Message):
     except TradingUser.DoesNotExist:
         pass
 
-
 @dp.message_handler(regexp="поддержк")
 async def support_show(message: types.Message):
     await message.answer(payload.support_text)
-
 
 @dp.message_handler(state=Deposit.count)
 async def deposit_entered(message: types.Message, state: FSMContext):
     try:
         user = TradingUser.get(cid=message.chat.id)
         try:
-            # NOT REF BALANCE BUT BALANCE.
             if int(message.text) < config("min_deposit"):
                 await message.answer(payload.deposit_minerror_text)
             else:
                 await message.answer(payload.deposit_form_text.format(
                     count=int(message.text),
-                    qiwi_number=13131313,  # QIWI NUMBER
+                    qiwi_number=13131313, # QIWI NUMBER
                     comment=133131        # GENERATE COMMENT???
                 ), reply_markup=payment_keyboard)
                 await state.finish()
@@ -100,13 +92,11 @@ async def deposit_entered(message: types.Message, state: FSMContext):
     except TradingUser.DoesNotExist:
         pass
 
-
 @dp.message_handler(state=Withdraw.count)
 async def withdraw_entered(message: types.Message, state: FSMContext):
     try:
         user = TradingUser.get(cid=message.chat.id)
         try:
-            # NOT REF BALANCE BUT BALANCE.
             if int(message.text) < config("min_withdraw"):
                 await message.answer(payload.withdraw_min_text)
             elif int(message.text) > user.balance:
@@ -124,7 +114,6 @@ async def withdraw_entered(message: types.Message, state: FSMContext):
     except TradingUser.DoesNotExist:
         pass
 
-
 @dp.message_handler(state=Withdraw.requisites)
 async def requisites_entered(message: types.Message, state: FSMContext):
     try:
@@ -136,3 +125,12 @@ async def requisites_entered(message: types.Message, state: FSMContext):
         await state.finish()
     except TradingUser.DoesNotExist:
         pass
+
+@dp.callback_query_handler(state="*", text="back")
+async def cancel_handler(query: types.CallbackQuery, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is None:
+        return
+    await state.finish()
+    await query.message.delete()
+    await query.message.answer("Отменено")
