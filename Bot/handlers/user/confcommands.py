@@ -14,12 +14,12 @@ from utils.executional import rub_usd_btcticker, get_correct_str, find_lolz_user
     get_info_about_worker
 
 
-@dp.message_handler(commands="help", workers_type=True)
+@dp.message_handler(commands="help", workers_chat=True)
 async def help_command(message: types.Message):
     await message.reply(payload.help_text)
 
 
-@dp.message_handler(commands="btc", workers_type=True)
+@dp.message_handler(commands="btc", workers_chat=True)
 async def btc_price(message: types.Message):
     rub, usd = await rub_usd_btcticker()
     await message.reply(payload.btc_text.format(
@@ -29,7 +29,7 @@ async def btc_price(message: types.Message):
     logger.debug(f"Chat User - {message.from_user.id}, get btc info")
 
 
-@dp.message_handler(commands="clc", workers_type=True)
+@dp.message_handler(commands="clc", workers_chat=True)
 async def clc_command(message: types.Message):
     text = message.text.replace("/clc ", "")
     try:
@@ -41,7 +41,7 @@ async def clc_command(message: types.Message):
         f"Chat User - {message.from_user.id}, /clc {text} result: {result}")
 
 
-@dp.message_handler(commands="me", workers_type=True)
+@dp.message_handler(commands="me", workers_chat=True)
 async def me_command(message: types.Message):
     try:
         worker = Worker.get(cid=message.from_user.id)
@@ -57,7 +57,7 @@ async def me_command(message: types.Message):
         )
 
 
-@dp.message_handler(commands="lzt", workers_type=True)
+@dp.message_handler(commands="lzt", workers_chat=True)
 async def lzt_command(message: types.Message):
     try:
         json = await find_lolz_user(message.text.replace("/lzt ", "", 1))
@@ -94,7 +94,7 @@ async def lzt_command(message: types.Message):
         )
 
 
-@dp.message_handler(commands="cck", workers_type=True)
+@dp.message_handler(commands="cck", workers_chat=True)
 async def cock_size_command(message: types.Message):
     try:
         worker = Worker.get(cid=message.from_user.id)
@@ -117,7 +117,7 @@ def get_place(i):
     )
 
 
-@dp.message_handler(commands="top", workers_type=True)
+@dp.message_handler(commands="top", workers_chat=True)
 async def team_top(message: types.Message):
     logger.debug(f"User - {message.from_user.id}, wants /top in chat.")
     query = db_commands.get_topworkers_all()  # limit = 15
@@ -143,7 +143,7 @@ async def team_top(message: types.Message):
     logger.debug(f"User {message.from_user.id} /top in chat succesfully.")
 
 
-@dp.message_handler(commands="topm", workers_type=True)
+@dp.message_handler(commands="topm", workers_chat=True)
 async def team_top_day(message: types.Message):
     logger.debug(f"User - {message.from_user.id}, wants /topm in chat.")
     query = db_commands.get_topworkers_month()  # limit = 15 autodelta
@@ -169,7 +169,7 @@ async def team_top_day(message: types.Message):
     logger.debug(f"User {message.from_user.id} /topm in chat succesfully.")
 
 
-@dp.message_handler(commands="topd", workers_type=True)
+@dp.message_handler(commands="topd", workers_chat=True)
 async def team_top_day(message: types.Message):
     logger.debug(f"User - {message.from_user.id}, wants /topd in chat.")
     query = db_commands.get_topworkers_day()  # limit = 15

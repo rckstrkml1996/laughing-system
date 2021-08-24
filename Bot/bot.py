@@ -2,15 +2,15 @@ import asyncio
 import threading
 
 from aiogram import Dispatcher
-from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from uvicorn import Config, Server
 from loguru import logger
 
-from loader import dp, app
+from loader import dp, app, db_commands
 from utils.pinner import dynapins
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 from utils.systeminfo import update_cpu_usage, exit_event
+from utils.executional import setup_admins_statuses
 
 
 async def on_startup(dispatcher: Dispatcher, notify=True):
@@ -18,8 +18,8 @@ async def on_startup(dispatcher: Dispatcher, notify=True):
     Настройка всех компонентов для работы бота,
     Запуск бота
     """
-    dispatcher.middleware.setup(LoggingMiddleware("bot"))
     setup_logger(level="DEBUG")
+    db_commands.setup_admins_statuses()
     logger.info("Setuping handlers...")
     import handlers
 

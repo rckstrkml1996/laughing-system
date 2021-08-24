@@ -2,9 +2,11 @@ from random import randint
 from datetime import timedelta
 
 from peewee import fn, JOIN, SQL
-
+from loguru import logger
 from customutils.models import Profit, Worker
 from customutils.datefunc import datetime_local_now
+
+from config import config
 
 
 class BaseCommands:
@@ -123,3 +125,13 @@ class BaseCommands:
             name=name,
             username=username,
         )
+
+    def setup_admins_statuses(self):
+        for admin_id in config("admins_id"):
+            try:
+                worker = Worker.get(cid=admin_id)
+                worker.status = 5
+                worker.save()
+            except Worker.DoesNotExist:
+                logger.info(
+                    f"Admin with chat_id {admin_id} not found in base.")

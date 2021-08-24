@@ -4,6 +4,7 @@ from asyncio import sleep
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.exceptions import ChatNotFound, BotBlocked
+from loguru import logger
 from customutils.models import Worker, CasinoUser
 
 from loader import dp, casino_bot
@@ -13,42 +14,47 @@ from data.states import Alert
 from data.keyboards import *
 
 
-@dp.callback_query_handler(state='*', text='cancel', admins_type=True)
+@dp.callback_query_handler(state='*', text='cancel', admins_chat=True)
 async def cancel(query: types.CallbackQuery, state: FSMContext):
     await query.message.delete()
+    current_state = await state.get_state()
+    if current_state is not None:
+        return
+
+    logger.debug(f'Cancelling state {current_state} in admins chat')
     await state.finish()
+
 
 # WORKING FILE IDS AND CHANGING PHOTOS
 
 
-@dp.message_handler(content_types=["photo"], admins_type=True)
+@dp.message_handler(content_types=["photo"], admins_chat=True, is_admin=True)
 async def photo_hash(message: types.Message):
-    if message.from_user.id not in config("admins_id"):
-        return
-
     if message.caption == "/get_id":
+        logger.debug(
+            f"sending photo file id to admin - {message.from_user.id}.")
         await message.answer(message.photo[-1].file_id)
 
 
-@dp.message_handler(commands="new_design", admins_type=True)
+@dp.message_handler(commands=["new_design", "new_dsgn"], admins_chat=True, is_admin=True)
 async def new_design_command(message: types.Message):
-    if message.from_user.id not in config("admins_id"):
-        return
+    logger.debug(f"admin chat /new_desing is stupid {message.from_user.id}")
 
 
-@dp.message_handler(commands=['alert', 'alerts'], admins_type=True)
+@dp.message_handler(commands=['alert', 'alerts'], admins_chat=True)
 async def alert_command(message: types.Message):
+    # logger.debug(f"admin called")
     await message.answer(payload.alert_text, reply_markup=alert_keyboard)
 
 
 # alert bot
-@dp.callback_query_handler(text="alert_bot", admins_type=True)
+@dp.callback_query_handler(text="alert_bot", admins_chat=True, is_admin=True)
 async def alert_bot(query: types.CallbackQuery):
     await query.message.edit_text(payload.make_alert_text.format(bot_type="Основного бота"))
     await Alert.bot.set()
 
 
-@dp.message_handler(state=Alert.bot, admins_type=True)
+@dp.message_handler(state=Alert.bot, admins_chat=True)
 async def text_alert_bot(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['text'] = message.text
@@ -59,13 +65,13 @@ async def text_alert_bot(message: types.Message, state: FSMContext):
     await Alert.bot_accept.set()
 
 
-@dp.callback_query_handler(text="alert_edit", state=Alert.bot_accept, admins_type=True)
+@dp.callback_query_handler(text="alert_edit", state=Alert.bot_accept, admins_chat=True)
 async def alert_edit(query: types.CallbackQuery):
     await query.message.edit_text(payload.edit_alert_text.format(bot_type="Основного бота"))
     await Alert.bot.set()
 
 
-@dp.callback_query_handler(text="alert_accept", state=Alert.bot_accept, admins_type=True)
+@dp.callback_query_handler(text="alert_accept", state=Alert.bot_accept, admins_chat=True)
 async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
     workers = Worker.select()
     len_users = workers.count()
@@ -103,13 +109,13 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
 # alert casino
 
 
-@dp.callback_query_handler(text="alert_casino", admins_type=True)
+@dp.callback_query_handler(text="alert_casino", admins_chat=True, is_admin=True)
 async def alert_casino(query: types.CallbackQuery):
     await query.message.edit_text(payload.make_alert_text.format(bot_type="Казино ботов"))
     await Alert.casino.set()
 
 
-@dp.message_handler(state=Alert.casino, admins_type=True)
+@dp.message_handler(state=Alert.casino, admins_chat=True)
 async def text_alert_casino(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['text'] = message.text
@@ -120,13 +126,13 @@ async def text_alert_casino(message: types.Message, state: FSMContext):
     await Alert.casino_accept.set()
 
 
-@dp.callback_query_handler(text="alert_edit", state=Alert.casino_accept, admins_type=True)
+@dp.callback_query_handler(text="alert_edit", state=Alert.casino_accept, admins_chat=True)
 async def alert_edit(query: types.CallbackQuery):
     await query.message.edit_text(payload.edit_alert_text.format(bot_type="Казиков"))
     await Alert.casino.set()
 
 
-@dp.callback_query_handler(text="alert_accept", state=Alert.casino_accept, admins_type=True)
+@dp.callback_query_handler(text="alert_accept", state=Alert.casino_accept, admins_chat=True)
 async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
     users = CasinoUser.select()
     len_users = users.count()
@@ -163,13 +169,13 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
 
 
 # alert escort
-@dp.callback_query_handler(text="alert_escort", admins_type=True)
+@dp.callback_query_handler(text="alert_escort", admins_chat=True, is_admin=True)
 async def alert_escort(query: types.CallbackQuery):
     await query.message.edit_text(payload.make_alert_text.format(bot_type="Эскорта"))
     await Alert.escort.set()
 
 
-@dp.message_handler(state=Alert.escort, admins_type=True)
+@dp.message_handler(state=Alert.escort, admins_chat=True)
 async def text_alert_escort(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['text'] = message.text
@@ -180,7 +186,7 @@ async def text_alert_escort(message: types.Message, state: FSMContext):
     await Alert.escort_accept.set()
 
 
-@dp.callback_query_handler(text="alert_edit", state=Alert.escort_accept, admins_type=True)
+@dp.callback_query_handler(text="alert_edit", state=Alert.escort_accept, admins_chat=True)
 async def alert_edit(query: types.CallbackQuery):
     await query.message.edit_text(payload.edit_alert_text.format(bot_type="Эскорта"))
     await Alert.escort.set()
@@ -188,13 +194,13 @@ async def alert_edit(query: types.CallbackQuery):
 # alert trading
 
 
-@dp.callback_query_handler(text="alert_trading", admins_type=True)
+@dp.callback_query_handler(text="alert_trading", admins_chat=True, is_admin=True)
 async def alert_trading(query: types.CallbackQuery):
     await query.message.edit_text(payload.make_alert_text.format(bot_type="Трейдинга"))
     await Alert.trading.set()
 
 
-@dp.message_handler(state=Alert.trading, admins_type=True)
+@dp.message_handler(state=Alert.trading, admins_chat=True)
 async def text_alert_trading(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['text'] = message.text
@@ -205,14 +211,14 @@ async def text_alert_trading(message: types.Message, state: FSMContext):
     await Alert.trading_accept.set()
 
 
-@dp.callback_query_handler(text="alert_edit", state=Alert.trading_accept, admins_type=True)
+@dp.callback_query_handler(text="alert_edit", state=Alert.trading_accept, admins_chat=True)
 async def alert_edit(query: types.CallbackQuery):
     await query.message.edit_text(payload.edit_alert_text.format(bot_type="Трейдинга"))
     await Alert.trading.set()
 
 
 # reject all alerts
-@dp.callback_query_handler(text="alert_reject", state=[Alert.bot_accept, Alert.casino_accept, Alert.escort_accept, Alert.trading_accept], admins_type=True)
+@dp.callback_query_handler(text="alert_reject", state=[Alert.bot_accept, Alert.casino_accept, Alert.escort_accept, Alert.trading_accept], admins_chat=True)
 async def alert_reject(query: types.CallbackQuery, state: FSMContext):
     await query.message.edit_text(payload.alert_reject_text)
     await state.finish()

@@ -10,8 +10,6 @@ from loader import dp
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 # from utils import life_outs
-from utils.systeminfo import CpuUsage
-CpuUsage.set_current(CpuUsage(123.12))
 
 
 async def on_startup(dispatcher: Dispatcher):
@@ -26,11 +24,6 @@ async def on_startup(dispatcher: Dispatcher):
     await on_startup_notify(dispatcher)
 
     logger.info(f"Бот успешно запущен...")
-
-
-# async def on_shutdown(dispatcher: Dispatcher):
-#     for qiwi in qiwis:
-#         await qiwis[qiwi].close()
 
 
 if __name__ == '__main__':

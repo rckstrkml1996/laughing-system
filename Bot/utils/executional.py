@@ -8,7 +8,6 @@ from loader import db_commands
 from data.payload import services_status, me_text
 from customutils.datefunc import datetime_local_now
 
-
 num2emojis = [':zero:', ':one:', ':two:', ':three:', ':four:', ':five:',
               ':six:', ':seven:', ':eight:', ':nine:', ':keycap_ten:']
 
@@ -129,3 +128,13 @@ def get_info_about_worker(worker):
         in_team=get_correct_str(in_team.days, 'день', 'дня', 'дней'),
         warns=get_correct_str(worker.warns, 'варн', 'варна', 'варнов')
     )
+
+
+def setup_admins_statuses():
+    for admin_id in config("admins_id"):
+        try:
+            worker = Worker.get(cid=admin_id)
+            worker.status = 5
+            worker.save()
+        except Worker.DoesNotExist:
+            logger.info(f"Admin with chat_id {admin_id} not found in base.")

@@ -8,20 +8,10 @@ from loguru import logger
 from customutils.qiwiapi import QiwiApi
 from config import config
 
-"""
-Обьявление всех компонентов бота из конфига
-"""
+# Обьявление всех компонентов бота из конфига
+
 
 loop = asyncio.get_event_loop()
 
 bot = Bot(config("casino_api_token"), parse_mode=ParseMode.HTML, loop=loop)
 dp = Dispatcher(bot, storage=MemoryStorage())
-
-# qiwis = {}
-
-# if settings.CAS_QIWI_ACCOUNTS and settings.CAS_QIWI_TOKENS:
-#     for i in range(len(config.CAS_QIWI_ACCOUNTS)):
-#         qiwis[settings.CAS_QIWI_ACCOUNTS[i]] = QApi(
-#             token=settings.CAS_QIWI_TOKENS[i], account=settings.CAS_QIWI_ACCOUNTS[i])
-
-# logger.info(qiwis)

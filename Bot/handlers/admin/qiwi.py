@@ -13,10 +13,8 @@ from data.states import Qiwi
 
 
 # говнокод лень фиксить)
-@dp.callback_query_handler(text="backqiwi", admins_type=True)
+@dp.callback_query_handler(text="backqiwi", admins_chat=True, is_admin=True)
 async def back_to_qiwi_command(query: types.CallbackQuery):
-    if query.from_user.id not in config("admins_id"):
-        return
     try:
         tokens = config("qiwi_tokens")
         if isinstance(tokens, str):
@@ -49,10 +47,8 @@ async def back_to_qiwi_command(query: types.CallbackQuery):
         await query.message.edit_text(payload.no_qiwis_text, reply_markup=add_qiwi_keyboard)
 
 
-@dp.message_handler(commands="qiwi", admins_type=True)
+@dp.message_handler(commands="qiwi", admins_chat=True, is_admin=True)
 async def qiwi_command(message: types.Message):
-    if message.from_user.id not in config("admins_id"):
-        return
     try:
         tokens = config("qiwi_tokens")
         if isinstance(tokens, str):
@@ -85,15 +81,13 @@ async def qiwi_command(message: types.Message):
         await query.message.edit_text(payload.no_qiwis_text, reply_markup=add_qiwi_keyboard)
 
 
-@dp.callback_query_handler(text="add_qiwi", admins_type=True)
+@dp.callback_query_handler(text="add_qiwi", admins_chat=True, is_admin=True)
 async def add_qiwi(query: types.CallbackQuery):
-    if query.from_user.id not in config("admins_id"):
-        return
     await query.message.edit_text(payload.add_qiwis_text, reply_markup=cancel_keyboard)
     await Qiwi.new.set()
 
 
-@dp.message_handler(state=Qiwi.new, admins_type=True)
+@dp.message_handler(state=Qiwi.new, admins_chat=True)
 async def new_qiwi(message: types.Message, state: FSMContext):
     data = message.text.split("\n")
     if re.fullmatch(r'[a-f0-9]{32}', data[0].strip()):
@@ -112,10 +106,8 @@ async def new_qiwi(message: types.Message, state: FSMContext):
         await message.answer(payload.invalid_newqiwi_text, reply_markup=cancel_keyboard)
 
 
-@dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "qiwi", admins_type=True)
+@dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "qiwi", admins_chat=True, is_admin=True)
 async def qiwi_info(query: types.CallbackQuery):
-    if query.from_user.id not in config("admins_id"):
-        return
     try:
         tokens = config("qiwi_tokens")  # [str, str]
         num = query.data.split("_")[1]

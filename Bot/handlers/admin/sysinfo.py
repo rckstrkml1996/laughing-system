@@ -11,7 +11,7 @@ from utils.systeminfo import cpu_usage
 from utils.executional import get_correct_str
 
 
-@dp.message_handler(commands="sysinfo", admins_type=True)
+@dp.message_handler(commands="sysinfo", admins_chat=True, is_admin=True)
 async def system_info_command(message: types.Message):
     a = time()
     memory = psutil.virtual_memory()
@@ -34,7 +34,7 @@ async def system_info_command(message: types.Message):
     print(time() - a)
 
 
-@ dp.callback_query_handler(text="update_sys", admins_type=True)
+@ dp.callback_query_handler(text="update_sys", admins_chat=True, is_admin=True)
 async def update_system_info(query: types.CallbackQuery):
     a = time()
     memory = psutil.virtual_memory()

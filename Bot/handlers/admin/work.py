@@ -8,7 +8,7 @@ from data import payload
 from data.keyboards import *
 
 
-@dp.message_handler(commands="work", admins_type=True)
+@dp.message_handler(commands="work", admins_chat=True)
 async def work_command(message: types.Message):
     casino_work = config("casino_work")
     escort_work = config("escort_work")
@@ -31,12 +31,8 @@ async def work_command(message: types.Message):
     )
 
 
-@dp.callback_query_handler(text="toggleworkstatus", admins_type=True)
+@dp.callback_query_handler(text="toggleworkstatus", admins_chat=True, is_admin=True)
 async def toggle_work_status(query: types.CallbackQuery):
-    if query.from_user.id not in config("admins_id"):
-        await query.answer("Ты не админ!")
-        return
-
     casino_work = config("casino_work")  # return bool values
     escort_work = config("escort_work")
     antikino_work = config("antikino_work")
