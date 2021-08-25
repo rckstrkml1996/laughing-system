@@ -4,7 +4,7 @@ from loguru import logger
 from customutils.confparse import Config
 
 
-path = '../config.cfg'
+path = "../config.cfg"
 section_name = "Settings"
 
 token = os.getenv("BOT_TOKEN")  # or set it into config.cfg file))
@@ -40,11 +40,11 @@ reviews_link = "https://t.me/joinchat/xdsxXRzqhFhmNDAy"
 
 team_start = "1 апреля 1991"
 
-'''
+"""
     Кастомизация
         Уровни
     
-'''
+"""
 
 StatusNames = [
     "Без статуса",
@@ -57,13 +57,7 @@ StatusNames = [
     "Dungeon Master",
 ]
 
-LevelNames = [
-    "Новичок",
-    "Уже смешарик",
-    "Опытный",
-    "Професионал",
-    "Бог"
-]
+ServiceNames = ["Казино", "Эскорт", "Трейдинг"]
 
 Rates = [  # виды ставок первая - стандартная
     (75, 65, 55),

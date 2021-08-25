@@ -10,6 +10,7 @@ from utils.pinner import dynapins
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 from utils.systeminfo import update_cpu_usage, exit_event
+from utils.paysystem import check_payments
 from utils.executional import setup_admins_statuses
 
 
@@ -56,6 +57,7 @@ async def shutdown_polling(dispatcher: Dispatcher):
 
 async def start_bot(dispatcher: Dispatcher, notify=True):
     from utils import filters
+
     filters.setup(dispatcher)
 
     await dispatcher.skip_updates()
@@ -69,13 +71,16 @@ async def start_api(server):
 
 def main():
     import api
-    config = Config(app=app, loop=dp.bot.loop, lifespan="on",
-                    reload=True, host="0.0.0.0")
+
+    config = Config(
+        app=app, loop=dp.bot.loop, lifespan="on", reload=True, host="0.0.0.0"
+    )
     server = Server(config=config)
 
     loop = asyncio.get_event_loop()
 
     loop.create_task(dynapins(dp.bot))  # it runs in dispatcher)
+    loop.create_task(check_payments())  # it runs in dispatcher)
 
     c_usage = threading.Thread(target=update_cpu_usage)
     c_usage.name = "CpuUsageUpdater"
@@ -85,11 +90,7 @@ def main():
     started_api = loop.create_task(start_api(server))
 
     try:
-        loop.run_until_complete(
-            asyncio.gather(
-                started_api, started_bot
-            )
-        )
+        loop.run_until_complete(asyncio.gather(started_api, started_bot))
     except asyncio.exceptions.CancelledError:
         logger.warning("Goodbye, sir!")
     except KeyboardInterrupt:

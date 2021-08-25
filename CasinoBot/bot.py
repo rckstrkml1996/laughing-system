@@ -9,7 +9,6 @@ from loader import dp
 
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
-from utils.qiwicheker import check_payments
 
 # from utils import life_outs
 
@@ -29,7 +28,6 @@ async def on_startup(dispatcher: Dispatcher):
 
 
 if __name__ == "__main__":
-    dp.bot.loop.create_task(check_payments())
     executor.start_polling(
         dp, skip_updates=SKIP_UPDATES, on_startup=on_startup
     )  # , on_shutdown=on_shutdown)

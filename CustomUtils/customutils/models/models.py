@@ -12,9 +12,9 @@ base = peewee.MySQLDatabase(
     config("base_name"),
     user=config("base_user"),
     password=config("base_password"),
-    host='127.0.0.1',
+    host="127.0.0.1",
     port=3306,
-    charset='utf8mb4'  # for emoji and symbols)
+    charset="utf8mb4",  # for emoji and symbols)
 )
 
 
@@ -56,13 +56,15 @@ class QiwiPayment(BaseModel):
         profit_obj.save(only=[Profit.payment])
 
     person_id = peewee.CharField()  # наш аккаунт киви
+    account = peewee.CharField()  # аккаунт перевода или пополнения
     amount = peewee.IntegerField()
+    currency = peewee.IntegerField(default=643)
     comment = peewee.CharField(null=True)
     date = peewee.DateTimeField()
 
 
 class Profit(BaseModel):
-    owner = peewee.ForeignKeyField(Worker, related_name='profits')
+    owner = peewee.ForeignKeyField(Worker, related_name="profits")
     amount = peewee.FloatField()
     share = peewee.FloatField()
     service = peewee.CharField(default="idk")
@@ -71,11 +73,12 @@ class Profit(BaseModel):
         QiwiPayment,
         backref="profits",
         unique=True,
+        null=True,
     )
 
 
 class CasinoUser(BaseModel):
-    owner = peewee.ForeignKeyField(Worker, related_name='cas_users')
+    owner = peewee.ForeignKeyField(Worker, related_name="cas_users")
     cid = peewee.IntegerField(unique=True)
     balance = peewee.IntegerField(default=0)
     fort_chance = peewee.IntegerField(default=50)  # val from 0 to 100
@@ -85,11 +88,11 @@ class CasinoUser(BaseModel):
     fullname = peewee.CharField(null=True)
 
     def __str__(self):
-        return f'#{self.id} {self.cid}'
+        return f"#{self.id} {self.cid}"
 
 
 class CasinoPayment(BaseModel):
-    owner = peewee.ForeignKeyField(CasinoUser, related_name='payments')
+    owner = peewee.ForeignKeyField(CasinoUser, related_name="payments")
     comment = peewee.CharField(unique=True)
     amount = peewee.IntegerField()
     done = peewee.BooleanField(default=False)
@@ -97,7 +100,7 @@ class CasinoPayment(BaseModel):
 
 
 class CasinoUserHistory(BaseModel):
-    owner = peewee.ForeignKeyField(CasinoUser, related_name='history')
+    owner = peewee.ForeignKeyField(CasinoUser, related_name="history")
     editor = peewee.IntegerField(default=0)
     amount = peewee.IntegerField()
     balance = peewee.IntegerField()
@@ -111,12 +114,18 @@ class TradingUser(BaseModel):
     username = peewee.CharField(default="Юзернейм скрыт")
 
     def __str__(self):
-        return f'#{self.id} {self.cid}'
+        return f"#{self.id} {self.cid}"
 
 
 base.connect()
-base.create_tables([
-    Worker, Profit, QiwiPayment,
-    CasinoUser, CasinoUserHistory, CasinoPayment,
-    TradingUser
-])
+base.create_tables(
+    [
+        Worker,
+        Profit,
+        QiwiPayment,
+        CasinoUser,
+        CasinoUserHistory,
+        CasinoPayment,
+        TradingUser,
+    ]
+)
