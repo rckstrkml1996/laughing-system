@@ -1,5 +1,6 @@
 from asyncio import sleep
 
+from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.exceptions import ChatNotFound, BotBlocked
 from customutils.models import Worker, CasinoUser

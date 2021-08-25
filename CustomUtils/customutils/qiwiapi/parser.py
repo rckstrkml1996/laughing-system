@@ -35,11 +35,12 @@ class QiwiPaymentsParser:
             if transaction.txnId == self.last_transactions.data[0].txnId and i != 0:
                 # new transactions
                 await self.notify(
+                    self.api,
                     Payments(
                         data=transactions.data[:i],
                         nextTxnId=transactions.nextTxnId,
                         nextTxnDate=transactions.nextTxnDate,
-                    )
+                    ),
                 )
                 self.last_transactions = transactions  # update transactions
                 break

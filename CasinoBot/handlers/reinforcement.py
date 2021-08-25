@@ -74,6 +74,7 @@ async def add_reqiz(message: types.Message, state: FSMContext):
 
         try:
             profile = await api.get_profile()
+            await api.close()
             account = profile.contractInfo.contractId
             await message.answer(
                 payload.add_req_text(amount, comment, account),
