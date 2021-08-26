@@ -4,33 +4,22 @@ from configparser import NoOptionError
 
 from loguru import logger
 from aiohttp.client_exceptions import ClientProxyConnectionError
+from aiogram.types.input_file import InputFile
 from customutils.models import QiwiPayment, Profit, CasinoPayment
 from customutils.qiwiapi import QiwiPaymentsParser
 from customutils.qiwiapi.types import Payments, Transaction
 
-from loader import db_commands
+from loader import dp, db_commands
 from config import config, ServiceNames
+from data import payload
 from utils.executional import get_api, delete_api_proxy
 from .render import render_profit
 
 
-async def make_profit(all_profit, amount, share, service_name, username):
-    profit_path = render_profit(all_profit, amount, share, service_name, username)
-    logger.debug(f"Succesfully rendered profit path: {profit_path}")
-
-
 async def check_casino(traction: Transaction):
     try:
-        qiwi_pay = QiwiPayment.create(
-            person_id=traction.personId,
-            account=traction.account,
-            amount=traction.total.amount,
-            currency=traction.total.currency,
-            comment=traction.comment,
-            date=traction.date,
-        )
-        logger.debug("Sucessfully created QiwiPayment in base.")
         pay = CasinoPayment.get(comment=traction.comment)
+
         if traction.trnsType == "IN" and pay.amount <= traction.transactionSum.amount:
             logger.debug(f"Some payment with {pay.amount} amount")
             if traction.transactionSum.currency == 643:
@@ -43,15 +32,22 @@ async def check_casino(traction: Transaction):
                 casino_user = pay.owner
                 worker = casino_user.owner
 
-                service = 0
+                service = ServiceNames[0]  # thats casino
 
                 username = worker.username
-                amount = pay.amount
+                amount = int(pay.amount)
 
-                all_profit = db_commands.get_profits_sum(worker.id)
                 moll = 0.8 if casino_user.fuckedup else 0.7
                 share = int(pay.amount * moll)
 
+                qiwi_pay = QiwiPayment.create(
+                    person_id=traction.personId,
+                    account=traction.account,
+                    amount=traction.total.amount,
+                    currency=traction.total.currency,
+                    comment=traction.comment,
+                    date=traction.date,
+                )
                 Profit.create(
                     owner=worker,
                     amount=amount,
@@ -59,18 +55,40 @@ async def check_casino(traction: Transaction):
                     service=service,
                     payment=qiwi_pay,
                 )
+                logger.debug("Sucessfully created QiwiPayment and Profit in base.")
 
-                await make_profit(
-                    all_profit, amount, share, ServiceNames[service], username
+                all_profit = db_commands.get_profits_sum(worker.id)
+                profit_path = render_profit(
+                    all_profit, amount, share, service, username
                 )
+                logger.debug(
+                    f"Succesfully rendered profit path: {profit_path}, sending to outs chat"
+                )
+                await dp.bot.send_photo(
+                    config("outs_chat"),
+                    InputFile(profit_path),
+                    caption=payload.profit_text.format(
+                        service=service,
+                        share=share,
+                        amount=amount,
+                        cid=worker.cid,
+                        name=worker.username if worker.username else worker.name,
+                    ),
+                )
+                logger.debug("Succesfully sent to outs and admins chat")
+                return True
     except CasinoPayment.DoesNotExist:
         logger.debug(f"Payment with comment {traction.comment} not in base!")
+    return False
 
 
 async def on_new_payment(payments: Payments):
     logger.info(f"On new payments {len(payments.data)} notify.")
     for transaction in payments.data:
-        await check_casino(transaction)  # check if supply on casino
+        if await check_casino(transaction):  # check if supply on casino
+            print("casino payment parse as qiwi chilen")
+        else:
+            print("blanck payment epta")
 
 
 async def check_payments():

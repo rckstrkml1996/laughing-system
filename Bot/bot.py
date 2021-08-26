@@ -2,10 +2,9 @@ import asyncio
 import threading
 
 from aiogram import Dispatcher
-from uvicorn import Config, Server
 from loguru import logger
 
-from loader import dp, app, db_commands
+from loader import dp, db_commands
 from utils.pinner import dynapins
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
@@ -27,24 +26,14 @@ async def on_startup(dispatcher: Dispatcher, notify=True):
     if notify:
         await on_startup_notify(dispatcher)
 
-    logger.info(f"Bot started succesfully...")
-
-
-@app.on_event("shutdown")
-async def api_shutdown():
-    await shutdown_polling(dp)
-
 
 async def shutdown(dispatcher: Dispatcher):
+    exit_event.set()
     dispatcher.stop_polling()
+
     await dispatcher.storage.close()
     await dispatcher.storage.wait_closed()
     await dispatcher.bot.session.close()
-
-    exit_event.set()
-
-    for task in asyncio.all_tasks():
-        task.cancel()
 
     # await dispatcher.wait_closed()
 
@@ -60,46 +49,35 @@ async def start_bot(dispatcher: Dispatcher, notify=True):
 
     filters.setup(dispatcher)
 
-    await dispatcher.skip_updates()
     await on_startup(dispatcher, notify=notify)
-    await dispatcher.start_polling()
 
-
-async def start_api(server):
-    await server.serve()
+    await dispatcher.skip_updates()
+    logger.info(f"Starting bot...")
+    await dispatcher.start_polling(timeout=3)  # change if internet slow)
 
 
 def main():
-    import api
-
-    # for aiohttp connection by proxy.
+    # for aiohttp connection by proxy, too slow for windows :(
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    config = Config(
-        app=app, loop=dp.bot.loop, lifespan="on", reload=True, host="0.0.0.0"
-    )
-    server = Server(config=config)
 
     loop = asyncio.get_event_loop()
-
-    loop.create_task(dynapins(dp.bot))  # it runs in dispatcher)
-    loop.create_task(check_payments())  # it runs in dispatcher)
 
     c_usage = threading.Thread(target=update_cpu_usage)
     c_usage.name = "CpuUsageUpdater"
     c_usage.start()
 
-    started_bot = loop.create_task(start_bot(dp, notify=False))
-    started_api = loop.create_task(start_api(server))
+    paymnts = loop.create_task(check_payments())  # it runs in dispatcher)
+    dynapns = loop.create_task(dynapins(dp.bot))  # it runs in dispatcher)
+    start_task = loop.create_task(start_bot(dp, notify=False))
 
     try:
-        loop.run_until_complete(asyncio.gather(started_api, started_bot))
-    except asyncio.exceptions.CancelledError:
-        logger.warning("Goodbye, sir!")
-    except KeyboardInterrupt:
+        loop.run_until_complete(start_task)  # better for testing and dev
+        # loop.run_forever() # better for static
+    except (KeyboardInterrupt, SystemExit):
+        pass
+    finally:
         loop.run_until_complete(shutdown_polling(dp))
-    except Exception as e:
-        print(e)
-        loop.run_until_complete(shutdown_polling(dp))
+        logger.warning("Poka!")
 
 
 if __name__ == "__main__":

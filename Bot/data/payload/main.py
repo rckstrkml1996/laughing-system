@@ -56,26 +56,6 @@ top_text = emojize(
 )
 
 
-"""
-rate
-
-"""
-
-rate_text = emojize(
-    ":scales: <b>Ваша ставка</b>\n\n"
-    "<b>Оплата:</b> {profit}%\n"
-    "<b>X-Оплата:</b> {xprofit}%\n"
-    "<b>Возврат:</b> {refund}%"
-)
-
-about_rates_text = emojize(
-    ":woman_tipping_hand: <b>Выберите ставку</b>\n\n"
-    "<b>Оплата  Х-Оплата  Возврат</b>\n"
-)
-for i, (profit, xprofit, refund) in enumerate(Rates):
-    about_rates_text += f'{i + 1}{" "*4}{profit}%{" "*10}{xprofit}%{" "*10}{refund}%\n'
-
-
 profits_text = emojize(":lizard: Какую статистику отобразить?")
 
 week_profitinv_text = emojize("Список Ваших профитов за неделю пуст.")
@@ -84,4 +64,11 @@ week_profit_text = emojize(
     ":chart: Статистика за неделю.\n\n"
     "<b>Средний чек:</b> {middle_profits:.0f} RUB\n"
     "<b>Кол-во залетов:</b> {profits_len}"
+)
+
+profit_text = emojize(
+    ":white_check_mark: <b>УСПЕШНАЯ</b> оплата ({service})\n"
+    "<b>Доля воркера ~ {share} ₽</b>\n\n"
+    ":money_with_wings: Сумма платежа: <b>{amount} ₽</b>\n"
+    ":see_no_evil: Воркер: <a href='tg://user?id={cid}'>{name}</a>"
 )

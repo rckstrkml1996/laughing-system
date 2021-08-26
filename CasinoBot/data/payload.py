@@ -4,6 +4,7 @@ from aiogram.utils.emoji import emojize
 from aiogram.utils.markdown import quote_html
 
 from config import config
+
 # from config import SUP, LIFE_OUTS, MINIK
 SUP = "SUPPER"
 LIFE_OUTS = "LINKTRUW"
@@ -11,7 +12,10 @@ LIFE_OUTS = "LINKTRUW"
 # политика конф. при старте бота для новых
 
 
-def welcome_text(first): return emojize(quote_html(f":tada: Привет, {first}! \
+def welcome_text(first):
+    return emojize(
+        quote_html(
+            f":tada: Привет, {first}! \
 	\n\nПолитика и условия пользования данным ботом. \
 	\n1. Играя у нас, вы берёте все риски за свои средства на себя. \
 	\n2. Принимая правила, Вы подтверждаете своё совершеннолетие! \
@@ -23,47 +27,71 @@ def welcome_text(first): return emojize(quote_html(f":tada: Привет, {first
 	и Ваше совершеннолетие. \
 	\n\nВы играете на виртуальные монеты, покупая их за настоящие деньги. Любое пополнение бота является пожертвованием! \
 	\nСпасибо за понимание! \
-	\nУдачи в игре."))
+	\nУдачи в игре."
+        )
+    )
 
 
 # ПОПОЛНЕНИЕ
-add_text = emojize(f":gem: Введите сумму пополнения от <b>{config('min_deposit')} до 10000 RUB</b>:")
+add_text = emojize(
+    f":gem: Введите сумму пополнения от <b>{config('min_deposit', int)} до 10000 RUB</b>:"
+)
 
 
-def add_req_text(amount, comment, number): return emojize(f"Переведите <b>{amount} RUB</b> на QIWI\n\n{':heavy_minus_sign:' * 8} \
-	\nНомер: <b>+{number}</b>\nКомментарий: <b>{comment}</b>\n{':heavy_minus_sign:' * 8}")
+def add_req_text(amount, comment, number):
+    return emojize(
+        f"Переведите <b>{amount} RUB</b> на QIWI\n\n{':heavy_minus_sign:' * 8} \
+	\nНомер: <b>+{number}</b>\nКомментарий: <b>{comment}</b>\n{':heavy_minus_sign:' * 8}"
+    )
 
 
-def add_succesful(amount): return emojize(quote_html(f":white_check_mark: Платеж на сумму {amount} RUB, прошел успешно! \
-	\nПриятной игры! :green_heart:")
-                                          )
+def add_succesful(amount):
+    return emojize(
+        quote_html(
+            f":white_check_mark: Платеж на сумму {amount} RUB, прошел успешно! \
+	\nПриятной игры! :green_heart:"
+        )
+    )
 
 
-add_unsuccesful = emojize(
-    ":pensive: Счёт не оплачен, проверьте оплату ещё раз!")
+add_unsuccesful = emojize(":pensive: Счёт не оплачен, проверьте оплату ещё раз!")
 
 # ВЫВОД
-out_req_text = emojize("Введите реквизиты для вывода :iphone:\
-	\n:warning: Вывод возможен только на реквизиты, с которых пополнялся Ваш баланс!")
+out_req_text = emojize(
+    "Введите реквизиты для вывода :iphone:\
+	\n:warning: Вывод возможен только на реквизиты, с которых пополнялся Ваш баланс!"
+)
 
-out_req_succesful = emojize("Заявка на вывод средств отправлена \
-	\n:warning: Средства придут к Вам на счёт в течении 2 до 30 минут.\nОжидайте!")
+out_req_succesful = emojize(
+    "Заявка на вывод средств отправлена \
+	\n:warning: Средства придут к Вам на счёт в течении 2 до 30 минут.\nОжидайте!"
+)
 
-out_invreq_text = emojize(f":hammer_and_wrench: <b>Вывод возможен только на те QIWI кошельки или карты, с которых пополнялся ваш баланс!\
-	\n:warning: Обратитесь в тех-поддержку. @{SUP}</b>")
+out_invreq_text = emojize(
+    f":hammer_and_wrench: <b>Вывод возможен только на те QIWI кошельки или карты, с которых пополнялся ваш баланс!\
+	\n:warning: Обратитесь в тех-поддержку. @{SUP}</b>"
+)
 
 # ИГРА
 game_any = emojize(
-    ":robot: Отправьте любое сообщение, чтобы подтвердить, что Вы не робот")
+    ":robot: Отправьте любое сообщение, чтобы подтвердить, что Вы не робот"
+)
 
 
-def game_amount(balance): return emojize(f"Введите сумму ставки :fire: \
-	\nВаш баланс: <b>{balance} RUB</b>")
+def game_amount(balance):
+    return emojize(
+        f"Введите сумму ставки :fire: \
+	\nВаш баланс: <b>{balance} RUB</b>"
+    )
 
 
-game_bet = quote_html(emojize("Сейчас выпадет рандомное число от 1 до 99 \
+game_bet = quote_html(
+    emojize(
+        "Сейчас выпадет рандомное число от 1 до 99 \
 	\n\nВыберите исход события :star: \
-	\n <50 - x2\n =50 - x10\n >50 - x2"))
+	\n <50 - x2\n =50 - x10\n >50 - x2"
+    )
+)
 
 
 def generate():
@@ -74,11 +102,14 @@ def generate():
     return last_out
 
 
-def info_text(): return emojize(f"Лицензия на предоставление услуг :point_up_2: \
+def info_text():
+    return emojize(
+        f"Лицензия на предоставление услуг :point_up_2: \
 	\n\n:earth_africa: Текущий онлайн: <b>{randint(420, 450)}</b> \
 	\n:money_with_wings: Последний вывод: <b>{generate()} RUB</b> \
 	\n:fire: Лайв выводы: {LIFE_OUTS} \
 	\n\nПо любым вопросам, Тех. Поддержка: @{SUP} \
 	\n:warning: Пишите сразу по делу! \
 	\n\n<i>Пользовательское соглашение: \
-	\nhttps://telegra.ph/Polzovatelskoe-soglashenie-03-17</i>")
+	\nhttps://telegra.ph/Polzovatelskoe-soglashenie-03-17</i>"
+    )

@@ -69,6 +69,7 @@ class Profit(BaseModel):
     share = peewee.FloatField()
     service = peewee.CharField(default="idk")
     created = peewee.DateTimeField(default=datetime_local_now)
+    done = peewee.BooleanField(default=False) # dont nesessary.(S(das))
     payment = peewee.ForeignKeyField(
         QiwiPayment,
         backref="profits",
