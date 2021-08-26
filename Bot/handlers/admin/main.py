@@ -19,9 +19,17 @@ async def cancel(query: types.CallbackQuery, state: FSMContext):
     await state.finish()
 
 
+@dp.message_handler(state="*", commands=["help", "info"], admins_chat=True)
+async def help_command(message: types.Message, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is not None:
+        logger.debug(f"Cancelling state {current_state} in admins chat")
+        await state.finish()
+
+    await message.answer(payload.admins_help_text)
+
+
 # WORKING FILE IDS AND CHANGING PHOTOS
-
-
 @dp.message_handler(content_types=["photo"], admins_chat=True, is_admin=True)
 async def photo_hash(message: types.Message):
     if message.caption == "/get_id":

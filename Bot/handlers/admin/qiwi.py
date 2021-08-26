@@ -13,7 +13,7 @@ from config import config
 from data import payload
 from data.keyboards import *
 from data.states import Qiwi
-from utils.executional import get_api, delete_api_proxy, check_proxy
+from utils.executional import find_token, get_api, delete_api_proxy, check_proxy
 
 
 # говнокод лень фиксить)
@@ -37,8 +37,8 @@ async def back_to_qiwi_command(query: types.CallbackQuery):
                     all_balance += qiwiaccs[0].balance.amount
             except (InvalidToken, InvalidAccount):
                 await query.message.edit_text(
-                    payload.qiwi_delete.format(
-                        token=token[:8] + "*" * 24,
+                    payload.qiwi_delete_text.format(
+                        token=api.token[:8] + "*" * 24,
                     )
                 )
                 tokens.pop(i)
@@ -100,8 +100,8 @@ async def qiwi_command(message: types.Message):
                     all_balance += qiwiaccs[0].balance.amount
             except (InvalidToken, InvalidAccount):
                 await message.answer(
-                    payload.qiwi_delete.format(
-                        token=token[:8] + "*" * 24,
+                    payload.qiwi_delete_text.format(
+                        token=api.token[:8] + "*" * 24,
                     )
                 )
                 tokens.remove(token)
@@ -112,7 +112,7 @@ async def qiwi_command(message: types.Message):
                     await message.answer(
                         payload.qiwi_proxy_delete.format(
                             proxy=proxy,
-                            token=token[:8] + "*" * 24,
+                            token=api.token[:8] + "*" * 24,
                         )
                     )
                     # add conn error qiwi to answer
@@ -164,13 +164,13 @@ async def new_qiwi(message: types.Message, state: FSMContext):
     if re.fullmatch(r"[a-f0-9]{32}", data[0].strip()):
         try:
             tokens = config("qiwi_tokens")
-            if data[0].strip() in tokens:
+            if data[0].strip() in map(find_token, tokens):
                 await message.answer(payload.same_qiwi_text)
                 await state.finish()
                 await qiwi_command(message)
                 return
 
-            if not isinstance(tokens, list):
+            if isinstance(tokens, str):
                 config.edit_config("qiwi_tokens", f"{tokens},{data[0]}{proxy_data}")
             else:
                 tokens.append(data[0].strip() + proxy_data)
@@ -212,6 +212,7 @@ async def add_qiwi_proxy(message: types.Message, state: FSMContext):
             await msg.edit_text("Прокси невалид иди нах не добавлю)")
             await state.finish()
             await qiwi_command(message)  # /qiwi commands esadkasd
+            return
 
         tokens = config("qiwi_tokens")
         if isinstance(tokens, list):  # if list than find the correct
@@ -236,6 +237,39 @@ async def add_qiwi_proxy(message: types.Message, state: FSMContext):
 
 
 @dp.callback_query_handler(
+    lambda cb: cb.data.split("_")[0] == "qiwidelete", admins_chat=True, is_admin=True
+)
+async def qiwi_delete(query: types.CallbackQuery):
+    num = query.data.split("_")[1]
+    await query.message.edit_text(
+        payload.qiwi_selfdelete_text, reply_markup=qiwi_delete_keyboard(num)
+    )
+    await Qiwi.delete.set()
+
+
+@dp.callback_query_handler(
+    lambda cb: cb.data.split("_")[0] == "suredelete",
+    state=Qiwi.delete,
+    admins_chat=True,
+    is_admin=True,
+)
+async def qiwi_delete_sure(query: types.CallbackQuery, state: FSMContext):
+    num = int(query.data.split("_")[1])
+    tokens = config("qiwi_tokens")
+    if isinstance(tokens, str):
+        tokens = [tokens]
+
+    await query.message.edit_text(
+        payload.qiwi_delete_text.format(token=find_token(tokens[num][:8] + "*" * 24))
+    )
+    tokens.pop(num)
+    config.edit_config("qiwi_tokens", tokens)
+
+    await state.finish()
+    await qiwi_command(query.message)
+
+
+@dp.callback_query_handler(
     lambda cb: cb.data.split("_")[0] == "qiwi", admins_chat=True, is_admin=True
 )
 async def qiwi_info(query: types.CallbackQuery):
@@ -257,7 +291,7 @@ async def qiwi_info(query: types.CallbackQuery):
             level = profile.contractInfo.identificationInfo[0].identificationLevel
         except (InvalidToken, InvalidAccount):
             await message.answer(
-                payload.qiwi_delete.format(
+                payload.qiwi_delete_text.format(
                     token=token[:8] + "*" * 24,
                 )
             )

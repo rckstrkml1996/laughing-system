@@ -30,6 +30,7 @@ class Pin(StatesGroup):
 class Qiwi(StatesGroup):
     new = State()
     add_proxy = State()
+    delete = State()
 
 
 class Casino(StatesGroup):

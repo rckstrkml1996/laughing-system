@@ -202,12 +202,29 @@ def oneqiwi_keyboard(num):
     markup = InlineKeyboardMarkup()
 
     add_proxy_btn = InlineKeyboardButton(
-        emojize("Добавить прокси"), callback_data=f"addproxy_{num}"
+        emojize("Добавить прокси :diamond_shape_with_a_dot_inside:"),
+        callback_data=f"addproxy_{num}",
+    )
+    delete_qiwi_btn = InlineKeyboardButton(
+        emojize("Удалить :x:"), callback_data=f"qiwidelete_{num}"
     )
     back_btn = InlineKeyboardButton("Назад", callback_data="backqiwi")
 
     markup.add(add_proxy_btn)
+    markup.add(delete_qiwi_btn)
     markup.add(back_btn)
+
+    return markup
+
+
+def qiwi_delete_keyboard(num):
+    markup = InlineKeyboardMarkup()
+    sure_btn = InlineKeyboardButton(
+        emojize("Уревенрбялдь уверен нахуй :wastebasket:"),
+        callback_data=f"suredelete_{num}",
+    )
+    markup.add(sure_btn)
+    markup.add(cancel_btn)
 
     return markup
 

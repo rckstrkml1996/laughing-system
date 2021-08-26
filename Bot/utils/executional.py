@@ -179,6 +179,12 @@ def setup_admins_statuses():
             logger.info(f"Admin with chat_id {admin_id} not found in base.")
 
 
+def find_token(conf_token: str):
+    srch = re.search(r"\(([^\(^\)]+)\)", conf_token)
+    if srch:
+        return conf_token.replace(srch.group(0), "")
+    return conf_token
+
 def get_api(conf_token: str):
     srch = re.search(r"\(([^\(^\)]+)\)", conf_token)
     if srch:

@@ -78,9 +78,11 @@ qiwi_info_text = emojize(
 
 same_qiwi_text = emojize("Похоже вы пытаетесь добавить такой же киви кошелек)")
 
-qiwi_delete = emojize(
+qiwi_delete_text = emojize(
     ":wastebasket: Удаляю кошелек с токеном:\n" "<code>{token}</code>"
 )
+
+qiwi_selfdelete_text = emojize("Вы уверенны чо хатите удалить этат киви сука")
 
 qiwi_add_proxy_text = emojize(
     "Введите <b>HTTP</b> прокси, пример:\n"
@@ -132,4 +134,14 @@ sys_info_text = emojize(
     "Загруженность ОЗУ: <b>{ram_usage}</b> %\n"
     "Загруженность ЦП: <b>{cpu_usage}</b> %\n\n"
     "Время работы компьютера: <b>{computer_work}</b>"
+)
+
+admins_help_text = emojize(
+    ":woman_tipping_hand: <b>Команды</b> конфы\n"
+    "/sysinfo - Информация о сервере.\n"
+    "/pin или /pinned - Действия с закрепленным сообщением.\n"
+    "/qiwi - Работа с киви кошельками.\n"
+    "/alert - Работа с Оповещениями.\n"
+    "/work - Действия с статусом работы проекта.\n"
+    "/new_dsgn - Бета хуета ещо нету)\n"
 )

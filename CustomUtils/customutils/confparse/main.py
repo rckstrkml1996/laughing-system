@@ -28,7 +28,9 @@ class Config:  # section and path must not be different, standart setting not
 
         value = self.config.get(self.section, what)
         if "," in value:
-            return list(map(lambda v: self.right_type(v, type_as=type_as), value.split(",")))
+            return list(
+                map(lambda v: self.right_type(v, type_as=type_as), value.split(","))
+            )
         elif type_as is not None:
             try:
                 return type_as(value)
@@ -63,19 +65,19 @@ class Config:  # section and path must not be different, standart setting not
         with open(self.path, "w") as config_file:
             self.config.write(config_file)
 
-    def edit_config(self, setting, value):
+    def edit_config(self, setting, value=None):
         self.config.read(self.path)
 
-        if value is None:
+        if isinstance(value, bool):
+            value = str(int(value))
+        elif isinstance(value, int):
+            value = str(value)
+        elif isinstance(value, list):
+            value = ",".join(map(lambda i: str(i), value))
+
+        if not value:
             self.config.remove_option(self.section, setting)
         else:
-            if isinstance(value, bool):
-                value = str(int(value))
-            elif isinstance(value, int):
-                value = str(value)
-            elif isinstance(value, list):
-                value = ",".join(map(lambda i: str(i), value))
-
             self.config.set(self.section, setting, value)
 
         with open(self.path, "w") as config_file:
