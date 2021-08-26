@@ -27,8 +27,7 @@ def welcome_text(first): return emojize(quote_html(f":tada: Привет, {first
 
 
 # ПОПОЛНЕНИЕ
-add_text = emojize(f":gem: Введите сумму пополнения от <b>{config('min_deposit')} RUB</b>: \
-	\n(например, если вы хотите пополнить баланс на <b>1000 RUB</b>, отправьте в чат сообщение ‘1000’, без кавычек)")
+add_text = emojize(f":gem: Введите сумму пополнения от <b>{config('min_deposit')} до 10000 RUB</b>:")
 
 
 def add_req_text(amount, comment, number): return emojize(f"Переведите <b>{amount} RUB</b> на QIWI\n\n{':heavy_minus_sign:' * 8} \
@@ -48,11 +47,10 @@ out_req_text = emojize("Введите реквизиты для вывода :i
 	\n:warning: Вывод возможен только на реквизиты, с которых пополнялся Ваш баланс!")
 
 out_req_succesful = emojize("Заявка на вывод средств отправлена \
-	\n:warning: Средства придут к Вам на счёт в течении от 2 до 30 минут.\nОжидайте!")
+	\n:warning: Средства придут к Вам на счёт в течении 2 до 30 минут.\nОжидайте!")
 
-out_invreq_text = emojize(f":hammer_and_wrench: Упс.. \
-	\nКажется у вас не пройдена верификация \
-	\n:warning: Прошу обратится в Тех. Поддержку @{SUP}")
+out_invreq_text = emojize(f":hammer_and_wrench: <b>Вывод возможен только на те QIWI кошельки или карты, с которых пополнялся ваш баланс!\
+	\n:warning: Обратитесь в тех-поддержку. @{SUP}</b>")
 
 # ИГРА
 game_any = emojize(
