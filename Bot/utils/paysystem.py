@@ -1,5 +1,6 @@
 from asyncio import sleep
 from asyncio.exceptions import TimeoutError
+from configparser import NoOptionError
 
 from loguru import logger
 from aiohttp.client_exceptions import ClientProxyConnectionError
@@ -73,28 +74,35 @@ async def on_new_payment(payments: Payments):
 
 
 async def check_payments():
-    token = config("qiwi_tokens")
-    if isinstance(token, list):
-        token = token[0]
+    try:
+        token = config("qiwi_tokens")
+        if isinstance(token, list):
+            token = token[0]
 
-    api = get_api(token)  # get api instance by token(proxy) string
-    parser = QiwiPaymentsParser(api, on_new_payment)
+        api, proxy_url = get_api(token)  # get api instance by token(proxy) string
+        parser = QiwiPaymentsParser(api, on_new_payment)
+    except NoOptionError:
+        token = None
 
     logger.debug("QiwiPaymentsParser started succesfully.")
     while True:
-        new_token = config("qiwi_tokens")
-        if isinstance(new_token, list):
-            new_token = new_token[0]
-
-        if new_token != token:
-            token = new_token
-            api = get_api(token)
-            parser = QiwiPaymentsParser(api, on_new_payment)
-            logger.info(f"Parsing payments with new qiwi {token}")
-
         try:
-            await parser.check()
-        except (ClientProxyConnectionError, TimeoutError):
-            delete_api_proxy(token)
-            await parser.api.close()
+            new_token = config("qiwi_tokens")
+            if isinstance(new_token, list):
+                new_token = new_token[0]
+
+            if new_token != token:
+                token = new_token
+                api, proxy_url = get_api(token)
+                parser = QiwiPaymentsParser(api, on_new_payment)
+                logger.info(f"Parsing payments with new qiwi {token}")
+
+            try:
+                await parser.check()
+            except (ClientProxyConnectionError, TimeoutError):
+                delete_api_proxy(token)
+                await parser.api.close()
+        except NoOptionError:
+            token = None
+
         await sleep(60)

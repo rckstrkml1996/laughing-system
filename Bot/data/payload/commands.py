@@ -71,7 +71,8 @@ invalid_newqiwi_text = emojize(
 qiwi_info_text = emojize(
     "Кошелек: <b>+{number}</b> :kiwi_fruit:\n"
     "Баланс: <b>{balance}</b>\n"
-    "Статус: <b>{status}</b>\n\n"
+    "Статус: <b>{status}</b>\n"
+    "Прокси: <i>{proxy_url}</i>\n\n"
     "{last_actions}"
 )
 

@@ -1,7 +1,9 @@
-import random
 import re
+import random
+from asyncio.exceptions import TimeoutError
 
 import aiohttp
+from aiohttp.client_exceptions import ClientProxyConnectionError
 from aiogram.utils.emoji import emojize
 
 from config import config
@@ -182,8 +184,8 @@ def get_api(conf_token: str):
     if srch:
         return QiwiApi(
             token=conf_token.replace(srch.group(0), ""), proxy_url=srch.group(1)
-        )
-    return QiwiApi(conf_token)
+        ), srch.group(1)
+    return QiwiApi(conf_token), None
 
 
 def delete_api_proxy(conf_token: str):
@@ -200,3 +202,19 @@ def delete_api_proxy(conf_token: str):
             config.edit_config("qiwi_tokens", conf_token.replace(srch.group(0), ""))
 
         return srch.group(0)[1:-1]
+
+
+async def check_proxy(proxy_url: str):
+    url = "http://example.com"
+    answer = True
+    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(4)) as session:
+        try:
+            await session.get(url, proxy=proxy_url)
+        except TimeoutError:  # this is for different log
+            answer = False
+        except ClientProxyConnectionError:
+            answer = False  # this is for different log
+        finally:
+            await session.close()
+        
+        return answer
