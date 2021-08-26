@@ -24,7 +24,7 @@ standart_config = {
     "min_deposit": "300",
     "min_withdraw": "800",
     "bet_timer": "5",
-    "support_username": "@tradesup_bot",
+    "trading_sup_username": "@tradesup_bot",
 }
 
 config = Config(section_name, path, standart_config)

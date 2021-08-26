@@ -43,7 +43,7 @@ my_profile_text = emojize(
 )
 
 support_text = emojize(
-    f":hammer_and_wrench: Техническая поддержка: {config('support_username')}"
+    ":hammer_and_wrench: Техническая поддержка: {sup_username}"
 )
 
 withdraw_text = emojize(
