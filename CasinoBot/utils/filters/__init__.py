@@ -1,4 +1,7 @@
-# from .main import IsWorking
+from aiogram import Dispatcher
 
-# def setup(dp: Dispatcher):
-#     dp.filters_factory.bind(IsWorking)
+from .main import IsWorking
+
+
+def setup(dp: Dispatcher):
+    dp.filters_factory.bind(IsWorking)

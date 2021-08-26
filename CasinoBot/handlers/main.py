@@ -16,6 +16,11 @@ from loader import dp
 from customutils.models import Worker, CasinoUser, CasinoUserHistory
 
 
+@dp.message_handler(state="*", is_working=False)
+async def on_dont_work_status(message: types.Message):
+    await message.answer("Ожидайте завершения тех. работ, бот временно не работает!")
+
+
 async def self_cabine(chat_id: int):
     user = CasinoUser.get(cid=chat_id)
     games = user.history.where(
