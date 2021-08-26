@@ -1,9 +1,9 @@
 from aiogram.dispatcher.filters.state import State, StatesGroup
 
-'''
+"""
     bla bla bla
     mne pohui ia delau chisto pokakat
-'''
+"""
 
 
 class Summary(StatesGroup):
@@ -29,6 +29,7 @@ class Pin(StatesGroup):
 
 class Qiwi(StatesGroup):
     new = State()
+    add_proxy = State()
 
 
 class Casino(StatesGroup):

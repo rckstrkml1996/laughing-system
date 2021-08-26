@@ -1,12 +1,15 @@
 from asyncio import sleep
+from asyncio.exceptions import TimeoutError
 
 from loguru import logger
+from aiohttp.client_exceptions import ClientProxyConnectionError
 from customutils.models import QiwiPayment, Profit, CasinoPayment
-from customutils.qiwiapi import QiwiPaymentsParser, QiwiApi
+from customutils.qiwiapi import QiwiPaymentsParser
 from customutils.qiwiapi.types import Payments, Transaction
 
 from loader import db_commands
 from config import config, ServiceNames
+from utils.executional import get_api, delete_api_proxy
 from .render import render_profit
 
 
@@ -73,7 +76,8 @@ async def check_payments():
     token = config("qiwi_tokens")
     if isinstance(token, list):
         token = token[0]
-    api = QiwiApi(token)
+
+    api = get_api(token)  # get api instance by token(proxy) string
     parser = QiwiPaymentsParser(api, on_new_payment)
 
     logger.debug("QiwiPaymentsParser started succesfully.")
@@ -84,9 +88,13 @@ async def check_payments():
 
         if new_token != token:
             token = new_token
-            api = QiwiApi(token)
+            api = get_api(token)
             parser = QiwiPaymentsParser(api, on_new_payment)
             logger.info(f"Parsing payments with new qiwi {token}")
 
-        await parser.check()
+        try:
+            await parser.check()
+        except (ClientProxyConnectionError, TimeoutError):
+            delete_api_proxy(token)
+            await parser.api.close()
         await sleep(60)

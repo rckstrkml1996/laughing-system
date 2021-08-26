@@ -5,7 +5,6 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import ParseMode
 from loguru import logger
 
-from customutils.qiwiapi import QiwiApi
 from config import config
 
 # Обьявление всех компонентов бота из конфига

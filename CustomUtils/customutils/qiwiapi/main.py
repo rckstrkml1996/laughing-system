@@ -12,7 +12,13 @@ def get_currency(currency: int):
 
 
 def get_identification_level(level: str):
-    return "Основной" if level == "SIMPLE" or level == "VERIFIED" else "Профессиональный" if level == "FULL" else "Без верификации"
+    return (
+        "Основной"
+        if level == "SIMPLE" or level == "VERIFIED"
+        else "Профессиональный"
+        if level == "FULL"
+        else "Без верификации"
+    )
 
 
 class QiwiApi:
@@ -20,30 +26,22 @@ class QiwiApi:
     Манипуляции напрямую с Qiwi API
     """
 
-    def __init__(self, token: str):
+    def __init__(self, token: str, proxy_url: str = None):
         self.token = token
+        self.proxy = proxy_url  # only http or https proxy.
         self.profile = None
         self._session: aiohttp.ClientSession = None
         self.headers = {"authorization": "Bearer " + token}
 
     async def get_profile(self):
         if self.profile is None:
-            url = "https://edge.qiwi.com/person-profile/v1/profile/current"
-
-            response = await self.session.get(url)
-            if response.status == 401:
-                raise InvalidToken
-            elif response.status == 403:
-                raise InvalidAccount
-            json = await response.json()
-
-            self.profile = Profile(**json)
+            await self.get_new_profile()
         return self.profile
 
     async def get_new_profile(self):
         url = "https://edge.qiwi.com/person-profile/v1/profile/current"
 
-        response = await self.session.get(url)
+        response = await self.session.get(url, proxy=self.proxy)
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -68,13 +66,15 @@ class QiwiApi:
         return str(int(time() * 1000))
 
     def get_new_session(self) -> aiohttp.ClientSession:
-        return aiohttp.ClientSession(headers=self.headers)
+        return aiohttp.ClientSession(
+            headers=self.headers, timeout=aiohttp.ClientTimeout(5), trust_env=True
+        )
 
     async def get_balance(self):
         profile = await self.get_profile()
         url = f"https://edge.qiwi.com/funding-sources/v2/persons/{profile.contractInfo.contractId}/accounts"
 
-        response = await self.session.get(url)
+        response = await self.session.get(url, proxy=self.proxy)
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -87,7 +87,7 @@ class QiwiApi:
         profile = await self.get_profile()
         url = f"https://edge.qiwi.com/payment-history/v2/persons/{profile.contractInfo.contractId}/payments"
 
-        response = await self.session.get(url, params={"rows": rows})
+        response = await self.session.get(url, params={"rows": rows}, proxy=self.proxy)
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -101,21 +101,13 @@ class QiwiApi:
 
         params = {
             "id": self._transaction_id,
-            "sum": {
-                "amount": amount,
-                "currency": currency
-            },
-            "paymentMethod": {
-                "type": "Account",
-                "accountId": "643"
-            },
+            "sum": {"amount": amount, "currency": currency},
+            "paymentMethod": {"type": "Account", "accountId": "643"},
             "comment": comment,
-            "fields": {
-                "account": account
-            }
+            "fields": {"account": account},
         }
 
-        response = await self.session.post(url, json=params)
+        response = await self.session.post(url, json=params, proxy=self.proxy)
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:

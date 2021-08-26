@@ -12,7 +12,7 @@ from data.keyboards import *
 async def cancel(query: types.CallbackQuery, state: FSMContext):
     await query.message.delete()
     current_state = await state.get_state()
-    if current_state is not None:
+    if current_state is None:
         return
 
     logger.debug(f"Cancelling state {current_state} in admins chat")

@@ -40,36 +40,32 @@ cck_size_text = "Мой размер чилена - {size}см {smile}"
 
 
 # admins commands
-adm_work_command = emojize(
-    "<b>Состояние</b> сервисов:\n"
-    "{services_status}"
-)
+adm_work_command = emojize("<b>Состояние</b> сервисов:\n" "{services_status}")
 
 setwork_text = emojize(":white_check_mark: <b>Поставлен</b> ворк")
 setdontwork_text = emojize(":x: <b>Поставлен</b> неворк")
 
 qiwi_command_text = emojize(
-    "Информация по киви кошелькам.\n\n"
-    "Общий баланс: <b>{all_balance} RUB</b>"
+    "Информация по киви кошелькам.\n\n" "Общий баланс: <b>{all_balance} RUB</b>"
 )
 
-no_qiwis_text = emojize(
-    "У вас нет привязанных кошельков!"
-)
+no_qiwis_text = emojize("У вас нет привязанных кошельков!")
 
 qiwi_error_text = emojize(
     "Какая-то ошибка в киви, попробуй еще раз или позови кодера) :warning:"
 )
 
 add_qiwis_text = emojize(
-    "Введите <b>Токен</b>, пример:\n"
-    "<code>f420543a9430065db1264535ff4eb1ae</code>"
+    "Введите <b>Токен</b>, и  <b>По желанию</b> Прокси, пример:\n"
+    "<code>f420543a9430065db1264535ff4eb1ae</code>\n"
+    "<code>http://user:pass@123.222.222.123:1111</code>"
 )
 
 invalid_newqiwi_text = emojize(
     "Допущена ошибка при вводе! :warning:\n"
-    "Введите <b>Токен</b>, пример:\n"
-    "<code>f420543a9430065db1264535ff4eb1ae</code>"
+    "Введите <b>Токен</b> и Прокси <b>(Не обяз.)</b>, пример:\n"
+    "<code>f420543a9430065db1264535ff4eb1ae</code>\n"
+    "<code>http://user:pass@123.222.222.123:1111</code> (По желанию)"
 )
 
 qiwi_info_text = emojize(
@@ -79,14 +75,25 @@ qiwi_info_text = emojize(
     "{last_actions}"
 )
 
-same_qiwi_text = emojize(
-    "Похоже вы пытаетесь добавить такой же киви кошелек)"
-)
+same_qiwi_text = emojize("Похоже вы пытаетесь добавить такой же киви кошелек)")
 
 qiwi_delete = emojize(
-    ":wastebasket: Удаляю кошелек с токеном:\n"
-    "<code>{token}</code>"
+    ":wastebasket: Удаляю кошелек с токеном:\n" "<code>{token}</code>"
 )
+
+qiwi_add_proxy_text = emojize(
+    "Введите <b>HTTP</b> прокси, пример:\n"
+    "<code>http://user:pass@123.123.123.123:1111</code>"
+)
+
+new_proxy_success_text = emojize("Прокси добавленны для этого кошелька.")
+
+qiwi_proxy_delete = emojize(
+    "Удаляю прокси: <i>{proxy}</i>\n"
+    "Для кошелька c этим токеном: <code>{token}</code>"
+)
+
+proxy_error_text = "Что-та с удалением прокси зови кодера нахуй!!"
 
 alert_text = emojize(
     "Отправка сообщения <b>всем</b> пользователя бота.\n"
@@ -94,22 +101,18 @@ alert_text = emojize(
 )
 
 make_alert_text = emojize(
-    "Отправка всем пользователям <b>{bot_type}</b>\n"
-    ":imp: Введите текст:"
+    "Отправка всем пользователям <b>{bot_type}</b>\n" ":imp: Введите текст:"
 )
 
 edit_alert_text = emojize(
-    "Отравка всем пользователям <b>{bot_type}</b>\n"
-    ":imp: Введите <b>новый</b> текст:"
+    "Отравка всем пользователям <b>{bot_type}</b>\n" ":imp: Введите <b>новый</b> текст:"
 )
 
 alert_accept_text = emojize(
     ":thinking_face: Вы уверены что хотите отправить это?\n\n{text}"
 )
 
-alert_reject_text = emojize(
-    ":wastebasket: Текст <b>не будет</b> отправлен!"
-)
+alert_reject_text = emojize(":wastebasket: Текст <b>не будет</b> отправлен!")
 
 alert_start_text = emojize(
     "Начинаю рассылку всем пользователям.\n"

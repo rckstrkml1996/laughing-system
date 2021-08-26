@@ -79,8 +79,7 @@ summary_accepted_keyboard.add(reviews_btn)
 """
 panel
 """
-menu_keyboard = ReplyKeyboardMarkup(
-    one_time_keyboard=True, resize_keyboard=True)
+menu_keyboard = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
 profile_btn = KeyboardButton(emojize(":woman_tipping_hand: Мой профиль"))
 casino_btn = KeyboardButton(emojize(":slot_machine: Казино"))
 traiding_btn = KeyboardButton(emojize(":chart_with_upwards_trend: Трейдинг"))
@@ -94,7 +93,9 @@ menu_keyboard.add(about_btn)
 def panel_keyboard(namehide):
     markup = InlineKeyboardMarkup()
     username_btn = InlineKeyboardButton(
-        f'{"Открыть" if namehide else "Скрыть"} никнейм в выплатах', callback_data="toggleusername")
+        f'{"Открыть" if namehide else "Скрыть"} никнейм в выплатах',
+        callback_data="toggleusername",
+    )
     markup.add(username_btn)
 
     return markup
@@ -106,7 +107,8 @@ def admworkstatus_keyboard(work_status):
     change_work_btn = InlineKeyboardButton(
         emojize(
             ":full_moon: Сменить статус" if work_status else ":new_moon: Сменить статус"
-        ), callback_data="toggleworkstatus"
+        ),
+        callback_data="toggleworkstatus",
     )
     markup.add(change_work_btn)
 
@@ -115,29 +117,29 @@ def admworkstatus_keyboard(work_status):
 
 about_project_keyboard = InlineKeyboardMarkup()
 ref_btn = InlineKeyboardButton(
-    emojize(":handshake: Реф. система"), callback_data="refsystem")
-rules_btn = InlineKeyboardButton(
-    emojize(":scroll: Правила"), callback_data="showrules")
-out_btn = InlineKeyboardButton(
-    emojize(":money_with_wings: Выплаты"), url=outs_link)
-info_btn = InlineKeyboardButton(
-    emojize(":wastebasket: Инфоканал"), url=reviews_link)
-chat_btn = InlineKeyboardButton(
-    emojize(":dolphin: Чат воркеров"), url=workers_link)
+    emojize(":handshake: Реф. система"), callback_data="refsystem"
+)
+rules_btn = InlineKeyboardButton(emojize(":scroll: Правила"), callback_data="showrules")
+out_btn = InlineKeyboardButton(emojize(":money_with_wings: Выплаты"), url=outs_link)
+info_btn = InlineKeyboardButton(emojize(":wastebasket: Инфоканал"), url=reviews_link)
+chat_btn = InlineKeyboardButton(emojize(":dolphin: Чат воркеров"), url=workers_link)
 about_project_keyboard.add(ref_btn, rules_btn)
 about_project_keyboard.add(info_btn, out_btn)
 about_project_keyboard.add(chat_btn)
 
 change_pin_keyboard = InlineKeyboardMarkup()
 changeit_btn = InlineKeyboardButton(
-    emojize(":pencil2: Изменить закреп"), callback_data="change_pin")
+    emojize(":pencil2: Изменить закреп"), callback_data="change_pin"
+)
 change_pin_keyboard.add(changeit_btn)
 
 new_pin_keyboard = InlineKeyboardMarkup()
 newpin_btn = InlineKeyboardButton(
-    emojize(":white_check_mark: Сохранить изменения"), callback_data="savepin")
+    emojize(":white_check_mark: Сохранить изменения"), callback_data="savepin"
+)
 oldpin_btn = InlineKeyboardButton(
-    emojize(":x: Не сохранять"), callback_data="unsavepin")
+    emojize(":x: Не сохранять"), callback_data="unsavepin"
+)
 new_pin_keyboard.add(newpin_btn)
 new_pin_keyboard.add(oldpin_btn)
 
@@ -145,13 +147,20 @@ new_pin_keyboard.add(oldpin_btn)
 casino_keyboard = InlineKeyboardMarkup()
 
 my_mamoths_btn = InlineKeyboardButton(
-    emojize(":elephant: Мои мамонтята :elephant:"), callback_data="none")
+    emojize(":elephant: Мои мамонтята :elephant:"), callback_data="none"
+)
 promos_btn = InlineKeyboardButton(
-    emojize(":receipt: Мои промокоды :receipt:"), callback_data="none")
+    emojize(":receipt: Мои промокоды :receipt:"), callback_data="none"
+)
 msgspam_btn = InlineKeyboardButton(
-    emojize(":diamond_shape_with_a_dot_inside: Массовая рассылка :diamond_shape_with_a_dot_inside:"), callback_data="none")
+    emojize(
+        ":diamond_shape_with_a_dot_inside: Массовая рассылка :diamond_shape_with_a_dot_inside:"
+    ),
+    callback_data="none",
+)
 deleteall_btn = InlineKeyboardButton(
-    emojize(":warning: Удалить всех :warning:"), callback_data="none")
+    emojize(":warning: Удалить всех :warning:"), callback_data="none"
+)
 
 casino_keyboard.add(my_mamoths_btn)
 casino_keyboard.add(promos_btn)
@@ -161,7 +170,8 @@ casino_keyboard.add(deleteall_btn)
 
 add_qiwi_keyboard = InlineKeyboardMarkup()
 add_qiwi_btn = InlineKeyboardButton(
-    emojize("Добавить киви :information_source:"), callback_data="add_qiwi")
+    emojize("Добавить киви :information_source:"), callback_data="add_qiwi"
+)
 add_qiwi_keyboard.add(add_qiwi_btn)
 
 
@@ -170,7 +180,11 @@ def qiwi_keyboard(accounts: list):
 
     for i, acc in enumerate(accounts):
         if i == 0:
-            markup.add(InlineKeyboardButton(emojize(f"{acc} :sparkle:"), callback_data=f"qiwi_{i}"))
+            markup.add(
+                InlineKeyboardButton(
+                    emojize(f"{acc} :sparkle:"), callback_data=f"qiwi_{i}"
+                )
+            )
         else:
             markup.add(InlineKeyboardButton(acc, callback_data=f"qiwi_{i}"))
 
@@ -183,12 +197,25 @@ cancel_keyboard = InlineKeyboardMarkup()
 cancel_btn = InlineKeyboardButton("Отмена нахуй", callback_data="cancel")
 cancel_keyboard.add(cancel_btn)
 
-backqiwi_keyboard = InlineKeyboardMarkup()
-back_btn = InlineKeyboardButton("Назад", callback_data="backqiwi")
-backqiwi_keyboard.add(back_btn)
+
+def oneqiwi_keyboard(num):
+    markup = InlineKeyboardMarkup()
+
+    add_proxy_btn = InlineKeyboardButton(
+        emojize("Добавить прокси"), callback_data=f"addproxy_{num}"
+    )
+    back_btn = InlineKeyboardButton("Назад", callback_data="backqiwi")
+
+    markup.add(add_proxy_btn)
+    markup.add(back_btn)
+
+    return markup
+
+
 escort_keyboard = InlineKeyboardMarkup()
 create_form = InlineKeyboardButton(
-    emojize(":envelope: Создать анкету :envelope:"), callback_data="none")
+    emojize(":envelope: Создать анкету :envelope:"), callback_data="none"
+)
 
 escort_keyboard.add(my_mamoths_btn)
 escort_keyboard.add(create_form)
@@ -197,7 +224,8 @@ escort_keyboard.add(deleteall_btn)
 
 trading_keyboard = InlineKeyboardMarkup()
 my_phrases = InlineKeyboardButton(
-    emojize(":open_book: Свои фразы при выводе :open_book:"), callback_data="none")
+    emojize(":open_book: Свои фразы при выводе :open_book:"), callback_data="none"
+)
 
 trading_keyboard.add(my_mamoths_btn)
 trading_keyboard.add(my_phrases)
@@ -208,7 +236,8 @@ trading_keyboard.add(deleteall_btn)
 def cas_info_update_keyboard(uid):
     markup = InlineKeyboardMarkup()
     cas_info_update_btn = InlineKeyboardButton(
-        emojize(":arrows_counterclockwise:"), callback_data="updateinfo_{uid}")
+        emojize(":arrows_counterclockwise:"), callback_data="updateinfo_{uid}"
+    )
     markup.add(cas_info_update_btn)
 
     return markup
@@ -216,20 +245,16 @@ def cas_info_update_keyboard(uid):
 
 alert_keyboard = InlineKeyboardMarkup()
 bot_btn = InlineKeyboardButton(
-    emojize("Основной бот :robot:"),
-    callback_data="alert_bot"
+    emojize("Основной бот :robot:"), callback_data="alert_bot"
 )
 casino_bots_btn = InlineKeyboardButton(
-    emojize("Казино :slot_machine:"),
-    callback_data="alert_casino"
+    emojize("Казино :slot_machine:"), callback_data="alert_casino"
 )
 escort_bots_btn = InlineKeyboardButton(
-    emojize("Эскорт :strawberry:"),
-    callback_data="alert_escort"
+    emojize("Эскорт :strawberry:"), callback_data="alert_escort"
 )
 trading_bot_btn = InlineKeyboardButton(
-    emojize("Трейдинг :chart_with_upwards_trend:"),
-    callback_data="alert_trading"
+    emojize("Трейдинг :chart_with_upwards_trend:"), callback_data="alert_trading"
 )
 alert_keyboard.add(bot_btn)
 alert_keyboard.add(casino_bots_btn)
@@ -237,18 +262,20 @@ alert_keyboard.add(escort_bots_btn, trading_bot_btn)
 
 alert_accept_keyboard = InlineKeyboardMarkup()
 alert_accept_btn = InlineKeyboardButton(
-    emojize(":white_check_mark: Подтвердить"), callback_data="alert_accept")
+    emojize(":white_check_mark: Подтвердить"), callback_data="alert_accept"
+)
 alert_edit_btn = InlineKeyboardButton(
-    emojize(":pencil2: Изменить"), callback_data="alert_edit")
+    emojize(":pencil2: Изменить"), callback_data="alert_edit"
+)
 alert_reject_btn = InlineKeyboardButton(
-    emojize(":x: Отменить"), callback_data="alert_reject")
+    emojize(":x: Отменить"), callback_data="alert_reject"
+)
 alert_accept_keyboard.add(alert_accept_btn)
 alert_accept_keyboard.add(alert_edit_btn, alert_reject_btn)
 
 
 update_sysinfo_keyboard = InlineKeyboardMarkup()
 sysinfo_update_btn = InlineKeyboardButton(
-    emojize(":arrows_counterclockwise:"),
-    callback_data="update_sys"
+    emojize(":arrows_counterclockwise:"), callback_data="update_sys"
 )
 update_sysinfo_keyboard.add(sysinfo_update_btn)

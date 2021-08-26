@@ -72,6 +72,8 @@ async def start_api(server):
 def main():
     import api
 
+    # for aiohttp connection by proxy.
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     config = Config(
         app=app, loop=dp.bot.loop, lifespan="on", reload=True, host="0.0.0.0"
     )
