@@ -6,25 +6,20 @@ from config import Rates, config
 
 
 # multy use
-services_status = "{casino_status}\n" \
-    "{escort_status}\n" \
-    "{antikino_status}\n" \
-    "{team_status}"
+services_status = (
+    "{casino_status}\n" "{escort_status}\n" "{trading_status}\n" "{team_status}"
+)
 
 
 # inline use
 about_worker_text = "{status}\n{profits} на сумму {profits_sum} р"
 
-startup_text = emojize(
-    "<b>Бот запущен!</b> :sparkle:"
-)
+startup_text = emojize("<b>Бот запущен!</b> :sparkle:")
 
 
 # dynamic pin
 
-standart_pin = emojize(
-    "СТАНДАРТНЫЙ КОНФИГ"
-)
+standart_pin = emojize("СТАНДАРТНЫЙ КОНФИГ")
 
 pin_path = config("pin_path")
 
@@ -81,13 +76,9 @@ for i, (profit, xprofit, refund) in enumerate(Rates):
     about_rates_text += f'{i + 1}{" "*4}{profit}%{" "*10}{xprofit}%{" "*10}{refund}%\n'
 
 
-profits_text = emojize(
-    ":lizard: Какую статистику отобразить?"
-)
+profits_text = emojize(":lizard: Какую статистику отобразить?")
 
-week_profitinv_text = emojize(
-    "Список Ваших профитов за неделю пуст."
-)
+week_profitinv_text = emojize("Список Ваших профитов за неделю пуст.")
 
 week_profit_text = emojize(
     ":chart: Статистика за неделю.\n\n"

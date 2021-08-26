@@ -23,7 +23,7 @@ standart_config = {
     "time_zone": "Europe/Moscow",
     "casino_work": "0",
     "escort_work": "0",
-    "antikino_work": "0",
+    "trading_work": "0",
     "adv_team_photo": "AgACAgIAAxkBAAIL-WENYLIp8iRCBBUqsWPZK3Vk7fPPAAKyuDEbA6toSNh2SVkwoqY0AQADAgADeQADIAQ",
     "pin_path": "pin.txt",
     "pin_update_time": "15",

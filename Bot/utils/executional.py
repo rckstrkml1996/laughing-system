@@ -115,9 +115,9 @@ def new_pin_text(text: str):
 def get_work_moon():
     casino_work = config("casino_work")
     escort_work = config("escort_work")
-    antikino_work = config("antikino_work")
+    trading_work = config("trading_work")
 
-    all_work = casino_work and escort_work and antikino_work
+    all_work = casino_work and escort_work and trading_work
 
     return ":full_moon:" if all_work else ":new_moon:"
 
@@ -125,9 +125,9 @@ def get_work_moon():
 def get_work_status():
     casino_work = config("casino_work")
     escort_work = config("escort_work")
-    antikino_work = config("antikino_work")
+    trading_work = config("trading_work")
 
-    all_work = casino_work and escort_work and antikino_work
+    all_work = casino_work and escort_work and trading_work
 
     return emojize(
         services_status.format(
@@ -137,9 +137,9 @@ def get_work_status():
             escort_status=f":full_moon: Эскорт СКАМ"
             if escort_work
             else f":new_moon: <del>Эскорт СКАМ</del>",
-            antikino_status=f":full_moon: Антикино СКАМ"
-            if antikino_work
-            else f":new_moon: <del>Антикино СКАМ</del>",
+            trading_status=f":full_moon: Трейдинг СКАМ"
+            if trading_work
+            else f":new_moon: <del>Трейдинг СКАМ</del>",
             team_status=":full_moon: Общий статус: Ворк"
             if all_work
             else ":new_moon: Общий статус: Не ворк",
@@ -185,6 +185,7 @@ def find_token(conf_token: str):
         return conf_token.replace(srch.group(0), "")
     return conf_token
 
+
 def get_api(conf_token: str):
     srch = re.search(r"\(([^\(^\)]+)\)", conf_token)
     if srch:
@@ -222,5 +223,5 @@ async def check_proxy(proxy_url: str):
             answer = False  # this is for different log
         finally:
             await session.close()
-        
+
         return answer
