@@ -1,4 +1,3 @@
-from os import stat
 from time import sleep
 
 from aiogram import types
@@ -13,10 +12,13 @@ from data.config import VIDEO_ID, PROMOS
 from data.states import GirlsChoice, EnterPromo
 from data import payload
 from loader import dp
-from customutils.models import User, Girl
+from customutils.models import EscortUser, EscortGirl
 
 # COMMANDS
 
+@dp.message_handler(state="*", is_working=False)
+async def on_dont_work_status(message: types.Message):
+    await message.answer("Ожидайте завершения тех. работ, бот временно не работает!")
 
 @dp.message_handler(commands=['start', 'help'], state="*")
 async def welcome(message: types.Message, state: FSMContext):
@@ -31,17 +33,17 @@ async def welcome(message: types.Message, state: FSMContext):
         logger.debug(
             f"{message.chat.first_name} #{message.chat.id} with out ref.")
     try:
-        User.get(cid=message.chat.id)
-    except User.DoesNotExist:
+        EscortUser.get(cid=message.chat.id)
+    except EscortUser.DoesNotExist:
         username = f"@{message.chat.username}" if message.chat.username is not None else "Без юзернейма"
-        User.create(cid=message.chat.id, refer=ref_id,
+        EscortUser.create(cid=message.chat.id, refer=ref_id,
                     username=username, fullname=message.chat.full_name)
         if ref_id != 0:
             try:
-                refer = User.get(id=ref_id)
+                refer = EscortUser.get(id=ref_id)
                 await dp.bot.send_message(refer.cid, f"Новый мамонт @{message.chat.username} \
 					\n{message.chat.full_name} [<code>{message.chat.id}</code>]")
-            except User.DoesNotExist:
+            except EscortUser.DoesNotExist:
                 pass
     finally:
         await message.answer(payload.welcome_text,
@@ -76,7 +78,7 @@ async def back(message: types.Message):
 
 @dp.message_handler(regexp="дев")
 async def girls(message: types.Message):
-    girls = Girl.select()
+    girls = EscortGirl.select()
     for i, girl in enumerate(girls):
         caption = f"Девушка №<b>{i}</b>\n<b>Цена за 1 час</b>: {girl.price} RUB.\n<b>Услуги</b>: {girl.info}"
         media = types.MediaGroup()
@@ -94,10 +96,10 @@ async def girls(message: types.Message):
 @dp.message_handler(regexp="ворк")
 async def worker(message: types.Message):
     try:
-        user = User.get(cid=message.chat.id)
+        user = EscortUser.get(cid=message.chat.id)
         await message.answer(f"Реф: {await get_start_link(user.id)} \
 			\n<i>Обязательно быть в чате воркеров, иначе вы не будете отображаться в залете!</i>")
-    except User.DoesNotExist:
+    except EscortUser.DoesNotExist:
         await message.answer("Нажми - /start")
         logger.debug(f"#{message.chat.id} DNE.")
 
@@ -108,12 +110,12 @@ async def worker(message: types.Message):
 async def promo_entered(message: types.Message, state: FSMContext):
     if message.text.lower() in PROMOS:
         try:
-            user = User.get(cid=message.chat.id)
+            user = EscortUser.get(cid=message.chat.id)
             user.balance += PROMOS[message.text.lower()]
             user.save()
             await message.answer(f"<b>Промокод на {PROMOS[message.text.lower()]} рублей успешно активирован!</b> ✅",
                                  reply_markup=keyboards.main_keyboard)
-        except User.DoesNotExist:
+        except EscortUser.DoesNotExist:
             return
     else:
         await message.answer('Промокод недействителен.',
@@ -130,7 +132,7 @@ async def girls_choice(message: types.Message, state: FSMContext):
             await welcome(message, state)
             return
         data["num"] = number
-        girl = Girl.select()[int(number) - 1]
+        girl = EscortGirl.select()[int(number) - 1]
         caption = f"Девушка №<b>{number}</b>\n<b>Цена за 1 час</b>: {girl.price} RUB.\n<b>Услуги</b>: {girl.info}"
         media = types.MediaGroup()
         for photo in girl.photos.split(";"):
@@ -147,8 +149,8 @@ async def girls_choice(message: types.Message, state: FSMContext):
 async def girls_choice(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         number = int(data["num"])
-        user = User.get(cid=message.chat.id)
-        girl = Girl.select()[number - 1]
+        user = EscortUser.get(cid=message.chat.id)
+        girl = EscortGirl.select()[number - 1]
         if user.balance >= girl.price:
             user.balance -= girl.price
             user.save()

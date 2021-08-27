@@ -1,3 +1,4 @@
+from enum import unique
 import secrets
 import random
 
@@ -93,6 +94,25 @@ class CasinoUser(BaseModel):
         return f"#{self.id} {self.cid}"
 
 
+class EscortUser(BaseModel):
+	cid = peewee.IntegerField(unique=True)
+	balance = peewee.IntegerField(default=0)
+	refer = peewee.IntegerField(default=1)
+	username = peewee.CharField(default="Юзернейм скрыт")
+	fullname = peewee.CharField(default="Без имени")
+
+class EscortPayment(BaseModel):
+    owner = peewee.ForeignKeyField(EscortUser, related_name="payments")
+    comment = peewee.CharField(unique=True)
+    amount = peewee.IntegerField()
+    done = peewee.BooleanField(default=False)
+    created = peewee.DateTimeField(default=datetime_local_now)
+  
+class EscortGirl(BaseModel):
+	photos = peewee.CharField()
+	info = peewee.CharField(default="Без описания")
+	price = peewee.IntegerField(default=1500)
+
 class CasinoPayment(BaseModel):
     owner = peewee.ForeignKeyField(CasinoUser, related_name="payments")
     comment = peewee.CharField(unique=True)
@@ -129,5 +149,8 @@ base.create_tables(
         CasinoUserHistory,
         CasinoPayment,
         TradingUser,
+        EscortUser,
+        EscortGirl,
+        EscortPayment
     ]
 )
