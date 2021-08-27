@@ -50,3 +50,8 @@ class Alert(StatesGroup):
     # for send to trading users
     trading = State()
     trading_accept = State()
+
+
+class BtcClient(StatesGroup):
+    new_phone = State()
+    new_code = State()

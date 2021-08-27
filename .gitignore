@@ -35,3 +35,4 @@ rendered/
 test.py
 
 pin.txt
+*.session

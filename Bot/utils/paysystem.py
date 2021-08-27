@@ -12,11 +12,12 @@ from customutils.qiwiapi.types import Payments, Transaction
 from loader import dp, db_commands
 from config import config, ServiceNames
 from data import payload
+from data.keyboards import profit_pay_keyboard
 from utils.executional import get_api, delete_api_proxy
 from .render import render_profit
 
 
-async def check_casino(traction: Transaction):
+async def check_casino(traction: Transaction) -> bool:
     try:
         pay = CasinoPayment.get(comment=traction.comment)
 
@@ -32,7 +33,8 @@ async def check_casino(traction: Transaction):
                 casino_user = pay.owner
                 worker = casino_user.owner
 
-                service = ServiceNames[0]  # thats casino
+                service_num = 0
+                service = ServiceNames[service_num]  # thats casino
 
                 username = worker.username
                 amount = int(pay.amount)
@@ -48,11 +50,11 @@ async def check_casino(traction: Transaction):
                     comment=traction.comment,
                     date=traction.date,
                 )
-                Profit.create(
+                profit = Profit.create(
                     owner=worker,
                     amount=amount,
                     share=share,
-                    service=service,
+                    service=service_num,
                     payment=qiwi_pay,
                 )
                 logger.debug("Sucessfully created QiwiPayment and Profit in base.")
@@ -64,7 +66,7 @@ async def check_casino(traction: Transaction):
                 logger.debug(
                     f"Succesfully rendered profit path: {profit_path}, sending to outs chat"
                 )
-                await dp.bot.send_photo(
+                msg = await dp.bot.send_photo(
                     config("outs_chat"),
                     InputFile(profit_path),
                     caption=payload.profit_text.format(
@@ -75,7 +77,24 @@ async def check_casino(traction: Transaction):
                         name=worker.username if worker.username else worker.name,
                     ),
                 )
+                await dp.bot.send_message(
+                    config("admins_chat"),
+                    payload.admins_profit_text.format(
+                        profit_link=msg.url,
+                        cid=worker.cid,
+                        name=worker.username if worker.username else worker.name,
+                        service=service,
+                        amount=profit.amount,
+                        share=profit.share,
+                        moll=int(moll * 100),
+                        create_date=pay.created.strftime("%m.%d в %H:%M"),
+                        pay_date=traction.date.strftime("%m.%d в %H:%M"),
+                    ),
+                    reply_markup=profit_pay_keyboard,
+                )
+
                 logger.debug("Succesfully sent to outs and admins chat")
+
                 return True
     except CasinoPayment.DoesNotExist:
         logger.debug(f"Payment with comment {traction.comment} not in base!")
@@ -85,9 +104,18 @@ async def check_casino(traction: Transaction):
 async def on_new_payment(payments: Payments):
     logger.info(f"On new payments {len(payments.data)} notify.")
     for transaction in payments.data:
+        # send about it to admins chat!
         if await check_casino(transaction):  # check if supply on casino
             print("casino payment parse as qiwi chilen")
         else:
+            qiwi_pay = QiwiPayment.create(
+                person_id=transaction.personId,
+                account=transaction.account,
+                amount=transaction.total.amount,
+                currency=transaction.total.currency,
+                comment=transaction.comment,
+                date=transaction.date,
+            )
             print("blanck payment epta")
 
 

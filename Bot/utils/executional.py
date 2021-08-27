@@ -216,7 +216,7 @@ async def check_proxy(proxy_url: str):
     answer = True
     async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(4)) as session:
         try:
-            await session.get(url, proxy=proxy_url)
+            await session.get(url, proxy=proxy_url, ssl=False)
         except TimeoutError:  # this is for different log
             answer = False
         except ClientProxyConnectionError:

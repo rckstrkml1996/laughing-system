@@ -6,10 +6,11 @@ uvicorn
 peewee
 pytz
 python-multipart
-telethon
+pyrogram
 loguru
 py_expression_eval
 pydantic
 pymysql
 pillow
 psutil
+aiohttp_proxy

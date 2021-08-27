@@ -1,5 +1,6 @@
 import asyncio
 import threading
+import sys
 
 from aiogram import Dispatcher
 from loguru import logger
@@ -58,7 +59,8 @@ async def start_bot(dispatcher: Dispatcher, notify=True):
 
 def main():
     # for aiohttp connection by proxy, too slow for windows :(
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    if sys.platform == "win32":
+        asyncio.set_event_loop(asyncio.SelectorEventLoop())
 
     loop = asyncio.get_event_loop()
 
@@ -66,7 +68,7 @@ def main():
     c_usage.name = "CpuUsageUpdater"
     c_usage.start()
 
-    paymnts = loop.create_task(check_payments())  # it runs in dispatcher)
+    # paymnts = loop.create_task(check_payments())  # it runs in dispatcher)
     dynapns = loop.create_task(dynapins(dp.bot))  # it runs in dispatcher)
     start_task = loop.create_task(start_bot(dp, notify=False))
 

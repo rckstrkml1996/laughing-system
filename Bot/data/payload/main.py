@@ -72,3 +72,12 @@ profit_text = emojize(
     ":money_with_wings: Сумма платежа: <b>{amount} ₽</b>\n"
     ":see_no_evil: Воркер: <a href='tg://user?id={cid}'>{name}</a>"
 )
+
+admins_profit_text = emojize(
+    ":call_me_hand: Новый <a href='{profit_link}'>профит</a> у <a href='tg://user?id={cid}'>{name}</a>\n\n"
+    "Сервис: <b>{service}</b>\n"
+    "Сумма: <b>{amount} RUB</b>\n"
+    "Будет выплачено: <b>{share} RUB</b> (<i>{moll}%</i>)\n\n"
+    "Дата создания пополнения: {create_date}\n"
+    "Дата оплаты пополнения: {pay_date}"
+)

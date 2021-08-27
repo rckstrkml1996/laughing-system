@@ -296,3 +296,14 @@ sysinfo_update_btn = InlineKeyboardButton(
     emojize(":arrows_counterclockwise:"), callback_data="update_sys"
 )
 update_sysinfo_keyboard.add(sysinfo_update_btn)
+
+
+profit_pay_keyboard = InlineKeyboardMarkup()
+pay_btn = InlineKeyboardButton(
+    emojize("Выплатить :white_check_mark:"), callback_data="pizda"
+)
+dontpay_btn = InlineKeyboardButton(
+    emojize("Заморозка! :cold_face:"), callback_data="pizdaebat"
+)
+profit_pay_keyboard.add(pay_btn)
+profit_pay_keyboard.add(dontpay_btn)

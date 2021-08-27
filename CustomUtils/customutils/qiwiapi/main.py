@@ -41,7 +41,7 @@ class QiwiApi:
     async def get_new_profile(self):
         url = "https://edge.qiwi.com/person-profile/v1/profile/current"
 
-        response = await self.session.get(url, proxy=self.proxy)
+        response = await self.session.get(url, proxy=self.proxy, ssl=False)
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -67,14 +67,17 @@ class QiwiApi:
 
     def get_new_session(self) -> aiohttp.ClientSession:
         return aiohttp.ClientSession(
-            headers=self.headers, timeout=aiohttp.ClientTimeout(5), trust_env=True
+            connector=aiohttp.TCPConnector(verify_ssl=False),
+            headers=self.headers,
+            timeout=aiohttp.ClientTimeout(5),
+            trust_env=True,
         )
 
     async def get_balance(self):
         profile = await self.get_profile()
         url = f"https://edge.qiwi.com/funding-sources/v2/persons/{profile.contractInfo.contractId}/accounts"
 
-        response = await self.session.get(url, proxy=self.proxy)
+        response = await self.session.get(url, proxy=self.proxy, ssl=False)
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -87,7 +90,9 @@ class QiwiApi:
         profile = await self.get_profile()
         url = f"https://edge.qiwi.com/payment-history/v2/persons/{profile.contractInfo.contractId}/payments"
 
-        response = await self.session.get(url, params={"rows": rows}, proxy=self.proxy)
+        response = await self.session.get(
+            url, params={"rows": rows}, proxy=self.proxy, ssl=False
+        )
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -107,7 +112,9 @@ class QiwiApi:
             "fields": {"account": account},
         }
 
-        response = await self.session.post(url, json=params, proxy=self.proxy)
+        response = await self.session.post(
+            url, json=params, proxy=self.proxy, ssl=False
+        )
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
