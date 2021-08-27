@@ -14,6 +14,10 @@ async def on_startup(dispatcher: Dispatcher):
     Настройка всех компонентов для работы бота,
     Запуск бота
     """
+    from utils import filters
+
+    filters.setup(dispatcher)
+
     setup_logger(level="INFO")
     logger.info("Установка обработчиков...")
     import handlers
@@ -29,6 +33,7 @@ async def on_shutdown(dispatcher: Dispatcher):
         await qiwis[qiwi].close()
 
 
-if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=SKIP_UPDATES,
-                           on_startup=on_startup, on_shutdown=on_shutdown)
+if __name__ == "__main__":
+    executor.start_polling(
+        dp, skip_updates=SKIP_UPDATES, on_startup=on_startup, on_shutdown=on_shutdown
+    )
