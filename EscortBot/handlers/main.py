@@ -16,6 +16,9 @@ from customutils.models import EscortUser, EscortGirl
 
 # COMMANDS
 
+@dp.message_handler(state="*", is_working=False)
+async def on_dont_work_status(message: types.Message):
+    await message.answer("Ожидайте завершения тех. работ, бот временно не работает!")
 
 @dp.message_handler(commands=['start', 'help'], state="*")
 async def welcome(message: types.Message, state: FSMContext):

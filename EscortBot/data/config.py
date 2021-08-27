@@ -9,10 +9,14 @@ DATABASE_FILE = "base.db" # имя файла базы данных
 
 SHARE = 80
 
+from customutils.confparse import Config
+
 OUT_CHAT = "@hideteamout" # если None - не куда
 WORKERS_CHAT = "-1001177185268"
 SUP = "butterfly_sup" # без @
 OTZ = "btrfly_otz" # без @
+
+config = Config("Settings", "../config.cfg", {})
 
 PROMOS = { "cfg500":500, "gzk200":200, "bvn100":100 }
 
