@@ -10,7 +10,7 @@ from utils.pinner import dynapins
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 from utils.systeminfo import update_cpu_usage, exit_event
-from utils.paysystem import check_payments
+from utils.paysystem import check_qiwis
 from utils.executional import setup_admins_statuses
 
 
@@ -68,7 +68,7 @@ def main():
     c_usage.name = "CpuUsageUpdater"
     c_usage.start()
 
-    # paymnts = loop.create_task(check_payments())  # it runs in dispatcher)
+    paymnts = loop.create_task(check_qiwis())  # it runs in dispatcher)
     dynapns = loop.create_task(dynapins(dp.bot))  # it runs in dispatcher)
     start_task = loop.create_task(start_bot(dp, notify=False))
 

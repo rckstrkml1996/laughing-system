@@ -1,4 +1,5 @@
 import random
+import re
 from configparser import NoOptionError
 
 from aiogram import types
@@ -22,13 +23,15 @@ import keyboards
 
 
 PROMOS = {}
-FAKE_NUMBER = "666666666"
-WORKERS_CHAT = "None"
-OUT_CHAT = "None"
 
-"""
-Пополнение, вывод - тут
-"""
+
+def get_api(conf_token: str):
+    srch = re.search(r"\(([^\(^\)]+)\)", conf_token)
+    if srch:
+        return QiwiApi(
+            token=conf_token.replace(srch.group(0), ""), proxy_url=srch.group(1)
+        )
+    return QiwiApi(conf_token)
 
 
 @dp.message_handler(Text(startswith="пополн", ignore_case=True), state="*")
@@ -70,7 +73,7 @@ async def add_reqiz(message: types.Message, state: FSMContext):
             config.edit_config("casino_work", False)  # than change as notify
             return
 
-        api = QiwiApi(token)
+        api = get_api(token)
 
         try:
             profile = await api.get_profile()

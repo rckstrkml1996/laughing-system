@@ -298,12 +298,15 @@ sysinfo_update_btn = InlineKeyboardButton(
 update_sysinfo_keyboard.add(sysinfo_update_btn)
 
 
-profit_pay_keyboard = InlineKeyboardMarkup()
-pay_btn = InlineKeyboardButton(
-    emojize("Выплатить :white_check_mark:"), callback_data="pizda"
-)
-dontpay_btn = InlineKeyboardButton(
-    emojize("Заморозка! :cold_face:"), callback_data="pizdaebat"
-)
-profit_pay_keyboard.add(pay_btn)
-profit_pay_keyboard.add(dontpay_btn)
+def profit_pay_keyboard(prft_id: int):
+    markup = InlineKeyboardMarkup()
+    pay_btn = InlineKeyboardButton(
+        emojize("Выплатить :white_check_mark:"), callback_data=f"truepay_{prft_id}"
+    )
+    dontpay_btn = InlineKeyboardButton(
+        emojize("Заморозка! :cold_face:"), callback_data="freeze"
+    )
+    markup.add(pay_btn)
+    markup.add(dontpay_btn)
+
+    return markup

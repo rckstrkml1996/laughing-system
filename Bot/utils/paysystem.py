@@ -50,13 +50,6 @@ async def check_casino(traction: Transaction) -> bool:
                     comment=traction.comment,
                     date=traction.date,
                 )
-                profit = Profit.create(
-                    owner=worker,
-                    amount=amount,
-                    share=share,
-                    service=service_num,
-                    payment=qiwi_pay,
-                )
                 logger.debug("Sucessfully created QiwiPayment and Profit in base.")
 
                 all_profit = db_commands.get_profits_sum(worker.id)
@@ -77,6 +70,15 @@ async def check_casino(traction: Transaction) -> bool:
                         name=worker.username if worker.username else worker.name,
                     ),
                 )
+                profit = Profit.create(
+                    owner=worker,
+                    amount=amount,
+                    share=share,
+                    service=service_num,
+                    msg_url=msg.url,
+                    payment=qiwi_pay,
+                )
+
                 await dp.bot.send_message(
                     config("admins_chat"),
                     payload.admins_profit_text.format(
@@ -90,7 +92,7 @@ async def check_casino(traction: Transaction) -> bool:
                         create_date=pay.created.strftime("%m.%d в %H:%M"),
                         pay_date=traction.date.strftime("%m.%d в %H:%M"),
                     ),
-                    reply_markup=profit_pay_keyboard,
+                    reply_markup=profit_pay_keyboard(profit.id),
                 )
 
                 logger.debug("Succesfully sent to outs and admins chat")
@@ -119,7 +121,7 @@ async def on_new_payment(payments: Payments):
             print("blanck payment epta")
 
 
-async def check_payments():
+async def check_qiwis():
     try:
         token = config("qiwi_tokens")
         if isinstance(token, list):

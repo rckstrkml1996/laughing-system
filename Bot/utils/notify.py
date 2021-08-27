@@ -1,8 +1,8 @@
-from aiogram.utils.exceptions import ChatNotFound, BotBlocked
-from loguru import logger
-
-from aiogram import Dispatcher
 from asyncio import sleep
+
+from aiogram.utils.exceptions import ChatNotFound, BotBlocked
+from aiogram import Dispatcher
+from loguru import logger
 
 from data.payload import startup_text
 from config import config  # ADMINS_ID

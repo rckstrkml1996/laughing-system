@@ -10,7 +10,5 @@ from config import config
 # Обьявление всех компонентов бота из конфига
 
 
-loop = asyncio.get_event_loop()
-
-bot = Bot(config("casino_api_token"), parse_mode=ParseMode.HTML, loop=loop)
+bot = Bot(config("casino_api_token"), parse_mode=ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())

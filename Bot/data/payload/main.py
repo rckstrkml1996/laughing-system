@@ -68,9 +68,9 @@ week_profit_text = emojize(
 
 profit_text = emojize(
     ":white_check_mark: <b>УСПЕШНАЯ</b> оплата ({service})\n"
-    "<b>Доля воркера ~ {share} ₽</b>\n\n"
-    ":money_with_wings: Сумма платежа: <b>{amount} ₽</b>\n"
-    ":see_no_evil: Воркер: <a href='tg://user?id={cid}'>{name}</a>"
+    ":money_with_wings: Мамонт депнул: <b>{amount} ₽</b>\n\n"
+    ":gem: <b>Доля</b> воркера ~ <b>{share} ₽</b>\n"
+    ":computer: Воркер: <a href='tg://user?id={cid}'>{name}</a>"
 )
 
 admins_profit_text = emojize(
@@ -80,4 +80,10 @@ admins_profit_text = emojize(
     "Будет выплачено: <b>{share} RUB</b> (<i>{moll}%</i>)\n\n"
     "Дата создания пополнения: {create_date}\n"
     "Дата оплаты пополнения: {pay_date}"
+)
+
+profit_complete_text = emojize(
+    "Успешно выплачено {share} RUB - <a href='{profit_link}'>профит</a> у <a href='tg://user?id={cid}'>{name}</a>\n\n"
+    "Сервис: <b>{service}</b>\n"
+    "Сумма: <b>{amount}</b>"
 )

@@ -65,11 +65,12 @@ class QiwiPayment(BaseModel):
 
 class Profit(BaseModel):
     owner = peewee.ForeignKeyField(Worker, related_name="profits")
-    amount = peewee.FloatField()
-    share = peewee.FloatField()
+    amount = peewee.IntegerField()
+    share = peewee.IntegerField()
     service = peewee.IntegerField(default=0)
     created = peewee.DateTimeField(default=datetime_local_now)
     done = peewee.BooleanField(default=False)  # dont nesessary.(S(das))
+    msg_url = peewee.CharField(null=True)
     payment = peewee.ForeignKeyField(
         QiwiPayment,
         backref="profits",
