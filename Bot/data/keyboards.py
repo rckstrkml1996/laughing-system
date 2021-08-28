@@ -147,23 +147,25 @@ new_pin_keyboard.add(oldpin_btn)
 casino_keyboard = InlineKeyboardMarkup()
 
 my_mamoths_btn = InlineKeyboardButton(
-    emojize(":elephant: Мои мамонтята :elephant:"), callback_data="none"
+    emojize("Мои мамонтята :elephant:"), callback_data="my_mamonths"
 )
 promos_btn = InlineKeyboardButton(
-    emojize(":receipt: Мои промокоды :receipt:"), callback_data="none"
+    emojize("Мои промокоды :receipt:"), callback_data="my_promos"
+)
+my_fraze_btn = InlineKeyboardButton(
+    emojize("Свои фразы при выводе :book:"), callback_data="my_frazes"
 )
 msgspam_btn = InlineKeyboardButton(
-    emojize(
-        ":diamond_shape_with_a_dot_inside: Массовая рассылка :diamond_shape_with_a_dot_inside:"
-    ),
-    callback_data="none",
+    emojize("Массовая рассылка :diamond_shape_with_a_dot_inside:"),
+    callback_data="my_all_alerts",
 )
 deleteall_btn = InlineKeyboardButton(
-    emojize(":warning: Удалить всех :warning:"), callback_data="none"
+    emojize("Удалить всех :warning:"), callback_data="my_delete_all"
 )
 
 casino_keyboard.add(my_mamoths_btn)
 casino_keyboard.add(promos_btn)
+casino_keyboard.add(my_fraze_btn)
 casino_keyboard.add(msgspam_btn)
 casino_keyboard.add(deleteall_btn)
 
@@ -250,11 +252,18 @@ trading_keyboard.add(msgspam_btn)
 trading_keyboard.add(deleteall_btn)
 
 
-def cas_info_update_keyboard(uid):
+def cas_info_keyboard(fart, uid, minpay):
     markup = InlineKeyboardMarkup()
-    cas_info_update_btn = InlineKeyboardButton(
-        emojize(":arrows_counterclockwise:"), callback_data="updateinfo_{uid}"
+    cas_fart_btn = InlineKeyboardButton(
+        emojize(f"Фарт: {fart} %"), callback_data=f"updatefart_{uid}"
     )
+    cas_min_btn = InlineKeyboardButton(
+        emojize(f"Мин: {minpay} RUB"), callback_data=f"updatemin_{uid}"
+    )
+    cas_info_update_btn = InlineKeyboardButton(
+        emojize(":arrows_counterclockwise:"), callback_data=f"casupdateinfo_{uid}"
+    )
+    markup.add(cas_fart_btn, cas_min_btn)
     markup.add(cas_info_update_btn)
 
     return markup
@@ -277,10 +286,12 @@ alert_keyboard.add(bot_btn)
 alert_keyboard.add(casino_bots_btn)
 alert_keyboard.add(escort_bots_btn, trading_bot_btn)
 
+serv_alaccept_keyboard = InlineKeyboardMarkup()
 alert_accept_keyboard = InlineKeyboardMarkup()
 alert_accept_btn = InlineKeyboardButton(
     emojize(":white_check_mark: Подтвердить"), callback_data="alert_accept"
 )
+serv_alaccept_keyboard.add(alert_accept_btn)
 alert_edit_btn = InlineKeyboardButton(
     emojize(":pencil2: Изменить"), callback_data="alert_edit"
 )

@@ -22,7 +22,6 @@ async def on_startup(dispatcher: Dispatcher):
     logger.info("Установка обработчиков...")
     import handlers
 
-    # await req_bot.send_message(1404657362, "ебааать мы нашли камень!")
     await on_startup_notify(dispatcher)
 
     logger.info(f"Бот успешно запущен...")

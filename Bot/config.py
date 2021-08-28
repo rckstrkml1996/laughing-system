@@ -33,6 +33,7 @@ standart_config = {
 
 config = Config(section_name, path, standart_config)
 
+html_style_url = "https://telegra.ph/file/0e91498d70cfc4d87afba.png" # than i replace!
 
 outs_link = "https://t.me/hideteamout"
 workers_link = "https://t.me/joinchat/oV_2yUpUrA1kZThi"

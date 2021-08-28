@@ -35,6 +35,8 @@ class Qiwi(StatesGroup):
 
 class Casino(StatesGroup):
     commands = State()
+    alert = State()
+    alert_true = State()
 
 
 class Alert(StatesGroup):
