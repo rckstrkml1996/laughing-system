@@ -4,12 +4,14 @@ from loguru import logger
 
 from customutils.confparse import Config
 
+
 token = os.getenv("CASINO_TOKEN")
 
 standart_config = {
     "casino_api_token": token,
     "licence_photo": "AgACAgIAAxkBAAEOOY1gU9f3uRanl2h-YCVh3PFbprQWLQACN7QxG2NPoUrQtlfP33-xv-Tzk6IuAAMBAAMCAAN5AAMgBgACHgQ",
     "min_deposite": 500,
+    "casino_sup_username": "support",
 }
 
 path = os.path.normpath(os.path.join(os.path.dirname(__file__), "../config.cfg"))
