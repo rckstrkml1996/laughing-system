@@ -12,7 +12,7 @@ standart_config = {
     "min_deposite": 500,
 }
 
-path = os.path.abspath("../config.cfg")
+path = os.path.normpath(os.path.join(os.path.dirname(__file__), "../config.cfg"))
 config = Config("Settings", path, {})
 
 MINIK = 150  # минимальная сумма пополнения

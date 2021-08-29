@@ -8,7 +8,7 @@ import peewee
 from ..confparse import Config
 from ..datefunc import datetime_local_now
 
-path = os.path.abspath("../config.cfg")
+path = os.path.normpath(os.path.join(os.path.dirname(__file__), "../config.cfg"))
 config = Config("Settings", path, {})
 
 base = peewee.MySQLDatabase(
