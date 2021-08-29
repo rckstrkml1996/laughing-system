@@ -112,7 +112,7 @@ async def girls(message: types.Message):
                 media.attach_photo(photo, caption)
                 caption = None  # as a caption bitch)
         await message.answer_media_group(media=media)
-        sleep(0.15)
+        sleep(0.3)
     await message.answer(
         payload.choice_text, reply_markup=keyboards.girl_choice_keyboard(len(girls))
     )

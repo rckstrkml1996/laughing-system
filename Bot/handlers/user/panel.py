@@ -17,7 +17,7 @@ from utils.executional import get_correct_str, get_work_status
 async def worker_profile(message: types.Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state is not None:
-        logger.debug(f'Cancelling state {current_state} in bot profile')
+        logger.debug(f"Cancelling state {current_state} in bot profile")
         await state.finish()
 
     await worker_welcome(message)
@@ -49,12 +49,10 @@ async def worker_welcome(message: types.Message):
             all_balance=all_balance,
             ref_balance=worker.ref_balance,
             middle_profits=middle_profits,
-            profits=get_correct_str(
-                len_profits, "профит", "профита", "профитов"),
+            profits=get_correct_str(len_profits, "профит", "профита", "профитов"),
             in_team=get_correct_str(in_team.days, "день", "дня", "дней"),
             warns=0,
-            team_status=emojize(
-                ":full_moon: <b>Всё работает</b>, воркаем!")
+            team_status=emojize(":full_moon: <b>Всё работает</b>, воркаем!"),
         ),
         reply_markup=panel_keyboard(worker.username_hide),
     )
@@ -64,7 +62,7 @@ async def worker_welcome(message: types.Message):
 async def project_info(message: types.Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state is not None:
-        logger.debug(f'Cancelling state {current_state} in bot project info')
+        logger.debug(f"Cancelling state {current_state} in bot project info")
         await state.finish()
 
     team_profits = Profit.select().count()
@@ -74,44 +72,50 @@ async def project_info(message: types.Message, state: FSMContext):
             team_start=team_start,
             team_profits=team_profits,
             profits_sum=db_commands.all_profits_sum(),
-            services_status=get_work_status()
+            services_status=get_work_status(),
         ),
-        reply_markup=about_project_keyboard
+        reply_markup=about_project_keyboard,
     )
     logger.debug(f"Worker - {message.chat.id}, get project info")
 
 
-@dp.message_handler(regexp="эскор")
+@dp.message_handler(regexp="эскорт", is_worker=True, state="*")
 async def casino_info(message: types.Message):
+    worker = Worker.get(cid=message.from_user.id)
     await message.answer(
         payload.escort_text.format(
-            worker_id=101,
+            worker_id=worker.uniq_key,
         ),
         reply_markup=escort_keyboard,
-        disable_web_page_preview=True
+        disable_web_page_preview=True,
     )
 
 
-@dp.message_handler(regexp="трейдин")
+@dp.message_handler(regexp="трейдин", is_worker=True, state="*")
 async def casino_info(message: types.Message):
+    worker = Worker.get(cid=message.from_user.id)
     await message.answer(
         payload.trading_text.format(
-            worker_id=101,
+            worker_id=worker.uniq_key,
             pay_cards="\n".join(
                 map(
-                    lambda c: f'&#127479;&#127482; {c[1:]}' if c[0] == "r" else f'&#127482;&#127462; {c[1:]}', config(
-                        "fake_cards")
+                    lambda c: f"&#127479;&#127482; {c[1:]}"
+                    if c[0] == "r"
+                    else f"&#127482;&#127462; {c[1:]}",
+                    config("fake_cards"),
                 )
             ),
             pay_qiwis="\n".join(
                 map(
-                    lambda c: f'&#127479;&#127482; {c[1:]}' if c[0] == "r" else f'&#127482;&#127462; {c[1:]}', config(
-                        "fake_numbers")
+                    lambda c: f"&#127479;&#127482; {c[1:]}"
+                    if c[0] == "r"
+                    else f"&#127482;&#127462; {c[1:]}",
+                    config("fake_numbers"),
                 )
             ),
         ),
         reply_markup=trading_keyboard,
-        disable_web_page_preview=True
+        disable_web_page_preview=True,
     )
 
 
@@ -142,12 +146,10 @@ async def toggle_username(query: types.CallbackQuery):
                 all_balance=all_balance,
                 ref_balance=worker.ref_balance,
                 middle_profits=middle_profits,
-                profits=get_correct_str(
-                    len_profits, "профит", "профита", "профитов"),
+                profits=get_correct_str(len_profits, "профит", "профита", "профитов"),
                 in_team=get_correct_str(in_team.days, "день", "дня", "дней"),
                 warns=0,
-                team_status=emojize(
-                    ":full_moon: <b>Всё работает</b>, воркаем!")
+                team_status=emojize(":full_moon: <b>Всё работает</b>, воркаем!"),
             ),
             reply_markup=panel_keyboard(worker.username_hide),
         )
@@ -158,12 +160,11 @@ async def toggle_username(query: types.CallbackQuery):
 
 @dp.callback_query_handler(text="showrules", is_worker=True)
 async def show_rules(query: types.CallbackQuery):
-    await query.message.answer(
-        payload.rules_text(True))
+    await query.message.answer(payload.rules_text(True))
 
 
 @dp.callback_query_handler(text="refsystem", is_worker=True)
 async def ref_system(query: types.CallbackQuery):
     await query.message.answer(
-        payload.referral_system_text.format(
-            user_id=query.message.chat.id))
+        payload.referral_system_text.format(user_id=query.message.chat.id)
+    )
