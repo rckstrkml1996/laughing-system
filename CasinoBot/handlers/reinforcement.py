@@ -100,6 +100,7 @@ async def add_check(query: types.CallbackQuery):
         try:
             payment = CasinoPayment.get(owner=user, comment=comment)
             if payment.done:
+                payment.delete_instance()
                 user.balance += payment.amount + user.bonus
                 user.save()
                 await query.message.answer(

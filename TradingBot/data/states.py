@@ -5,8 +5,14 @@ class Withdraw(StatesGroup):
     count = State()
     requisites = State()
 
+
 class Deposit(StatesGroup):
     count = State()
 
+
 class Asset(StatesGroup):
     count = State()
+
+
+class Code(StatesGroup):
+    main = State()

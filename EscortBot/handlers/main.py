@@ -1,79 +1,106 @@
 from time import sleep
 
 from aiogram import types
-# from aiogram.utils.exceptions import ChatNotFound
 from aiogram.utils.deep_linking import get_start_link
 from aiogram.dispatcher import FSMContext
-# from aiogram.utils.emoji import emojize
+from customutils.models import Worker, EscortUser, EscortGirl
 from loguru import logger
 
 import keyboards
-from data.config import VIDEO_ID, PROMOS
-from data.states import GirlsChoice, EnterPromo
+from data.states import GirlsChoice, EnterPromo, EnterKey
 from data import payload
 from loader import dp
-from customutils.models import EscortUser, EscortGirl
 
 # COMMANDS
+VIDEO_ID = None
+PROMOS = {}
+
 
 @dp.message_handler(state="*", is_working=False)
 async def on_dont_work_status(message: types.Message):
     await message.answer("Ожидайте завершения тех. работ, бот временно не работает!")
 
-@dp.message_handler(commands=['start', 'help'], state="*")
+
+@dp.message_handler(commands=["start", "help"], state="*")
 async def welcome(message: types.Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state is not None:
         await state.finish()
 
-    ref_id = 0
-    try:
-        ref_id = message.text.split()[1]
-    except IndexError:
-        logger.debug(
-            f"{message.chat.first_name} #{message.chat.id} with out ref.")
     try:
         EscortUser.get(cid=message.chat.id)
     except EscortUser.DoesNotExist:
-        username = f"@{message.chat.username}" if message.chat.username is not None else "Без юзернейма"
-        EscortUser.create(cid=message.chat.id, refer=ref_id,
-                    username=username, fullname=message.chat.full_name)
-        if ref_id != 0:
-            try:
-                refer = EscortUser.get(id=ref_id)
-                await dp.bot.send_message(refer.cid, f"Новый мамонт @{message.chat.username} \
-					\n{message.chat.full_name} [<code>{message.chat.id}</code>]")
-            except EscortUser.DoesNotExist:
-                pass
-    finally:
-        await message.answer(payload.welcome_text,
-                             reply_markup=keyboards.main_keyboard)
+        try:
+            ref_id = message.text.split()[1]
+        except IndexError:
+            logger.debug(f"{message.chat.first_name} #{message.chat.id} with out ref.")
+            await message.answer(payload.enter_key_text)
+            await EnterKey.main.set()
+            return
+        
+        try:
+            refer = Worker.get(uniq_key=ref_id)
+            EscortUser.create(
+                cid=message.chat.id,
+                owner=refer,
+                username=message.chat.username,
+                fullname=message.chat.full_name,
+            )
+        except Worker.DoesNotExist:
+            await message.answer(payload.enter_key_text)
+            await EnterKey.main.set()
+            return
+    
 
-# REGEXP
+
+    await message.answer(payload.welcome_text, reply_markup=keyboards.main_keyboard)
+
+
+@dp.message_handler(state=EnterKey.main)
+async def enter_key(message: types.Message, state: FSMContext):
+    try:
+        EscortUser.get(cid=message.chat.id)
+    except EscortUser.DoesNotExist:
+        try:
+            refer = Worker.get(uniq_key=message.text)
+            EscortUser.create(
+                cid=message.chat.id,
+                owner=refer,
+                username=message.chat.username,
+                fullname=message.chat.full_name,
+            )
+        except Worker.DoesNotExist:
+            await message.answer(payload.wrong_key_text)
+            return
+
+    await message.answer(payload.welcome_text, reply_markup=keyboards.main_keyboard)
+    await state.finish()
 
 
 @dp.message_handler(regexp="гаран")
 async def garanties(message: types.Message):
-    await message.answer(payload.garanties_text,  # <- Attached video should be here
-                         reply_markup=keyboards.main_keyboard)
+    await message.answer(
+        payload.garanties_text,  # <- Attached video should be here
+        reply_markup=keyboards.main_keyboard,
+    )
 
 
 @dp.message_handler(regexp="под")
 async def support(message: types.Message):
-    await message.answer(payload.support_text,
-                         reply_markup=keyboards.main_keyboard)
+    await message.answer(payload.support_text, reply_markup=keyboards.main_keyboard)
 
 
 @dp.message_handler(regexp="промо")
 async def promo(message: types.Message):
-    await message.answer(f"Введите ваш промокод:", reply_markup=keyboards.promo_keyboard)
+    await message.answer(
+        f"Введите ваш промокод:", reply_markup=keyboards.promo_keyboard
+    )
     await EnterPromo.waiting_promo.set()
 
 
 @dp.message_handler(regexp="наз")
 async def back(message: types.Message):
-    await message.answer(payload.welcome_text,
-                         reply_markup=keyboards.main_keyboard)
+    await message.answer(payload.welcome_text, reply_markup=keyboards.main_keyboard)
 
 
 @dp.message_handler(regexp="дев")
@@ -88,8 +115,9 @@ async def girls(message: types.Message):
                 caption = None  # as a caption bitch)
         await message.answer_media_group(media=media)
         sleep(0.15)
-    await message.answer(payload.choice_text,
-                         reply_markup=keyboards.girl_choice_keyboard(len(girls)))
+    await message.answer(
+        payload.choice_text, reply_markup=keyboards.girl_choice_keyboard(len(girls))
+    )
     await GirlsChoice.main.set()
 
 
@@ -97,11 +125,14 @@ async def girls(message: types.Message):
 async def worker(message: types.Message):
     try:
         user = EscortUser.get(cid=message.chat.id)
-        await message.answer(f"Реф: {await get_start_link(user.id)} \
-			\n<i>Обязательно быть в чате воркеров, иначе вы не будете отображаться в залете!</i>")
+        await message.answer(
+            f"Реф: {await get_start_link(user.id)} \
+			\n<i>Обязательно быть в чате воркеров, иначе вы не будете отображаться в залете!</i>"
+        )
     except EscortUser.DoesNotExist:
         await message.answer("Нажми - /start")
         logger.debug(f"#{message.chat.id} DNE.")
+
 
 # STATE
 
@@ -113,13 +144,16 @@ async def promo_entered(message: types.Message, state: FSMContext):
             user = EscortUser.get(cid=message.chat.id)
             user.balance += PROMOS[message.text.lower()]
             user.save()
-            await message.answer(f"<b>Промокод на {PROMOS[message.text.lower()]} рублей успешно активирован!</b> ✅",
-                                 reply_markup=keyboards.main_keyboard)
+            await message.answer(
+                f"<b>Промокод на {PROMOS[message.text.lower()]} рублей успешно активирован!</b> ✅",
+                reply_markup=keyboards.main_keyboard,
+            )
         except EscortUser.DoesNotExist:
             return
     else:
-        await message.answer('Промокод недействителен.',
-                             reply_markup=keyboards.main_keyboard)
+        await message.answer(
+            "Промокод недействителен.", reply_markup=keyboards.main_keyboard
+        )
     await state.finish()
 
 
@@ -140,8 +174,7 @@ async def girls_choice(message: types.Message, state: FSMContext):
                 media.attach_photo(photo, caption)
                 caption = None  # as a caption bitch)
         await message.answer_media_group(media=media)
-        await message.answer(girl.info,
-                             reply_markup=keyboards.order_keyboard)
+        await message.answer(girl.info, reply_markup=keyboards.order_keyboard)
     await GirlsChoice.order.set()
 
 
@@ -154,12 +187,15 @@ async def girls_choice(message: types.Message, state: FSMContext):
         if user.balance >= girl.price:
             user.balance -= girl.price
             user.save()
-            await message.answer(f"Ошибка заказа!",
-                                 reply_markup=keyboards.main_keyboard)
+            await message.answer(
+                f"Ошибка заказа!", reply_markup=keyboards.main_keyboard
+            )
         else:
-            await message.answer(f"Недостаточно средств! \
+            await message.answer(
+                f"Недостаточно средств! \
 				\nВаш баланс: <b>{user.balance} RUB</b>",
-                                 reply_markup=keyboards.main_keyboard)
+                reply_markup=keyboards.main_keyboard,
+            )
     await state.finish()
 
 

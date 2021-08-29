@@ -13,4 +13,5 @@ pydantic
 pymysql
 pillow
 psutil
-aiohttp_proxy
+cryptography
+tgcrypto

@@ -1,17 +1,14 @@
-import asyncio
-
-from aiogram import Bot, Dispatcher, types, executor
+from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import ParseMode
 from loguru import logger
 
-from data import config
+from config import config
 
 """
 Обьявление всех компонентов бота из конфига
 """
 
-loop = asyncio.get_event_loop()
 
-bot = Bot(config.API_TOKEN, parse_mode=ParseMode.HTML, loop=loop)
+bot = Bot(config("escort_api_token"), parse_mode=ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())

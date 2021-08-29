@@ -1,12 +1,26 @@
+import re
+from random import randint
+
 from aiogram import types
+from aiogram.dispatcher import FSMContext
+from customutils.qiwiapi import QiwiApi
+from customutils.qiwiapi.exceptions import InvalidToken, InvalidAccount
+from customutils.models import TradingUser, TradingPayment
+
 from loader import dp
 from data import payload
-from aiogram.dispatcher import FSMContext
 from data.keyboards import *
-from customutils.models import TradingUser
-from random import randint
 from data.states import Withdraw, Deposit
 from config import config
+
+
+def get_api(conf_token: str):
+    srch = re.search(r"\(([^\(^\)]+)\)", conf_token)
+    if srch:
+        return QiwiApi(
+            token=conf_token.replace(srch.group(0), ""), proxy_url=srch.group(1)
+        )
+    return QiwiApi(conf_token)
 
 
 @dp.message_handler(regexp="профил")
@@ -17,26 +31,6 @@ async def my_profile(message: types.Message):
             payload.my_profile_text.format(
                 balance=user.balance, cid=user.cid, deals_count=randint(1900, 3000)
             )
-        )
-    except TradingUser.DoesNotExist:
-        pass
-
-
-@dp.callback_query_handler(text="rules_agreed")
-async def rules_agreed(query: types.CallbackQuery):
-    await query.message.edit_text(payload.welcome_text(query.from_user.full_name, True))
-    TradingUser.create(
-        cid=query.message.chat.id,
-        username=query.from_user.username,
-        fullname=query.from_user.full_name,
-    )
-    try:
-        user = TradingUser.get(cid=query.message.chat.id)
-        await query.message.answer(
-            payload.my_profile_text.format(
-                balance=user.balance, cid=user.cid, deals_count=randint(1900, 3000)
-            ),
-            reply_markup=main_keyboard,
         )
     except TradingUser.DoesNotExist:
         pass
@@ -79,24 +73,70 @@ async def support_show(message: types.Message):
 
 @dp.message_handler(state=Deposit.count)
 async def deposit_entered(message: types.Message, state: FSMContext):
+    if not message.text.isdigit():
+        message.reply(payload.int_error_text)
+        return
+
+    try:
+        token = config("qiwi_tokens")
+        if isinstance(token, list):
+            token = token[0]
+    except NoOptionError:
+        config.edit_config("trading_work", False)  # than change as notify
+        return
+
     try:
         user = TradingUser.get(cid=message.chat.id)
-        try:
-            if int(message.text) < config("min_deposit"):
-                await message.answer(payload.deposit_minerror_text)
-            else:
+
+        if int(message.text) < config("min_deposit"):
+            await message.answer(payload.deposit_minerror_text)
+        else:
+            api = get_api(token)
+            try:
+                profile = await api.get_profile()
+                await api.close()
+                account = profile.contractInfo.contractId
+
+                pay = TradingPayment.create(
+                    owner=user,
+                    comment=f"bnc{randint(111111, 999999)}",
+                    amount=message.text,
+                )
                 await message.answer(
                     payload.deposit_form_text.format(
-                        count=int(message.text),
-                        qiwi_number=13131313,  # QIWI NUMBER
-                        comment=133131,  # GENERATE COMMENT???
+                        count=pay.amount,
+                        qiwi_number=account,
+                        comment=pay.comment,
                     ),
-                    reply_markup=payment_keyboard,
+                    reply_markup=payment_keyboard(pay.amount, account, pay.comment),
                 )
                 await state.finish()
-        except ValueError:
-            await message.reply(payload.int_error_text)
-            await state.finish()
+            except (InvalidToken, InvalidAccount):  # than change as notify
+                pass
+    except TradingUser.DoesNotExist:
+        pass  # log
+
+
+@dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "check", state="*")
+async def check_pay(query: types.CallbackQuery):
+    try:
+        user = TradingUser.get(cid=query.message.chat.id)
+        comment = query.data.split("_")[1]
+        try:
+            payment = TradingPayment.get(owner=user, comment=comment)
+            if payment.done:
+                payment.delete_instance()
+                user.balance += payment.amount  # pay amount changes in bot!
+                user.save()
+                await query.message.answer(
+                    payload.add_succesful.format(amount=payment.amount)
+                )
+            else:
+                await query.message.answer(payload.add_unsuccesful)
+        except TradingPayment.DoesNotExist:
+            await query.message.answer(
+                "Похоже вы уже оплатили этот счёт или он не существует."
+            )
     except TradingUser.DoesNotExist:
         pass
 
@@ -121,7 +161,7 @@ async def withdraw_entered(message: types.Message, state: FSMContext):
             await message.reply(payload.int_error_text)
             await state.finish()
     except TradingUser.DoesNotExist:
-        pass
+        pass  # log
 
 
 @dp.message_handler(state=Withdraw.requisites)
@@ -134,7 +174,7 @@ async def requisites_entered(message: types.Message, state: FSMContext):
         await message.reply(payload.withdraw_done_text)
         await state.finish()
     except TradingUser.DoesNotExist:
-        pass
+        pass  # log
 
 
 @dp.callback_query_handler(state="*", text="back")

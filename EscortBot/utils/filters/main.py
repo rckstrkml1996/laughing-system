@@ -1,7 +1,7 @@
 from aiogram.dispatcher.filters import BoundFilter
 from loguru import logger
 
-from data.config import config  # ADMINS_ID
+from config import config  # ADMINS_ID
 
 
 class IsWorking(BoundFilter):

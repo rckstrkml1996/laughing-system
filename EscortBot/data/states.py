@@ -15,3 +15,6 @@ class GirlsChoice(StatesGroup):
 
 class EnterPromo(StatesGroup):
     waiting_promo = State()
+    
+class EnterKey(StatesGroup):
+    main = State()

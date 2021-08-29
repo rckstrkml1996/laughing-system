@@ -1,3 +1,4 @@
+import sys
 import asyncio
 
 from aiogram import Dispatcher
@@ -21,16 +22,15 @@ async def on_startup(dispatcher: Dispatcher):
     logger.info(f"Бот успешно запущен...")
 
 
-async def on_shutdown(dispatcher: Dispatcher):
-    print("shutdown")
-
-
 if __name__ == "__main__":
+    if sys.platform == "win32":  # working even for win64!
+        asyncio.set_event_loop(asyncio.SelectorEventLoop())
+
     from utils.filters import setup
 
     setup(dp)
     loop = asyncio.get_event_loop()
     loop.create_task(file_ids())
     executor.start_polling(
-        dp, skip_updates=SKIP_UPDATES, on_startup=on_startup, on_shutdown=on_shutdown
+        dp, skip_updates=SKIP_UPDATES, on_startup=on_startup, timeout=4
     )

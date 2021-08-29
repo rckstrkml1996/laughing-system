@@ -1,10 +1,10 @@
-from aiogram import Dispatcher
-from aiogram import executor
+import sys
+import asyncio
 
-from data.config import SKIP_UPDATES
+from aiogram import Dispatcher, executor
 from loguru import logger
-from loader import dp, qiwis
 
+from loader import dp
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 
@@ -27,12 +27,8 @@ async def on_startup(dispatcher: Dispatcher):
     logger.info(f"Бот успешно запущен...")
 
 
-async def on_shutdown(dispatcher: Dispatcher):
-    for qiwi in qiwis:
-        await qiwis[qiwi].close()
-
-
 if __name__ == "__main__":
-    executor.start_polling(
-        dp, skip_updates=SKIP_UPDATES, on_startup=on_startup, on_shutdown=on_shutdown
-    )
+    if sys.platform == "win32":
+        asyncio.set_event_loop(asyncio.SelectorEventLoop())
+
+    executor.start_polling(dp, skip_updates=True, on_startup=on_startup, timeout=4)

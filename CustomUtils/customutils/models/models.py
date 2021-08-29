@@ -95,23 +95,26 @@ class CasinoUser(BaseModel):
 
 
 class EscortUser(BaseModel):
-	cid = peewee.IntegerField(unique=True)
-	balance = peewee.IntegerField(default=0)
-	refer = peewee.IntegerField(default=1)
-	username = peewee.CharField(default="Юзернейм скрыт")
-	fullname = peewee.CharField(default="Без имени")
+    owner = peewee.ForeignKeyField(Worker, related_name="esc_users")
+    cid = peewee.IntegerField(unique=True)
+    balance = peewee.IntegerField(default=0)
+    username = peewee.CharField(default="Без юзернейма")
+    fullname = peewee.CharField(default="Без имени")
+
 
 class EscortPayment(BaseModel):
     owner = peewee.ForeignKeyField(EscortUser, related_name="payments")
+    amount = peewee.IntegerField(null=True)  # sets dynamic
     comment = peewee.CharField(unique=True)
-    amount = peewee.IntegerField()
     done = peewee.BooleanField(default=False)
     created = peewee.DateTimeField(default=datetime_local_now)
-  
+
+
 class EscortGirl(BaseModel):
-	photos = peewee.CharField()
-	info = peewee.CharField(default="Без описания")
-	price = peewee.IntegerField(default=1500)
+    photos = peewee.CharField()
+    info = peewee.CharField(default="Без описания")
+    price = peewee.IntegerField(default=1500)
+
 
 class CasinoPayment(BaseModel):
     owner = peewee.ForeignKeyField(CasinoUser, related_name="payments")
@@ -130,6 +133,7 @@ class CasinoUserHistory(BaseModel):
 
 
 class TradingUser(BaseModel):
+    owner = peewee.ForeignKeyField(Worker, related_name="tdg_users")
     cid = peewee.IntegerField(unique=True)
     balance = peewee.IntegerField(default=0)
     fullname = peewee.CharField(default="Без имени")
@@ -137,6 +141,14 @@ class TradingUser(BaseModel):
 
     def __str__(self):
         return f"#{self.id} {self.cid}"
+
+
+class TradingPayment(BaseModel):
+    owner = peewee.ForeignKeyField(TradingUser, related_name="payments")
+    comment = peewee.CharField(unique=True)
+    amount = peewee.IntegerField()
+    done = peewee.BooleanField(default=False)
+    created = peewee.DateTimeField(default=datetime_local_now)
 
 
 base.connect()
@@ -149,8 +161,9 @@ base.create_tables(
         CasinoUserHistory,
         CasinoPayment,
         TradingUser,
+        TradingPayment,
         EscortUser,
         EscortGirl,
-        EscortPayment
+        EscortPayment,
     ]
 )
