@@ -1,13 +1,15 @@
 from enum import unique
 import secrets
 import random
+import os
 
 import peewee
 
 from ..confparse import Config
 from ..datefunc import datetime_local_now
 
-config = Config("Settings", "../config.cfg", {})
+path = os.path.normpath(os.path.join(os.getcwd(), "../config.cfg"))
+config = Config("Settings", path, {})
 
 base = peewee.MySQLDatabase(
     config("base_name"),

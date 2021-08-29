@@ -1,10 +1,13 @@
+import os
+
 from datetime import datetime
 
 import pytz
 
 from .confparse import Config
 
-config = Config("Settings", "../config.cfg", {"time_zone": "Europe/Moscow"})
+path = os.path.normpath(os.path.join(os.getcwd(), "../config.cfg"))
+config = Config("Settings", path, {"time_zone": "Europe/Moscow"})
 
 
 local_tz = pytz.timezone(config("time_zone"))

@@ -1,10 +1,11 @@
-from os import getenv
+import os
 
 from loguru import logger
 
 from customutils.confparse import Config
 
-token = getenv("CASINO_TOKEN")
+
+token = os.getenv("CASINO_TOKEN")
 
 standart_config = {
     "casino_api_token": token,
@@ -13,7 +14,8 @@ standart_config = {
     "casino_sup_username": "support",
 }
 
-config = Config("Settings", "../config.cfg", {})
+path = os.path.normpath(os.path.join(os.path.dirname(__file__), "../config.cfg"))
+config = Config("Settings", path, {})
 
 MINIK = 150  # минимальная сумма пополнения
 
