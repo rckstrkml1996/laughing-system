@@ -7,19 +7,19 @@ from customutils.models import CasinoUser
 # from config import QIWI_ACCOUNTS
 
 # cancel button
-cancel_button = KeyboardButton(emojize("Назад :arrow_up:"))
+cancel_button = KeyboardButton(emojize("Назад"))
 
 # bot main keyboard
 
 
 def main_keyboard():
     main_keyboard = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-    play_button = KeyboardButton(emojize("Играть :four_leaf_clover:"))
-    in_button = KeyboardButton(emojize("Пополнить :moneybag:"))
-    promo_button = KeyboardButton(emojize("Ввести промокод :key:"))
-    out_button = KeyboardButton(emojize("Вывести :money_with_wings:"))
-    sup_button = KeyboardButton(emojize("Информация :bulb:"))
-    selfcab_button = KeyboardButton(emojize("Личный кабинет :briefcase:"))
+    play_button = KeyboardButton(emojize("Играть"))
+    in_button = KeyboardButton(emojize("Пополнить"))
+    promo_button = KeyboardButton(emojize("Ввести промокод"))
+    out_button = KeyboardButton(emojize("Вывести"))
+    sup_button = KeyboardButton(emojize("Информация"))
+    selfcab_button = KeyboardButton(emojize("Личный кабинет"))
     main_keyboard.row(play_button)
     main_keyboard.row(in_button, promo_button, out_button)
     main_keyboard.row(sup_button, selfcab_button)
@@ -43,11 +43,9 @@ def add_req_keyboard(amount: int, comment: int, number):
     markup = InlineKeyboardMarkup(
         one_time_keyboard=True, resize_keyboard=True, row_width=1
     )
-    goto_button = InlineKeyboardButton(
-        emojize("Перейти к оплате :arrow_heading_up:"), url=url
-    )
+    goto_button = InlineKeyboardButton(emojize("Перейти к оплате"), url=url)
     check_button = InlineKeyboardButton(
-        emojize("Проверить оплату :recycle:"), callback_data=f"check_{comment}"
+        emojize("Проверить оплату"), callback_data=f"check_{comment}"
     )
     markup.add(goto_button, check_button)
 
@@ -64,7 +62,7 @@ qiwi_keyboard.add(InlineKeyboardButton("acc", callback_data=f"qiwi_acc"))
 def payment_done_keyboard(cid, comment):
     markup = InlineKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     accept_button = InlineKeyboardButton(
-        emojize("Пополнить :sparkle:"), callback_data=f"done_{cid}_{comment}"
+        emojize("Пополнить"), callback_data=f"done_{cid}_{comment}"
     )
     markup.add(accept_button)
     return markup

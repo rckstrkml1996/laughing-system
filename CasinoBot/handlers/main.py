@@ -133,5 +133,5 @@ async def game_support(message: types.Message):
 
 
 @dp.message_handler(regexp="назад", state="*")
-async def cancel(message: types.Message):
+async def cancel(message: types.Message, state: FSMContext):
     await main_menu(message, state)

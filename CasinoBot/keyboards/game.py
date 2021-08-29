@@ -3,9 +3,9 @@ from aiogram.utils.emoji import emojize
 
 
 games_keyboard = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-casino_button = KeyboardButton(emojize("Числа :1234:"))
-dice_button = KeyboardButton(emojize("Кости :game_die:"))
-cancel_button = KeyboardButton(emojize("Назад :arrow_up:"))
+casino_button = KeyboardButton(emojize("Числа"))
+dice_button = KeyboardButton(emojize("Кости"))
+cancel_button = KeyboardButton(emojize("Назад"))
 games_keyboard.add(casino_button, dice_button)
 games_keyboard.add(cancel_button)
 
