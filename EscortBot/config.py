@@ -4,7 +4,7 @@ from loguru import logger
 from customutils.confparse import Config
 
 
-path = "../config.cfg"
+path = os.path.abspath("../config.cfg")
 section_name = "Settings"
 
 token = os.getenv("ESC_TOKEN")  # or set it into config.cfg file))

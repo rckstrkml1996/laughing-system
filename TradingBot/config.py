@@ -3,7 +3,7 @@ from customutils.confparse import Config
 import os
 
 
-path = "../config.cfg"
+path = os.path.abspath("../config.cfg")
 section_name = "Settings"
 
 directory = os.path.dirname(os.path.abspath(__file__))

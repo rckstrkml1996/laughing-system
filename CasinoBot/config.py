@@ -1,10 +1,10 @@
-from os import getenv
+from os
 
 from loguru import logger
 
 from customutils.confparse import Config
 
-token = getenv('CASINO_TOKEN')
+token = os.getenv('CASINO_TOKEN')
 
 standart_config = {
     "casino_api_token": token,
@@ -12,7 +12,8 @@ standart_config = {
     "min_deposite": 500,
 }
 
-config = Config("Settings", "../config.cfg", {})
+path = os.path.abspath("../config.cfg")
+config = Config("Settings", path, {})
 
 MINIK = 150  # минимальная сумма пополнения
 

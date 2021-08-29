@@ -4,7 +4,7 @@ from loguru import logger
 from customutils.confparse import Config
 
 
-path = "../config.cfg"
+path = os.path.abspath("../config.cfg")
 section_name = "Settings"
 
 token = os.getenv("BOT_TOKEN")  # or set it into config.cfg file))
@@ -33,7 +33,7 @@ standart_config = {
 
 config = Config(section_name, path, standart_config)
 
-html_style_url = "https://telegra.ph/file/0e91498d70cfc4d87afba.png" # than i replace!
+html_style_url = "https://telegra.ph/file/0e91498d70cfc4d87afba.png"  # than i replace!
 
 outs_link = "https://t.me/joinchat/0K4ig3Lm-4EzNzc6"
 workers_link = "https://t.me/joinchat/6-4rJOpD17s4Y2Ey"
