@@ -70,7 +70,7 @@ def main():
 
     paymnts = loop.create_task(check_qiwis())  # it runs in dispatcher)
     dynapns = loop.create_task(dynapins(dp.bot))  # it runs in dispatcher)
-    start_task = loop.create_task(start_bot(dp, notify=False))
+    start_task = loop.create_task(start_bot(dp, notify=True))
 
     try:
         loop.run_until_complete(start_task)  # better for testing and dev

@@ -35,9 +35,9 @@ config = Config(section_name, path, standart_config)
 
 html_style_url = "https://telegra.ph/file/0e91498d70cfc4d87afba.png" # than i replace!
 
-outs_link = "https://t.me/hideteamout"
-workers_link = "https://t.me/joinchat/oV_2yUpUrA1kZThi"
-reviews_link = "https://t.me/joinchat/xdsxXRzqhFhmNDAy"
+outs_link = "https://t.me/joinchat/0K4ig3Lm-4EzNzc6"
+workers_link = "https://t.me/joinchat/6-4rJOpD17s4Y2Ey"
+reviews_link = "https://t.me/blessinform"
 
 team_start = "1 апреля 1991"
 
