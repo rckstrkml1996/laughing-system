@@ -24,7 +24,7 @@ class IsWorkerFilter(BoundFilter):
                 return self.is_worker == (Worker.get(cid=chat.id).status >= 2)
             except Worker.DoesNotExist:
                 return not self.is_worker  # not worker
-        elif chat.type == "group":
+        elif chat.type == "group" or "supergroup":
             return False
 
         logger.debug(
@@ -41,8 +41,10 @@ class IsAdminFilter(BoundFilter):
 
     def get_target(self, obj):
         if isinstance(obj, CallbackQuery):
-            return getattr(getattr(obj, 'message', None), 'chat', None), getattr(obj, 'from_user', None)
-        return getattr(obj, 'chat', None), getattr(obj, 'from_user', None)
+            return getattr(getattr(obj, "message", None), "chat", None), getattr(
+                obj, "from_user", None
+            )
+        return getattr(obj, "chat", None), getattr(obj, "from_user", None)
 
     async def check(self, obj):
         chat, user = self.get_target(obj)
@@ -51,7 +53,7 @@ class IsAdminFilter(BoundFilter):
                 return self.is_admin == (Worker.get(cid=user.id).status >= 4)
             except Worker.DoesNotExist:
                 return not self.is_admin  # not admin
-        elif chat.type == "group":
+        elif chat.type == "group" or chat.type == "supergroup":
             try:
                 return self.is_admin == (Worker.get(cid=user.id).status >= 4)
             except Worker.DoesNotExist:
@@ -84,7 +86,7 @@ class SendSummaryFilter(BoundFilter):
 
 
 class AdminsChatFilter(BoundFilter):
-    key = 'admins_chat'
+    key = "admins_chat"
     required = True
     default = False
 
@@ -104,7 +106,7 @@ class AdminsChatFilter(BoundFilter):
 
 
 class WorkersChatFilter(BoundFilter):
-    key = 'workers_chat'
+    key = "workers_chat"
     required = True
     default = False
 
