@@ -77,13 +77,14 @@ async def add_reqiz(message: types.Message, state: FSMContext):
             profile = await api.get_profile()
             await api.close()
             account = profile.contractInfo.contractId
+            CasinoPayment.create(owner=user, comment=comment, amount=amount)
             await message.answer(
                 payload.add_req_text(amount, comment, account),
                 reply_markup=keyboards.add_req_keyboard(amount, comment, account),
             )
-            CasinoPayment.create(owner=user, comment=comment, amount=amount)
         except (InvalidToken, InvalidAccount):  # than change as notify
             pass
+        await state.finish()
 
     except CasinoUser.DoesNotExist:
         logger.debug(f"#{message.chat.id} - does not exist")
@@ -188,12 +189,11 @@ async def out_number(message: types.Message, state: FSMContext, regexp):
                 f"Баланс: <b>{user.balance} RUB</b>\n" + payload.out_req_succesful,
                 reply_markup=keyboards.main_keyboard(),
             )
-            await state.finish()
         else:
             await message.answer(
                 payload.out_invreq_text, reply_markup=keyboards.main_keyboard()
             )
-            await state.finish()
+        await state.finish()
     except CasinoUser.DoesNotExist:
         logger.debug(f"#{message.chat.id} - does not exist")
 
