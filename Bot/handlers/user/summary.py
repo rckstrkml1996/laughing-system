@@ -144,11 +144,6 @@ async def summary_accepted(query: types.CallbackQuery):
             payload.summary_accepted_text,
             reply_markup=summary_accepted_keyboard
         )
-        await dp.bot.send_message(
-            worker.cid,
-            payload.summary_accepted_info_text,
-            reply_markup=menu_keyboard,
-        )
 
     except Worker.DoesNotExist:
         pass

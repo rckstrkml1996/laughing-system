@@ -19,7 +19,7 @@ startup_text = emojize("<b>Бот запущен!</b> :sparkle:")
 
 # dynamic pin
 
-standart_pin = emojize("СТАНДАРТНЫЙ КОНФИГ")
+standart_pin = emojize("СТАНДАРТНЫЙ КОНФИГ {time}")
 
 pin_path = config("pin_path")
 

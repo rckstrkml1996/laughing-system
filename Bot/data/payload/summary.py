@@ -12,19 +12,21 @@ summary_text = emojize(
 )
 
 new_summary_text = emojize(
-    "Привет, это бот <b>DUREX TEAM</b> :revolving_hearts:\n"
+    "Привет, это бот <b>BLESS TEAM</b> :revolving_hearts:\n"
     "Чтобы начать работу у нас, подай заявку :point_down:"
 )
 
 
 def rules_text(agreed=False):
-    text = ":page_with_curl: <b>Правила нашего проекта:</b>\n\n" \
-        "• <code>Запрещено попрошайничество</code>\n\n" \
-        "• <code>Запрещен: спам/флуд/шок/порно контент</code>\n\n" \
-        "• <code>Запрещается продажа каких либо услуг/товаров без соглашения администрации, за сделки проведённые без нашего ведома ответственности НЕ НЕСЁМ</code>\n\n" \
-        "• <code>Запрещено принимать оплату на свои реквизиты</code>\n\n"  \
-        "• <code>Разрешено - рофлить над всеми, не зависимо от статуса участника проекта (в пределах нормы)</code>\n\n" \
+    text = (
+        ":page_with_curl: <b>Правила нашего проекта:</b>\n\n"
+        "• <code>Запрещено попрошайничество</code>\n\n"
+        "• <code>Запрещен: спам/флуд/шок/порно контент</code>\n\n"
+        "• <code>Запрещается продажа каких либо услуг/товаров без соглашения администрации, за сделки проведённые без нашего ведома ответственности НЕ НЕСЁМ</code>\n\n"
+        "• <code>Запрещено принимать оплату на свои реквизиты</code>\n\n"
+        "• <code>Разрешено - рофлить над всеми, не зависимо от статуса участника проекта (в пределах нормы)</code>\n\n"
         "• <code>По усмотрению администрации проекта, лок/скам дропов ОПЛАЧИВАЕТСЯ в размере 25%-50% от успешной оплаты</code>"
+    )
 
     if agreed:
         text += ":white_check_mark: <b>Вы ознакомились и согласились с правилами проекта</b>"
@@ -35,8 +37,7 @@ def rules_text(agreed=False):
 
 
 summary_where_text = emojize(
-    ":seedling: <b>Откуда Вы узнали о нас?</b>\n\n"
-    "Отправьте ссылку на источник."
+    ":seedling: <b>Откуда Вы узнали о нас?</b>\n\n" "Отправьте ссылку на источник."
 )
 
 summary_exp_text = emojize(
@@ -61,8 +62,7 @@ summary_sended_text = emojize(
 )
 
 summary_reviewing_text = emojize(
-    ":warning: <b>Ошибка!</b>\n"
-    ":information_source: Ваша заявка уже рассматривается"
+    ":warning: <b>Ошибка!</b>\n" ":information_source: Ваша заявка уже рассматривается"
 )
 
 
@@ -95,22 +95,11 @@ summary_accepted_text = emojize(
     "<b>Удачных профитов!</b>"
 )
 
-summary_accepted_info_text = emojize(
-    ":green_apple: <b>Данная информация может быть полезна.</b>\n\n"
-    "<b>Мануалы</b> :books:\n"
-    "└ <a href='https://telegra.ph/Manual-po-rabote-s-Antikino-04-30'>Антикино (Основной)</a>\n"
-    "└ <a href='https://telegra.ph/Polnyj-manual-dlya-raboty-04-30'>Антикино (Полный)</a>\n"
-    "└ <a href='https://telegra.ph/Casino-Hide-Team-04-04'>Казино (Основной)</a>\n"
-    "└ <a href='https://telegra.ph/Esli-mamont-znaet-pro-shemu-04-04'>Казино (Если мамонт шарит)</a>\n"
-    "└ <a href='https://telegra.ph/Manual-po-vyvodu-sredstv-s-BTC-BANKER-04-30'>Вывод с BTC Banker</a>\n"
-)
-
 summary_blocked_text = emojize(
     ":no_entry_sign: <b>Администрация проекта заблокировала Вас!</b>\n\n"
     ":hatched_chick: <b>Ты идешь НАХУЙ!</b>"
 )
 
 summary_blockfin_text = emojize(
-    ":shrimp: <b>Вы пришли нахуй!</b>\n\n"
-    "<code>Иди отсоси себе)</code>"
+    ":shrimp: <b>Вы пришли нахуй!</b>\n\n" "<code>Иди отсоси себе)</code>"
 )

