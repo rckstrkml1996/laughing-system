@@ -5,11 +5,10 @@ from aiogram.utils.markdown import quote_html
 
 from config import config
 
-# from config import SUP, LIFE_OUTS, MINIK
-SUP = "SUPPER"
 LIFE_OUTS = "LINKTRUW"
 # MINIK = "100"
 # политика конф. при старте бота для новых
+SUP = config("casino_sup_username")
 
 
 def welcome_text(first):
