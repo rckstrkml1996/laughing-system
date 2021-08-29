@@ -45,9 +45,9 @@ async def format_pin_text(text):
             btc_rub_price=rub,
             topd_worker=topd_worker,
             time=timenow,
-            in_casino=0,
-            in_trading=0,
-            in_escort=0,
+            in_casino=in_casino,
+            in_trading=in_trading,
+            in_escort=in_escort,
         )
     )
 
