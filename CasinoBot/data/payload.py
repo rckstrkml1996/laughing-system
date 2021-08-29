@@ -68,7 +68,7 @@ out_req_succesful = emojize(
 
 out_invreq_text = emojize(
     f":hammer_and_wrench: <b>Вывод возможен только на те QIWI кошельки или карты, с которых пополнялся ваш баланс!\
-	\n:warning: Обратитесь в тех-поддержку. @{SUP}</b>"
+	\n:warning: Обратитесь в тех-поддержку. {SUP}</b>"
 )
 
 # ИГРА
@@ -107,7 +107,7 @@ def info_text():
 	\n\n:earth_africa: Текущий онлайн: <b>{randint(420, 450)}</b> \
 	\n:money_with_wings: Последний вывод: <b>{generate()} RUB</b> \
 	\n:fire: Лайв выводы: {LIFE_OUTS} \
-	\n\nПо любым вопросам, Тех. Поддержка: @{SUP} \
+	\n\nПо любым вопросам, Тех. Поддержка: {SUP} \
 	\n:warning: Пишите сразу по делу! \
 	\n\n<i>Пользовательское соглашение: \
 	\nhttps://telegra.ph/Polzovatelskoe-soglashenie-08-29-2</i>"

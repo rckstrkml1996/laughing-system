@@ -43,14 +43,12 @@ async def self_cabine(chat_id: int):
 
 @dp.message_handler(Text(startswith="личн", ignore_case=True))
 async def cabine(message: types.Message):
-    await message.answer(
-        await self_cabine(message.chat.id)
-    )  # main
+    await message.answer(await self_cabine(message.chat.id))  # main
     await SelfCabine.main.set()  # пустышка для перевода стейта
 
 
 async def ref_code(message: types.Message):
-    await message.answer("Введи код")
+    await message.answer("Введите 6 значный код:")
     await Register.ref_code.set()
 
 
@@ -66,9 +64,9 @@ async def register(message: types.Message, state: FSMContext):
             )
             await state.finish()
         except Worker.DoesNotExist:
-            await message.answer("Введи правильный код")
+            await message.answer("Код неправильный! Введите 6 значный код:")
     else:
-        await message.answer("Введи правильный код")
+        await message.answer("Код не 6 значный! Введите 6 значный код:")
 
 
 @dp.message_handler(commands="start", state="*")
