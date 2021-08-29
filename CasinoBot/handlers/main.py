@@ -41,7 +41,7 @@ async def self_cabine(chat_id: int):
     )
 
 
-@dp.message_handler(Text(startswith="личн", ignore_case=True))
+@dp.message_handler(Text(startswith="личн", ignore_case=True), state="*")
 async def cabine(message: types.Message):
     await message.answer(await self_cabine(message.chat.id))  # main
     await SelfCabine.main.set()  # пустышка для перевода стейта
@@ -133,5 +133,5 @@ async def game_support(message: types.Message):
 
 
 @dp.message_handler(regexp="назад", state="*")
-async def cancel(message: types.Message, state: FSMContext):
+async def cancel(message: types.Message):
     await main_menu(message, state)
