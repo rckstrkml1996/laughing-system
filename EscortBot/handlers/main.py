@@ -37,7 +37,7 @@ async def welcome(message: types.Message, state: FSMContext):
             await message.answer(payload.enter_key_text)
             await EnterKey.main.set()
             return
-        
+
         try:
             refer = Worker.get(uniq_key=ref_id)
             EscortUser.create(
@@ -50,8 +50,6 @@ async def welcome(message: types.Message, state: FSMContext):
             await message.answer(payload.enter_key_text)
             await EnterKey.main.set()
             return
-    
-
 
     await message.answer(payload.welcome_text, reply_markup=keyboards.main_keyboard)
 
@@ -103,7 +101,7 @@ async def back(message: types.Message):
     await message.answer(payload.welcome_text, reply_markup=keyboards.main_keyboard)
 
 
-@dp.message_handler(regexp="дев")
+@dp.message_handler(regexp="анкет", state="*")
 async def girls(message: types.Message):
     girls = EscortGirl.select()
     for i, girl in enumerate(girls):
@@ -119,19 +117,6 @@ async def girls(message: types.Message):
         payload.choice_text, reply_markup=keyboards.girl_choice_keyboard(len(girls))
     )
     await GirlsChoice.main.set()
-
-
-@dp.message_handler(regexp="ворк")
-async def worker(message: types.Message):
-    try:
-        user = EscortUser.get(cid=message.chat.id)
-        await message.answer(
-            f"Реф: {await get_start_link(user.id)} \
-			\n<i>Обязательно быть в чате воркеров, иначе вы не будете отображаться в залете!</i>"
-        )
-    except EscortUser.DoesNotExist:
-        await message.answer("Нажми - /start")
-        logger.debug(f"#{message.chat.id} DNE.")
 
 
 # STATE
