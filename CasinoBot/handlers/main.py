@@ -44,7 +44,7 @@ async def self_cabine(chat_id: int):
 @dp.message_handler(Text(startswith="личн", ignore_case=True))
 async def cabine(message: types.Message):
     await message.answer(
-        await self_cabine(message.chat.id), reply_markup=keyboards.selfcab_keyboard
+        await self_cabine(message.chat.id)
     )  # main
     await SelfCabine.main.set()  # пустышка для перевода стейта
 

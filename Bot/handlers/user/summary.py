@@ -1,5 +1,6 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
+from aiogram.utils.emoji import emojize
 
 from loader import dp
 from data.states import Summary
@@ -32,7 +33,7 @@ async def summary_agree(query: types.CallbackQuery):
 @dp.message_handler(state=Summary.where)
 async def summary_experience(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
-        data['where'] = message.text.replace(";", " ")
+        data["where"] = message.text.replace(";", " ")
 
     await message.answer(payload.summary_exp_text)
     await Summary.experience.set()
@@ -41,14 +42,14 @@ async def summary_experience(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Summary.experience)
 async def summary_final(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
-        data['exp'] = message.text.replace(";", " ")
+        data["exp"] = message.text.replace(";", " ")
 
         await message.answer(
             payload.summary_final.format(
-                where=data['where'],
-                experience=data['exp'],
+                where=data["where"],
+                experience=data["exp"],
             ),
-            reply_markup=summary_send_keyboard
+            reply_markup=summary_send_keyboard,
         )
 
     await Summary.final.set()
@@ -63,8 +64,8 @@ async def summary_send(query: types.CallbackQuery, state: FSMContext):
         async with state.proxy() as data:
             await query.message.edit_text(  # message to user
                 payload.summary_sended_text.format(
-                    where=data['where'],
-                    experience=data['exp'],
+                    where=data["where"],
+                    experience=data["exp"],
                 )
             )
 
@@ -79,8 +80,8 @@ async def summary_send(query: types.CallbackQuery, state: FSMContext):
                     name=query.message.chat.full_name,
                     username=username,
                     chat_id=query.message.chat.id,
-                    where=data['where'],
-                    experience=data['exp'],
+                    where=data["where"],
+                    experience=data["exp"],
                 ),
                 reply_markup=summary_check_keyboard(query.message.chat.id),
             )
@@ -90,10 +91,12 @@ async def summary_send(query: types.CallbackQuery, state: FSMContext):
     await state.finish()
 
 
-@dp.callback_query_handler(lambda cb: cb.data.split('_')[0] == "reject", admins_chat=True)
+@dp.callback_query_handler(
+    lambda cb: cb.data.split("_")[0] == "reject", admins_chat=True
+)
 async def summary_reject(query: types.CallbackQuery):
     try:
-        worker = Worker.get(cid=query.data.split('_')[1])
+        worker = Worker.get(cid=query.data.split("_")[1])
         worker.send_summary = False  # can send new summary
         worker.save()
 
@@ -113,16 +116,18 @@ async def summary_reject(query: types.CallbackQuery):
         await dp.bot.send_message(
             worker.cid,
             payload.summary_rejected_text,
-            reply_markup=summary_start_keyboard
+            reply_markup=summary_start_keyboard,
         )
     except Worker.DoesNotExist:
         pass
 
 
-@dp.callback_query_handler(lambda cb: cb.data.split('_')[0] == "accept", admins_chat=True)
+@dp.callback_query_handler(
+    lambda cb: cb.data.split("_")[0] == "accept", admins_chat=True
+)
 async def summary_accepted(query: types.CallbackQuery):
     try:
-        worker = Worker.get(cid=query.data.split('_')[1])
+        worker = Worker.get(cid=query.data.split("_")[1])
         worker.status = 2  # status - worker
         worker.save()
 
@@ -142,17 +147,22 @@ async def summary_accepted(query: types.CallbackQuery):
         await dp.bot.send_message(
             worker.cid,
             payload.summary_accepted_text,
-            reply_markup=summary_accepted_keyboard
+            reply_markup=summary_accepted_keyboard,
+        )
+        await dp.bot.send_message(
+            worker.cid, emojize(":zap:"), reply_markup=menu_keyboard
         )
 
     except Worker.DoesNotExist:
         pass
 
 
-@dp.callback_query_handler(lambda cb: cb.data.split('_')[0] == "block", admins_chat=True)
+@dp.callback_query_handler(
+    lambda cb: cb.data.split("_")[0] == "block", admins_chat=True
+)
 async def summary_accepted(query: types.CallbackQuery):
     try:
-        worker = Worker.get(cid=query.data.split('_')[1])
+        worker = Worker.get(cid=query.data.split("_")[1])
         worker.status = 1  # status - blocked
         worker.save()
 
@@ -172,7 +182,7 @@ async def summary_accepted(query: types.CallbackQuery):
         await dp.bot.send_message(
             worker.cid,
             payload.summary_blocked_text,
-            reply_markup=summary_blocked_keyboard
+            reply_markup=summary_blocked_keyboard,
         )
 
     except Worker.DoesNotExist:

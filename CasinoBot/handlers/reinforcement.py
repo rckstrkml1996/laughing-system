@@ -218,19 +218,19 @@ async def promo_complete(message: types.Message):
             if user.bonus == amount:
                 await message.answer(
                     "Такой промокод уже активирован",
-                    reply_markup=keyboards.selfcab_keyboard,
+                    reply_markup=keyboards.main_keyboard(),
                 )
                 return
             user.bonus = amount
             user.save()
             await message.answer(
                 f"Промокод на {amount} RUB активирован!",
-                reply_markup=keyboards.selfcab_keyboard,
+                reply_markup=keyboards.main_keyboard(),
             )
         else:
             await message.answer(
                 "Такой промокод не удалось найти",
-                reply_markup=keyboards.selfcab_keyboard,
+                reply_markup=keyboards.main_keyboard(),
             )
     except CasinoUser.DoesNotExist:
         logger.info(f"CasinoUser {message.chat.id} does not exist")

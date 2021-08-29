@@ -36,3 +36,5 @@ test.py
 
 pin.txt
 *.session
+
+.env/

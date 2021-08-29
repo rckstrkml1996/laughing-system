@@ -79,7 +79,7 @@ summary_accepted_keyboard.add(reviews_btn)
 """
 panel
 """
-menu_keyboard = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+menu_keyboard = ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)
 profile_btn = KeyboardButton(emojize(":woman_tipping_hand: Мой профиль"))
 casino_btn = KeyboardButton(emojize(":slot_machine: Казино"))
 traiding_btn = KeyboardButton(emojize(":chart_with_upwards_trend: Трейдинг"))

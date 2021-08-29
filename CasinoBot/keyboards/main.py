@@ -15,21 +15,16 @@ cancel_button = KeyboardButton(emojize("Назад :arrow_up:"))
 def main_keyboard():
     main_keyboard = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     play_button = KeyboardButton(emojize("Играть :four_leaf_clover:"))
+    in_button = KeyboardButton(emojize("Пополнить :moneybag:"))
+    promo_button = KeyboardButton(emojize("Ввести промокод :key:"))
+    out_button = KeyboardButton(emojize("Вывести :money_with_wings:"))
     sup_button = KeyboardButton(emojize("Информация :bulb:"))
     selfcab_button = KeyboardButton(emojize("Личный кабинет :briefcase:"))
     main_keyboard.row(play_button)
+    main_keyboard.row(in_button, promo_button, out_button)
     main_keyboard.row(sup_button, selfcab_button)
 
     return main_keyboard
-
-
-selfcab_keyboard = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
-in_button = KeyboardButton(emojize("Пополнить :moneybag:"))
-promo_button = KeyboardButton(emojize("Ввести промокод :key:"))
-out_button = KeyboardButton(emojize("Вывести :money_with_wings:"))
-selfcab_keyboard.row(in_button, out_button)
-selfcab_keyboard.row(promo_button)
-selfcab_keyboard.row(cancel_button)
 
 
 def welcome_keyboard(ref_id: int):
