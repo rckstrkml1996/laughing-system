@@ -299,6 +299,7 @@ async def cas_mamonths_info(query: types.CallbackQuery):
     timenow = localnow.strftime("%H:%M, %S cек")
 
     if mamonths_count == 0:
+        await query.answer("Вывожу!")
         await query.message.answer(payload.no_mamonths_text)
     else:
         mamonths_text = "\n".join(map(small_mamont, worker.cas_users))
@@ -309,6 +310,11 @@ async def cas_mamonths_info(query: types.CallbackQuery):
                 time=timenow,
             )
         )
+
+
+@dp.callback_query_handler(text="my_frazes", state=Casino.commands, is_worker=True)
+async def cas_mamonths_phrazes(query: types.CallbackQuery):
+    await query.answer("Работаю хули")
 
 
 @dp.callback_query_handler(text="my_promos", state=Casino.commands, is_worker=True)
