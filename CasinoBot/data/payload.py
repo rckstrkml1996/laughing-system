@@ -110,5 +110,5 @@ def info_text():
 	\n\nПо любым вопросам, Тех. Поддержка: @{SUP} \
 	\n:warning: Пишите сразу по делу! \
 	\n\n<i>Пользовательское соглашение: \
-	\nhttps://telegra.ph/Polzovatelskoe-soglashenie-03-17</i>"
+	\nhttps://telegra.ph/Polzovatelskoe-soglashenie-08-29-2</i>"
     )
