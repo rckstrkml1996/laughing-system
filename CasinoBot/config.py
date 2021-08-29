@@ -1,10 +1,10 @@
-from os
+import os
 
 from loguru import logger
 
 from customutils.confparse import Config
 
-token = os.getenv('CASINO_TOKEN')
+token = os.getenv("CASINO_TOKEN")
 
 standart_config = {
     "casino_api_token": token,
