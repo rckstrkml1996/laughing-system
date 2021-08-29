@@ -6,7 +6,7 @@ import pytz
 
 from .confparse import Config
 
-path = os.path.normpath(os.path.join(os.path.dirname(__file__), "../config.cfg"))
+path = os.path.normpath(os.path.join(os.getcwd(), "../config.cfg"))
 config = Config("Settings", path, {"time_zone": "Europe/Moscow"})
 
 
