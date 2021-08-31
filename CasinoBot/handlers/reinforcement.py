@@ -13,7 +13,7 @@ from customutils.qiwiapi import QiwiApi
 from customutils.models import CasinoUser, CasinoUserHistory, CasinoPayment
 from customutils.qiwiapi.exceptions import InvalidToken, InvalidAccount
 
-from loader import dp
+from loader import dp, main_bot
 from config import config
 from data.states import SelfCabine, AddBalance, OutBalance
 from data import payload
@@ -59,8 +59,6 @@ async def add_reqiz(message: types.Message, state: FSMContext):
         return
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        async with state.proxy() as data:
-            data["amount"] = amount
         comment = random.randint(1000000, 9999999)
 
         try:
@@ -68,6 +66,7 @@ async def add_reqiz(message: types.Message, state: FSMContext):
             if isinstance(token, list):
                 token = token[0]
         except NoOptionError:
+            logger.info("Casino Stop Work")
             config.edit_config("casino_work", False)  # than change as notify
             return
 
@@ -75,15 +74,23 @@ async def add_reqiz(message: types.Message, state: FSMContext):
 
         try:
             profile = await api.get_profile()
-            await api.close()
             account = profile.contractInfo.contractId
-            CasinoPayment.create(owner=user, comment=comment, amount=amount)
+            pay = CasinoPayment.create(owner=user, comment=comment, amount=amount)
             await message.answer(
                 payload.add_req_text(amount, comment, account),
                 reply_markup=keyboards.add_req_keyboard(amount, comment, account),
             )
+            await main_bot.send_message(
+                user.owner.cid,
+                payload.pay_mamonth_text.format(
+                    cid=user.cid, name=user.fullname, uid=user.id, amount=amount
+                ),
+                reply_markup=keyboards.pay_accept(pay.id),
+            )
         except (InvalidToken, InvalidAccount):  # than change as notify
-            pass
+            logger.info("Invalid Token or Account!")
+        finally:
+            await api.close()
         await state.finish()
 
     except CasinoUser.DoesNotExist:
@@ -101,12 +108,15 @@ async def add_check(query: types.CallbackQuery):
         try:
             payment = CasinoPayment.get(owner=user, comment=comment)
             if payment.done:
+                await query.message.delete()
                 payment.delete_instance()
                 user.balance += payment.amount + user.bonus
                 user.save()
                 await query.message.answer(
                     payload.add_succesful(payment.amount + user.bonus)
                 )
+            else:
+                await query.message.answer("Вы ещё не оплатили этот счёт!")
         except CasinoPayment.DoesNotExist:
             logger.warning(f"for #{query.from_user.id} - payment does not exist")
             await query.message.answer(

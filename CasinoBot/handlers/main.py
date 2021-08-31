@@ -12,7 +12,7 @@ from config import LICENCE
 from data.states import SelfCabine, Register
 import keyboards
 from data import payload
-from loader import dp
+from loader import dp, main_bot
 from customutils.models import Worker, CasinoUser, CasinoUserHistory
 
 
@@ -113,8 +113,16 @@ async def accept_user(query: types.CallbackQuery):
             worker = Worker.get(uniq_key=refer)
             username = query.message.chat.username
             fullname = query.message.chat.full_name
-            CasinoUser.create(
+            user = CasinoUser.create(
                 owner=worker, cid=chat_id, username=username, fullname=fullname
+            )
+            await main_bot.send_message(
+                worker.cid,
+                payload.new_mamonth_text.format(
+                    cid=chat_id,
+                    name=user.fullname,
+                    uid=user.id,
+                ),
             )
         except Worker.DoesNotExist:  # редко
             await ref_code(query.message)

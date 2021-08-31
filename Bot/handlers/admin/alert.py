@@ -12,7 +12,7 @@ from data.keyboards import *
 from data.states import Alert
 
 
-@dp.message_handler(commands=["alert", "alerts"], admins_chat=True)
+@dp.message_handler(commands=["alert", "alerts"], admins_chat=True, is_admin=True, state="*")
 async def alert_command(message: types.Message):
     logger.debug("Admin called alert command")
     await message.answer(payload.alert_text, reply_markup=alert_keyboard)

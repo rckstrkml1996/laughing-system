@@ -112,3 +112,15 @@ def info_text():
 	\n\n<i>Пользовательское соглашение: \
 	\nhttps://telegra.ph/Polzovatelskoe-soglashenie-08-29-2</i>"
     )
+
+
+new_mamonth_text = emojize(
+    ":elephant: <a href='tg://user?id={cid}'>{name}</a> (/c{uid}) - твой новый мамонт (Казино)"
+)
+
+pay_mamonth_text = emojize(
+    "<a href='tg://user?id={cid}'>{name}</a> создал заявку на пополнение\n\n"
+    "Telegram ID: {cid}\n"
+    "ID мамонта: /c{uid}\n"
+    "Сумма: {amount} ₽"
+)

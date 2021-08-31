@@ -13,7 +13,7 @@ cancel_button = KeyboardButton(emojize("Назад"))
 
 
 def main_keyboard():
-    main_keyboard = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
+    main_keyboard = ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)
     play_button = KeyboardButton(emojize("Играть"))
     in_button = KeyboardButton(emojize("Пополнить"))
     promo_button = KeyboardButton(emojize("Ввести промокод"))

@@ -365,3 +365,20 @@ async def cas_alert_true(query: types.CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(text="my_delete_all", state=Casino.commands, is_worker=True)
 async def cas_mamonths_delete(query: types.CallbackQuery):
     await query.answer("Работаю")
+
+
+@dp.callback_query_handler(
+    lambda cb: cb.data.split("_")[0] == "payaccept", is_worker=True
+)
+async def accept_pay(query: types.CallbackQuery):
+    pay_id = query.data.split("_")[1]
+    try:
+        pay = CasinoPayment.get(id=pay_id)
+        pay.done = True
+        pay.save()
+        await query.message.edit_text(
+            query.message.parse_entities() + "\n\nВы пополнили баланс"
+        )
+        await query.answer("Принял")
+    except CasinoPayment.DoesNotExist:
+        await query.answer("Ошибка!")
