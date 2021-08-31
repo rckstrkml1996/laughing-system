@@ -10,7 +10,10 @@ from ..datefunc import datetime_local_now
 path = os.path.normpath(os.path.join(os.getcwd(), "../config.cfg"))
 config = Config("Settings", path, {})
 
-base = peewee.MySQLDatabase(
+class DB(peewee.ReconnectMixin, peewee.MySQLDatabase):
+    pass
+
+base = DB(
     config("base_name"),
     user=config("base_user"),
     password=config("base_password"),
