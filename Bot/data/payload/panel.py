@@ -17,7 +17,7 @@ worker_menu_text = emojize(
 about_project_text = emojize(
     ":woman_tipping_hand: <b>Информация о проекте Bless Team</b>\n\n"
     ":fire: Мы открылись: {team_start}\n"
-    ":fallen_leaf: Количество профитов: {team_profits}\n"
+    ":gb: Количество профитов: {team_profits}\n"
     ":moneybag: Общая сумма профитов: {profits_sum} ₽\n"
     "<b>Выплаты</b> проекта:\n"
     "— Оплата - <b>80%</b>\n"
