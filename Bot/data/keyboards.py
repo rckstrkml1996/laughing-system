@@ -255,10 +255,10 @@ trading_keyboard.add(deleteall_btn)
 def cas_info_keyboard(fart, uid, minpay):
     markup = InlineKeyboardMarkup()
     cas_fart_btn = InlineKeyboardButton(
-        emojize(f"Фарт: {fart} %"), callback_data=f"updatefart_{uid}"
+        f"Фарт: {fart} %", callback_data=f"updatefart_{uid}"
     )
     cas_min_btn = InlineKeyboardButton(
-        emojize(f"Мин: {minpay} RUB"), callback_data=f"updatemin_{uid}"
+        f"Мин: {minpay} RUB", callback_data=f"updatemin_{uid}"
     )
     cas_info_update_btn = InlineKeyboardButton(
         emojize(":arrows_counterclockwise:"), callback_data=f"casupdateinfo_{uid}"

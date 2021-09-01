@@ -161,14 +161,16 @@ async def cas_mamonth_info(message: types.Message):
 
 @dp.callback_query_handler(
     lambda cb: cb.data.split("_")[0] == "updatefart",
+    state="*",
     is_worker=True,
 )
 async def update_mamonth_fart(query: types.CallbackQuery):
     try:
         user = CasinoUser.get(id=query.data.split("_")[1])  # can get by str
-        user.fort_chance = (
+        user.fort_chance = int(
             100 if user.fort_chance == 0 else 50 if user.fort_chance == 100 else 0
         )
+
         user.save()
 
         localnow = datetime_local_now().replace(tzinfo=None)
