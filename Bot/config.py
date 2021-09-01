@@ -39,7 +39,7 @@ outs_link = "https://t.me/joinchat/0K4ig3Lm-4EzNzc6"
 workers_link = "https://t.me/joinchat/6-4rJOpD17s4Y2Ey"
 reviews_link = "https://t.me/blessinform"
 
-team_start = "1 сентября 2021"
+team_start = "3 сентября 2021"
 
 """
     Кастомизация

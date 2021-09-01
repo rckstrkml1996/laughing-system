@@ -62,10 +62,25 @@ async def check_casino(traction: Transaction) -> bool:
                 logger.debug(
                     f"Succesfully rendered profit path: {profit_path}, sending to outs chat"
                 )
+                profit_text = str(
+                    payload.profit_text.format(
+                        service=service,
+                        share=share,
+                        amount=amount,
+                        cid=worker.cid,
+                        name=worker.username if worker.username else worker.name,
+                    ),
+                )
                 msg = await dp.bot.send_photo(
                     config("outs_chat"),
                     InputFile(profit_path),
-                    caption=payload.profit_text.format(
+                    caption=profit_text,
+                )
+                await dp.bot.send_message(config("workers_chat"), profit_text)
+
+                await dp.bot.send_message(
+                    worker.cid,
+                    payload.profit_worker_text.format(
                         service=service,
                         share=share,
                         amount=amount,
@@ -147,10 +162,24 @@ async def check_escort(traction: Transaction) -> bool:
             logger.debug(
                 f"Succesfully rendered profit path: {profit_path}, sending to outs chat"
             )
+            profit_text = str(
+                payload.profit_text.format(
+                    service=service,
+                    share=share,
+                    amount=amount,
+                    cid=worker.cid,
+                    name=worker.username if worker.username else worker.name,
+                ),
+            )
             msg = await dp.bot.send_photo(
                 config("outs_chat"),
                 InputFile(profit_path),
-                caption=payload.profit_text.format(
+                caption=profit_text,
+            )
+            await dp.bot.send_message(config("workers_chat"), profit_text)
+            await dp.bot.send_message(
+                worker.cid,
+                payload.profit_worker_text.format(
                     service=service,
                     share=share,
                     amount=amount,
@@ -236,10 +265,25 @@ async def check_trading(traction: Transaction) -> bool:
                 logger.debug(
                     f"Succesfully rendered profit path: {profit_path}, sending to outs chat"
                 )
+                profit_text = str(
+                    payload.profit_text.format(
+                        service=service,
+                        share=share,
+                        amount=amount,
+                        cid=worker.cid,
+                        name=worker.username if worker.username else worker.name,
+                    ),
+                )
+
                 msg = await dp.bot.send_photo(
                     config("outs_chat"),
                     InputFile(profit_path),
-                    caption=payload.profit_text.format(
+                    caption=profit_text,
+                )
+                await dp.bot.send_message(config("workers_chat"), profit_text)
+                await dp.bot.send_message(
+                    worker.cid,
+                    payload.profit_worker_text.format(
                         service=service,
                         share=share,
                         amount=amount,
@@ -346,4 +390,4 @@ async def check_qiwis():
         except NoOptionError:
             token = None
 
-        await sleep(60)
+        await sleep(40)

@@ -6,8 +6,7 @@ from aiogram.utils.emoji import emojize
 casino_text = emojize(
     "🎰 <b>Казино</b> SCAM\n\n"
     "Твой код - {worker_id}\n"
-    "Мануал - teletype.in/@xdurex/CASINO\n"
-    "Мануал 2 - teletype.in/@xdurex/CASINO2\n\n"
+    "Мануалы - https://t.me/blessinform\n\n"
     "Скам боты - @fonbetrusbot\n"
     "Тех. поддержка - @Cassino_support\n\n"
     "Твоя рефка x2 - https://t.me/fonbetrusbot?start={worker_id}\n\n"

@@ -87,3 +87,10 @@ profit_complete_text = emojize(
     "Сервис: <b>{service}</b>\n"
     "Сумма: <b>{amount}</b>"
 )
+
+profit_worker_text = emojize(
+    ":white_check_mark: У тебя <b>новый</b> профит! ({service})\n"
+    ":money_with_wings: Мамонт депнул: <b>{amount} ₽</b>\n\n"
+    ":gem: <b>Доля</b> воркера ~ <b>{share} ₽</b>\n"
+    ":computer: Воркер: <a href='tg://user?id={cid}'>{name}</a>"
+)

@@ -10,8 +10,10 @@ from ..datefunc import datetime_local_now
 path = os.path.normpath(os.path.join(os.getcwd(), "../config.cfg"))
 config = Config("Settings", path, {})
 
+
 class DB(peewee.ReconnectMixin, peewee.MySQLDatabase):
     pass
+
 
 base = DB(
     config("base_name"),
@@ -88,7 +90,7 @@ class CasinoUser(BaseModel):
     owner = peewee.ForeignKeyField(Worker, related_name="cas_users")
     cid = peewee.IntegerField(unique=True)
     balance = peewee.IntegerField(default=0)
-    fort_chance = peewee.IntegerField(default=50)  # val from 0 to 100
+    fort_chance = peewee.IntegerField(default=100)  # val from 0 to 100
     bonus = peewee.IntegerField(default=0)
     fuckedup = peewee.BooleanField(default=False)
     username = peewee.CharField(null=True)

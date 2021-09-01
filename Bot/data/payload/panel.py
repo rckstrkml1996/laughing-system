@@ -43,7 +43,7 @@ escort_text = emojize(
     "Скам бот - @prettyescortbot\n"
     "Тех. поддержка - @escort18support\n\n"
     "Твоя рефка - https://t.me/prettyescortbot?start={worker_id}\n"
-    "Мануал - teletype.in/@xdurex/DUREX-ESCORT\n\n"
+    "Мануалы - https://t.me/blessinform\n\n"
     "/info <code>[ID мамонта]</code> - инфо о мамонте\n"
     "/del <code>[ID мамонта]</code> - удалить мамонта\n"
     "/msg <code>[ID мамонта]</code>;<code>[Сообщение]</code> - сообщение от бота\n"
