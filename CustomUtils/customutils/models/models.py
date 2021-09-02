@@ -3,6 +3,7 @@ import random
 import os
 
 import peewee
+from playhouse.shortcuts import ReconnectMixin
 
 from ..confparse import Config
 from ..datefunc import datetime_local_now
@@ -11,7 +12,7 @@ path = os.path.normpath(os.path.join(os.getcwd(), "../config.cfg"))
 config = Config("Settings", path, {})
 
 
-class DB(peewee.ReconnectMixin, peewee.MySQLDatabase):
+class DB(ReconnectMixin, peewee.MySQLDatabase):
     pass
 
 
