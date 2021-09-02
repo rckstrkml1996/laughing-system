@@ -43,6 +43,7 @@ async def alert_edit(query: types.CallbackQuery):
     await query.message.edit_text(
         payload.edit_alert_text.format(bot_type="Основного бота")
     )
+    logger.debug("Admin changing alert text")
     await Alert.bot.set()
 
 
@@ -70,7 +71,7 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
             )
             msg_count += 1
         except ChatNotFound:
-            not_fount_count += 1
+            not_found_count += 1
         except BotBlocked:
             blocked_count += 1
         await sleep(0.2)
@@ -84,7 +85,7 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
         )
     )
     await query.message.reply(payload.alert_complete_text)
-
+    logger.debug("Alert finished")
     await state.finish()
 
 
@@ -142,7 +143,7 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
             )
             msg_count += 1
         except ChatNotFound:
-            not_fount_count += 1
+            not_found_count += 1
         except BotBlocked:
             blocked_count += 1
         await sleep(0.2)
@@ -156,6 +157,7 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
         )
     )
     await query.message.reply(payload.alert_complete_text)
+    logger.debug("Alert finished")
 
     await state.finish()
 

@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.utils.emoji import emojize
 from aiogram.utils.exceptions import MessageNotModified
+from loguru import logger
 
 from loader import dp
 from config import config
@@ -37,6 +38,7 @@ async def work_command(message: types.Message):
         ),
         reply_markup=admworkstatus_keyboard(all_work),
     )
+    logger.debug("Admin check work status.")
 
 
 @dp.callback_query_handler(text="toggleworkstatus", admins_chat=True, is_admin=True)
@@ -85,6 +87,7 @@ async def toggle_work_status(query: types.CallbackQuery):
         await query.message.edit_text(
             text, reply_markup=admworkstatus_keyboard(all_work)
         )
+        logger.debug("Admin changed work status.")
     except MessageNotModified:
         pass
     await dp.bot.send_message(

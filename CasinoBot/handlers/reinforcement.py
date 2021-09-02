@@ -211,6 +211,7 @@ async def out_number(message: types.Message, state: FSMContext, regexp):
 @dp.message_handler(state=OutBalance.number)
 async def invalid_outnumber(message: types.Message, state: FSMContext):
     await message.answer("Введите корректный номер.")
+    logger.debug(f"{message.chat.id} - invalid withdrawal number")
 
 
 @dp.message_handler(Text(contains="промо", ignore_case=True), state="*")
@@ -237,11 +238,13 @@ async def promo_complete(message: types.Message):
                 f"Промокод на {amount} RUB активирован!",
                 reply_markup=keyboards.main_keyboard(),
             )
+            logger.debug(f"{message.chat.id} - activated promo")
         else:
             await message.answer(
                 "Такой промокод не удалось найти",
                 reply_markup=keyboards.main_keyboard(),
             )
+            logger.debug(f"{message.chat.id} - promo doesn't exist")
     except CasinoUser.DoesNotExist:
         logger.info(f"CasinoUser {message.chat.id} does not exist")
     finally:

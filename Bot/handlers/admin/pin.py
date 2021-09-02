@@ -1,6 +1,8 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
+from loguru import logger
+
 from loader import dp
 from config import config
 from data import payload
@@ -42,7 +44,7 @@ async def save_pin(query: types.CallbackQuery, state: FSMContext):
             await query.message.answer(f"Вы ввели неправильное сокращения для динамического закрепа - {{{str(e)[1:-1]}}}")
             await state.finish()
             return
-
+    logger.debug("New pin set.")
     await query.answer("Сохранено")
     await query.message.delete()
     await state.finish()

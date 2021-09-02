@@ -225,6 +225,7 @@ async def update_mamonth_info(query: types.CallbackQuery):
             ),
             reply_markup=cas_info_keyboard(user.fort_chance, user.id, "PIZDA"),
         )
+        logger.debug("Mamonth info updated.")
     except CasinoUser.DoesNotExist:
         logger.debug("Mamonth that worker want see does not exist.")
 
@@ -272,6 +273,7 @@ async def delete_mamonth(message: types.Message, user: CasinoUser, match):
     logger.debug(f"Deleting Casino UserId {user.id} Instance")
     user.delete_instance()  # delete user instance
     await message.answer(payload.mamonth_delete_text.format(name=user.fullname))
+    logger.debug("Mamonths deleted.")
 
 
 @dp.message_handler(commands="del", state=Casino.commands, is_worker=True)
@@ -312,7 +314,7 @@ async def cas_mamonths_info(query: types.CallbackQuery):
                 time=timenow,
             )
         )
-
+    logger.debug("Got mamonths list.")
 
 @dp.callback_query_handler(text="my_frazes", state=Casino.commands, is_worker=True)
 async def cas_mamonths_phrazes(query: types.CallbackQuery):
@@ -361,6 +363,7 @@ async def cas_alert_true(query: types.CallbackQuery, state: FSMContext):
                     text=data["text"], msg_count=msg_count, msg_len=msg_len
                 )
             )
+    logger.debug("Alert done.")
     await state.finish()
 
 
@@ -381,6 +384,7 @@ async def accept_pay(query: types.CallbackQuery):
         await query.message.edit_text(
             query.message.parse_entities() + "\n\nВы пополнили баланс"
         )
+        logger.debug("Balance added.")
         await query.answer("Принял")
     except CasinoPayment.DoesNotExist:
         await query.answer("Ошибка!")

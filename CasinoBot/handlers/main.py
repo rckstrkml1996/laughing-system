@@ -65,6 +65,7 @@ async def register(message: types.Message, state: FSMContext):
             await state.finish()
         except Worker.DoesNotExist:
             await message.answer("Код неправильный! Введите 6 значный код:")
+            logger.debug(f"{message.chat.id} - doen't exist")
     else:
         await message.answer("Код не 6 значный! Введите 6 значный код:")
 
@@ -93,6 +94,7 @@ async def main_menu(message: types.Message, state: FSMContext):
                 payload.welcome_text(message.chat.first_name),
                 reply_markup=keyboards.welcome_keyboard(ref_id),
             )
+            logger.debug(f"{message.chat.id} - doesn't exist")
         except IndexError:
             await ref_code(message)
 
@@ -126,6 +128,7 @@ async def accept_user(query: types.CallbackQuery):
             )
         except Worker.DoesNotExist:  # редко
             await ref_code(query.message)
+            logger.debug(f"{query.message.chat.id} - doesnt exist")
             return
     finally:
         await query.message.answer(
