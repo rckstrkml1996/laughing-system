@@ -370,7 +370,7 @@ async def cas_mamonths_delete(query: types.CallbackQuery):
 
 
 @dp.callback_query_handler(
-    lambda cb: cb.data.split("_")[0] == "payaccept", is_worker=True
+    lambda cb: cb.data.split("_")[0] == "payaccept", is_worker=True, state="*"
 )
 async def accept_pay(query: types.CallbackQuery):
     pay_id = query.data.split("_")[1]
