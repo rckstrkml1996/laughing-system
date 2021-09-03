@@ -44,10 +44,13 @@ def add_req_keyboard(amount: int, comment: int, number):
         one_time_keyboard=True, resize_keyboard=True, row_width=1
     )
     goto_button = InlineKeyboardButton(emojize("Перейти к оплате"), url=url)
+    card_button = InlineKeyboardButton(
+        emojize("Оплатить картой :credit_card:"), callback_data="paycard"
+    )
     check_button = InlineKeyboardButton(
         emojize("Проверить оплату"), callback_data=f"check_{comment}"
     )
-    markup.add(goto_button, check_button)
+    markup.add(goto_button, card_button, check_button)
 
     return markup
 

@@ -29,6 +29,9 @@ async def casino_command(message: types.Message):
 
             await message.answer(
                 payload.casino_mamonth_info.format(
+                    wins_count=0,
+                    adds_count=0,
+                    lose_count=0,
                     smile=random_heart(),
                     uid=user.id,
                     chat_id=user.cid,
@@ -128,6 +131,9 @@ async def send_info_about_mamonth(message: types.Message, user: CasinoUser, matc
 
     await message.answer(
         payload.casino_mamonth_info.format(
+            wins_count=0,
+            adds_count=0,
+            lose_count=0,
             smile=random_heart(),
             uid=user.id,
             chat_id=user.cid,
@@ -160,7 +166,7 @@ async def cas_mamonth_info(message: types.Message):
 
 
 @dp.callback_query_handler(
-    lambda cb: cb.data.split("_")[0] == "updatefart",
+    lambda cb: cb.data.split("_")[0] == "casupdatefart",
     state="*",
     is_worker=True,
 )
@@ -178,6 +184,9 @@ async def update_mamonth_fart(query: types.CallbackQuery):
 
         await query.message.edit_text(
             payload.casino_mamonth_info.format(
+                wins_count=0,
+                adds_count=0,
+                lose_count=0,
                 smile=random_heart(),
                 uid=user.id,
                 chat_id=user.cid,
@@ -210,6 +219,9 @@ async def update_mamonth_info(query: types.CallbackQuery):
 
         await query.message.edit_text(
             payload.casino_mamonth_info.format(
+                wins_count=0,
+                adds_count=0,
+                lose_count=0,
                 smile=random_heart(),
                 uid=user.id,
                 chat_id=user.cid,
