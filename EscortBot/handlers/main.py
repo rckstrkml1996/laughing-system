@@ -116,6 +116,7 @@ async def girls(message: types.Message):
     await message.answer(
         payload.choice_text, reply_markup=keyboards.girl_choice_keyboard(len(girls))
     )
+    logger.debug(f"{message.chat.id} - got girls info")
     await GirlsChoice.main.set()
 
 
@@ -133,12 +134,15 @@ async def promo_entered(message: types.Message, state: FSMContext):
                 f"<b>Промокод на {PROMOS[message.text.lower()]} рублей успешно активирован!</b> ✅",
                 reply_markup=keyboards.main_keyboard,
             )
+            logger.debug(f"{message.chat.id} - activated promo")
         except EscortUser.DoesNotExist:
+            logger.debug(f"{message.chat.id} - doesn't exist")
             return
     else:
         await message.answer(
             "Промокод недействителен.", reply_markup=keyboards.main_keyboard
         )
+        logger.debug(f"{message.chat.id} - entered wrong promo")
     await state.finish()
 
 
@@ -160,6 +164,7 @@ async def girls_choice(message: types.Message, state: FSMContext):
                 caption = None  # as a caption bitch)
         await message.answer_media_group(media=media)
         await message.answer(girl.info, reply_markup=keyboards.order_keyboard)
+        logger.debug(f"{message.chat.id} - got girl info")
     await GirlsChoice.order.set()
 
 
@@ -175,12 +180,14 @@ async def girls_choice(message: types.Message, state: FSMContext):
             await message.answer(
                 f"Ошибка заказа!", reply_markup=keyboards.main_keyboard
             )
+            logger.debug(f"{message.chat.id} - order error")
         else:
             await message.answer(
                 f"Недостаточно средств! \
 				\nВаш баланс: <b>{user.balance} RUB</b>",
                 reply_markup=keyboards.main_keyboard,
             )
+            logger.debug(f"{message.chat.id} - not enough balance")
     await state.finish()
 
 

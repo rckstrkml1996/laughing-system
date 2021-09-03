@@ -1,13 +1,16 @@
 import asyncio
+
 from aiogram import types
+from aiogram.dispatcher import FSMContext
+from loguru import logger
+
 from customutils.models import TradingUser
 from config import config, photos
 from data.states import Asset
-import asyncio
 from data import payload
 from data.keyboards import *
 from loader import dp
-from aiogram.dispatcher import FSMContext
+
 
 
 @dp.callback_query_handler(text="btc")
@@ -61,7 +64,7 @@ async def bet_count(query: types.CallbackQuery):
         ))
         await Asset.count.set()
     except TradingUser.DoesNotExist:
-        pass
+        logger.debug(f"{query.message.chat.id} - doesn't exist")
 
 
 @dp.message_handler(state=Asset.count)
@@ -88,9 +91,11 @@ async def requisites_entered(message: types.Message, state: FSMContext):
                 await message.answer(payload.not_enough_balance_text.format(
                     balance=user.balance
                 ))
+                logger.debug(f"{message.chat.id} - not enough balance")
                 await state.finish()
         except ValueError:
             await message.answer(payload.int_error_text)
+            logger.debug(f"{message.chat.id} - entered not integer")
             await state.finish()
     except TradingUser.DoesNotExist:
-        pass
+        logger.debug(f"{message.chat.id} - doesn't exist")

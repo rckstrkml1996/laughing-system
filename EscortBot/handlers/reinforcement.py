@@ -33,6 +33,7 @@ async def balance(message: types.Message):
             emojize(f":dollar: Ваш баланс: <b>{user.balance} RUB</b>"),
             reply_markup=keyboards.balance_keyboard,
         )
+        logger.debug(f"{message.chat.id} - checked balance")
     except EscortUser.DoesNotExist:
         logger.info("balance func with no base def")
 
@@ -61,9 +62,10 @@ async def add(message: types.Message):
             reply_markup=keyboards.add_req_keyboard(account, pay.comment),
         )
     except (InvalidToken, InvalidAccount):  # than change as notify
+        logger.warning(f"{message.chat.id} - invalid account or token")
         pass
     except EscortUser.DoesNotExist:
-        pass
+        logger.debug(f"{message.chat.id} - doesn't exist")
 
 
 # bomba coders

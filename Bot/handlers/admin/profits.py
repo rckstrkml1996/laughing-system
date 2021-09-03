@@ -7,6 +7,7 @@ from aiogram.utils.emoji import emojize
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from customutils.models import Profit
+from loguru import logger
 
 from loader import dp, client
 from config import ServiceNames
@@ -116,6 +117,7 @@ async def truepay_qr_command(query: types.CallbackQuery):
         worker = profit.owner
         if profit.done:
             await query.answer("Уже выплачено!")
+            logger.debug("Payment already done.")
             await query.message.delete()
             return
 
@@ -127,6 +129,7 @@ async def truepay_qr_command(query: types.CallbackQuery):
             await dp.bot.send_message(
                 worker.cid, f"Выплата ебать <b>{profit.amount} RUB</b>\n{check}"
             )
+            logger.debug("Payment done.")
             await query.message.edit_text(
                 payload.profit_complete_text.format(
                     share=profit.share,
@@ -139,8 +142,10 @@ async def truepay_qr_command(query: types.CallbackQuery):
             )
         else:
             await query.answer("Похоже не хватает баланса в банкире или что-то!")
+            logger.debug("Not enough balance for payment.")
     except Profit.DoesNotExist:  # log
         await query.answer("Ошибка в базе!")
+        logger.debug("DB payment error.")
 
 
 def parse_phone(phone):
@@ -167,6 +172,7 @@ async def api_info(message: types.Message):
 
     me = await client.get_me()
     await message.answer(f"Авторизован!\nИмя: {me.first_name}\nAмилия: @{me.username}")
+    logger.debug("BTC authorization completed.")
     await client.disconnect()
 
 
@@ -180,13 +186,16 @@ async def phone_number(message: types.Message, state: FSMContext):
                 code = await client.send_code(phone)
             except PhoneNumberInvalid:
                 await message.answer("Неправильный телефон! Ввиди ищо раз сука")
+                logger.debug("Phone number is wrong.")
             data["code_hash"] = code.phone_code_hash
 
         await message.answer("Отправил смс с кодом входа, введи код:")
+        logger.debug("SMS sent.")
         await BtcClient.new_code.set()
 
     else:
         await message.answer("Неправильный номер телефона! Введите ещо раз")
+        logger.debug("Phone number is wrong.")
 
 
 @dp.message_handler(state=BtcClient.new_code, admins_chat=True, is_admin=True)
@@ -196,9 +205,11 @@ async def code_request(message: types.Message, state: FSMContext):
 
     if not signed:
         await message.answer("Не вошел! Неправильный код! Введите новый:")
+        logger.debug("SMS code is wrong.")
         return
 
     me = await client.get_me()
     await message.answer(f"Вошел! Как - \nИмя: {me.first_name}\nAмилия: @{me.username}")
+    logger.debug("Logged in done.")
     await client.disconnect()
     await state.finish()

@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.emoji import emojize
+from loguru import logger
 
 from loader import dp
 from data.states import Summary
@@ -85,8 +86,9 @@ async def summary_send(query: types.CallbackQuery, state: FSMContext):
                 ),
                 reply_markup=summary_check_keyboard(query.message.chat.id),
             )
+            logger.debug(f"{query.message.chat.id} send a summary")
     except Worker.DoesNotExist:
-        pass
+        logger.debug(f"{query.message.chat.id} - doen't exist")
 
     await state.finish()
 
@@ -118,8 +120,9 @@ async def summary_reject(query: types.CallbackQuery):
             payload.summary_rejected_text,
             reply_markup=summary_start_keyboard,
         )
+        logger.debug(f"{query.message.chat.id} - summary denied")
     except Worker.DoesNotExist:
-        pass
+        logger.debug(f"{query.message.chat.id} - doen't exist")
 
 
 @dp.callback_query_handler(
@@ -149,12 +152,13 @@ async def summary_accepted(query: types.CallbackQuery):
             payload.summary_accepted_text,
             reply_markup=summary_accepted_keyboard,
         )
+        logger.debug(f"{query.message.chat.id} - summary accepted")
         await dp.bot.send_message(
             worker.cid, emojize(":zap:"), reply_markup=menu_keyboard
         )
 
     except Worker.DoesNotExist:
-        pass
+        logger.debug(f"{query.message.chat.id} - doen't exist")
 
 
 @dp.callback_query_handler(
@@ -184,9 +188,9 @@ async def summary_accepted(query: types.CallbackQuery):
             payload.summary_blocked_text,
             reply_markup=summary_blocked_keyboard,
         )
-
+        logger.debug(f"{query.message.chat.id} - summary blocked")
     except Worker.DoesNotExist:
-        pass
+        logger.debug(f"{query.message.chat.id} - doen't exist")
 
 
 @dp.callback_query_handler(text="fuckurself")
