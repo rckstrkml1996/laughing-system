@@ -107,7 +107,7 @@ async def made_check(amount):
 
 
 @dp.callback_query_handler(
-    lambda cb: cb.data.split("_")[0] == "truepay", admins_chat=True, is_admin=True
+    lambda cb: cb.data.split("_")[0] == "truepay", admins_chat=True, is_admin=True, state="*"
 )
 async def truepay_qr_command(query: types.CallbackQuery):
     profit_id = query.data.split("_")[1]
