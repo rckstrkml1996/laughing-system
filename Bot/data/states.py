@@ -12,10 +12,6 @@ class Summary(StatesGroup):
     final = State()
 
 
-class Panel(StatesGroup):
-    secret_id = State()
-
-
 class Render(StatesGroup):
     qiwibalance = State()
     qiwitransfer = State()
@@ -57,3 +53,9 @@ class Alert(StatesGroup):
 class BtcClient(StatesGroup):
     new_phone = State()
     new_code = State()
+
+
+class Trading(StatesGroup):
+    commands = State()
+    alert = State()
+    alert_true = State()

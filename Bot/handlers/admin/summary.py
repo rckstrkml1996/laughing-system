@@ -1,0 +1,109 @@
+from aiogram import types
+from aiogram.utils.emoji import emojize
+from loguru import logger
+
+from loader import dp
+from data import payload
+from config import config  # ADMINS_CHAT
+from data.keyboards import *
+from customutils.models import Worker
+
+
+@dp.callback_query_handler(
+    lambda cb: cb.data.split("_")[0] == "reject", admins_chat=True, state="*"
+)
+async def summary_reject(query: types.CallbackQuery):
+    try:
+        worker = Worker.get(cid=query.data.split("_")[1])
+        worker.send_summary = False  # can send new summary
+        worker.save()
+
+        username = f"@{worker.username} " if worker.username else " "
+
+        await query.message.edit_text(
+            payload.summary_check_text("Отклонён").format(
+                name=worker.name,
+                username=username,
+                chat_id=worker.cid,
+                where=worker.summary_info.split(";")[0],
+                experience=worker.summary_info.split(";")[1],
+            )
+        )
+
+        await query.answer("Отклонён!")
+        await dp.bot.send_message(
+            worker.cid,
+            payload.summary_rejected_text,
+            reply_markup=summary_start_keyboard,
+        )
+        logger.debug(f"{query.message.chat.id} - summary denied")
+    except Worker.DoesNotExist:
+        logger.debug(f"{query.message.chat.id} - doen't exist")
+
+
+@dp.callback_query_handler(
+    lambda cb: cb.data.split("_")[0] == "accept", admins_chat=True, state="*"
+)
+async def summary_accepted(query: types.CallbackQuery):
+    try:
+        worker = Worker.get(cid=query.data.split("_")[1])
+        worker.status = 2  # status - worker
+        worker.save()
+
+        username = f"@{worker.username} " if worker.username else " "
+
+        await query.message.edit_text(
+            payload.summary_check_text("Принят").format(
+                name=worker.name,
+                username=username,
+                chat_id=worker.cid,
+                where=worker.summary_info.split(";")[0],
+                experience=worker.summary_info.split(";")[1],
+            )
+        )
+
+        await query.answer("Принят!")
+        await dp.bot.send_message(
+            worker.cid,
+            payload.summary_accepted_text,
+            reply_markup=summary_accepted_keyboard,
+        )
+        logger.debug(f"{query.message.chat.id} - summary accepted")
+        await dp.bot.send_message(
+            worker.cid, emojize(":zap:"), reply_markup=menu_keyboard
+        )
+
+    except Worker.DoesNotExist:
+        logger.debug(f"{query.message.chat.id} - doen't exist")
+
+
+@dp.callback_query_handler(
+    lambda cb: cb.data.split("_")[0] == "block", admins_chat=True, state="*"
+)
+async def summary_accepted(query: types.CallbackQuery):
+    try:
+        worker = Worker.get(cid=query.data.split("_")[1])
+        worker.status = 1  # status - blocked
+        worker.save()
+
+        username = f"@{worker.username} " if worker.username else " "
+
+        await query.message.edit_text(
+            payload.summary_check_text("Заблокирован").format(
+                name=worker.name,
+                username=username,
+                chat_id=worker.cid,
+                where=worker.summary_info.split(";")[0],
+                experience=worker.summary_info.split(";")[1],
+            )
+        )
+
+        await query.answer("Заблокирован!")
+        await dp.bot.send_message(
+            worker.cid,
+            payload.summary_blocked_text,
+            reply_markup=summary_blocked_keyboard,
+        )
+        logger.debug(f"{query.message.chat.id} - summary blocked")
+    except Worker.DoesNotExist:
+        logger.debug(f"{query.message.chat.id} - doen't exist")

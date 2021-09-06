@@ -58,4 +58,4 @@ async def new_worker(message: types.Message):
                 payload.summary_text, reply_markup=summary_start_keyboard
             )
     except Worker.DoesNotExist:
-        await welcome(message, None)  # new user to base
+        await welcome(message, dp.current_state())  # new user to base

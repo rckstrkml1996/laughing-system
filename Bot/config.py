@@ -68,3 +68,5 @@ Rates = [  # виды ставок первая - стандартная
 
 # useless
 SKIP_UPDATES = True
+
+team_name = "BLESS TEAM"

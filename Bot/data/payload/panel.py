@@ -1,5 +1,5 @@
 from aiogram.utils.emoji import emojize
-from config import config
+from config import config, team_name
 
 worker_menu_text = emojize(
     ":woman_tipping_hand: <b>Твой профиль</b>\n\n"
@@ -15,7 +15,7 @@ worker_menu_text = emojize(
 )
 
 about_project_text = emojize(
-    ":woman_tipping_hand: <b>Информация о проекте Bless Team</b>\n\n"
+    f":woman_tipping_hand: <b>Информация о проекте {team_name}</b>\n\n"
     ":fire: Мы открылись: {team_start}\n"
     ":gb: Количество профитов: {team_profits}\n"
     ":moneybag: Общая сумма профитов: {profits_sum} ₽\n"

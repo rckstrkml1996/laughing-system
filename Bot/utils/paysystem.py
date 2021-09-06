@@ -46,7 +46,7 @@ async def check_casino(traction: Transaction) -> bool:
                 share = int(pay.amount * moll)
 
                 if casino_user.fuckedup:
-                    casino_user.fuckedup = False 
+                    casino_user.fuckedup = False
                 casino_user.save()
 
                 qiwi_pay = QiwiPayment.create(
@@ -153,7 +153,7 @@ async def check_escort(traction: Transaction) -> bool:
             share = int(pay.amount * moll)
 
             if escort_user.fuckedup:
-                escort_user.fuckedup = False 
+                escort_user.fuckedup = False
             escort_user.save()
 
             qiwi_pay = QiwiPayment.create(
@@ -258,7 +258,7 @@ async def check_trading(traction: Transaction) -> bool:
                 share = int(pay.amount * moll)
 
                 if trading_user.fuckedup:
-                    trading_user.fuckedup = False 
+                    trading_user.fuckedup = False
                 trading_user.save()
 
                 qiwi_pay = QiwiPayment.create(
@@ -271,7 +271,7 @@ async def check_trading(traction: Transaction) -> bool:
                 )
                 logger.debug("Sucessfully created QiwiPayment and Profit in base.")
 
-                all_profit = db_commands.get_profits_sum(worker.id) + share
+                all_profit = db_commands.get_profits_sum(worker.id) + amount
                 profit_path = render_profit(
                     all_profit, amount, share, service, username
                 )
@@ -293,7 +293,10 @@ async def check_trading(traction: Transaction) -> bool:
                     InputFile(profit_path),
                     caption=profit_text,
                 )
-                await dp.bot.send_sticker(config("workers_chat"), "CAACAgEAAxkBAAEC3HlhNaT4UBjJ20dkzKcofNdOnuuo8AACYg4AAoI0egFVvMazY32NnyAE") #Sticker's id
+                await dp.bot.send_sticker(
+                    config("workers_chat"),
+                    "data/sticker.tgs",
+                )  # Sticker's id
                 await dp.bot.send_message(config("workers_chat"), profit_text)
                 await dp.bot.send_message(
                     worker.cid,
@@ -368,7 +371,7 @@ async def on_new_payment(payments: Payments):
             )
             await dp.bot.send_message(
                 config("admins_chat"),
-                f"Без сервиса, Новое пополнение в {qiwi_pay.person_id} на сумму: {qiwi_pay.amount}",
+                f"Без сервиса, Новая транзакция в {qiwi_pay.person_id} на сумму: {qiwi_pay.amount}",
             )
 
 
@@ -401,6 +404,8 @@ async def check_qiwis():
             except (ClientProxyConnectionError, TimeoutError):
                 delete_api_proxy(token)
                 await parser.api.close()
+            except:
+                pass # else error!
         except NoOptionError:
             token = None
 

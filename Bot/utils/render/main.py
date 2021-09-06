@@ -23,7 +23,7 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
             "fonts",
             "SFUIText-Semibold.ttf",
         ),
-        85,
+        58,
     )
 
     font_analog = ImageFont.truetype(
@@ -32,13 +32,13 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
             "fonts",
             "SFUIText-Semibold.ttf",
         ),
-        30,
+        20,
     )
 
     w, h = font_general.getsize(general_text)
     ligthText(
         image,
-        ((image.size[0] - w) / 2, 350),
+        ((image.size[0] - w) / 2, 239),
         general_text,
         font=font_general,
         width=15,
@@ -51,7 +51,7 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
     w, h = font_analog.getsize(analog)
     ligthText(
         image,
-        ((image.size[0] - w) / 2, 440),
+        ((image.size[0] - w) / 2, 300),
         analog,
         font=font_analog,
         width=15,
@@ -65,7 +65,7 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
             "fonts",
             "SFUIText-Semibold.ttf",
         ),
-        65,
+        44,
     )
 
     profit_text = "{:,}".format(profit_sum).replace(",", " ") + " RUB"
@@ -73,7 +73,7 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
     w, h = font_info.getsize(profit_text)
     ligthText(
         image,
-        (1625 - w, 550),
+        (1109 - w, 375),
         profit_text,
         font=font_info,
         width=15,
@@ -86,7 +86,7 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
     w, h = font_info.getsize(share_text)
     ligthText(
         image,
-        (1625 - w, 680),
+        (1109 - w, 464),
         share_text,
         font=font_info,
         width=15,
@@ -96,7 +96,7 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
 
     ligthText(
         image,
-        (206, 550),
+        (141, 375),
         service,
         font=font_info,
         width=15,
@@ -106,7 +106,7 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
 
     ligthText(
         image,
-        (206, 680),
+        (141, 464),
         username,
         font=font_info,
         width=15,

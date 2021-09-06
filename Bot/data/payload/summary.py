@@ -1,5 +1,5 @@
 from aiogram.utils.emoji import emojize
-
+from config import team_name
 
 """
     Summary
@@ -12,7 +12,7 @@ summary_text = emojize(
 )
 
 new_summary_text = emojize(
-    "Привет, это бот <b>BLESS TEAM</b> :revolving_hearts:\n"
+    f"Привет, это бот <b>{team_name.upper()}</b> :revolving_hearts:\n"
     "Чтобы начать работу у нас, подай заявку :point_down:"
 )
 

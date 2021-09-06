@@ -207,8 +207,7 @@ async def update_mamonth_fart(query: types.CallbackQuery):
 
 
 @dp.callback_query_handler(
-    lambda cb: cb.data.split("_")[0] == "casupdateinfo",
-    is_worker=True,
+    lambda cb: cb.data.split("_")[0] == "casupdateinfo", is_worker=True, state="*"
 )
 async def update_mamonth_info(query: types.CallbackQuery):
     try:
@@ -327,6 +326,7 @@ async def cas_mamonths_info(query: types.CallbackQuery):
             )
         )
     logger.debug("Got mamonths list.")
+
 
 @dp.callback_query_handler(text="my_frazes", state=Casino.commands, is_worker=True)
 async def cas_mamonths_phrazes(query: types.CallbackQuery):
