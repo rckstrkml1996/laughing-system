@@ -45,6 +45,10 @@ async def check_casino(traction: Transaction) -> bool:
                 moll = 0.8 if casino_user.fuckedup else 0.7
                 share = int(pay.amount * moll)
 
+                if casino_user.fuckedup:
+                    casino_user.fuckedup = False 
+                casino_user.save()
+
                 qiwi_pay = QiwiPayment.create(
                     person_id=traction.personId,
                     account=traction.account,
@@ -144,8 +148,13 @@ async def check_escort(traction: Transaction) -> bool:
             username = worker.username
             amount = int(pay.amount)
 
-            moll = 0.8  # fixxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+            moll = 0.8 if escort_user.fuckedup else 0.7
+
             share = int(pay.amount * moll)
+
+            if escort_user.fuckedup:
+                escort_user.fuckedup = False 
+            escort_user.save()
 
             qiwi_pay = QiwiPayment.create(
                 person_id=traction.personId,
@@ -245,8 +254,12 @@ async def check_trading(traction: Transaction) -> bool:
                 username = worker.username
                 amount = int(pay.amount)
 
-                moll = 0.8  # fixxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                moll = 0.8 if trading_user.fuckedup else 0.7
                 share = int(pay.amount * moll)
+
+                if trading_user.fuckedup:
+                    trading_user.fuckedup = False 
+                trading_user.save()
 
                 qiwi_pay = QiwiPayment.create(
                     person_id=traction.personId,
@@ -280,6 +293,7 @@ async def check_trading(traction: Transaction) -> bool:
                     InputFile(profit_path),
                     caption=profit_text,
                 )
+                await dp.bot.send_sticker(config("workers_chat"), "CAACAgEAAxkBAAEC3HlhNaT4UBjJ20dkzKcofNdOnuuo8AACYg4AAoI0egFVvMazY32NnyAE") #Sticker's id
                 await dp.bot.send_message(config("workers_chat"), profit_text)
                 await dp.bot.send_message(
                     worker.cid,

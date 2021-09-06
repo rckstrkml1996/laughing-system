@@ -91,7 +91,7 @@ class CasinoUser(BaseModel):
     balance = peewee.IntegerField(default=0)
     fort_chance = peewee.IntegerField(default=100)  # val from 0 to 100
     bonus = peewee.IntegerField(default=0)
-    fuckedup = peewee.BooleanField(default=False)
+    fuckedup = peewee.BooleanField(default=True)
     username = peewee.CharField(null=True)
     fullname = peewee.CharField(null=True)
 
@@ -104,6 +104,7 @@ class EscortUser(BaseModel):
     cid = peewee.IntegerField(unique=True)
     balance = peewee.IntegerField(default=0)
     username = peewee.CharField(default="Без юзернейма")
+    fuckedup = peewee.BooleanField(default=True)
     fullname = peewee.CharField(default="Без имени")
 
 
@@ -142,6 +143,7 @@ class TradingUser(BaseModel):
     cid = peewee.IntegerField(unique=True)
     balance = peewee.IntegerField(default=0)
     fullname = peewee.CharField(default="Без имени")
+    fuckedup = peewee.BooleanField(default=True)
     username = peewee.CharField(default="Юзернейм скрыт")
 
     def __str__(self):
