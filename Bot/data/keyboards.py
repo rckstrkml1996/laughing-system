@@ -255,7 +255,7 @@ trading_keyboard.add(deleteall_btn)
 def cas_info_keyboard(fart, uid, minpay):
     markup = InlineKeyboardMarkup()
     cas_fart_btn = InlineKeyboardButton(
-        f"Фарт: {fart} %", callback_data=f"updatefart_{uid}"
+        f"Фарт: {fart} %", callback_data=f"casupdatefart_{uid}"
     )
     cas_min_btn = InlineKeyboardButton(
         f"Мин: {minpay} RUB", callback_data=f"updatemin_{uid}"

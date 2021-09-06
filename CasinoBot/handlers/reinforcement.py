@@ -111,6 +111,11 @@ async def add_check(query: types.CallbackQuery):
                 payment.delete_instance()
                 user.balance += payment.amount + user.bonus
                 user.save()
+                UserHistory.create(
+                    cid=query.message.chat.id,
+                    amount=user_payment.amount,
+                    balance=user.balance,
+                )
                 await query.message.answer(
                     payload.add_succesful(payment.amount + user.bonus)
                 )
@@ -248,3 +253,8 @@ async def promo_complete(message: types.Message):
         logger.info(f"CasinoUser {message.chat.id} does not exist")
     finally:
         await SelfCabine.main.set()
+
+
+@dp.callback_query_handler(text="paycard", state="*")
+async def paycard_cback(query: types.CallbackQuery):
+    await query.answer("Что бы оплатить картой, нажмите \"Перейти к оплате\".")
