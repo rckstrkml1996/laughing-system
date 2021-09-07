@@ -6,12 +6,14 @@ from pyrogram.errors.exceptions.not_acceptable_406 import PhoneNumberInvalid
 from aiogram.utils.emoji import emojize
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from customutils.models import Profit
+from customutils.models import Worker, Profit
 from loguru import logger
 
 from loader import dp, client
 from config import ServiceNames
+from utils.paysystem import send_profit
 from data import payload
+from data.keyboards import *
 from data.states import BtcClient, MakeProfit
 
 
@@ -234,20 +236,25 @@ async def make_profit_command(message: types.Message):
 async def make_profit_make(message: types.Message):
     textlist = message.text.split()
     if len(textlist) == 4:
-        await message.answer("Выполняю!")
+        msg = await message.answer("Выполняю!")
         try:
             worker = Worker.get(cid=textlist[0])
             if textlist[3] == "0" or textlist[3] == "1" or textlist[3] == "2":
-                try:
-                    profit = Profit.create(
-                        owner=worker,
-                        amount=textlist[1],
-                        share=textlist[2],
-                        service=textlist[3],
-                    )
-                    # p = await send_profit(profit, qiwi_pay, moll)
-                except:
-                    await message.answer("Ошибка в создании модели профита.")
+                if textlist[2].isdigit():
+                    if int(textlist[2]) <= 100:
+                        moll = int(textlist[2]) / 100
+                        try:
+                            profit = Profit.create(
+                                owner=worker,
+                                amount=int(textlist[1]),
+                                share=int(textlist[1]) * moll,
+                                service=int(textlist[3]),
+                            )
+                            await send_profit(profit, moll)
+                            await msg.edit_text("Выполнено!")
+                            return
+                        except:
+                            await message.answer("Ошибка в создании модели профита.")
         except Worker.DoesNotExist:
             pass
 
