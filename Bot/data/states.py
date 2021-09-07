@@ -59,3 +59,6 @@ class Trading(StatesGroup):
     commands = State()
     alert = State()
     alert_true = State()
+
+class MakeProfit(StatesGroup):
+    main = State()

@@ -144,5 +144,18 @@ admins_help_text = emojize(
     "/alert - Работа с Оповещениями.\n"
     "/work - Действия с статусом работы проекта.\n"
     "/btc_auth - Проверка Авторизации в аккаунте банкира.\n"
+    "/mkprft - Создать профит\n"
     "/new_dsgn - Бета хуета ещо нету)\n"
+)
+
+admin_make_profit_text = emojize(
+    "Заполни данные таким образом :point_up_2:\n\n"
+    "<a href='t.me/userinfobot'>Telegram ID</a>\n"
+    "Сумма и доля в %\n"
+    "<b>0</b>, <b>1</b>, <b>2</b> - <i>Казино, Эскорт, Трейдинг</i>\n"
+    "Пример:\n\n"
+    "<code>1404657362</code>\n"
+    "<code>1000</code>\n"
+    "<code>70</code>\n"
+    "<code>1</code>"
 )

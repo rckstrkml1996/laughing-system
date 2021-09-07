@@ -123,6 +123,7 @@ class EscortGirl(BaseModel):
 
 
 class CasinoPayment(BaseModel):
+    # payment = peewee.ForeignKeyField(QiwiPayment, related_name="bot_pay", null=True)
     owner = peewee.ForeignKeyField(CasinoUser, related_name="payments")
     comment = peewee.CharField(unique=True)
     amount = peewee.IntegerField()

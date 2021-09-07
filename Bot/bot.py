@@ -6,6 +6,7 @@ from aiogram import Dispatcher
 from loguru import logger
 
 from loader import dp, db_commands
+from config import SKIP_UPDATES
 from utils.pinner import dynapins
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
@@ -45,14 +46,15 @@ async def shutdown_polling(dispatcher: Dispatcher):
     await shutdown(dispatcher)
 
 
-async def start_bot(dispatcher: Dispatcher, notify=True):
+async def start_bot(dispatcher: Dispatcher, notify=True, skip_updates=True):
     from utils import filters
 
     filters.setup(dispatcher)
 
     await on_startup(dispatcher, notify=notify)
 
-    await dispatcher.skip_updates()
+    if skip_updates:
+        await dispatcher.skip_updates()
     logger.info(f"Starting bot...")
     await dispatcher.start_polling(timeout=3)  # change if internet slow)
 
@@ -70,7 +72,7 @@ def main():
 
     paymnts = loop.create_task(check_qiwis())  # it runs in dispatcher)
     dynapns = loop.create_task(dynapins(dp.bot))  # it runs in dispatcher)
-    start_task = loop.create_task(start_bot(dp, notify=True))
+    start_task = loop.create_task(start_bot(dp, notify=True, skip_updates=SKIP_UPDATES))
 
     try:
         loop.run_until_complete(start_task)  # better for testing and dev

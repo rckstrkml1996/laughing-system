@@ -57,68 +57,16 @@ async def check_casino(traction: Transaction) -> bool:
                     comment=traction.comment,
                     date=traction.date,
                 )
-                logger.debug("Sucessfully created QiwiPayment and Profit in base.")
-
-                all_profit = db_commands.get_profits_sum(worker.id) + share
-                profit_path = render_profit(
-                    all_profit, amount, share, service, username
-                )
-                logger.debug(
-                    f"Succesfully rendered profit path: {profit_path}, sending to outs chat"
-                )
-                profit_text = str(
-                    payload.profit_text.format(
-                        service=service,
-                        share=share,
-                        amount=amount,
-                        cid=worker.cid,
-                        name=worker.username if worker.username else worker.name,
-                    ),
-                )
-                msg = await dp.bot.send_photo(
-                    config("outs_chat"),
-                    InputFile(profit_path),
-                    caption=profit_text,
-                )
-                await dp.bot.send_message(config("workers_chat"), profit_text)
-
-                await dp.bot.send_message(
-                    worker.cid,
-                    payload.profit_worker_text.format(
-                        service=service,
-                        share=share,
-                        amount=amount,
-                        cid=worker.cid,
-                        name=worker.username if worker.username else worker.name,
-                    ),
-                )
                 profit = Profit.create(
                     owner=worker,
                     amount=amount,
                     share=share,
                     service=service_num,
-                    msg_url=msg.url,
                     payment=qiwi_pay,
                 )
+                logger.debug("Sucessfully created QiwiPayment and Profit in base.")
 
-                await dp.bot.send_message(
-                    config("admins_chat"),
-                    payload.admins_profit_text.format(
-                        profit_link=msg.url,
-                        cid=worker.cid,
-                        name=worker.username if worker.username else worker.name,
-                        service=service,
-                        amount=profit.amount,
-                        share=profit.share,
-                        moll=int(moll * 100),
-                        create_date=pay.created.strftime("%m.%d в %H:%M"),
-                        pay_date=traction.date.strftime("%m.%d в %H:%M"),
-                    ),
-                    reply_markup=profit_pay_keyboard(profit.id),
-                )
-
-                logger.debug("Succesfully sent to outs and admins chat")
-                return True
+                return await send_profit(profit, qiwi_pay, moll)
     except CasinoPayment.DoesNotExist:
         logger.debug(f"Casino payment with comment {traction.comment} not in base!")
 
@@ -164,65 +112,16 @@ async def check_escort(traction: Transaction) -> bool:
                 comment=traction.comment,
                 date=traction.date,
             )
-            logger.debug("Sucessfully created QiwiPayment and Profit in base.")
-
-            all_profit = db_commands.get_profits_sum(worker.id) + share
-            profit_path = render_profit(all_profit, amount, share, service, username)
-            logger.debug(
-                f"Succesfully rendered profit path: {profit_path}, sending to outs chat"
-            )
-            profit_text = str(
-                payload.profit_text.format(
-                    service=service,
-                    share=share,
-                    amount=amount,
-                    cid=worker.cid,
-                    name=worker.username if worker.username else worker.name,
-                ),
-            )
-            msg = await dp.bot.send_photo(
-                config("outs_chat"),
-                InputFile(profit_path),
-                caption=profit_text,
-            )
-            await dp.bot.send_message(config("workers_chat"), profit_text)
-            await dp.bot.send_message(
-                worker.cid,
-                payload.profit_worker_text.format(
-                    service=service,
-                    share=share,
-                    amount=amount,
-                    cid=worker.cid,
-                    name=worker.username if worker.username else worker.name,
-                ),
-            )
             profit = Profit.create(
                 owner=worker,
                 amount=amount,
                 share=share,
                 service=service_num,
-                msg_url=msg.url,
                 payment=qiwi_pay,
             )
+            logger.debug("Sucessfully created QiwiPayment and Profit in base.")
 
-            await dp.bot.send_message(
-                config("admins_chat"),
-                payload.admins_profit_text.format(
-                    profit_link=msg.url,
-                    cid=worker.cid,
-                    name=worker.username if worker.username else worker.name,
-                    service=service,
-                    amount=profit.amount,
-                    share=profit.share,
-                    moll=int(moll * 100),
-                    create_date=pay.created.strftime("%m.%d в %H:%M"),
-                    pay_date=traction.date.strftime("%m.%d в %H:%M"),
-                ),
-                reply_markup=profit_pay_keyboard(profit.id),
-            )
-
-            logger.debug("Succesfully sent to outs and admins chat")
-            return True
+            return await send_profit(profit, qiwi_pay, moll)
     except EscortPayment.DoesNotExist:
         logger.debug(f"Escort payment with comment {traction.comment} not in base!")
 
@@ -269,72 +168,22 @@ async def check_trading(traction: Transaction) -> bool:
                     comment=traction.comment,
                     date=traction.date,
                 )
-                logger.debug("Sucessfully created QiwiPayment and Profit in base.")
-
-                all_profit = db_commands.get_profits_sum(worker.id) + amount
-                profit_path = render_profit(
-                    all_profit, amount, share, service, username
-                )
-                logger.debug(
-                    f"Succesfully rendered profit path: {profit_path}, sending to outs chat"
-                )
-                profit_text = str(
-                    payload.profit_text.format(
-                        service=service,
-                        share=share,
-                        amount=amount,
-                        cid=worker.cid,
-                        name=worker.username if worker.username else worker.name,
-                    ),
-                )
-
-                msg = await dp.bot.send_photo(
-                    config("outs_chat"),
-                    InputFile(profit_path),
-                    caption=profit_text,
-                )
-                await dp.bot.send_sticker(
-                    config("workers_chat"),
-                    "data/sticker.tgs",
-                )  # Sticker's id
-                await dp.bot.send_message(config("workers_chat"), profit_text)
-                await dp.bot.send_message(
-                    worker.cid,
-                    payload.profit_worker_text.format(
-                        service=service,
-                        share=share,
-                        amount=amount,
-                        cid=worker.cid,
-                        name=worker.username if worker.username else worker.name,
-                    ),
-                )
                 profit = Profit.create(
                     owner=worker,
                     amount=amount,
                     share=share,
                     service=service_num,
-                    msg_url=msg.url,
                     payment=qiwi_pay,
                 )
+                logger.debug("Sucessfully created QiwiPayment and Profit in base.")
 
-                await dp.bot.send_message(
-                    config("admins_chat"),
-                    payload.admins_profit_text.format(
-                        profit_link=msg.url,
-                        cid=worker.cid,
-                        name=worker.username if worker.username else worker.name,
-                        service=service,
-                        amount=profit.amount,
-                        share=profit.share,
-                        moll=int(moll * 100),
-                        create_date=pay.created.strftime("%m.%d в %H:%M"),
-                        pay_date=traction.date.strftime("%m.%d в %H:%M"),
-                    ),
-                    reply_markup=profit_pay_keyboard(profit.id),
-                )
+                return await send_profit(profit, qiwi_pay, moll)
 
-                logger.debug("Succesfully sent to outs and admins chat")
-                return True
+                # await dp.bot.send_sticker(
+                #     config("workers_chat"),
+                #     "data/sticker.tgs",
+                # )  # Sticker's id
+
     except TradingPayment.DoesNotExist:
         logger.debug(f"Escort payment with comment {traction.comment} not in base!")
 
@@ -403,10 +252,75 @@ async def check_qiwis():
                 await parser.check()
             except (ClientProxyConnectionError, TimeoutError):
                 delete_api_proxy(token)
-                await parser.api.close()
             except:
-                pass # else error!
+                logger.error("CHECKER EXCEPTION!")  # else error!
+            finally:
+                await parser.api.close()
         except NoOptionError:
             token = None
 
         await sleep(40)
+
+
+async def send_profit(profit: Profit, pay, moll):
+    service = ServiceNames[profit.service]
+    worker = profit.owner
+
+    all_profit = db_commands.get_profits_sum(worker.id)
+    profit_path = render_profit(
+        all_profit, profit.amount, profit.share, service, worker.username
+    )
+    logger.debug(
+        f"Succesfully rendered profit path: {profit_path}, sending to outs chat"
+    )
+    profit_text = str(
+        payload.profit_text.format(
+            service=service,
+            share=profit.share,
+            amount=profit.amount,
+            cid=worker.cid,
+            name=worker.username if worker.username else worker.name,
+        ),
+    )
+
+    msg = await dp.bot.send_photo(
+        config("outs_chat"),
+        InputFile(profit_path),
+        caption=profit_text,
+    )
+
+    await dp.bot.send_message(config("workers_chat"), profit_text)
+    await dp.bot.send_message(
+        worker.cid,
+        payload.profit_worker_text.format(
+            service=service,
+            share=profit.share,
+            amount=profit.amount,
+            cid=worker.cid,
+            name=worker.username if worker.username else worker.name,
+        ),
+    )
+
+    profit.msg_url = msg.url  # save then send
+    profit.save()
+
+    if pay is not None:
+        await dp.bot.send_message(
+            config("admins_chat"),
+            payload.admins_profit_text.format(
+                profit_link=msg.url,
+                cid=worker.cid,
+                name=worker.username if worker.username else worker.name,
+                service=service,
+                amount=profit.amount,
+                share=profit.share,
+                moll=int(moll * 100),
+                create_date=pay.created.strftime("%m.%d в %H:%M"),
+                pay_date=profit.payment.date.strftime("%m.%d в %H:%M"),
+            ),
+            reply_markup=profit_pay_keyboard(profit.id),
+        )
+        logger.debug("Succesfully sent to outs and admins chat")
+        return True
+    else:
+        logger.info("Making Fake Profit!")

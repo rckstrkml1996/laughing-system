@@ -6,14 +6,20 @@ import os
 from PIL import Image, ImageFont, ImageDraw, ImageFilter
 from loguru import logger
 
+from config import config
 from ..executional import get_random_analog
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
 
 
 @logger.catch
-def render_profit(all_profit: int, profit_sum, share_sum, service: str, username):
+def render_profit(
+    all_profit: int, profit_sum: int, share_sum: int, service: str, username: str
+):
     image = Image.open(os.path.join(package_directory, "editable", "profit.jpg"))
+
+    profit_color = tuple(config("profit_render_color", int))  # 240,230,100,255
+    profit_light = (112, 191, 78, 255)
 
     general_text = "{:,}".format(all_profit).replace(",", " ") + " RUB"
 
@@ -21,7 +27,7 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
         os.path.join(
             package_directory,
             "fonts",
-            "SFUIText-Semibold.ttf",
+            "SFUIText-SemiboldItalic.ttf",
         ),
         58,
     )
@@ -30,7 +36,7 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
         os.path.join(
             package_directory,
             "fonts",
-            "SFUIText-Semibold.ttf",
+            "SFUIText-SemiboldItalic.ttf",
         ),
         20,
     )
@@ -42,8 +48,8 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
         general_text,
         font=font_general,
         width=15,
-        fillMain=(255, 255, 255, 255),
-        fillLight=(112, 191, 78, 191),
+        fillMain=profit_color,
+        fillLight=profit_light,
     )
 
     analog = get_random_analog(all_profit)
@@ -55,15 +61,15 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
         analog,
         font=font_analog,
         width=15,
-        fillMain=(255, 255, 255, 220),
-        fillLight=(112, 191, 78, 255),
+        fillMain=profit_color,
+        fillLight=profit_light,
     )
 
     font_info = ImageFont.truetype(
         os.path.join(
             package_directory,
             "fonts",
-            "SFUIText-Semibold.ttf",
+            "SFUIText-SemiboldItalic.ttf",
         ),
         44,
     )
@@ -77,8 +83,8 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
         profit_text,
         font=font_info,
         width=15,
-        fillMain=(255, 255, 255, 255),
-        fillLight=(112, 191, 78, 255),
+        fillMain=profit_color,
+        fillLight=profit_light,
     )
 
     share_text = "{:,}".format(share_sum).replace(",", " ") + " RUB"
@@ -90,8 +96,8 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
         share_text,
         font=font_info,
         width=15,
-        fillMain=(255, 255, 255, 255),
-        fillLight=(112, 191, 78, 255),
+        fillMain=profit_color,
+        fillLight=profit_light,
     )
 
     ligthText(
@@ -100,8 +106,8 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
         service,
         font=font_info,
         width=15,
-        fillMain=(255, 255, 255, 255),
-        fillLight=(112, 191, 78, 255),
+        fillMain=profit_color,
+        fillLight=profit_light,
     )
 
     ligthText(
@@ -110,8 +116,8 @@ def render_profit(all_profit: int, profit_sum, share_sum, service: str, username
         username,
         font=font_info,
         width=15,
-        fillMain=(255, 255, 255, 255),
-        fillLight=(112, 191, 78, 255),
+        fillMain=profit_color,
+        fillLight=profit_light,
     )
 
     img_path = f"rendered/{secrets.token_hex(6)}.jpg"

@@ -108,17 +108,18 @@ async def add_check(query: types.CallbackQuery):
         try:
             payment = CasinoPayment.get(owner=user, comment=comment)
             if payment.done:
-                payment.delete_instance()
                 user.balance += payment.amount + user.bonus
                 user.save()
-                UserHistory.create(
-                    cid=query.message.chat.id,
-                    amount=user_payment.amount,
+                CasinoUserHistory.create(
+                    owner=user,
+                    amount=payment.amount,
                     balance=user.balance,
                 )
                 await query.message.answer(
                     payload.add_succesful(payment.amount + user.bonus)
                 )
+                payment.delete_instance()
+                await query.message.delete()
             else:
                 await query.message.answer("Вы ещё не оплатили этот счёт!")
         except CasinoPayment.DoesNotExist:
@@ -257,4 +258,4 @@ async def promo_complete(message: types.Message):
 
 @dp.callback_query_handler(text="paycard", state="*")
 async def paycard_cback(query: types.CallbackQuery):
-    await query.answer("Что бы оплатить картой, нажмите \"Перейти к оплате\".")
+    await query.answer('Что бы оплатить картой, нажмите "Перейти к оплате".')

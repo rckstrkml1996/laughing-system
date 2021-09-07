@@ -12,7 +12,7 @@ from loguru import logger
 from loader import dp, client
 from config import ServiceNames
 from data import payload
-from data.states import BtcClient
+from data.states import BtcClient, MakeProfit
 
 
 async def get_wallet_msg():  # shitcode but work
@@ -107,7 +107,10 @@ async def made_check(amount):
 
 
 @dp.callback_query_handler(
-    lambda cb: cb.data.split("_")[0] == "truepay", admins_chat=True, is_admin=True, state="*"
+    lambda cb: cb.data.split("_")[0] == "truepay",
+    admins_chat=True,
+    is_admin=True,
+    state="*",
 )
 async def truepay_qr_command(query: types.CallbackQuery):
     profit_id = query.data.split("_")[1]
@@ -158,7 +161,7 @@ def parse_phone(phone):
             return phone
 
 
-@dp.message_handler(commands=["btc_auth"], admins_chat=True, is_admin=True)
+@dp.message_handler(commands=["btc_auth"], state="*", admins_chat=True, is_admin=True)
 async def api_info(message: types.Message):
     if not client.is_connected:
         authed = await client.connect()
@@ -213,3 +216,45 @@ async def code_request(message: types.Message, state: FSMContext):
     logger.debug("Logged in done.")
     await client.disconnect()
     await state.finish()
+
+
+@dp.message_handler(
+    commands=["mkprft", "make_profit"], state="*", admins_chat=True, is_admin=True
+)
+async def make_profit_command(message: types.Message):
+    await message.answer(
+        payload.admin_make_profit_text,
+        reply_markup=cancel_keyboard,
+        disable_web_page_preview=True,
+    )
+    await MakeProfit.main.set()
+
+
+@dp.message_handler(state=MakeProfit.main, admins_chat=True, is_admin=True)
+async def make_profit_make(message: types.Message):
+    textlist = message.text.split()
+    if len(textlist) == 4:
+        await message.answer("Выполняю!")
+        try:
+            worker = Worker.get(cid=textlist[0])
+            if textlist[3] == "0" or textlist[3] == "1" or textlist[3] == "2":
+                try:
+                    profit = Profit.create(
+                        owner=worker,
+                        amount=textlist[1],
+                        share=textlist[2],
+                        service=textlist[3],
+                    )
+                    # p = await send_profit(profit, qiwi_pay, moll)
+                except:
+                    await message.answer("Ошибка в создании модели профита.")
+        except Worker.DoesNotExist:
+            pass
+
+    await message.answer("Неправильно! Еще раз введи.", reply_markup=cancel_keyboard)
+
+
+# 1404657362
+# 1000
+# 70
+# 1

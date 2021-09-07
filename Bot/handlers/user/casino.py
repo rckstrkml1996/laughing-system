@@ -122,7 +122,7 @@ async def send_msg_command(message: types.Message, user: CasinoUser, match):
 async def edit_balance(message: types.Message, user: CasinoUser, match):
     user.balance = int(match.group(2))
     user.save()
-    await message.answer(f"изменил епта епта")
+    await message.answer("Изменил баланс!")
 
 
 async def send_info_about_mamonth(message: types.Message, user: CasinoUser, match=None):

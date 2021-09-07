@@ -12,7 +12,7 @@ from utils.executional import new_pin_text
 from utils.pinner import format_pin_text
 
 
-@dp.message_handler(commands=["pinned", "pin"], admins_chat=True, is_admin=True)
+@dp.message_handler(commands=["pinned", "pin"], admins_chat=True, is_admin=True, state="*")
 async def pinned_command(message: types.Message):
     await message.answer(payload.pin_text())
     await message.reply(payload.pin_help_text, reply_markup=change_pin_keyboard)

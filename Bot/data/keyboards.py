@@ -2,7 +2,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
-from config import outs_link, workers_link, reviews_link, Rates
+from config import config, Rates  # outs_link, workers_link, reviews_link
 from utils.executional import num2emoji
 
 
@@ -64,13 +64,13 @@ summary_blocked_keyboard.add(fuckurself_btn)
 
 summary_accepted_keyboard = InlineKeyboardMarkup()
 outs_btn = InlineKeyboardButton(
-    emojize(":revolving_hearts: Канал выплат"), url=outs_link
+    emojize(":revolving_hearts: Канал выплат"), url=config("outs_link")
 )
 workers_btn = InlineKeyboardButton(
-    emojize(":busts_in_silhouette: Чат воркеров"), url=workers_link
+    emojize(":busts_in_silhouette: Чат воркеров"), url=config("workers_link")
 )
 reviews_btn = InlineKeyboardButton(
-    emojize(":page_with_curl: Канал отзывов"), url=reviews_link
+    emojize(":page_with_curl: Канал отзывов"), url=config("reviews_link")
 )
 summary_accepted_keyboard.add(outs_btn)
 summary_accepted_keyboard.add(workers_btn)
@@ -120,9 +120,15 @@ ref_btn = InlineKeyboardButton(
     emojize(":handshake: Реф. система"), callback_data="refsystem"
 )
 rules_btn = InlineKeyboardButton(emojize(":scroll: Правила"), callback_data="showrules")
-out_btn = InlineKeyboardButton(emojize(":money_with_wings: Выплаты"), url=outs_link)
-info_btn = InlineKeyboardButton(emojize(":wastebasket: Инфоканал"), url=reviews_link)
-chat_btn = InlineKeyboardButton(emojize(":dolphin: Чат воркеров"), url=workers_link)
+out_btn = InlineKeyboardButton(
+    emojize(":money_with_wings: Выплаты"), url=config("outs_link")
+)
+info_btn = InlineKeyboardButton(
+    emojize(":wastebasket: Инфоканал"), url=config("reviews_link")
+)
+chat_btn = InlineKeyboardButton(
+    emojize(":dolphin: Чат воркеров"), url=config("workers_link")
+)
 about_project_keyboard.add(ref_btn, rules_btn)
 about_project_keyboard.add(info_btn, out_btn)
 about_project_keyboard.add(chat_btn)
