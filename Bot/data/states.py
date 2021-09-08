@@ -62,3 +62,6 @@ class Trading(StatesGroup):
 
 class MakeProfit(StatesGroup):
     main = State()
+    
+class SetProfitStick(StatesGroup):
+    main = State()

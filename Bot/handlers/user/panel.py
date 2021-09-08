@@ -29,7 +29,7 @@ async def worker_welcome(message: types.Message):
     worker = Worker.get(cid=message.chat.id)
     worker.username = message.chat.username
     worker.save()  # update worker username
-    in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
+    in_team = datetime_local_now() - worker.registered
 
     len_profits = worker.profits.count()
     all_balance = db_commands.get_profits_sum(worker.id)
@@ -88,7 +88,7 @@ async def toggle_username(query: types.CallbackQuery):
     try:
         worker = Worker.get(cid=query.message.chat.id)
         worker.username_hide = not worker.username_hide
-        in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
+        in_team = datetime_local_now() - worker.registered
         worker.save()
         logger.debug(
             f"Worker - {worker.cid}:{worker.id}, change username hide status to {worker.username_hide}"

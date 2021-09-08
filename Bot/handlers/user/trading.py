@@ -6,6 +6,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.utils.exceptions import ChatNotFound, BotBlocked
 from loguru import logger
+from customutils.datefunc import datetime_local_now
 from customutils.models import TradingUser, TradingPayment, Worker
 
 from loader import dp, trading_bot
@@ -51,7 +52,7 @@ async def casino_command(message: types.Message):
         try:
             user = TradingUser.get(id=mb_id)  # can get by str
 
-            localnow = datetime_local_now().replace(tzinfo=None)
+            localnow = datetime_local_now()
             timenow = localnow.strftime("%H:%M, %S cек")
 
             await message.answer(
@@ -116,7 +117,7 @@ async def edit_balance(message: types.Message, user: TradingUser, match):
 async def send_info_about_mamonth(
     message: types.Message, user: TradingUser, match=None
 ):
-    localnow = datetime_local_now().replace(tzinfo=None)
+    localnow = datetime_local_now()
     timenow = localnow.strftime("%H:%M, %S cек")
 
     await message.answer(
@@ -169,7 +170,7 @@ async def update_mamonth_fart(query: types.CallbackQuery):
 
         user.save()
 
-        localnow = datetime_local_now().replace(tzinfo=None)
+        localnow = datetime_local_now()
         timenow = localnow.strftime("%H:%M, %S cек")
 
         await query.message.edit_text(
@@ -204,7 +205,7 @@ async def update_mamonth_info(query: types.CallbackQuery):
     try:
         user = TradingUser.get(id=query.data.split("_")[1])  # can get by str
 
-        localnow = datetime_local_now().replace(tzinfo=None)
+        localnow = datetime_local_now()
         timenow = localnow.strftime("%H:%M, %S cек")
 
         await query.message.edit_text(
@@ -301,7 +302,7 @@ def small_mamont(user: TradingUser) -> str:
 async def cas_mamonths_info(query: types.CallbackQuery):
     worker = Worker.get(cid=query.from_user.id)
     mamonths_count = worker.cas_users.count()
-    localnow = datetime_local_now().replace(tzinfo=None)
+    localnow = datetime_local_now()
     timenow = localnow.strftime("%H:%M, %S cек")
 
     if mamonths_count == 0:

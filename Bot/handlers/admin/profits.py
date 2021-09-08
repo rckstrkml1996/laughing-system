@@ -239,7 +239,7 @@ async def make_profit_make(message: types.Message):
         msg = await message.answer("Выполняю!")
         try:
             worker = Worker.get(cid=textlist[0])
-            if textlist[3] == "0" or textlist[3] == "1" or textlist[3] == "2":
+            if textlist[3] in map(lambda v: str(v), range(len(ServiceNames))):
                 if textlist[2].isdigit():
                     if int(textlist[2]) <= 100:
                         moll = int(textlist[2]) / 100
@@ -247,7 +247,7 @@ async def make_profit_make(message: types.Message):
                             profit = Profit.create(
                                 owner=worker,
                                 amount=int(textlist[1]),
-                                share=int(textlist[1]) * moll,
+                                share=int(int(textlist[1]) * moll),
                                 service=int(textlist[3]),
                             )
                             await send_profit(profit, moll)
@@ -259,9 +259,3 @@ async def make_profit_make(message: types.Message):
             pass
 
     await message.answer("Неправильно! Еще раз введи.", reply_markup=cancel_keyboard)
-
-
-# 1404657362
-# 1000
-# 70
-# 1

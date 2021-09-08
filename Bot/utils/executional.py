@@ -148,7 +148,7 @@ def get_work_status():
 
 
 def get_info_about_worker(worker):
-    in_team = datetime_local_now().replace(tzinfo=None) - worker.registered
+    in_team = datetime_local_now() - worker.registered
 
     len_profits = worker.profits.count()
     sum_profits = db_commands.get_profits_sum(worker.id)

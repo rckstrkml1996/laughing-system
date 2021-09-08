@@ -21,7 +21,7 @@ from customutils.datefunc import datetime_local_now
 
 
 async def format_pin_text(text):
-    localnow = datetime_local_now().replace(tzinfo=None)
+    localnow = datetime_local_now()
     timenow = localnow.strftime("%H:%M, %S cек")
 
     rub, usd = await rub_usd_btcticker()

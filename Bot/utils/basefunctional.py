@@ -11,35 +11,36 @@ from config import config
 
 class BaseCommands:
     def all_profits_sum(self) -> int:
-        return int((
-            Profit
-            .select(
-                fn.SUM(Profit.amount).alias("all_profits")
-            )
-        ).execute()[0].all_profits or 0)
+        return int(
+            (Profit.select(fn.SUM(Profit.amount).alias("all_profits")))
+            .execute()[0]
+            .all_profits
+            or 0
+        )
 
     def get_profits_sum(self, worker_id) -> int:
-        return int((
-            Profit
-            .select(
-                fn.SUM(Profit.amount).alias("all_profits")
+        return int(
+            (
+                Profit.select(fn.SUM(Profit.amount).alias("all_profits")).where(
+                    Profit.owner_id == worker_id
+                )
             )
-            .where(Profit.owner_id == worker_id)
-        ).execute()[0].all_profits or 0)
+            .execute()[0]
+            .all_profits
+            or 0
+        )
 
     def workers_by_username(self, username: str):
         return Worker.select().where(
-            fn.Lower(Worker.username.contains(username)),
-            Worker.username_hide == False
+            fn.Lower(Worker.username.contains(username)), Worker.username_hide == False
         )
 
     def get_topworkers_all(self, limit: int = 15):
         return (
-            Worker
-            .select(
+            Worker.select(
                 Worker,
                 fn.SUM(Profit.amount).alias("profits_sum"),
-                fn.COUNT(Profit.id).alias("profits_count")
+                fn.COUNT(Profit.id).alias("profits_count"),
             )
             .join(Profit, JOIN.LEFT_OUTER)
             .group_by(Worker.id)
@@ -48,13 +49,12 @@ class BaseCommands:
         )
 
     def get_topworkers_month(self, limit: int = 15):
-        delta = datetime_local_now().replace(tzinfo=None) - timedelta(days=30)
+        delta = datetime_local_now() - timedelta(days=30)
         return (
-            Worker
-            .select(
+            Worker.select(
                 Worker,
                 fn.SUM(Profit.amount).alias("profits_sum"),
-                fn.COUNT(Profit.id).alias("profits_count")
+                fn.COUNT(Profit.id).alias("profits_count"),
             )
             .join(Profit, JOIN.LEFT_OUTER)
             .where(Profit.created >= delta)
@@ -64,19 +64,18 @@ class BaseCommands:
         )
 
     def get_topworkers_day(self, limit: int = 15):
-        date = datetime_local_now().replace(tzinfo=None)
+        date = datetime_local_now()
         return (
-            Worker
-            .select(
+            Worker.select(
                 Worker,
                 fn.SUM(Profit.amount).alias("profits_sum"),
-                fn.COUNT(Profit.id).alias("profits_count")
+                fn.COUNT(Profit.id).alias("profits_count"),
             )
             .join(Profit, JOIN.LEFT_OUTER)
             .where(
                 Profit.created.day == date.day,
                 Profit.created.month == date.month,
-                Profit.created.year == date.year
+                Profit.created.year == date.year,
             )
             .group_by(Worker.id)
             .order_by(SQL("profits_sum").desc())
@@ -84,29 +83,40 @@ class BaseCommands:
         )
 
     def get_profits_all(self) -> int:
-        return int(Profit.select(
-            fn.SUM(Profit.amount).alias("all_profits")
-        ).execute()[0].all_profits or 0)
+        return int(
+            Profit.select(fn.SUM(Profit.amount).alias("all_profits"))
+            .execute()[0]
+            .all_profits
+            or 0
+        )
 
     def get_profits_month(self) -> int:
-        delta = datetime_local_now().replace(tzinfo=None) - timedelta(days=30)
-        return int((
-            Profit
-            .select(fn.SUM(Profit.amount).alias("all_profits"))
-            .where(Profit.created >= delta)
-        ).execute()[0].all_profits or 0)
+        delta = datetime_local_now() - timedelta(days=30)
+        return int(
+            (
+                Profit.select(fn.SUM(Profit.amount).alias("all_profits")).where(
+                    Profit.created >= delta
+                )
+            )
+            .execute()[0]
+            .all_profits
+            or 0
+        )
 
     def get_profits_day(self) -> int:
-        date = datetime_local_now().replace(tzinfo=None)
-        return int((
-            Profit
-            .select(fn.SUM(Profit.amount).alias("all_profits"))
-            .where(
-                Profit.created.day == date.day,
-                Profit.created.month == date.month,
-                Profit.created.year == date.year,
+        date = datetime_local_now()
+        return int(
+            (
+                Profit.select(fn.SUM(Profit.amount).alias("all_profits")).where(
+                    Profit.created.day == date.day,
+                    Profit.created.month == date.month,
+                    Profit.created.year == date.year,
+                )
             )
-        ).execute()[0].all_profits or 0)
+            .execute()[0]
+            .all_profits
+            or 0
+        )
 
     def get_uniq_key(self) -> int:
         key = randint(111111, 999999)
@@ -133,5 +143,4 @@ class BaseCommands:
                 worker.status = 5
                 worker.save()
             except Worker.DoesNotExist:
-                logger.info(
-                    f"Admin with chat_id {admin_id} not found in base.")
+                logger.info(f"Admin with chat_id {admin_id} not found in base.")

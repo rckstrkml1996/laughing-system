@@ -5,6 +5,7 @@ from loguru import logger
 from loader import dp
 from config import config
 from data import payload
+from data.states import SetProfitStick
 from data.keyboards import *
 
 
@@ -42,3 +43,33 @@ async def photo_hash(message: types.Message):
 )
 async def new_design_command(message: types.Message):
     logger.debug(f"admin chat /new_desing is stupid {message.from_user.id}")
+
+
+@dp.message_handler(
+    commands=["prftstick", "set_profit_sticker"], admins_chat=True, is_admin=True
+)
+async def sticker_command(message: types.Message):
+    await message.answer("Отправь мне любой стикер")
+    await SetProfitStick.main.set()
+
+
+@dp.message_handler(
+    state=SetProfitStick.main,
+    content_types=["sticker"],
+    admins_chat=True,
+    is_admin=True,
+)
+async def set_profit_sticker(message: types.Message, state: FSMContext):
+    config.edit_config("profit_sticker_id", message.sticker.file_id)
+    await state.finish()
+    await message.answer("Сохранил!")
+
+
+@dp.message_handler(
+    state=SetProfitStick.main,
+    admins_chat=True,
+    is_admin=True,
+)
+async def close_profit_sticker(message: types.Message, state: FSMContext):
+    await state.finish()
+    await message.answer("Ну и иди нахуй со своим стиком :(")
