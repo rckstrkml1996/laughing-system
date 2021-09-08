@@ -91,9 +91,9 @@ class CasinoUser(BaseModel):
     balance = peewee.IntegerField(default=0)
     fort_chance = peewee.IntegerField(default=100)  # val from 0 to 100
     bonus = peewee.IntegerField(default=0)
-    fuckedup = peewee.BooleanField(default=True)
     username = peewee.CharField(null=True)
     fullname = peewee.CharField(null=True)
+    min_deposit = peewee.IntegerField(default=config("min_deposit", int))
 
     def __str__(self):
         return f"#{self.id} {self.cid}"
@@ -104,7 +104,6 @@ class EscortUser(BaseModel):
     cid = peewee.IntegerField(unique=True)
     balance = peewee.IntegerField(default=0)
     username = peewee.CharField(default="Без юзернейма")
-    fuckedup = peewee.BooleanField(default=True)
     fullname = peewee.CharField(default="Без имени")
 
 
@@ -112,7 +111,7 @@ class EscortPayment(BaseModel):
     owner = peewee.ForeignKeyField(EscortUser, related_name="payments")
     amount = peewee.IntegerField(null=True)  # sets dynamic
     comment = peewee.CharField(unique=True)
-    done = peewee.BooleanField(default=False)
+    done = peewee.IntegerField(default=0)  # 0 - not done 1 - real done 2 - fake done
     created = peewee.DateTimeField(default=datetime_local_now)
 
 
@@ -123,11 +122,10 @@ class EscortGirl(BaseModel):
 
 
 class CasinoPayment(BaseModel):
-    # payment = peewee.ForeignKeyField(QiwiPayment, related_name="bot_pay", null=True)
     owner = peewee.ForeignKeyField(CasinoUser, related_name="payments")
     comment = peewee.CharField(unique=True)
     amount = peewee.IntegerField()
-    done = peewee.BooleanField(default=False)
+    done = peewee.IntegerField(default=0)  # 0 - not done 1 - real done 2 - fake done
     created = peewee.DateTimeField(default=datetime_local_now)
 
 
@@ -144,7 +142,6 @@ class TradingUser(BaseModel):
     cid = peewee.IntegerField(unique=True)
     balance = peewee.IntegerField(default=0)
     fullname = peewee.CharField(default="Без имени")
-    fuckedup = peewee.BooleanField(default=True)
     username = peewee.CharField(default="Юзернейм скрыт")
 
     def __str__(self):
@@ -155,7 +152,7 @@ class TradingPayment(BaseModel):
     owner = peewee.ForeignKeyField(TradingUser, related_name="payments")
     comment = peewee.CharField(unique=True)
     amount = peewee.IntegerField()
-    done = peewee.BooleanField(default=False)
+    done = peewee.IntegerField(default=0)  # 0 - not done 1 - real done 2 - fake done
     created = peewee.DateTimeField(default=datetime_local_now)
 
 
