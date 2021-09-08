@@ -31,7 +31,7 @@ async def check_casino(traction: Transaction) -> bool:
     try:
         pay = CasinoPayment.get(comment=traction.comment)
 
-        if pay.amount <= traction.transactionSum.amount:
+        if pay.amount <= traction.transactionSum.amount and pay.done == 0:
             logger.debug(f"Some payment with {pay.amount} amount")
             if traction.transactionSum.currency == 643:
                 pay.done = 1
@@ -91,7 +91,7 @@ async def check_escort(traction: Transaction) -> bool:
         pay = EscortPayment.get(comment=traction.comment)
 
         logger.debug(f"Some payment with {traction.total.amount} amount")
-        if traction.transactionSum.currency == 643:
+        if traction.transactionSum.currency == 643 and pay.done == 0:
             pay.done = 1
             pay.amount = traction.total.amount
             pay.save()
@@ -148,7 +148,7 @@ async def check_trading(traction: Transaction) -> bool:
     try:
         pay = TradingPayment.get(comment=traction.comment)
 
-        if pay.amount <= traction.transactionSum.amount:
+        if pay.amount <= traction.transactionSum.amount and pay.done == 0:
             logger.debug(f"Some payment with {traction.total.amount} amount")
             if traction.transactionSum.currency == 643:
                 pay.done = 1
