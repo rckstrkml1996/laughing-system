@@ -266,6 +266,10 @@ async def check_qiwis():
                 delete_api_proxy(token)
             except:
                 logger.error("CHECKER EXCEPTION!")  # else error!
+                token = new_token
+                api, proxy_url = get_api(token)
+                parser = QiwiPaymentsParser(api, on_new_payment)
+                logger.info(f"Parsing payments with new qiwi {token}")
             finally:
                 await parser.api.close()
         except NoOptionError:
