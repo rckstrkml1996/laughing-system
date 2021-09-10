@@ -12,7 +12,9 @@ from data.keyboards import *
 from data.states import Alert
 
 
-@dp.message_handler(commands=["alert", "alerts"], admins_chat=True, is_admin=True, state="*")
+@dp.message_handler(
+    commands=["alert", "alerts"], admins_chat=True, is_admin=True, state="*"
+)
 async def alert_command(message: types.Message):
     logger.debug(f"Admin [{message.from_user.id}] called alert command")
     await message.answer(payload.alert_text, reply_markup=alert_keyboard)
@@ -70,11 +72,13 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
                 )
             )
             msg_count += 1
+            await sleep(0.2)
         except ChatNotFound:
             not_found_count += 1
         except BotBlocked:
             blocked_count += 1
-        await sleep(0.2)
+        except Exception:
+            logger.debug("Some exception while Alerting Workers")
 
     await query.message.edit_text(
         payload.alert_start_text.format(
@@ -142,11 +146,13 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
                 )
             )
             msg_count += 1
+            await sleep(0.2)
         except ChatNotFound:
             not_found_count += 1
         except BotBlocked:
             blocked_count += 1
-        await sleep(0.2)
+        except Exception:
+            logger.debug("Some exception while Alerting Casino")
 
     await query.message.edit_text(
         payload.alert_start_text.format(

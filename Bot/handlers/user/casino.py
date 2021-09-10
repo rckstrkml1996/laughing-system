@@ -24,6 +24,7 @@ async def casino_command(message: types.Message):
         try:
             user = CasinoUser.get(id=mb_id)  # can get by str
             games_win = user.history.where(CasinoUserHistory.editor == 2).count()
+            adds_count = user.history.where(CasinoUserHistory.editor == 0).count()
             games_lose = user.history.where(CasinoUserHistory.editor == 3).count()
 
             localnow = datetime_local_now()
@@ -32,7 +33,7 @@ async def casino_command(message: types.Message):
             await message.answer(
                 payload.casino_mamonth_info.format(
                     wins_count=games_win,
-                    adds_count=0,
+                    adds_count=adds_count,
                     lose_count=games_lose,
                     smile=random_heart(),
                     uid=user.id,
@@ -131,12 +132,13 @@ async def send_info_about_mamonth(message: types.Message, user: CasinoUser, matc
     localnow = datetime_local_now()
     timenow = localnow.strftime("%H:%M, %S cек")
     games_win = user.history.where(CasinoUserHistory.editor == 2).count()
+    adds_count = user.history.where(CasinoUserHistory.editor == 0).count()
     games_lose = user.history.where(CasinoUserHistory.editor == 3).count()
 
     await message.answer(
         payload.casino_mamonth_info.format(
             wins_count=games_win,
-            adds_count=0,
+            adds_count=adds_count,
             lose_count=games_lose,
             smile=random_heart(),
             uid=user.id,
@@ -181,6 +183,7 @@ async def update_mamonth_fart(query: types.CallbackQuery):
             100 if user.fort_chance == 0 else 50 if user.fort_chance == 100 else 0
         )
         games_win = user.history.where(CasinoUserHistory.editor == 2).count()
+        adds_count = user.history.where(CasinoUserHistory.editor == 0).count()
         games_lose = user.history.where(CasinoUserHistory.editor == 3).count()
 
         user.save()
@@ -191,7 +194,7 @@ async def update_mamonth_fart(query: types.CallbackQuery):
         await query.message.edit_text(
             payload.casino_mamonth_info.format(
                 wins_count=games_win,
-                adds_count=0,
+                adds_count=adds_count,
                 lose_count=games_lose,
                 smile=random_heart(),
                 uid=user.id,
@@ -218,10 +221,8 @@ async def update_mamonth_fart(query: types.CallbackQuery):
 async def update_mamonth_info(query: types.CallbackQuery):
     try:
         user = CasinoUser.get(id=query.data.split("_")[1])  # can get by str
-        # games = user.history.where(
-        #     (CasinoUserHistory.editor == 2) | (CasinoUserHistory.editor == 3)
-        # ).count()
         games_win = user.history.where(CasinoUserHistory.editor == 2).count()
+        adds_count = user.history.where(CasinoUserHistory.editor == 0).count()
         games_lose = user.history.where(CasinoUserHistory.editor == 3).count()
 
         localnow = datetime_local_now()
@@ -230,7 +231,7 @@ async def update_mamonth_info(query: types.CallbackQuery):
         await query.message.edit_text(
             payload.casino_mamonth_info.format(
                 wins_count=games_win,
-                adds_count=0,
+                adds_count=adds_count,
                 lose_count=games_lose,
                 smile=random_heart(),
                 uid=user.id,

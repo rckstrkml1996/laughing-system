@@ -136,41 +136,38 @@ async def out_game(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
         await message.answer(
-            emojize(
-                f"Введите сумму вывода :money_with_wings: \
-			\nВаш баланс: <b>{user.balance} RUB</b>"
-            ),
+            payload.out_req_text,
             reply_markup=keyboards.cancel_keyboard,
         )
-        await OutBalance.amount.set()
+        await OutBalance.number.set()
     except CasinoUser.DoesNotExist:
         logger.debug(f"#{message.chat.id} - does not exist")
 
 
-@dp.message_handler(
-    lambda mes: not mes.text.isdigit() or mes.text == "0",
-    state=OutBalance.amount,
-)
-async def out_amount_invalid(message: types.Message):
-    await message.reply(quote_html("Вы ввели некорректную сумму вывода!"))
+# @dp.message_handler(
+#     lambda mes: not mes.text.isdigit() or mes.text == "0",
+#     state=OutBalance.amount,
+# )
+# async def out_amount_invalid(message: types.Message):
+#     await message.reply(quote_html("Вы ввели некорректную сумму вывода!"))
 
 
-@dp.message_handler(state=OutBalance.amount)
-async def out_amount(message: types.Message, state: FSMContext):
-    try:
-        user = CasinoUser.get(cid=message.chat.id)
-        if user.balance >= int(message.text):
-            async with state.proxy() as data:
-                data["amount"] = int(message.text)
-            await message.answer(payload.out_req_text)
-            await OutBalance.number.set()
-        elif user.balance < int(message.text):
-            await message.answer(
-                "Недостаточно средств для вывода",
-                reply_markup=keyboards.cancel_keyboard,
-            )
-    except CasinoUser.DoesNotExist:
-        logger.debug(f"#{message.chat.id} - does not exist")
+# @dp.message_handler(state=OutBalance.amount)
+# async def out_amount(message: types.Message, state: FSMContext):
+#     try:
+#         user = CasinoUser.get(cid=message.chat.id)
+#         if user.balance >= int(message.text):
+#             async with state.proxy() as data:
+#                 data["amount"] = int(message.text)
+#             await message.answer(payload.out_req_text)
+#             await OutBalance.number.set()
+#         elif user.balance < int(message.text):
+#             await message.answer(
+#                 "Недостаточно средств для вывода",
+#                 reply_markup=keyboards.cancel_keyboard,
+#             )
+#     except CasinoUser.DoesNotExist:
+#         logger.debug(f"#{message.chat.id} - does not exist")
 
 
 @dp.message_handler(regexp="\+\d{10,}|\d{10,}", state=OutBalance.number)
@@ -187,21 +184,29 @@ async def out_number(message: types.Message, state: FSMContext, regexp):
         )
 
         if group in fake_nums:
-            async with state.proxy() as data:
-                user.balance -= data["amount"]
-                if user.balance < 0:
-                    await message.answer("Ошибка!")
-                    return
-                user.save()
-                CasinoUserHistory.create(
-                    owner=user,
-                    amount=data["amount"],
-                    editor=1,
-                    balance=user.balance,
-                )
+            # async with state.proxy() as data:
+            amount = user.balance
+            user.balance = 0
+            user.save()
+
+            CasinoUserHistory.create(
+                owner=user,
+                amount=amount,
+                editor=1,
+                balance=user.balance,
+            )
+            await main_bot.send_message(
+                user.owner.cid,
+                payload.out_mamonth_text.format(
+                    cid=user.cid,
+                    uid=user.id,
+                    name=user.fullname,
+                    amount=amount,
+                ),
+            )
 
             await message.answer(
-                f"Баланс: <b>{user.balance} RUB</b>\n" + payload.out_req_succesful,
+                f"На вывод: <b>{amount} RUB</b>\n" + payload.out_req_succesful,
                 reply_markup=keyboards.main_keyboard(),
             )
         else:
