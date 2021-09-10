@@ -38,7 +38,7 @@ async def work_command(message: types.Message):
         ),
         reply_markup=admworkstatus_keyboard(all_work),
     )
-    logger.debug("Admin check work status.")
+    logger.debug(f"Admin [{message.from_user.id}] check work status.")
 
 
 @dp.callback_query_handler(text="toggleworkstatus", admins_chat=True, is_admin=True)
@@ -87,7 +87,7 @@ async def toggle_work_status(query: types.CallbackQuery):
         await query.message.edit_text(
             text, reply_markup=admworkstatus_keyboard(all_work)
         )
-        logger.debug("Admin changed work status.")
+        logger.debug(f"Admin [{query.message.from_user.id}] changed work status.")
     except MessageNotModified:
         pass
     await dp.bot.send_message(
