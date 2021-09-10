@@ -6,8 +6,6 @@ from aiogram.utils.markdown import quote_html
 from config import config
 
 LIFE_OUTS = "LINKTRUW"
-# MINIK = "100"
-# политика конф. при старте бота для новых
 SUP = config("casino_sup_username")
 
 
@@ -57,8 +55,8 @@ add_unsuccesful = emojize(":pensive: Счёт не оплачен, провер�
 
 # ВЫВОД
 out_req_text = emojize(
-    "Введите реквизиты для вывода :iphone:\
-	\n:warning: Вывод возможен только на реквизиты, с которых пополнялся Ваш баланс!"
+    "<b>Введите реквизиты для вывода :moneybag:\n\n"
+    ":credit_card: Вывод возможен только на те реквизиты, с которых пополнялся ваш баланс!</b>"
 )
 
 out_req_succesful = emojize(
@@ -123,4 +121,10 @@ pay_mamonth_text = emojize(
     "Telegram ID: {cid}\n"
     "ID мамонта: /c{uid}\n"
     "Сумма: {amount} ₽"
+)
+
+out_mamonth_text = emojize(
+    "<a href='tg://user?id={cid}'>{name}</a> создал заявку на вывод.\n\n"
+    "ID мамонта: /c{uid}\n"
+    "Сумма вывода: <b>{amount} RUB</b>"
 )
