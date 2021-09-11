@@ -22,3 +22,11 @@ MINIK = 150  # минимальная сумма пополнения
 LICENCE = "AgACAgIAAxkBAAEOOY1gU9f3uRanl2h-YCVh3PFbprQWLQACN7QxG2NPoUrQtlfP33-xv-Tzk6IuAAMBAAMCAAN5AAMgBgACHgQ"
 
 SKIP_UPDATES = True  # useless
+
+
+# directory = os.path.dirname(os.path.abspath(__file__))
+# words_path = os.path.join(directory, "data", "russian_nouns.txt")
+
+# with open(words_path, "r", encoding="utf-8") as file:
+#     words = file.readlines()
+#     words = [s.strip("\n") for s in words]

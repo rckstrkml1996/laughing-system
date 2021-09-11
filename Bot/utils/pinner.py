@@ -9,15 +9,16 @@ from aiogram.utils.exceptions import (
     MessageToEditNotFound,
     MessageTextIsEmpty,
     MessageToPinNotFound,
+    ChatNotFound,
 )
+from customutils.datefunc import datetime_local_now
+from customutils.models import Worker, Profit
+from customutils.models import CasinoUser, TradingUser, EscortUser
 
 from loader import db_commands
 from config import config
-from customutils.models import Worker, Profit
-from customutils.models import CasinoUser, TradingUser, EscortUser
 from data.payload import pin_text
 from utils.executional import get_work_status, get_work_moon, rub_usd_btcticker
-from customutils.datefunc import datetime_local_now
 
 
 async def format_pin_text(text):
@@ -80,6 +81,8 @@ async def dynapins(bot: Bot):
             await bot.pin_chat_message(
                 workers_chat, message_id, disable_notification=True
             )
+        except ChatNotFound:
+            pass
 
     while True:
         await asyncio.sleep(update_time)
@@ -98,3 +101,5 @@ async def dynapins(bot: Bot):
             await bot.pin_chat_message(
                 workers_chat, message_id, disable_notification=True
             )
+        except ChatNotFound:
+            pass

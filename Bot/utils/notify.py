@@ -1,6 +1,6 @@
 from asyncio import sleep
 
-from aiogram.utils.exceptions import ChatNotFound, BotBlocked
+from aiogram.utils.exceptions import ChatNotFound, BotBlocked, CantInitiateConversation
 from aiogram import Dispatcher
 from loguru import logger
 
@@ -10,20 +10,22 @@ from config import config  # ADMINS_ID
 
 async def on_startup_notify(dp: Dispatcher):
     logger.info("Admins notify...")
+    for admin_id in config("admins_id"):
+        try:
+            await dp.bot.send_message(admin_id, startup_text, disable_notification=True)
+            logger.debug(f"Notify message send to admin: [{admin_id}]")
+        except ChatNotFound:
+            logger.warning("Chat with admin not found.")
+        except BotBlocked:
+            logger.warning("Admin blocked bot.")
+        except CantInitiateConversation:
+            logger.warning(f"Cant initiate conversation with user: [{admin_id}]")
+        except:
+            logger.error(f"Admins notify exception")
+
+        await sleep(0.2)
+
     try:
-        for admin_id in config("admins_id"):
-            try:
-                await dp.bot.send_message(
-                    admin_id, startup_text, disable_notification=True
-                )
-                logger.debug(f"Notify message send to admin: [{admin_id}]")
-            except ChatNotFound:
-                logger.warning("Chat with admin not found.")
-            except BotBlocked:
-                logger.warning("Admin blocked bot.")
-
-            await sleep(0.2)
-
         admins_chat = config("admins_chat")
         await dp.bot.send_message(admins_chat, startup_text, disable_notification=True)
         logger.debug(f"Notify message send to Admins Chat {admins_chat}")
@@ -32,4 +34,4 @@ async def on_startup_notify(dp: Dispatcher):
         await dp.bot.send_message(workers_chat, startup_text, disable_notification=True)
         logger.debug(f"Notify message send to Admins Chat {admins_chat}")
     except:
-        logger.warning("Notify exception")
+        logger.warning("Chats notify exception")

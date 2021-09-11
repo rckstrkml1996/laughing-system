@@ -1,4 +1,5 @@
 import re
+from datetime import timedelta
 from configparser import NoOptionError
 from asyncio.exceptions import TimeoutError
 
@@ -7,6 +8,7 @@ from aiogram.dispatcher import FSMContext
 from aiohttp.client_exceptions import ClientProxyConnectionError
 from customutils.qiwiapi import get_currency, get_identification_level
 from customutils.qiwiapi.exceptions import InvalidToken, InvalidAccount
+from customutils.datefunc import normalized_local_now
 
 from loader import dp
 from config import config
@@ -91,7 +93,7 @@ async def qiwi_command(message: types.Message):
         accounts = []
         for token in tokens:
             api, proxy_url = get_api(token)
-            try:
+            try:  # API requests
                 profile = await api.get_profile()
                 qiwiaccs = await api.get_balance()
                 account = profile.contractInfo.contractId
@@ -125,9 +127,9 @@ async def qiwi_command(message: types.Message):
                         all_balance += qiwiaccs[0].balance.amount
                 else:
                     await message.answer(payload.qiwi_error_text)
-            finally:
+            finally:  # close to except error
                 await api.close()
-        await message.answer(
+        await message.answer(  # do shit
             payload.qiwi_command_text.format(
                 all_balance=all_balance,
             ),
@@ -140,12 +142,21 @@ async def qiwi_command(message: types.Message):
 
 @dp.callback_query_handler(text="add_qiwi", admins_chat=True, is_admin=True)
 async def add_qiwi(query: types.CallbackQuery):
-    await query.message.edit_text(payload.add_qiwis_text, reply_markup=cancel_keyboard)
-    await Qiwi.new.set()
+    await query.message.edit_text(
+        "Введите киви токен в бота для безопасности данных.",
+        reply_markup=cancel_keyboard,
+    )
+    await dp.bot.send_message(query.from_user.id, payload.add_qiwis_text)
+    # set new state in bot not in admins chat
+    state = dp.get_current().current_state(
+        chat=query.from_user.id, user=query.from_user.id
+    )
+    await state.set_state(Qiwi.new)
 
 
-@dp.message_handler(state=Qiwi.new, admins_chat=True)
+@dp.message_handler(state=Qiwi.new, is_admin=True)
 async def new_qiwi(message: types.Message, state: FSMContext):
+    message.chat.id = config("admins_chat")  # change to send to admins
     proxy_regex = r"http:\/\/([a-zA-Z0-9]+:[a-zA-Z0-9]+@)*([a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+)(:[0-9]+)*"
     data = message.text.split("\n")
     try:
@@ -287,6 +298,11 @@ async def qiwi_info(query: types.CallbackQuery):
         try:
             profile = await api.get_profile()  # to answer as msg
             accs = await api.get_balance()
+            history_stat = await api.get_statistics(
+                normalized_local_now() - timedelta(days=10), normalized_local_now()
+            )
+            incoming = history_stat.incomingTotal[0]
+            outgoing = history_stat.outgoingTotal[0]
             last_transactions = await api.get_transactions(rows=7)
             level = profile.contractInfo.identificationInfo[0].identificationLevel
         except (InvalidToken, InvalidAccount):
@@ -330,7 +346,7 @@ async def qiwi_info(query: types.CallbackQuery):
                 if action.comment
                 else "<i>Без комментария.</i>"
             )
-            fdate = action.date.strftime("%m.%d.%Y в %H:%M")
+            fdate = action.date.strftime("%d.%m.%Y в %H:%M")
             last_actions += f"{action_type}<b>{action.total.amount} {action_currency}</b>, {action.account}\n{comment}, {fdate}\n"
         await query.message.edit_text(
             payload.qiwi_info_text.format(
@@ -338,6 +354,8 @@ async def qiwi_info(query: types.CallbackQuery):
                 balance=f"{balance.amount} {get_currency(balance.currency)}",
                 status=get_identification_level(level),
                 proxy_url=proxy_url,
+                incoming=f"{incoming.amount} {get_currency(incoming.currency)}",
+                outgoing=f"{outgoing.amount} {get_currency(outgoing.currency)}",
                 last_actions=last_actions,
             ),
             reply_markup=oneqiwi_keyboard(num),

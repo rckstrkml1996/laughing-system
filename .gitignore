@@ -38,3 +38,5 @@ pin.txt
 *.session
 
 .env/
+# webhook
+*.pem

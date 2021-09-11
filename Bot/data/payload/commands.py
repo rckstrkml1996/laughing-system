@@ -71,6 +71,7 @@ invalid_newqiwi_text = emojize(
 qiwi_info_text = emojize(
     "Кошелек: <b>+{number}</b> :kiwi_fruit:\n"
     "Баланс: <b>{balance}</b>\n"
+    "Сумма платежей: <b>+{incoming}</b> <b>-{outgoing}</b>\n"
     "Статус: <b>{status}</b>\n"
     "Прокси: <i>{proxy_url}</i>\n\n"
     "{last_actions}"
@@ -159,3 +160,6 @@ admin_make_profit_text = emojize(
     "<code>70</code>\n"
     "<code>1</code>"
 )
+
+ban_success_text = emojize("Успешно забанил <a href='tg://user?id={cid}'>{name}</a>")
+kick_success_text = emojize("Успешно кикнул <a href='tg://user?id={cid}'>{name}</a>")

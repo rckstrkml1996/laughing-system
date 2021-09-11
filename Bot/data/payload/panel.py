@@ -16,7 +16,7 @@ worker_menu_text = emojize(
 
 about_project_text = emojize(
     f":woman_tipping_hand: <b>Информация о проекте {config('team_name')}</b>\n\n"
-    ":fire: Мы открылись: {team_start}\n"
+    f":fire: Мы открылись: {config('team_start')}\n"
     "&#127468;&#127463; Количество профитов: {team_profits}\n"
     ":moneybag: Общая сумма профитов: {profits_sum} ₽\n"
     "<b>Выплаты</b> проекта:\n"

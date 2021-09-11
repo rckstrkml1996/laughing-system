@@ -64,6 +64,7 @@ class QiwiPayment(BaseModel):
     person_id = peewee.CharField()  # наш аккаунт киви
     account = peewee.CharField()  # аккаунт перевода или пополнения
     amount = peewee.IntegerField()
+    payment_type = peewee.CharField(default="IN")
     currency = peewee.IntegerField(default=643)
     comment = peewee.CharField(null=True)
     date = peewee.DateTimeField()

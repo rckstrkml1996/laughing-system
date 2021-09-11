@@ -38,14 +38,13 @@ standart_config = {
     "workers_link": "https://t.me/joinchat/6-4rJOpD17s4Y2Ey",
     "reviews_link": "https://t.me/blessinform",
     "profit_render_color": "240,230,100,255",
+    "team_start": "13 ноября 2020",
 }
 
 config = Config(section_name, path, standart_config)
 
 html_style_url = "https://telegra.ph/file/0e91498d70cfc4d87afba.png"  # than i replace!
 
-
-team_start = "3 сентября 2021"
 
 """
     Кастомизация

@@ -14,7 +14,7 @@ from customutils.models import CasinoUser, CasinoUserHistory, CasinoPayment
 from customutils.qiwiapi.exceptions import InvalidToken, InvalidAccount
 
 from loader import dp, main_bot
-from config import config
+from config import config  # , words
 from data.states import SelfCabine, AddBalance, OutBalance
 from data import payload
 import keyboards
@@ -59,7 +59,9 @@ async def add_reqiz(message: types.Message, state: FSMContext):
         return
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        comment = random.randint(1000000, 9999999)
+        comment = f"r{random.randint(1000000, 9999999)}"
+        # comment = f"{random.randint(1, 99)}-{random.choice(words)}"
+        # comment = random.randint(1000000, 9999999)
 
         try:
             token = config("qiwi_tokens")

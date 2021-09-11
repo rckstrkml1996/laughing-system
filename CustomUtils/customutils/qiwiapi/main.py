@@ -1,10 +1,12 @@
 from time import time
+from datetime import datetime
+from typing import Union
 
 import aiohttp
 from pydantic.error_wrappers import ValidationError
 
 from .exceptions import InvalidToken, InvalidAccount
-from .types import Accounts, Payments, PaymentInfo, Profile
+from .types import Accounts, TotalPayments, Payments, PaymentInfo, Profile
 
 
 def get_currency(currency: int):
@@ -41,7 +43,7 @@ class QiwiApi:
     async def get_new_profile(self):
         url = "https://edge.qiwi.com/person-profile/v1/profile/current"
 
-        response = await self.session.get(url, proxy=self.proxy, ssl=False)
+        response = await self.session.get(url, proxy=self.proxy)
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -77,7 +79,7 @@ class QiwiApi:
         profile = await self.get_profile()
         url = f"https://edge.qiwi.com/funding-sources/v2/persons/{profile.contractInfo.contractId}/accounts"
 
-        response = await self.session.get(url, proxy=self.proxy, ssl=False)
+        response = await self.session.get(url, proxy=self.proxy)
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -88,11 +90,10 @@ class QiwiApi:
 
     async def get_transactions(self, rows: int = 50):
         profile = await self.get_profile()
-        url = f"https://edge.qiwi.com/payment-history/v2/persons/{profile.contractInfo.contractId}/payments"
+        wallet = profile.contractInfo.contractId
+        url = f"https://edge.qiwi.com/payment-history/v2/persons/{wallet}/payments"
 
-        response = await self.session.get(
-            url, params={"rows": rows}, proxy=self.proxy, ssl=False
-        )
+        response = await self.session.get(url, params={"rows": rows}, proxy=self.proxy)
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -100,6 +101,48 @@ class QiwiApi:
         json = await response.json()
 
         return Payments(**json)
+
+    async def get_statistics(
+        self,
+        startDate: Union[str, datetime],
+        endDate: Union[str, datetime],
+        operation: str = "ALL",
+    ):
+        if isinstance(startDate, datetime):
+            start_date = startDate.strftime("%Y-%m-%dT%H:%M:%S%z")
+            if startDate.tzinfo:
+                start_date = start_date[:-2] + ":" + start_date[-2:]
+        else:
+            start_date = startDate
+
+        if isinstance(endDate, datetime):
+            end_date = endDate.strftime("%Y-%m-%dT%H:%M:%S%z")
+            if endDate.tzinfo:
+                end_date = end_date[:-2] + ":" + end_date[-2:]
+        else:
+            end_date = endDate
+
+        profile = await self.get_profile()
+        wallet = profile.contractInfo.contractId
+        url = (
+            f"https://edge.qiwi.com/payment-history/v2/persons/{wallet}/payments/total"
+        )
+
+        params = {
+            "startDate": start_date,
+            "endDate": end_date,
+            "operation": operation,
+        }
+
+        response = await self.session.get(url, params=params, proxy=self.proxy)
+        if response.status == 401:
+            raise InvalidToken
+        elif response.status == 403:
+            raise InvalidAccount
+
+        json = await response.json()
+
+        return TotalPayments(**json)
 
     async def pay(self, account: str, amount, currency="643", comment=None):
         url = "https://edge.qiwi.com/sinap/api/v2/terms/99/payments"
