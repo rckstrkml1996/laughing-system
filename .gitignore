@@ -40,3 +40,5 @@ pin.txt
 .env/
 # webhook
 *.pem
+
+Bot/utils/render/editable/*.jpg
