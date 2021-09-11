@@ -16,7 +16,7 @@ from data.states import Alert
     commands=["alert", "alerts"], admins_chat=True, is_admin=True, state="*"
 )
 async def alert_command(message: types.Message):
-    logger.debug("Admin called alert command")
+    logger.debug(f"Admin [{message.from_user.id}] called alert command")
     await message.answer(payload.alert_text, reply_markup=alert_keyboard)
 
 

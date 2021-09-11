@@ -50,7 +50,7 @@ async def casino_command(message: types.Message):
                 reply_markup=cas_info_keyboard(user.fort_chance, user.id, "PIZDA"),
             )
         except CasinoUser.DoesNotExist:
-            logger.debug("Mamonth that worker want see does not exist.")
+            logger.debug(f"Mamonth [{user.id}] that worker [{message.chat.id}] want see does not exist.")
 
 
 @dp.message_handler(regexp="казин", state="*", is_worker=True)
@@ -212,7 +212,7 @@ async def update_mamonth_fart(query: types.CallbackQuery):
             reply_markup=cas_info_keyboard(user.fort_chance, user.id, "PIZDA"),
         )
     except CasinoUser.DoesNotExist:
-        logger.debug("Mamonth that worker want see does not exist.")
+        logger.debug(f"Mamonth [{user.id}]that worker [{query.from_user.id}] want see does not exist.")
 
 
 @dp.callback_query_handler(
@@ -248,9 +248,9 @@ async def update_mamonth_info(query: types.CallbackQuery):
             ),
             reply_markup=cas_info_keyboard(user.fort_chance, user.id, "PIZDA"),
         )
-        logger.debug("Mamonth info updated.")
+        logger.debug(f"Mamonth {user.id} info updated.")
     except CasinoUser.DoesNotExist:
-        logger.debug("Mamonth that worker want see does not exist.")
+        logger.debug(f"Mamonth [{user.id}] that worker [{query.from_user.id}] want see does not exist.")
 
 
 async def change_fart_mamonth(message: types.Message, user: CasinoUser, match):
