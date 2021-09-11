@@ -29,7 +29,7 @@ def render_profit(
             "fonts",
             "SFUIText-SemiboldItalic.ttf",
         ),
-        58,
+        85,
     )
 
     font_analog = ImageFont.truetype(
@@ -38,13 +38,13 @@ def render_profit(
             "fonts",
             "SFUIText-SemiboldItalic.ttf",
         ),
-        20,
+        30,
     )
 
     w, h = font_general.getsize(general_text)
     ligthText(
         image,
-        ((image.size[0] - w) / 2, 239),
+        ((image.size[0] - w) / 2, 350),
         general_text,
         font=font_general,
         width=15,
@@ -57,7 +57,7 @@ def render_profit(
     w, h = font_analog.getsize(analog)
     ligthText(
         image,
-        ((image.size[0] - w) / 2, 300),
+        ((image.size[0] - w) / 2, 440),
         analog,
         font=font_analog,
         width=15,
@@ -71,7 +71,7 @@ def render_profit(
             "fonts",
             "SFUIText-SemiboldItalic.ttf",
         ),
-        44,
+        65,
     )
 
     profit_text = "{:,}".format(profit_sum).replace(",", " ") + " RUB"
@@ -79,7 +79,7 @@ def render_profit(
     w, h = font_info.getsize(profit_text)
     ligthText(
         image,
-        (1109 - w, 375),
+        (1625 - w, 550),
         profit_text,
         font=font_info,
         width=15,
@@ -92,7 +92,7 @@ def render_profit(
     w, h = font_info.getsize(share_text)
     ligthText(
         image,
-        (1109 - w, 464),
+        (1625 - w, 680),
         share_text,
         font=font_info,
         width=15,
@@ -102,7 +102,7 @@ def render_profit(
 
     ligthText(
         image,
-        (141, 375),
+        (206, 550),
         service,
         font=font_info,
         width=15,
@@ -112,7 +112,7 @@ def render_profit(
 
     ligthText(
         image,
-        (141, 464),
+        (206, 680),
         username,
         font=font_info,
         width=15,
