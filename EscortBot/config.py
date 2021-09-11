@@ -12,6 +12,10 @@ if token is None:
     token = ""
     logger.warning("TOKEN DOES NOT SET IN ENV")
 
-standart_config = {"escort_api_token": token, "escort_sup_username": "@escort18support"}
+standart_config = {
+    "esc_otz_chat": "otzif",
+    "escort_api_token": token,
+    "escort_sup_username": "@escort18support",
+}
 
 config = Config(section_name, path, standart_config)
