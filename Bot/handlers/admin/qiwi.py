@@ -299,10 +299,14 @@ async def qiwi_info(query: types.CallbackQuery):
             profile = await api.get_profile()  # to answer as msg
             accs = await api.get_balance()
             history_stat = await api.get_statistics(
-                normalized_local_now() - timedelta(days=10), normalized_local_now()
+                normalized_local_now() - timedelta(days=1), normalized_local_now()
             )
-            incoming = history_stat.incomingTotal[0]
-            outgoing = history_stat.outgoingTotal[0]
+            try:
+                incoming = f"{history_stat.incomingTotal[0].amount} {get_currency(history_stat.incomingTotal[0].currency)}"
+                outgoing = f"{history_stat.outgoingTotal[0].amount} {get_currency(history_stat.outgoingTotal[0].currency)}"
+            except IndexError:
+                incoming = "0 RUB"
+                outgoing = "0 RUB"
             last_transactions = await api.get_transactions(rows=7)
             level = profile.contractInfo.identificationInfo[0].identificationLevel
         except (InvalidToken, InvalidAccount):
@@ -354,8 +358,8 @@ async def qiwi_info(query: types.CallbackQuery):
                 balance=f"{balance.amount} {get_currency(balance.currency)}",
                 status=get_identification_level(level),
                 proxy_url=proxy_url,
-                incoming=f"{incoming.amount} {get_currency(incoming.currency)}",
-                outgoing=f"{outgoing.amount} {get_currency(outgoing.currency)}",
+                incoming=incoming,
+                outgoing=outgoing,
                 last_actions=last_actions,
             ),
             reply_markup=oneqiwi_keyboard(num),
