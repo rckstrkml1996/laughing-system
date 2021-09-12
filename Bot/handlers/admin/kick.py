@@ -33,11 +33,14 @@ async def kick_all_users(message: types.Message):
                     try:
                         worker = Worker.get(cid=member.user.id)
                         if worker.status == 0:
-                            await dp.bot.kick_chat_member(workers_chat, member.user.id)
+                            iffsa = await dp.bot.kick_chat_member(workers_chat, member.user.id)
+                            if iffsa:
+                                kicked += 1
                     except Worker.DoesNotExist:
-                        await dp.bot.kick_chat_member(workers_chat, member.user.id)
+                        iffsa = await dp.bot.kick_chat_member(workers_chat, member.user.id)
+                        if iffsa:
+                            kicked += 1
 
-                    kicked += 1
                     await msg.edit_text(f"Исключил: {kicked}")
                     await sleep(0.6)
             except:
