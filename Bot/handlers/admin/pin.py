@@ -1,5 +1,6 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
+from aiogram.utils.text_decorations import html_decoration
 
 from loguru import logger
 
@@ -12,9 +13,12 @@ from utils.executional import new_pin_text
 from utils.pinner import format_pin_text
 
 
-@dp.message_handler(commands=["pinned", "pin"], admins_chat=True, is_admin=True, state="*")
+@dp.message_handler(
+    commands=["pinned", "pin"], admins_chat=True, is_admin=True, state="*"
+)
 async def pinned_command(message: types.Message):
-    await message.answer(payload.pin_text())
+    text = html_decoration.unparse(payload.pin_text())
+    await message.answer(text)
     await message.reply(payload.pin_help_text, reply_markup=change_pin_keyboard)
 
 
@@ -28,20 +32,22 @@ async def change_pin(query: types.CallbackQuery):
 async def new_pin(message: types.Message, state: FSMContext):
     await message.answer(message.text, reply_markup=new_pin_keyboard)
     async with state.proxy() as data:
-        data['pin'] = message.text
+        data["pin"] = message.text
     await Pin.new.set()
 
 
 @dp.callback_query_handler(state=Pin.new, text="savepin", admins_chat=True)
 async def save_pin(query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
-        pin = data['pin']
+        pin = data["pin"]
         try:
             msg = await query.message.answer(await format_pin_text(pin))
             await msg.reply("Новый закреп.")
             new_pin_text(pin)
         except KeyError as e:
-            await query.message.answer(f"Вы ввели неправильное сокращения для динамического закрепа - {{{str(e)[1:-1]}}}")
+            await query.message.answer(
+                f"Вы ввели неправильное сокращения для динамического закрепа - {{{str(e)[1:-1]}}}"
+            )
             await state.finish()
             return
     logger.debug("New pin set.")
