@@ -93,7 +93,7 @@ cas_alsend_text = emojize(
 escort_text = emojize(
     "💝 <b>Эскорт</b> SCAM\n\n"
     "Твой код - {worker_id}\n"
-    f"Скам бот - {config('escort_username')}\n"
+    f"Скам бот - @{config('escort_username')}\n"
     f"Тех. поддержка - {config('escort_sup_username')}\n\n"
     f"Твоя рефка - https://t.me/{config('escort_username')}"
     "?start={worker_id}\n"
