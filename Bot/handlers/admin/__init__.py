@@ -6,6 +6,7 @@ from .alert import dp
 from .sysinfo import dp
 from .summary import dp
 from .profits import dp
+from .statistic import dp
 from .commands import dp
 
 __all__ = ["dp"]

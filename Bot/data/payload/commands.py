@@ -165,3 +165,14 @@ admin_make_profit_text = emojize(
 
 ban_success_text = emojize("Успешно забанил <a href='tg://user?id={cid}'>{name}</a>")
 kick_success_text = emojize("Успешно кикнул <a href='tg://user?id={cid}'>{name}</a>")
+
+statistic_text = emojize(
+    ":monkey: Статистика проекта\n\n"
+    "<i>Кол-во Воркеров</i>: <b>{workers_count}</b>\n"
+    "<i>Кол-во Мамонтов Казик</i>: <b>{casino_count}</b>\n"
+    "<i>Кол-во Мамонтов Эскорт</i>: <b>{escort_count}</b>\n"
+    "<i>Кол-во Мамонтов Трейдинг</i>: <b>{trading_count}</b>\n\n"
+    "<i>Общее кол-во профитов</i>: <b>{profits_count}</b>\n"
+    "<i>Общая сумма профитов</i>: <b>{profits_amount} RUB</b>\n"
+    "<i>Средний профит на воркера</i>: <b>{profits_middle} RUB</b>\n"
+)
