@@ -12,7 +12,6 @@ from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 from utils.systeminfo import update_cpu_usage, exit_event
 from utils.paysystem import check_qiwis
-from utils.executional import setup_admins_statuses
 
 
 async def on_startup(dispatcher: Dispatcher, notify=True):
@@ -72,7 +71,9 @@ def main():
 
     paymnts = loop.create_task(check_qiwis())  # it runs in dispatcher)
     dynapns = loop.create_task(dynapins(dp.bot))  # it runs in dispatcher)
-    start_task = loop.create_task(start_bot(dp, notify=True, skip_updates=SKIP_UPDATES))
+    start_task = loop.create_task(
+        start_bot(dp, notify=False, skip_updates=SKIP_UPDATES)
+    )
 
     try:
         loop.run_until_complete(start_task)  # better for testing and dev

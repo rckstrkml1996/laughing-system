@@ -70,7 +70,7 @@ workers_btn = InlineKeyboardButton(
     emojize(":busts_in_silhouette: Чат воркеров"), url=config("workers_link")
 )
 reviews_btn = InlineKeyboardButton(
-    emojize(":page_with_curl: Канал отзывов"), url=config("reviews_link")
+    emojize(":page_with_curl: Мануалы"), url=config("reviews_link")
 )
 summary_accepted_keyboard.add(outs_btn)
 summary_accepted_keyboard.add(workers_btn)

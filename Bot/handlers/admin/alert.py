@@ -72,23 +72,26 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
                 )
             )
             msg_count += 1
-            await sleep(0.2)
+            await sleep(0.4)
         except ChatNotFound:
             not_found_count += 1
         except BotBlocked:
             blocked_count += 1
-        except Exception:
+        except:
             logger.debug("Some exception while Alerting Workers")
 
-    await query.message.edit_text(
-        payload.alert_start_text.format(
-            len_users=len_users,
-            msg_count=msg_count,
-            blocked_count=blocked_count,
-            not_found_count=not_found_count,
+    try:
+        await query.message.edit_text(
+            payload.alert_start_text.format(
+                len_users=len_users,
+                msg_count=msg_count,
+                blocked_count=blocked_count,
+                not_found_count=not_found_count,
+            )
         )
-    )
-    await query.message.reply(payload.alert_complete_text)
+        await query.message.reply(payload.alert_complete_text)
+    except:
+        pass
     logger.debug("Alert finished")
     await state.finish()
 
@@ -146,23 +149,26 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
                 )
             )
             msg_count += 1
-            await sleep(0.2)
+            await sleep(0.4)
         except ChatNotFound:
             not_found_count += 1
         except BotBlocked:
             blocked_count += 1
-        except Exception:
+        except:
             logger.debug("Some exception while Alerting Casino")
 
-    await query.message.edit_text(
-        payload.alert_start_text.format(
-            len_users=len_users,
-            msg_count=msg_count,
-            blocked_count=blocked_count,
-            not_found_count=not_found_count,
+    try:
+        await query.message.edit_text(
+            payload.alert_start_text.format(
+                len_users=len_users,
+                msg_count=msg_count,
+                blocked_count=blocked_count,
+                not_found_count=not_found_count,
+            )
         )
-    )
-    await query.message.reply(payload.alert_complete_text)
+        await query.message.reply(payload.alert_complete_text)
+    except:
+        pass
     logger.debug("Alert finished")
 
     await state.finish()

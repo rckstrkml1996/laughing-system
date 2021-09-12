@@ -11,7 +11,7 @@ from config import config
 # Обьявление всех компонентов бота из конфига
 # Обьявление expression eval парсера
 # Обьявление functional models
-# Обьявление client Telethon
+# Обьявление client Pyrogram
 
 bot = Bot(config("api_token"), parse_mode=ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
@@ -22,6 +22,9 @@ exp_parser = Parser()
 
 Session.notice_displayed = True  # fucking notice zaebala
 client = Client("suusy", config("api_id"), config("api_hash"))
+bot_client = Client(
+    "cl_bot", config("api_id"), config("api_hash"), bot_token=config("api_token")
+)
 
 # is no webhooks so it can be here)
 casino_bot = Bot(config("casino_api_token"), parse_mode=ParseMode.HTML)

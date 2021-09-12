@@ -233,7 +233,7 @@ async def make_profit_command(message: types.Message):
 
 
 @dp.message_handler(state=MakeProfit.main, admins_chat=True, is_admin=True)
-async def make_profit_make(message: types.Message):
+async def make_profit_make(message: types.Message, state: FSMContext):
     textlist = message.text.split()
     if len(textlist) == 4:
         msg = await message.answer("Выполняю!")
@@ -252,6 +252,7 @@ async def make_profit_make(message: types.Message):
                             )
                             await send_profit(profit, moll)
                             await msg.edit_text("Выполнено!")
+                            await state.finish()
                             return
                         except:
                             await message.answer("Ошибка в создании модели профита.")

@@ -170,15 +170,7 @@ def get_info_about_worker(worker):
     )
 
 
-def setup_admins_statuses():
-    for admin_id in config("admins_id"):
-        try:
-            worker = Worker.get(cid=admin_id)
-            if worker.status == 2:
-                worker.status = 5
-            worker.save()
-        except Worker.DoesNotExist:
-            logger.info(f"Admin with chat_id {admin_id} not found in base.")
+
 
 
 def find_token(conf_token: str):

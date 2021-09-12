@@ -8,5 +8,6 @@ from .summary import dp
 from .profits import dp
 from .statistic import dp
 from .commands import dp
+from .kick import dp
 
 __all__ = ["dp"]
