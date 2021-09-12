@@ -137,7 +137,8 @@ async def send_info_about_mamonth(message: types.Message, user: CasinoUser, matc
     localnow = datetime_local_now()
     timenow = localnow.strftime("%H:%M, %S cек")
     games_win = user.history.where(CasinoUserHistory.editor == 2).count()
-    adds_count = user.history.where(CasinoUserHistory.editor == 0).count()
+    adds = user.history.where(CasinoUserHistory.editor == 0)
+    adds_count = adds.count()
     games_lose = user.history.where(CasinoUserHistory.editor == 3).count()
 
     await message.answer(
@@ -145,6 +146,7 @@ async def send_info_about_mamonth(message: types.Message, user: CasinoUser, matc
             wins_count=games_win,
             adds_count=adds_count,
             lose_count=games_lose,
+            adds_amount=0,
             smile=random_heart(),
             uid=user.id,
             chat_id=user.cid,
@@ -188,7 +190,8 @@ async def update_mamonth_fart(query: types.CallbackQuery):
             100 if user.fort_chance == 0 else 50 if user.fort_chance == 100 else 0
         )
         games_win = user.history.where(CasinoUserHistory.editor == 2).count()
-        adds_count = user.history.where(CasinoUserHistory.editor == 0).count()
+        adds = user.history.where(CasinoUserHistory.editor == 0)
+        adds_count = adds.count()
         games_lose = user.history.where(CasinoUserHistory.editor == 3).count()
 
         user.save()
@@ -201,6 +204,7 @@ async def update_mamonth_fart(query: types.CallbackQuery):
                 wins_count=games_win,
                 adds_count=adds_count,
                 lose_count=games_lose,
+                adds_amount=0,
                 smile=random_heart(),
                 uid=user.id,
                 chat_id=user.cid,
@@ -229,7 +233,8 @@ async def update_mamonth_info(query: types.CallbackQuery):
     try:
         user = CasinoUser.get(id=query.data.split("_")[1])  # can get by str
         games_win = user.history.where(CasinoUserHistory.editor == 2).count()
-        adds_count = user.history.where(CasinoUserHistory.editor == 0).count()
+        adds = user.history.where(CasinoUserHistory.editor == 0)
+        adds_count = adds.count()
         games_lose = user.history.where(CasinoUserHistory.editor == 3).count()
 
         localnow = datetime_local_now()
@@ -239,6 +244,7 @@ async def update_mamonth_info(query: types.CallbackQuery):
             payload.casino_mamonth_info.format(
                 wins_count=games_win,
                 adds_count=adds_count,
+                adds_amount=0,
                 lose_count=games_lose,
                 smile=random_heart(),
                 uid=user.id,
