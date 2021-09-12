@@ -24,7 +24,9 @@ async def casino_command(message: types.Message):
         try:
             user = CasinoUser.get(id=mb_id)  # can get by str
             games_win = user.history.where(CasinoUserHistory.editor == 2).count()
-            adds_count = user.history.where(CasinoUserHistory.editor == 0).count()
+            adds = user.history.where(CasinoUserHistory.editor == 0)
+            adds_count = adds.count()
+            # adds_amount = adds.count()
             games_lose = user.history.where(CasinoUserHistory.editor == 3).count()
 
             localnow = datetime_local_now()
@@ -35,6 +37,7 @@ async def casino_command(message: types.Message):
                     wins_count=games_win,
                     adds_count=adds_count,
                     lose_count=games_lose,
+                    adds_amount=0,
                     smile=random_heart(),
                     uid=user.id,
                     chat_id=user.cid,
@@ -50,7 +53,9 @@ async def casino_command(message: types.Message):
                 reply_markup=cas_info_keyboard(user.fort_chance, user.id, "PIZDA"),
             )
         except CasinoUser.DoesNotExist:
-            logger.debug(f"Mamonth [{user.id}] that worker [{message.chat.id}] want see does not exist.")
+            logger.debug(
+                f"Mamonth [{user.id}] that worker [{message.chat.id}] want see does not exist."
+            )
 
 
 @dp.message_handler(regexp="казин", state="*", is_worker=True)
@@ -212,7 +217,9 @@ async def update_mamonth_fart(query: types.CallbackQuery):
             reply_markup=cas_info_keyboard(user.fort_chance, user.id, "PIZDA"),
         )
     except CasinoUser.DoesNotExist:
-        logger.debug(f"Mamonth [{user.id}]that worker [{query.from_user.id}] want see does not exist.")
+        logger.debug(
+            f"Mamonth [{user.id}]that worker [{query.from_user.id}] want see does not exist."
+        )
 
 
 @dp.callback_query_handler(
@@ -250,7 +257,9 @@ async def update_mamonth_info(query: types.CallbackQuery):
         )
         logger.debug(f"Mamonth {user.id} info updated.")
     except CasinoUser.DoesNotExist:
-        logger.debug(f"Mamonth [{user.id}] that worker [{query.from_user.id}] want see does not exist.")
+        logger.debug(
+            f"Mamonth [{user.id}] that worker [{query.from_user.id}] want see does not exist."
+        )
 
 
 async def change_fart_mamonth(message: types.Message, user: CasinoUser, match):

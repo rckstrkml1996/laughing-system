@@ -39,6 +39,9 @@ standart_config = {
     "reviews_link": "https://t.me/blessinform",
     "profit_render_color": "240,230,100,255",
     "team_start": "13 ноября 2020",
+    "casino_username": "casino_bot",
+    "escort_username": "escort_bot",
+    "trading_username": "trading_bot",
 }
 
 config = Config(section_name, path, standart_config)
