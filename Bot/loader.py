@@ -22,9 +22,7 @@ exp_parser = Parser()
 
 Session.notice_displayed = True  # fucking notice zaebala
 client = Client("suusy", config("api_id"), config("api_hash"))
-bot_client = Client(
-    "cl_bot", config("api_id"), config("api_hash"), bot_token=config("api_token")
-)
+bot_client = Client("cl_bot", config("api_id"), config("api_hash"))
 
 # is no webhooks so it can be here)
 casino_bot = Bot(config("casino_api_token"), parse_mode=ParseMode.HTML)

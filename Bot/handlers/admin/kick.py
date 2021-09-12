@@ -15,6 +15,9 @@ async def kick_all_users(message: types.Message):
     else:
         await bot_client.disconnect()  # get new con info
         authed = await bot_client.connect()
+    if not authed:
+        await message.answer("keyerror")
+        await bot_client.sign_in_bot(config("api_token"))
 
     offset = 0
     kicked = 0
