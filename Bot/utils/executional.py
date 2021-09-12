@@ -6,7 +6,7 @@ import aiohttp
 from aiohttp.client_exceptions import ClientProxyConnectionError
 from aiogram.utils.emoji import emojize
 
-from config import config
+from config import config, StatusNames
 from loader import db_commands
 from data.payload import services_status, me_text
 from customutils.datefunc import datetime_local_now
@@ -160,6 +160,7 @@ def get_info_about_worker(worker):
 
     return me_text.format(
         cid=worker.cid,
+        status=StatusNames[worker.status],
         username=worker.username,
         profits=get_correct_str(len_profits, "профит", "профита", "профитов"),
         sum_profits=sum_profits,

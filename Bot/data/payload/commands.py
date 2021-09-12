@@ -19,7 +19,7 @@ help_text = emojize(
 )
 
 me_text = emojize(
-    ":woman_tipping_hand: Воркер <a href='tg://user?id={cid}'>{username}</a>\n"
+    ":woman_tipping_hand: {status} <a href='tg://user?id={cid}'>{username}</a>\n"
     "Telegram ID: {cid}\n\n"
     "{profits} на сумму {sum_profits} ₽\n"
     "Средний профит ~ {middle_profits} ₽\n\n"
@@ -146,6 +146,8 @@ admins_help_text = emojize(
     "/work - Действия с статусом работы проекта.\n"
     "/btc_auth - Проверка Авторизации в аккаунте банкира.\n"
     "/mkprft - Создать профит\n"
+    "/prftstick - Стикер к профиту\n"
+    "/stat - Статистика проекта\n"
     "/new_dsgn - Бета хуета ещо нету)\n"
 )
 
