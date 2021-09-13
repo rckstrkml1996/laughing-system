@@ -1,7 +1,7 @@
 from aiogram import Dispatcher
 
 from .main import SendSummaryFilter, AdminsChatFilter, WorkersChatFilter, \
-    IsWorkerFilter, IsAdminFilter
+    IsWorkerFilter, IsAdminFilter, IsSupportFilter
 
 
 def setup(dp: Dispatcher):
@@ -16,6 +16,9 @@ def setup(dp: Dispatcher):
     )
     dp.filters_factory.bind(
         IsAdminFilter, event_handlers=event_handlers
+    )
+    dp.filters_factory.bind(
+        IsSupportFilter, event_handlers=event_handlers
     )
     dp.filters_factory.bind(
         SendSummaryFilter, event_handlers=event_handlers

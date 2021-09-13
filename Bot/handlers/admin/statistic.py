@@ -16,7 +16,8 @@ async def statistic_command(message: types.Message):
         middle_profits = 0
     
     await message.answer(statistic_text.format(
-        workers_count=Worker.select().count(),
+        workers_count=Worker.select().where(Worker.status == 2).count(),
+        bot_users_count=Worker.select().count(),
         casino_count=CasinoUser.select().count(),
         escort_count=EscortUser.select().count(),
         trading_count=TradingUser.select().count(),

@@ -13,6 +13,13 @@ from config import config
 # Обьявление functional models
 # Обьявление client Pyrogram
 
+# bot settings:
+# inline mode - on
+# allow groups - on
+# group privacy - off
+
+# workers and outs and admins chats - make bot admin!
+
 bot = Bot(config("api_token"), parse_mode=ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
 

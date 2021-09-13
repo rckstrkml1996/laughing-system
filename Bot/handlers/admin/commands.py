@@ -20,10 +20,14 @@ async def ban_workers_chat(message: types.Message):
         try:
             chat_id = message.reply_to_message.from_user.id
             if chat_id == bot_user.id:
+                logger.debug(f"User: {message.from_user.id} try to ban main bot!")
                 await message.answer("Э афигел меня кикать??")
                 return
             worker = Worker.get(cid=chat_id)
-            if worker.status > 4:
+            if worker.status > 5:
+                logger.debug(
+                    f"User: {message.from_user.id} try to ban worker with admin status: {worker.cid}"
+                )
                 await message.answer("Вы не можете забанить админа или других крутых")
                 return
 
@@ -32,12 +36,18 @@ async def ban_workers_chat(message: types.Message):
 
             try:
                 kicked = await message.chat.kick(chat_id)
+                logger.debug(
+                    f"User: {message.from_user.id} banned and kicked Worker: {chat_id}"
+                )
             except ChatAdminRequired:
+                logger.warning("Bot with no admin status in workers chat!")
                 await message.answer("У бота нет прав администратора.")
                 return
 
             if kicked:
-                logger.debug(f"Banned user: {chat_id} and kicked from chat.")
+                logger.debug(
+                    f"User: {message.from_user.id} banned and kicked Worker: {chat_id}"
+                )
                 await message.reply(
                     payload.ban_success_text.format(cid=worker.cid, name=worker.name)
                 )
@@ -45,12 +55,12 @@ async def ban_workers_chat(message: types.Message):
                     chat_id, "Вы были исключенны из бота навсегда!"
                 )
             else:
-                logger.debug(f"Can kick from chat user: {chat_id}")
+                logger.info(f"Cant kick from chat user: {chat_id}")
                 await message.answer("Не могу кикнуть из чата!")
         except Worker.DoesNotExist:
             await message.answer("Юзер не является пользователем бота, исключил.")
     else:
-        logger.debug("/ban message reply does not exist.")
+        logger.debug("/ban message with no reply")
 
 
 @dp.message_handler(commands="kick", workers_chat=True, is_admin=True)
@@ -60,12 +70,16 @@ async def kick_workers_chat(message: types.Message):
         try:
             chat_id = message.reply_to_message.from_user.id
             if chat_id == bot_user.id:
+                logger.debug(f"User: {message.from_user.id} try to ban main bot!")
                 await message.answer("Э афигел меня кикать??")
                 return
 
             worker = Worker.get(cid=chat_id)
-            if worker.status == 1:
-                await message.answer("Юзер уже в бане!")
+            if worker.status > 5:
+                logger.debug(
+                    f"User: {message.from_user.id} try to ban worker with admin status: {worker.cid}"
+                )
+                await message.answer("Вы не можете кикнуть админа или других крутых")
                 return
 
             worker.send_summary = False
@@ -95,3 +109,23 @@ async def kick_workers_chat(message: types.Message):
             await message.answer("Юзер не является пользователем бота, исключил.")
     else:
         logger.debug("/kick message reply does not exist.")
+
+
+@dp.message_handler(commands="warn", workers_chat=True, is_support=True)
+async def warn_command(message: types.Message):
+    if message.reply_to_message:
+        chat_id = message.reply_to_message.from_user.id
+        try:
+            worker = Worker.get(cid=chat_id)
+            if worker.status <= 2:
+                worker.warns += 1
+                worker.save()
+                await message.reply(
+                    payload.worker_warn_text.format(
+                        cid=worker.cid, name=worker.name, warns=worker.warns
+                    )
+                )
+            else:
+                await message.reply("У Воркера высокий статус!")
+        except Worker.DoesNotExist:
+            await message.reply("Пользователь не является Воркером!")

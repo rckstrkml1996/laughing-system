@@ -5,6 +5,7 @@ from loguru import logger
 from customutils.confparse import Config
 
 
+
 path = os.path.normpath(os.path.join(os.path.dirname(__file__), "../config.cfg"))
 section_name = "Settings"
 
@@ -42,6 +43,7 @@ standart_config = {
     "casino_username": "casino_bot",
     "escort_username": "escort_bot",
     "trading_username": "trading_bot",
+    "notify": "0",
 }
 
 config = Config(section_name, path, standart_config)

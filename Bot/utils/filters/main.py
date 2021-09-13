@@ -40,28 +40,31 @@ class IsAdminFilter(BoundFilter):
         self.is_admin = is_admin
 
     def get_target(self, obj):
-        if isinstance(obj, CallbackQuery):
-            return getattr(getattr(obj, "message", None), "chat", None), getattr(
-                obj, "from_user", None
-            )
-        return getattr(obj, "chat", None), getattr(obj, "from_user", None)
+        return getattr(obj, "from_user", None)
 
     async def check(self, obj):
-        chat, user = self.get_target(obj)
-        if chat.type == "private":
-            try:
-                return self.is_admin == (Worker.get(cid=user.id).status >= 4)
-            except Worker.DoesNotExist:
-                return not self.is_admin  # not admin
-        elif chat.type == "group" or chat.type == "supergroup":
-            try:
-                return self.is_admin == (Worker.get(cid=user.id).status >= 4)
-            except Worker.DoesNotExist:
-                return not self.is_admin  # not admin
-        logger.debug(
-            f"IsAdminFilter called not in private and group chat, type: {chat.type}, id: {chat.id}"
-        )
-        return False
+        user = self.get_target(obj)
+        try:
+            return self.is_admin == (Worker.get(cid=user.id).status >= 5)
+        except Worker.DoesNotExist:
+            return not self.is_admin  # not admin
+
+
+class IsSupportFilter(BoundFilter):
+    key = "is_support"  # working for query and message handlers
+
+    def __init__(self, is_support):
+        self.is_support = is_support
+
+    def get_target(self, obj):
+        return getattr(obj, "from_user", None)
+
+    async def check(self, obj):
+        user = self.get_target(obj)
+        try:
+            return self.is_support == (Worker.get(cid=user.id).status >= 3)
+        except Worker.DoesNotExist:
+            return not self.is_support  # not admin
 
 
 class SendSummaryFilter(BoundFilter):

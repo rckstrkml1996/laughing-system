@@ -6,7 +6,7 @@ from aiogram import Dispatcher
 from loguru import logger
 
 from loader import dp, db_commands
-from config import SKIP_UPDATES
+from config import config, SKIP_UPDATES
 from utils.pinner import dynapins
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
@@ -72,7 +72,7 @@ def main():
     paymnts = loop.create_task(check_qiwis())  # it runs in dispatcher)
     dynapns = loop.create_task(dynapins(dp.bot))  # it runs in dispatcher)
     start_task = loop.create_task(
-        start_bot(dp, notify=False, skip_updates=SKIP_UPDATES)
+        start_bot(dp, notify=config("notify", bool), skip_updates=SKIP_UPDATES)
     )
 
     try:
