@@ -59,26 +59,39 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
     blocked_count = 0
     not_found_count = 0
 
+    async with state.proxy() as data:
+        text = data["text"]
+
+    try:
+        await dp.bot.send_message(config("workers_chat"), text)
+    except:
+        pass
+
     for worker in workers:
         try:
-            async with state.proxy() as data:
-                await dp.bot.send_message(worker.cid, data["text"])
-            await query.message.edit_text(
-                payload.alert_start_text.format(
-                    len_users=len_users,
-                    msg_count=msg_count,
-                    blocked_count=blocked_count,
-                    not_found_count=not_found_count,
-                )
-            )
+            await dp.bot.send_message(worker.cid, text)
             msg_count += 1
-            await sleep(0.4)
         except ChatNotFound:
             not_found_count += 1
         except BotBlocked:
             blocked_count += 1
-        except:
-            logger.debug("Some exception while Alerting Workers")
+        except Exception as e:
+            logger.debug("Some exception while Alerting Workers" + str(e))
+
+        try:
+            if msg_count % 3 == 0:  # antispam
+                await query.message.edit_text(
+                    payload.alert_start_text.format(
+                        len_users=len_users,
+                        msg_count=msg_count,
+                        blocked_count=blocked_count,
+                        not_found_count=not_found_count,
+                    )
+                )
+        except Exception as e:
+            logger.error("Alert Exception" + str(e))
+
+        await sleep(0.5)
 
     try:
         await query.message.edit_text(

@@ -24,6 +24,7 @@ async def help_command(message: types.Message):
 
 
 @dp.message_handler(commands="btc", workers_chat=True)
+@dp.message_handler(commands="btc", admins_chat=True)
 async def btc_price(message: types.Message):
     rub, usd = await rub_usd_btcticker()
     await message.reply(
@@ -35,7 +36,8 @@ async def btc_price(message: types.Message):
     logger.debug(f"Chat User - {message.from_user.id}, get btc info")
 
 
-@dp.message_handler(commands="clc", workers_chat=True, admins_chat=True)
+@dp.message_handler(commands="clc", workers_chat=True)
+@dp.message_handler(commands="clc", admins_chat=True)
 async def clc_command(message: types.Message):
     text = message.text.replace("/clc ", "")
     try:
@@ -47,6 +49,7 @@ async def clc_command(message: types.Message):
 
 
 @dp.message_handler(commands="me", workers_chat=True)
+@dp.message_handler(commands="me", admins_chat=True)
 async def me_command(message: types.Message):
     try:
         worker = Worker.get(cid=message.from_user.id)
@@ -98,6 +101,7 @@ async def lzt_command(message: types.Message):
 
 
 @dp.message_handler(commands="cck", workers_chat=True)
+@dp.message_handler(commands="cck", admins_chat=True)
 async def cock_size_command(message: types.Message):
     try:
         worker = Worker.get(cid=message.from_user.id)

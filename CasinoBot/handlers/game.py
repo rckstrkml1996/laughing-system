@@ -225,8 +225,12 @@ async def casino_bet(message: types.Message, state: FSMContext, regexp):
 
             moll = 10 if number == 50 else 2
             async with state.proxy() as data:
-                user.balance += data["stake"] * moll - data["stake"]
+                amount = data["stake"] * moll - data["stake"]
+                user.balance += amount
                 user.save()
+                CasinoUserHistory.create(
+                    owner=user, amount=amount, balance=user.balance, editor=2
+                )
 
             await message.answer(f"Победа! Выпало число {number}")
         else:
@@ -242,8 +246,12 @@ async def casino_bet(message: types.Message, state: FSMContext, regexp):
                     number = randint(51, 99)
 
             async with state.proxy() as data:
+                amount = data["stake"]
                 user.balance -= data["stake"]
                 user.save()
+                CasinoUserHistory.create(
+                    owner=user, amount=amount, balance=user.balance, editor=3
+                )
 
             await message.answer(
                 emojize(f"Вы проиграли :confused: Выпало число {number}")
