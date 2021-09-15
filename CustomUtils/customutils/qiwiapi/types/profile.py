@@ -13,9 +13,9 @@ class Nickname(BaseModel):
 
 
 class IdentificationInfo(BaseModel):
-    bankAlias: str
-    identificationLevel: str
-    passportExpired: bool
+    bankAlias: str = None # xz
+    identificationLevel: str = None # xz
+    passportExpired: bool = None
 
 
 class SmsNotification(BaseModel):

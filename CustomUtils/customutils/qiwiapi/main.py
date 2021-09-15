@@ -5,7 +5,7 @@ from typing import Union
 import aiohttp
 from pydantic.error_wrappers import ValidationError
 
-from .exceptions import InvalidToken, InvalidAccount
+from .exceptions import InvalidToken, InvalidAccount, UnexpectedResponse
 from .types import Accounts, TotalPayments, Payments, PaymentInfo, Profile
 
 
@@ -48,6 +48,9 @@ class QiwiApi:
             raise InvalidToken
         elif response.status == 403:
             raise InvalidAccount
+        elif response.status != 200:
+            raise UnexpectedResponse
+
         json = await response.json()
 
         self.profile = Profile(**json)
@@ -84,6 +87,9 @@ class QiwiApi:
             raise InvalidToken
         elif response.status == 403:
             raise InvalidAccount
+        elif response.status != 200:
+            raise UnexpectedResponse
+
         json = await response.json()
 
         return Accounts(**json).accounts
@@ -98,6 +104,9 @@ class QiwiApi:
             raise InvalidToken
         elif response.status == 403:
             raise InvalidAccount
+        elif response.status != 200:
+            raise UnexpectedResponse
+
         json = await response.json()
 
         return Payments(**json)
@@ -139,6 +148,8 @@ class QiwiApi:
             raise InvalidToken
         elif response.status == 403:
             raise InvalidAccount
+        elif response.status != 200:
+            raise UnexpectedResponse
 
         json = await response.json()
 
@@ -162,6 +173,9 @@ class QiwiApi:
             raise InvalidToken
         elif response.status == 403:
             raise InvalidAccount
+        elif response.status != 200:
+            raise UnexpectedResponse
+
         json = await response.json()
 
         try:
