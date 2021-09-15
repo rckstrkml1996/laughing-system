@@ -60,7 +60,7 @@ def get_random_analog(general: int):
 
 async def get_btcticker():
     async with aiohttp.ClientSession() as session:
-        async with session.get("https://blockchain.info/ru/ticker") as response:
+        async with session.get("https://blockchain.info/ticker") as response:
             return await response.json()
 
 
@@ -168,9 +168,6 @@ def get_info_about_worker(worker):
         in_team=get_correct_str(in_team.days, "день", "дня", "дней"),
         warns=get_correct_str(worker.warns, "варн", "варна", "варнов"),
     )
-
-
-
 
 
 def find_token(conf_token: str):
