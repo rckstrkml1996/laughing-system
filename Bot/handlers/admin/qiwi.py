@@ -156,7 +156,6 @@ async def add_qiwi(query: types.CallbackQuery):
 
 @dp.message_handler(state=Qiwi.new, is_admin=True)
 async def new_qiwi(message: types.Message, state: FSMContext):
-    message.chat.id = config("admins_chat")  # change to send to admins
     proxy_regex = r"http:\/\/([a-zA-Z0-9]+:[a-zA-Z0-9]+@)*([a-zA-Z0-9]+(\.[a-zA-Z0-9]+)+)(:[0-9]+)*"
     data = message.text.split("\n")
     try:
@@ -178,9 +177,9 @@ async def new_qiwi(message: types.Message, state: FSMContext):
             if data[0].strip() in map(find_token, tokens):
                 await message.answer(payload.same_qiwi_text)
                 await state.finish()
+                message.chat.id = config("admins_chat")  # change to send to admins
                 await qiwi_command(message)
                 return
-
             if isinstance(tokens, str):
                 config.edit_config("qiwi_tokens", f"{tokens},{data[0]}{proxy_data}")
             else:

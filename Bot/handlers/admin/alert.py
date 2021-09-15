@@ -76,7 +76,7 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
         except BotBlocked:
             blocked_count += 1
         except Exception as e:
-            logger.debug("Some exception while Alerting Workers" + str(e))
+            logger.exception("Some exception while Alerting Workers" + str(e))
 
         try:
             if msg_count % 3 == 0:  # antispam
@@ -89,7 +89,7 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
                     )
                 )
         except Exception as e:
-            logger.error("Alert Exception" + str(e))
+            logger.exception("Alert Exception" + str(e))
 
         await sleep(0.5)
 

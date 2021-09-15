@@ -36,12 +36,14 @@ async def work_command(message: types.Message):
                 )
             )
         ),
-        reply_markup=admworkstatus_keyboard(all_work),
+        reply_markup=admworkstatus_keyboard(
+            all_work, casino_work, escort_work, trading_work
+        ),
     )
     logger.debug(f"Admin [{message.from_user.id}] check work status.")
 
 
-@dp.callback_query_handler(text="toggleworkstatus", admins_chat=True, is_admin=True)
+@dp.callback_query_handler(text="toggle_status", admins_chat=True, is_admin=True)
 async def toggle_work_status(query: types.CallbackQuery):
     casino_work = config("casino_work")  # return bool values
     escort_work = config("escort_work")
@@ -85,7 +87,13 @@ async def toggle_work_status(query: types.CallbackQuery):
 
     try:
         await query.message.edit_text(
-            text, reply_markup=admworkstatus_keyboard(all_work)
+            text,
+            reply_markup=admworkstatus_keyboard(
+                all_work,
+                casino_work,
+                escort_work,
+                trading_work,
+            ),
         )
         logger.debug(f"Admin [{query.message.from_user.id}] changed work status.")
     except MessageNotModified:
