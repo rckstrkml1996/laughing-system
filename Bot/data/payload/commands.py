@@ -166,7 +166,9 @@ admin_make_profit_text = emojize(
 ban_success_text = emojize("Успешно забанил <a href='tg://user?id={cid}'>{name}</a>")
 kick_success_text = emojize("Успешно кикнул <a href='tg://user?id={cid}'>{name}</a>")
 
-worker_warn_text = emojize("<a href='tg://user?id={cid}'>{name}</a> предупреждён ({warns}/3).")
+worker_warn_text = emojize(
+    "<a href='tg://user?id={cid}'>{name}</a> предупреждён ({warns}/3)."
+)
 
 statistic_text = emojize(
     ":monkey: Статистика проекта\n\n"
@@ -176,5 +178,12 @@ statistic_text = emojize(
     "<i>Кол-во Мамонтов Трейдинг</i>: <b>{trading_count}</b>\n\n"
     "<i>Общее кол-во профитов</i>: <b>{profits_count}</b>\n"
     "<i>Общая сумма профитов</i>: <b>{profits_amount} RUB</b>\n"
-    "<i>Средний профит на воркера</i>: <b>{profits_middle} RUB</b>\n"
+    "<i>Заработанно всего</i>: <b>{profits_cash} RUB</b>\n"
+    "<i>Средний профит на воркера</i>: <b>{profits_middle} RUB</b>\n\n"
+    ":anchor: Статистика за сегодня\n"
+    "<i>Новых воркеров</i>: <b>{workers_count_today} (<i>{bot_users_count_today}</i>)</b>\n"
+    "<i>Кол-во профитов</i>: <b>{profits_count_today}</b>\n"
+    "<i>Сумма профитов</i>: <b>{profits_amount_today} RUB</b>\n"
+    "<i>Средний профит сегодня</i>: <b>{profits_middle_today} RUB</b>\n"
+    "<i>Заработанно сегодня</i>: <b>{profits_cash_today} RUB</b>\n"
 )
