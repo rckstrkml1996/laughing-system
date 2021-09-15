@@ -9,8 +9,16 @@ from .exceptions import InvalidToken, InvalidAccount, UnexpectedResponse
 from .types import Accounts, TotalPayments, Payments, PaymentInfo, Profile
 
 
-def get_currency(currency: int):
-    return "RUB" if currency == 643 else "USD" if currency == 840 else "EUR"
+def get_currency(curr: int):  # currency
+    return (
+        "RUB"
+        if curr == 643
+        else "USD"
+        if curr == 840
+        else "KZT"
+        if curr == 398
+        else "Валюта."
+    )
 
 
 def get_identification_level(level: str):
