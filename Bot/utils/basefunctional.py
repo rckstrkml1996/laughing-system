@@ -1,15 +1,46 @@
 from random import randint
 from datetime import timedelta
 
-from peewee import fn, JOIN, SQL
+from peewee import ModelSelect, fn, JOIN, SQL
 from loguru import logger
 from customutils.models import Profit, Worker
+from customutils.models import CasinoUser, CasinoPayment, CasinoUserHistory
 from customutils.datefunc import datetime_local_now
 
 from config import config
 
 
 class BaseCommands:
+    def casino_history_sum(self, user_id, editor=0) -> int:
+        return int(
+            (
+                CasinoUserHistory.select(
+                    fn.SUM(CasinoUserHistory.amount).alias("all_sum")
+                ).where(
+                    CasinoUserHistory.owner_id == user_id,
+                    CasinoUserHistory.editor == editor,
+                )
+            )
+            .execute()[0]
+            .all_sum
+            or 0
+        )
+
+    # done in CasinoPayment!
+    def casino_pays_sum(self, user_id, done_type=2) -> int:
+        return int(
+            (
+                CasinoPayment.select(
+                    fn.SUM(CasinoPayment.amount).alias("all_sum")
+                ).where(
+                    CasinoPayment.owner_id == user_id, CasinoPayment.done == done_type
+                )
+            )
+            .execute()[0]
+            .all_sum
+            or 0
+        )
+
     def all_profits_sum(self) -> int:
         return int(
             (Profit.select(fn.SUM(Profit.amount).alias("all_profits")))
@@ -27,6 +58,26 @@ class BaseCommands:
             )
             .execute()[0]
             .all_profits
+            or 0
+        )
+
+    def all_share_sum(self) -> int:
+        return int(
+            (Profit.select(fn.SUM(Profit.share).alias("all_share")))
+            .execute()[0]
+            .all_share
+            or 0
+        )
+
+    def get_share_sum(self, worker_id) -> int:
+        return int(
+            (
+                Profit.select(fn.SUM(Profit.share).alias("all_share")).where(
+                    Profit.owner_id == worker_id
+                )
+            )
+            .execute()[0]
+            .all_share
             or 0
         )
 
@@ -134,6 +185,14 @@ class BaseCommands:
             uniq_key=self.get_uniq_key(),
             name=name,
             username=username,
+        )
+
+    def workers_today(self) -> ModelSelect:
+        date = datetime_local_now()
+        return Worker.select().where(
+            Worker.registered.day == date.day,
+            Worker.registered.month == date.month,
+            Worker.registered.year == date.year,
         )
 
     def setup_admins_statuses(self):
