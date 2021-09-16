@@ -31,6 +31,8 @@ class Config:  # section and path must not be different, standart setting not
             return list(
                 map(lambda v: self.right_type(v, type_as=type_as), value.split(","))
             )
+        elif value == "0" or value == "1" and type_as is bool:
+            return bool(int(value))
         elif type_as is not None:
             try:
                 return type_as(value)
