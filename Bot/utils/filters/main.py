@@ -102,6 +102,9 @@ class AdminsChatFilter(BoundFilter):
         self.admins_chat = admins_chat
 
     async def check(self, obj):
+        if self.admins_chat == "*":
+            return True
+
         chat = self.get_target(obj)
         if chat.id == config("admins_chat"):
             return self.admins_chat
@@ -122,6 +125,9 @@ class WorkersChatFilter(BoundFilter):
         self.workers_chat = workers_chat
 
     async def check(self, obj):
+        if self.workers_chat == "*":
+            return True
+
         chat = self.get_target(obj)
         if chat.id == config("workers_chat"):
             return self.workers_chat

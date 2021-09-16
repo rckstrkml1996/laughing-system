@@ -22,9 +22,14 @@ from .render import render_profit
 
 async def check_casino(traction: Transaction) -> bool:
     delta = datetime_local_now() - timedelta(days=1)
-    del_count = CasinoPayment.delete().where(CasinoPayment.created < delta).execute()
-    if del_count != 0:
-        logger.info(f"Casino deleting old payments: {del_count}")
+    try:
+        del_count = (
+            CasinoPayment.delete().where(CasinoPayment.created < delta).execute()
+        )
+        if del_count != 0:
+            logger.info(f"Casino deleting old payments: {del_count}")
+    except Exception as e:
+        logger.exception(e)
 
     if traction.trnsType != "IN":
         return False
@@ -197,43 +202,48 @@ async def check_trading(traction: Transaction) -> bool:
                 return await send_profit(profit, moll, pay)
 
     except TradingPayment.DoesNotExist:
-        logger.debug(f"Escort payment with comment {traction.comment} not in base!")
+        logger.debug(f"Trading payment with comment {traction.comment} not in base!")
 
     return False
 
 
 async def on_new_payment(payments: Payments):
     logger.info(f"On new payments {len(payments.data)} notify.")
-    for transaction in payments.data:
-        if await check_casino(transaction):  # check if supply on casino
-            logger.info(
-                f"Casino, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
-            )
-        elif await check_escort(transaction):  # check if on escort
-            logger.info(
-                f"Escort, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
-            )
-        elif await check_trading(transaction):  # check
-            logger.info(
-                f"Trading, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
-            )
-        else:
-            qiwi_pay = QiwiPayment.create(
-                person_id=transaction.personId,
-                account=transaction.account,
-                amount=transaction.total.amount,
-                currency=transaction.total.currency,
-                comment=transaction.comment,
-                date=transaction.date,
-            )
+    try:
+        for transaction in payments.data:
+            if await check_casino(transaction):  # check if supply on casino
+                logger.info(
+                    f"Casino, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
+                )
+            elif await check_escort(transaction):  # check if on escort
+                logger.info(
+                    f"Escort, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
+                )
+            elif await check_trading(transaction):  # check
+                logger.info(
+                    f"Trading, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
+                )
+            else:
+                qiwi_pay = QiwiPayment.create(
+                    person_id=transaction.personId,
+                    account=transaction.account,
+                    amount=transaction.total.amount,
+                    currency=transaction.total.currency,
+                    comment=transaction.comment,
+                    date=transaction.date,
+                )
 
-        comment = (
-            f"Комментарий: <b>{transaction.comment}</b>" if transaction.comment else ""
-        )
-        await dp.bot.send_message(
-            config("admins_chat"),
-            f"Без сервиса, Новая транзакция в {transaction.personId}\nСумма: <b>{transaction.total.amount} RUB</b>\n{comment}",
-        )
+            comment = (
+                f"Комментарий: <b>{transaction.comment}</b>"
+                if transaction.comment
+                else ":)"
+            )
+            await dp.bot.send_message(
+                config("admins_chat"),
+                f"Без сервиса, None в {transaction.personId}\nСумма: <b>{transaction.total.amount} RUB</b>\n{comment}",
+            )
+    except Exception as e:
+        logger.exception(e)
 
 
 async def check_qiwis():
@@ -264,8 +274,9 @@ async def check_qiwis():
                 await parser.check()
             except (ClientProxyConnectionError, TimeoutError):
                 delete_api_proxy(token)
-            except:
-                logger.error("CHECKER EXCEPTION!")  # else error!
+            except Exception as e:
+                logger.exception(e)
+                # update qiwi
                 token = new_token
                 api, proxy_url = get_api(token)
                 parser = QiwiPaymentsParser(api, on_new_payment)

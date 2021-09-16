@@ -10,6 +10,7 @@ from aiogram.utils.exceptions import (
     MessageTextIsEmpty,
     MessageToPinNotFound,
     ChatNotFound,
+    MessageCantBeEdited,
 )
 from customutils.datefunc import datetime_local_now
 from customutils.models import Worker, Profit
@@ -25,7 +26,10 @@ async def format_pin_text(text):
     localnow = datetime_local_now()
     timenow = localnow.strftime("%H:%M, %S cек")
 
-    rub, usd = await rub_usd_btcticker()
+    try:
+        rub, usd = await rub_usd_btcticker()
+    except AssertionError:
+        rub, usd = "Неизвестно", "Неизвестно"  # if btc api dont work
 
     query = db_commands.get_topworkers_day(limit=1)
     try:
@@ -86,17 +90,20 @@ async def dynapins(bot: Bot):
 
     while True:
         await asyncio.sleep(update_time)
+        text = await format_pin_text(pin_text())
         try:
-            text = await format_pin_text(pin_text())
             await bot.edit_message_text(
                 chat_id=workers_chat, message_id=message_id, text=text
             )
+        except MessageCantBeEdited:
+            message = await bot.send_message(workers_chat, text)
+            message_id = message.message_id
+            config.edit_config("pinned_msg_id", message_id)
         except MessageNotModified:
             pass
         except MessageTextIsEmpty:
             pass
         except MessageToEditNotFound:
-            text = await format_pin_text(pin_text())
             message = await bot.send_message(workers_chat, text)
             await bot.pin_chat_message(
                 workers_chat, message_id, disable_notification=True

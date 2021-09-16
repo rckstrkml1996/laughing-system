@@ -61,6 +61,7 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
 
     async with state.proxy() as data:
         text = data["text"]
+    await state.finish()
 
     try:
         await dp.bot.send_message(config("workers_chat"), text)
@@ -71,28 +72,30 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
         try:
             await dp.bot.send_message(worker.cid, text)
             msg_count += 1
+            try:
+                if msg_count % 5 == 0:  # antispam
+                    await query.message.edit_text(
+                        payload.alert_start_text.format(
+                            len_users=len_users,
+                            msg_count=msg_count,
+                            blocked_count=blocked_count,
+                            not_found_count=not_found_count,
+                        )
+                    )
+            except Exception as e:
+                logger.exception("Alert Exception" + str(e))
+            await sleep(0.3)
         except ChatNotFound:
             not_found_count += 1
+            continue
         except BotBlocked:
             blocked_count += 1
+            continue
         except Exception as e:
             logger.exception("Some exception while Alerting Workers" + str(e))
+            continue
 
-        try:
-            if msg_count % 3 == 0:  # antispam
-                await query.message.edit_text(
-                    payload.alert_start_text.format(
-                        len_users=len_users,
-                        msg_count=msg_count,
-                        blocked_count=blocked_count,
-                        not_found_count=not_found_count,
-                    )
-                )
-        except Exception as e:
-            logger.exception("Alert Exception" + str(e))
-
-        await sleep(0.5)
-
+    await sleep(0.2)
     try:
         await query.message.edit_text(
             payload.alert_start_text.format(
@@ -106,7 +109,6 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
     except:
         pass
     logger.debug("Alert finished")
-    await state.finish()
 
 
 # alert casino
@@ -148,11 +150,13 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
     msg_count = 0
     blocked_count = 0
     not_found_count = 0
+    async with state.proxy() as data:
+        text = data["text"]
+    await state.finish()
 
     for user in users:
         try:
-            async with state.proxy() as data:
-                await casino_bot.send_message(user.cid, data["text"])
+            await casino_bot.send_message(user.cid, text)
             await query.message.edit_text(
                 payload.alert_start_text.format(
                     len_users=len_users,
@@ -162,14 +166,18 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
                 )
             )
             msg_count += 1
-            await sleep(0.4)
         except ChatNotFound:
             not_found_count += 1
+            continue
         except BotBlocked:
             blocked_count += 1
+            continue
         except:
             logger.debug("Some exception while Alerting Casino")
+            continue
+        await sleep(0.4)
 
+    sleep(0.2)
     try:
         await query.message.edit_text(
             payload.alert_start_text.format(
@@ -182,9 +190,8 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
         await query.message.reply(payload.alert_complete_text)
     except:
         pass
-    logger.debug("Alert finished")
 
-    await state.finish()
+    logger.debug("Alert finished")
 
 
 # alert escort

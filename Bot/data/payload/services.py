@@ -40,7 +40,7 @@ small_mamonth_info_text = "(/c{mid}) - &#127479;&#127482; <a href='tg://user?id=
 no_mamonths_text = emojize(":slot_machine: <b>У тебя ещё нету мамонтов!</b>")
 
 all_mamonths_text = emojize(
-    ":slot_machine: <b>У тебя</b> {mamonths_count}:\n\n"
+    ":slot_machine: <b>У тебя</b> {mamonths_plur}:\n\n"
     "{all_mamonths}\n\n"
     "Обновлено в {time}"
 )
@@ -57,8 +57,8 @@ casino_mamonth_info = emojize(
     "Пополнений: <b>{adds_count}</b>\n"
     "Проигрышей: <b>{lose_count}</b>\n"
     # "Заявок на вывод: <b>0</b>\n"
-    "Зачисленных пополнений: <b>{adds_amount}</b> ₽\n"
-    "Всего поднял на казино: <b>0</b> ₽\n\n"
+    "Зачисленных пополнений: <b>{pays_accepted_amount}</b> ₽\n"
+    "Всего поднял на казино: <b>{adds_amount}</b> ₽\n\n"
     "Сообщение при выводе:\n"
     "<code>Введите свой QIWI кошелёк или карту\n\n"
     "Вывод возможен только на тот QIWI кошелек или карту с которой ваш баланс был пополнен впервые\n"

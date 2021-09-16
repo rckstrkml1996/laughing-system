@@ -72,7 +72,7 @@ def main():
     paymnts = loop.create_task(check_qiwis())  # it runs in dispatcher)
     dynapns = loop.create_task(dynapins(dp.bot))  # it runs in dispatcher)
     start_task = loop.create_task(
-        start_bot(dp, notify=config("notify", bool), skip_updates=SKIP_UPDATES)
+        start_bot(dp, notify=config("notify"), skip_updates=SKIP_UPDATES)
     )
 
     try:

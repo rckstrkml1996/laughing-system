@@ -49,6 +49,8 @@ pin_help_text = emojize(
     "<code>{time}</code> - Время Час:Минута, Секунда"
 )
 
+top_none_text = emojize(":coffin: <b>Топ пустой.</b>")
+
 top_text = emojize(
     ":woman_raising_hand: Топ воркеров за {period}:\n\n"
     "{profits}\n\n"

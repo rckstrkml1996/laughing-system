@@ -146,6 +146,10 @@ async def team_top(message: types.Message):
     query = db_commands.get_topworkers_all()  # limit = 15
     all_profits = db_commands.get_profits_all()
 
+    if query.count() == 0:
+        await message.reply(payload.top_none_text)
+        return  # logg
+
     profit_text_list = []
 
     for i, worker in enumerate(query):
@@ -180,6 +184,10 @@ async def team_top_day(message: types.Message):
     query = db_commands.get_topworkers_month()  # limit = 15 autodelta
     all_profits = db_commands.get_profits_month()
 
+    if query.count() == 0:
+        await message.reply(payload.top_none_text)
+        return  # logg
+
     profit_text_list = []
 
     for i, worker in enumerate(query):
@@ -213,6 +221,10 @@ async def team_top_day(message: types.Message):
     logger.debug(f"User - {message.from_user.id}, wants /topd in chat.")
     query = db_commands.get_topworkers_day()  # limit = 15
     all_profits = db_commands.get_profits_day_amount()
+
+    if query.count() == 0:
+        await message.reply(payload.top_none_text)
+        return  # logg
 
     profit_text_list = []
 

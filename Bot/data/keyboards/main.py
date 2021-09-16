@@ -4,6 +4,10 @@ from aiogram.utils.emoji import emojize
 
 from config import config
 
+cancel_keyboard = InlineKeyboardMarkup()
+cancel_btn = InlineKeyboardButton("Отмена нахуй", callback_data="cancel")
+cancel_keyboard.add(cancel_btn)
+
 
 # worker panel
 menu_keyboard = ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)
@@ -17,7 +21,7 @@ menu_keyboard.add(casino_btn, traiding_btn, escort_btn)
 menu_keyboard.add(about_btn)
 
 
-def panel_keyboard(namehide):
+def panel_keyboard(namehide) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     username_btn = InlineKeyboardButton(
         f'{"Открыть" if namehide else "Скрыть"} никнейм в выплатах',
@@ -47,70 +51,117 @@ about_project_keyboard.add(info_btn, out_btn)
 about_project_keyboard.add(chat_btn)
 
 
-casino_keyboard = InlineKeyboardMarkup()
-
-my_mamoths_btn = InlineKeyboardButton(
-    emojize("Мои мамонтята :elephant:"), callback_data="my_mamonths"
+cas_mamoths_btn = InlineKeyboardButton(
+    emojize("Мои мамонтята :elephant:"),
+    callback_data="mamonths_cas",  #
 )
-promos_btn = InlineKeyboardButton(
-    emojize("Мои промокоды :receipt:"), callback_data="my_promos"
+cas_promos_btn = InlineKeyboardButton(
+    emojize("Мои промокоды :receipt:"), callback_data="promos_cas"
 )
-my_fraze_btn = InlineKeyboardButton(
-    emojize("Свои фразы при выводе :book:"), callback_data="my_frazes"
+cas_fraze_btn = InlineKeyboardButton(
+    emojize("Свои фразы при выводе :book:"), callback_data="frazes_cas"
 )
-msgspam_btn = InlineKeyboardButton(
+cas_msg_spam_btn = InlineKeyboardButton(
     emojize("Массовая рассылка :diamond_shape_with_a_dot_inside:"),
-    callback_data="my_all_alerts",
+    callback_data="all_alerts_cas",
 )
-deleteall_btn = InlineKeyboardButton(
-    emojize("Удалить всех :warning:"), callback_data="my_delete_all"
+cas_delete_all_btn = InlineKeyboardButton(
+    emojize("Удалить всех :warning:"), callback_data="delete_all_cas"
 )
 
-casino_keyboard.add(my_mamoths_btn)
-casino_keyboard.add(promos_btn)
-casino_keyboard.add(my_fraze_btn)
-casino_keyboard.add(msgspam_btn)
-casino_keyboard.add(deleteall_btn)
+casino_keyboard = InlineKeyboardMarkup()
+casino_keyboard.add(cas_mamoths_btn)
+casino_keyboard.add(cas_promos_btn)
+casino_keyboard.add(cas_fraze_btn)
+casino_keyboard.add(cas_msg_spam_btn)
+casino_keyboard.add(cas_delete_all_btn)
 
 
-cancel_keyboard = InlineKeyboardMarkup()
-cancel_btn = InlineKeyboardButton("Отмена нахуй", callback_data="cancel")
-cancel_keyboard.add(cancel_btn)
-
+esc_mamoths_btn = InlineKeyboardButton(
+    emojize("Мои мамонтята :elephant:"), callback_data="mamonths_esc"
+)
+esc_msg_spam_btn = InlineKeyboardButton(
+    emojize("Массовая рассылка :diamond_shape_with_a_dot_inside:"),
+    callback_data="all_alerts_esc",
+)
+esc_create_form = InlineKeyboardButton(
+    emojize(":envelope: Создать анкету :envelope:"), callback_data="create_form_esc"
+)
+esc_delete_all_btn = InlineKeyboardButton(
+    emojize("Удалить всех :warning:"), callback_data="delete_all_esc"
+)
 
 escort_keyboard = InlineKeyboardMarkup()
-create_form = InlineKeyboardButton(
-    emojize(":envelope: Создать анкету :envelope:"), callback_data="none"
+escort_keyboard.add(esc_mamoths_btn)
+escort_keyboard.add(esc_create_form)
+escort_keyboard.add(esc_msg_spam_btn)
+escort_keyboard.add(esc_delete_all_btn)
+
+
+tdng_mamoths_btn = InlineKeyboardButton(
+    emojize("Мои мамонтята :elephant:"), callback_data="mamonths_tdng"
 )
-
-escort_keyboard.add(my_mamoths_btn)
-escort_keyboard.add(create_form)
-escort_keyboard.add(msgspam_btn)
-escort_keyboard.add(deleteall_btn)
-
+tdng_fraze_btn = InlineKeyboardButton(
+    emojize("Свои фразы при выводе :book:"), callback_data="frazes_tdng"
+)
+tdng_msg_spam_btn = InlineKeyboardButton(
+    emojize("Массовая рассылка :diamond_shape_with_a_dot_inside:"),
+    callback_data="all_alerts_tdng",
+)
+tdng_delete_all_btn = InlineKeyboardButton(
+    emojize("Удалить всех :warning:"), callback_data="delete_all_tdng"
+)
 trading_keyboard = InlineKeyboardMarkup()
-my_phrases = InlineKeyboardButton(
-    emojize(":open_book: Свои фразы при выводе :open_book:"), callback_data="none"
-)
-
-trading_keyboard.add(my_mamoths_btn)
-trading_keyboard.add(my_phrases)
-trading_keyboard.add(msgspam_btn)
-trading_keyboard.add(deleteall_btn)
+trading_keyboard.add(tdng_mamoths_btn)
+trading_keyboard.add(tdng_fraze_btn)
+trading_keyboard.add(tdng_msg_spam_btn)
+trading_keyboard.add(tdng_delete_all_btn)
 
 
-def cas_info_keyboard(fart, uid, minpay):
+def cas_info_keyboard(fart, uid, minpay) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     cas_fart_btn = InlineKeyboardButton(
-        f"Фарт: {fart} %", callback_data=f"casupdatefart_{uid}"
+        f"Фарт: {fart} %", callback_data=f"updatefart_{uid}"
     )
     cas_min_btn = InlineKeyboardButton(
         f"Мин: {minpay} RUB", callback_data=f"updatemin_{uid}"
     )
     cas_info_update_btn = InlineKeyboardButton(
-        emojize(":arrows_counterclockwise:"), callback_data=f"casupdateinfo_{uid}"
+        emojize(":arrows_counterclockwise:"), callback_data=f"updateinfo_{uid}"
     )
     markup.add(cas_fart_btn, cas_min_btn)
     markup.add(cas_info_update_btn)
+
+    return markup
+
+
+# fullcoded nahui by @ukhide
+def casino_mamonths_keyboard(
+    rows_count: int, page: int = 1, row_width=20
+) -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup()
+    update_btn = InlineKeyboardButton(
+        emojize(":arrows_counterclockwise:"), callback_data=f"updatemamonths_{page}"
+    )
+
+    # 51 rows - 3 pages
+    if rows_count > row_width:
+        max_pages_count = int((rows_count + rows_count % row_width) / row_width)
+        assert max_pages_count >= page and page > 0  # assertation epta
+
+        back_num = page - 1 if page - 1 > 0 else max_pages_count
+        next_num = 1 if page + 1 > max_pages_count else page + 1
+
+        back_btn = InlineKeyboardButton(
+            f"[{back_num}/{max_pages_count}]",
+            callback_data=f"updatemamonths_{back_num}",
+        )
+        next_btn = InlineKeyboardButton(
+            f"[{next_num}/{max_pages_count}]",
+            callback_data=f"updatemamonths_{next_num}",
+        )
+        markup.add(back_btn, update_btn, next_btn)
+    else:
+        markup.add(update_btn)
 
     return markup

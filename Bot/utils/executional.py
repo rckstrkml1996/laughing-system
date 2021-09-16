@@ -6,11 +6,54 @@ import aiohttp
 from aiohttp.client_exceptions import ClientProxyConnectionError
 from aiogram.utils.emoji import emojize
 
-from config import config, StatusNames
-from loader import db_commands
-from data.payload import services_status, me_text
+from customutils.models import Worker, CasinoUser, CasinoUserHistory
 from customutils.datefunc import datetime_local_now
 from customutils.qiwiapi import QiwiApi
+
+from config import config, StatusNames
+from loader import db_commands
+from data.payload import services_status, casino_mamonth_info, me_text
+from data.keyboards import cas_info_keyboard
+
+
+async def get_casino_mamonth_info(worker: Worker, user: CasinoUser):
+    # if user.owner != worker:
+    # logger.debug(f"/info Worker: {message.chat.id} try get different mamonth!")
+    # return
+
+    games_win = user.history.where(CasinoUserHistory.editor == 2).count()
+    adds = user.history.where(CasinoUserHistory.editor == 0)
+    adds_count = adds.count()
+    adds_amount = db_commands.casino_history_sum(user.id)  # editor == 0
+    pays_amount = db_commands.casino_history_sum(user.id, editor=2)
+    # pays_amount = db_commands.casino_pays_sum(user.id)  # done == 2
+    games_lose = user.history.where(CasinoUserHistory.editor == 3).count()
+
+    localnow = datetime_local_now()
+    timenow = localnow.strftime("%H:%M, %S cек")
+
+    return (
+        casino_mamonth_info.format(
+            wins_count=games_win,
+            adds_count=adds_count,
+            lose_count=games_lose,
+            adds_amount=adds_amount,
+            pays_accepted_amount=pays_amount,
+            smile=random_heart(),
+            uid=user.id,
+            chat_id=user.cid,
+            name=user.fullname,
+            balance=user.balance,
+            time=timenow,
+            fortune="Вкл"
+            if user.fort_chance == 100
+            else "Выкл"
+            if user.fort_chance == 0
+            else f"{user.fort_chance} %",
+        ),
+        cas_info_keyboard(user.fort_chance, user.id, "300"),
+    )
+
 
 num2emojis = [
     ":zero:",
@@ -61,6 +104,7 @@ def get_random_analog(general: int):
 async def get_btcticker():
     async with aiohttp.ClientSession() as session:
         async with session.get("https://blockchain.info/ticker") as response:
+            assert response.status == 200
             return await response.json()
 
 
@@ -76,6 +120,7 @@ async def get_btcmarket_price():
         async with session.get(
             "https://api.blockchain.info/charts/market-price"
         ) as response:
+            assert response.status == 200
             return await response.json()
 
 

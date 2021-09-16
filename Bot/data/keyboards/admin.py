@@ -19,15 +19,30 @@ def summary_check_keyboard(chat_id):
     return markup
 
 
-def admworkstatus_keyboard(work_status):
+def admworkstatus_keyboard(work_stat, casino_stat, escort_stat, trading_stat):
     markup = InlineKeyboardMarkup()
 
     change_work_btn = InlineKeyboardButton(
         emojize(
-            ":full_moon: Сменить статус" if work_status else ":new_moon: Сменить статус"
+            ":full_moon: Сменить статус" if work_stat else ":new_moon: Сменить статус"
         ),
-        callback_data="toggleworkstatus",
+        callback_data="toggle_status",
     )
+    change_casino_btn = InlineKeyboardButton(
+        emojize(":full_moon: Казино" if casino_stat else ":new_moon: Казино"),
+        callback_data="toggle_casino_status",
+    )
+    change_escort_btn = InlineKeyboardButton(
+        emojize(":full_moon: Эскорт" if escort_stat else ":new_moon: Эскорт"),
+        callback_data="toggle_escort_status",
+    )
+    change_trading_btn = InlineKeyboardButton(
+        emojize(":full_moon: Трейдинг" if trading_stat else ":new_moon: Трейдинг"),
+        callback_data="toggle_trading_status",
+    )
+
+    markup.add(change_casino_btn)
+    markup.add(change_escort_btn, change_trading_btn)
     markup.add(change_work_btn)
 
     return markup
@@ -149,17 +164,17 @@ sys_info_update_btn = InlineKeyboardButton(
     emojize(":arrows_counterclockwise:"), callback_data="update_sys"
 )
 sys_restart_btn = InlineKeyboardButton(
-    emojize("Перезагрузить сервер!"), callback_data="restart_sys"
+    emojize("Перезагрузить сервер"), callback_data="restart_sys"
 )
 code_restart_btn = InlineKeyboardButton(
-    emojize("Перезапустить бота!"), callback_data="restart_code"
+    emojize("Перезапустить бота"), callback_data="restart_code"
 )
 update_sysinfo_keyboard.add(sys_info_update_btn)
 update_sysinfo_keyboard.add(code_restart_btn, sys_restart_btn)
 
 
 # on new profit
-def profit_pay_keyboard(prft_id: int):
+def profit_pay_keyboard(prft_id: int) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     pay_btn = InlineKeyboardButton(
         emojize("Выплатить :white_check_mark:"), callback_data=f"truepay_{prft_id}"
