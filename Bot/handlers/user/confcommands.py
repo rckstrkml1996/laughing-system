@@ -26,7 +26,11 @@ async def help_command(message: types.Message):
 @dp.message_handler(commands="btc", workers_chat=True)
 @dp.message_handler(commands="btc", admins_chat=True)
 async def btc_price(message: types.Message):
-    rub, usd = await rub_usd_btcticker()
+    try:
+        rub, usd = await rub_usd_btcticker()
+    except AssertionError:
+        rub, usd = "Неизвестно", "Хз скока"
+
     await message.reply(
         payload.btc_text.format(
             rub=rub,
@@ -208,7 +212,7 @@ async def team_top_day(message: types.Message):
 async def team_top_day(message: types.Message):
     logger.debug(f"User - {message.from_user.id}, wants /topd in chat.")
     query = db_commands.get_topworkers_day()  # limit = 15
-    all_profits = db_commands.get_profits_day()
+    all_profits = db_commands.get_profits_day_amount()
 
     profit_text_list = []
 
