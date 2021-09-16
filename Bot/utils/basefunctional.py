@@ -49,7 +49,7 @@ class BaseCommands:
             or 0
         )
 
-    def get_profits_sum(self, worker_id) -> int:
+    def get_profits_sum(self, worker_id) -> int:  # rename to get_profits_amount
         return int(
             (
                 Profit.select(fn.SUM(Profit.amount).alias("all_profits")).where(
@@ -61,7 +61,7 @@ class BaseCommands:
             or 0
         )
 
-    def all_share_sum(self) -> int:
+    def all_share_sum(self) -> int:  # rename to get_profits_share
         return int(
             (Profit.select(fn.SUM(Profit.share).alias("all_share")))
             .execute()[0]
@@ -154,7 +154,30 @@ class BaseCommands:
             or 0
         )
 
-    def get_profits_day(self) -> int:
+    def get_profits_day(self) -> ModelSelect:
+        date = datetime_local_now()
+        return Profit.select().where(
+            Profit.created.day == date.day,
+            Profit.created.month == date.month,
+            Profit.created.year == date.year,
+        )
+
+    def get_profits_day_share(self) -> int:
+        date = datetime_local_now()
+        return int(
+            (
+                Profit.select(fn.SUM(Profit.share).alias("all_share")).where(
+                    Profit.created.day == date.day,
+                    Profit.created.month == date.month,
+                    Profit.created.year == date.year,
+                )
+            )
+            .execute()[0]
+            .all_share
+            or 0
+        )
+
+    def get_profits_day_amount(self) -> int:
         date = datetime_local_now()
         return int(
             (

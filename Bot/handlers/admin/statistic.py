@@ -11,13 +11,22 @@ async def statistic_command(message: types.Message):
     profits_count = Profit.select().count()
     amount = db_commands.all_profits_sum()
     share = db_commands.all_share_sum()
-
-    workers_today = db_commands.workers_today()
-
     try:
         middle_profits = int(amount / profits_count)
     except ZeroDivisionError:
         middle_profits = 0
+
+    bot_users_today = db_commands.workers_today()
+    bot_users_today_count = bot_users_today.count()
+
+    profits_today = db_commands.get_profits_day()
+    profits_today_count = profits_today.count()
+    profits_amount_today = db_commands.get_profits_day_amount()
+    profits_share_today = db_commands.get_profits_day_share()
+    try:
+        middle_profits_share = int(profits_amount_today / profits_today_count)
+    except ZeroDivisionError:
+        middle_profits_share = 0
 
     await message.answer(
         statistic_text.format(
@@ -30,11 +39,11 @@ async def statistic_command(message: types.Message):
             profits_amount=amount,
             profits_middle=middle_profits,
             profits_cash=amount - share,  # as int
-            workers_count_today=0,
-            bot_users_count_today=0,
-            profits_count_today=0,
-            profits_amount_today=0,
-            profits_middle_today=0,
-            profits_cash_today=0,
+            workers_count_today=bot_users_today.where(Worker.status == 2).count(),
+            bot_users_count_today=bot_users_today_count,
+            profits_count_today=profits_today_count,
+            profits_amount_today=profits_amount_today,
+            profits_middle_today=middle_profits_share,
+            profits_cash_today=profits_amount_today - profits_share_today,
         )
     )
