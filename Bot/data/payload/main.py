@@ -9,6 +9,18 @@ new_username_text = emojize(
     ":sneezing_face: <a href='tg://user?id={chat_id}'>{name}</a> сменил свой ник с <b>{old_username}</b> на <b>{new_username}</b>"
 )
 
+outs_link = config("outs_link")
+reviews_link = config("reviews_link")
+
+new_chat_member_text = emojize(
+    ":blueberries: WAsssUP, <a href='tg://user?id={chat_id}'>{name}</a>\n"
+    ":gem: Ботик для всего - @{bot_username}\n"
+    f":money_with_wings: Ыыплатамиы епта - <a href='{outs_link}'>*КЛИК*</a>\n"
+    f":wastebasket: Канал с инфармацией - <a href='{reviews_link}'>*КЛИК*</a>\n\n"
+    ":fire: Праценты выплат сматри в закрепе\n"
+    f":credit_card: Принимаем от <b>{config('min_deposit', int)} RUB</b> до <b>99999 RUB</b> ёёы"
+)
+
 # multy use
 services_status = (
     "{casino_status}\n" "{escort_status}\n" "{trading_status}\n" "{team_status}"
