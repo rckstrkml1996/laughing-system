@@ -332,7 +332,34 @@ async def send_profit(profit: Profit, moll, payment=None):
     profit.msg_url = msg.url  # save then send
     profit.save()
 
-    if payment is not None:
+    if payment is None:
+        logger.info("Making Fake Profit!")
+        await dp.bot.send_message(
+            worker.cid,
+            payload.profit_worker_text.format(
+                service=service,
+                share=profit.share,
+                amount=profit.amount,
+                mid="незнаюблядь",
+            ),
+        )
+        await dp.bot.send_message(
+            config("admins_chat"),
+            payload.admins_profit_text.format(
+                profit_link=msg.url,
+                cid=worker.cid,
+                name=worker.username if worker.username else worker.name,
+                service=service,
+                amount=profit.amount,
+                share=profit.share,
+                moll=int(moll * 100),
+                create_date="хз",
+                pay_date="хз",
+            ),
+            reply_markup=profit_pay_keyboard(profit.id),
+        )
+        logger.debug("Succesfully sent to outs and admins chat")
+    else:
         await dp.bot.send_message(
             worker.cid,
             payload.profit_worker_text.format(
@@ -361,30 +388,3 @@ async def send_profit(profit: Profit, moll, payment=None):
         )
         logger.debug("Succesfully sent to outs and admins chat")
         return True
-    else:
-        logger.info("Making Fake Profit!")
-        await dp.bot.send_message(
-            worker.cid,
-            payload.profit_worker_text.format(
-                service=service,
-                share=profit.share,
-                amount=profit.amount,
-                mid="незнаюблядь",
-            ),
-        )
-        await dp.bot.send_message(
-            config("admins_chat"),
-            payload.admins_profit_text.format(
-                profit_link=msg.url,
-                cid=worker.cid,
-                name=worker.username if worker.username else worker.name,
-                service=service,
-                amount=profit.amount,
-                share=profit.share,
-                moll=int(moll * 100),
-                create_date="хз",
-                pay_date="хз",
-            ),
-            reply_markup=profit_pay_keyboard(profit.id),
-        )
-        logger.debug("Succesfully sent to outs and admins chat")

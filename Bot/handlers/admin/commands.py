@@ -1,14 +1,12 @@
 from asyncio import sleep
 
 from aiogram import types
-from aiogram.dispatcher import FSMContext
 from customutils.models import Worker
 from loguru import logger
 
 from aiogram.utils.exceptions import ChatAdminRequired
 
 from loader import dp
-from config import config
 from data import payload
 from data.keyboards import *
 

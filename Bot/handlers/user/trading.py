@@ -1,16 +1,9 @@
-import re
-import random
-
 from aiogram import types
-from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters.builtin import Text
-from aiogram.utils.exceptions import ChatNotFound, BotBlocked
-from loguru import logger
-from customutils.datefunc import datetime_local_now
-from customutils.models import TradingUser, TradingPayment, Worker
 
-from loader import dp, trading_bot
-from config import config, html_style_url
+from customutils.models import Worker
+
+from loader import dp
+from config import config
 from data import payload
 from data.keyboards import *
 

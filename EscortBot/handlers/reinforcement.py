@@ -3,7 +3,6 @@ from random import randint
 
 
 from aiogram import types
-from aiogram.utils.markdown import quote_html
 from aiogram.utils.emoji import emojize
 from loguru import logger
 from customutils.qiwiapi import QiwiApi

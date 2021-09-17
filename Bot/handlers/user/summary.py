@@ -1,6 +1,5 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.utils.emoji import emojize
 from loguru import logger
 
 from loader import dp

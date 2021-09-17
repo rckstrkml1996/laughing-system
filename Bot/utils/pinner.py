@@ -1,7 +1,6 @@
 import asyncio
 from configparser import NoOptionError
 
-from peewee import fn, SQL, JOIN
 from aiogram import Bot
 from aiogram.utils.emoji import emojize
 from aiogram.utils.exceptions import (
@@ -13,7 +12,6 @@ from aiogram.utils.exceptions import (
     MessageCantBeEdited,
 )
 from customutils.datefunc import datetime_local_now
-from customutils.models import Worker, Profit
 from customutils.models import CasinoUser, TradingUser, EscortUser
 
 from loader import db_commands

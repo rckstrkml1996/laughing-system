@@ -1,7 +1,6 @@
 from random import randint
 
 from aiogram import types
-from aiogram.types import ChatType
 from aiogram.utils.emoji import emojize
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext

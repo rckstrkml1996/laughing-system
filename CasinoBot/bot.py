@@ -2,10 +2,8 @@ import asyncio
 import sys
 
 from aiogram import Dispatcher
-from aiogram import executor
 from loguru import logger
 
-from config import SKIP_UPDATES
 from loader import dp
 
 from utils.notify import on_startup_notify

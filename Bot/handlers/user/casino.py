@@ -1,18 +1,20 @@
-import re
 from asyncio import sleep
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher.filters import RegexpCommandsFilter
 from aiogram.utils.exceptions import ChatNotFound, BotBlocked
 from loguru import logger
 
+<<<<<<< HEAD
 from customutils.models import CasinoUser, CasinoUserHistory, CasinoPayment, Worker
+=======
+from customutils.models import CasinoUser, Worker
+>>>>>>> 3bc0244b33d7c68871064b66f9a911ecb6800f3c
 from customutils.datefunc import datetime_local_now
 
 from config import config, html_style_url
-from loader import dp, db_commands  # casino_bot
+from loader import dp  # casino_bot
 from data import payload
 from data.states import Casino
 from data.keyboards import *
