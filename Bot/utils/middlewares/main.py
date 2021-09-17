@@ -23,7 +23,7 @@ class NewUsernameMiddleware(BaseMiddleware):
                     await message.reply(
                         new_username_text.format(
                             chat_id=worker.cid,
-                            name=message.from_user.fullname,
+                            name=message.from_user.full_name,
                             old_username=worker.username,
                             new_username=message.from_user.username,
                         )
