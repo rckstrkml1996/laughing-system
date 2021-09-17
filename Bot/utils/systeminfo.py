@@ -1,5 +1,4 @@
 import threading
-from asyncio import sleep
 
 import psutil
 

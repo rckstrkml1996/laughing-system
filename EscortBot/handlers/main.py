@@ -1,7 +1,6 @@
 from time import sleep
 
 from aiogram import types
-from aiogram.utils.deep_linking import get_start_link
 from aiogram.dispatcher import FSMContext
 from customutils.models import Worker, EscortUser, EscortGirl
 from loguru import logger

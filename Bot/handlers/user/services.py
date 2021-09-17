@@ -1,5 +1,3 @@
-import re
-
 from aiogram import types
 from aiogram.dispatcher.filters import RegexpCommandsFilter
 from loguru import logger

@@ -4,7 +4,7 @@ from datetime import timedelta
 from peewee import ModelSelect, fn, JOIN, SQL
 from loguru import logger
 from customutils.models import Profit, Worker
-from customutils.models import CasinoUser, CasinoPayment, CasinoUserHistory
+from customutils.models import CasinoPayment, CasinoUserHistory
 from customutils.datefunc import datetime_local_now
 
 from config import config

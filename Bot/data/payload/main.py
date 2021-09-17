@@ -2,7 +2,7 @@ import os
 
 from aiogram.utils.emoji import emojize
 
-from config import Rates, config
+from config import config
 
 
 # multy use

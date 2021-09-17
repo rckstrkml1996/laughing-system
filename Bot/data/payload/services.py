@@ -1,4 +1,5 @@
 from aiogram.utils.emoji import emojize
+
 from config import config
 
 # casino info

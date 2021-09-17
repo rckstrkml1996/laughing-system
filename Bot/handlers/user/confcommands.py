@@ -7,8 +7,8 @@ from aiogram.utils.emoji import emojize
 from loguru import logger
 
 from loader import dp, exp_parser, db_commands
-from customutils.models import Worker, Profit
-from customutils.datefunc import datetime_local_now
+from customutils.models import Worker
+
 from data import payload
 from utils.executional import (
     rub_usd_btcticker,

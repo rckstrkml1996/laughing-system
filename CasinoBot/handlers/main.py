@@ -1,14 +1,12 @@
 import re
 
 from aiogram import types
-from aiogram.types import ChatType
 from aiogram.dispatcher.filters.builtin import Text
 from aiogram.utils.deep_linking import get_start_link
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.emoji import emojize
 from loguru import logger
 
-from config import LICENCE
 from data.states import SelfCabine, Register
 import keyboards
 from data import payload
