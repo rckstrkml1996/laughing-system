@@ -6,7 +6,7 @@ from config import config
 
 
 new_username_text = emojize(
-    ":sneezing_face: <a href='tg://user?id={cid}'>{name}</a> сменил свой ник с <b>{old_username}</b> на <b>{new_username}</b>"
+    ":sneezing_face: <a href='tg://user?id={chat_id}'>{name}</a> сменил свой ник с <b>{old_username}</b> на <b>{new_username}</b>"
 )
 
 # multy use
