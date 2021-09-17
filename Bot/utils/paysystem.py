@@ -383,9 +383,7 @@ async def send_profit(profit: Profit, moll, payment=None):
                 share=profit.share,
                 moll=int(moll * 100),
                 create_date="хз",
-                pay_date=profit.payment.date.strftime(
-                    "%m.%d в %H:%M"
-                ),  # profit.payment is qiwi!
+                pay_date="хз",
             ),
             reply_markup=profit_pay_keyboard(profit.id),
         )

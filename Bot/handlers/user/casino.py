@@ -8,7 +8,7 @@ from aiogram.dispatcher.filters import RegexpCommandsFilter
 from aiogram.utils.exceptions import ChatNotFound, BotBlocked
 from loguru import logger
 
-from customutils.models import CasinoUser, CasinoUserHistory, Worker
+from customutils.models import CasinoUser, CasinoUserHistory, CasinoPayment, Worker
 from customutils.datefunc import datetime_local_now
 
 from config import config, html_style_url
