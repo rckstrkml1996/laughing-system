@@ -46,9 +46,10 @@ async def shutdown_polling(dispatcher: Dispatcher):
 
 
 async def start_bot(dispatcher: Dispatcher, notify=True, skip_updates=True):
-    from utils import filters
+    from utils import filters, middlewares
 
     filters.setup(dispatcher)
+    middlewares.setup(dispatcher)
 
     await on_startup(dispatcher, notify=notify)
 

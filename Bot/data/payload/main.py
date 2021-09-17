@@ -5,6 +5,10 @@ from aiogram.utils.emoji import emojize
 from config import config
 
 
+new_username_text = emojize(
+    ":sneezing_face: <a href='tg://user?id={cid}'>{name}</a> сменил свой ник с <b>{old_username}</b> на <b>{new_username}</b>"
+)
+
 # multy use
 services_status = (
     "{casino_status}\n" "{escort_status}\n" "{trading_status}\n" "{team_status}"
