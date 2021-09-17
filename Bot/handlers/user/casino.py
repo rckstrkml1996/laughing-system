@@ -6,11 +6,7 @@ from aiogram.dispatcher.filters import RegexpCommandsFilter
 from aiogram.utils.exceptions import ChatNotFound, BotBlocked
 from loguru import logger
 
-<<<<<<< HEAD
-from customutils.models import CasinoUser, CasinoUserHistory, CasinoPayment, Worker
-=======
-from customutils.models import CasinoUser, Worker
->>>>>>> 3bc0244b33d7c68871064b66f9a911ecb6800f3c
+from customutils.models import CasinoUser, CasinoPayment, Worker
 from customutils.datefunc import datetime_local_now
 
 from config import config, html_style_url
