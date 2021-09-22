@@ -73,7 +73,7 @@ async def kick_workers_chat(message: types.Message):
                 return
 
             worker = Worker.get(cid=chat_id)
-            if worker.status > 5:
+            if worker.status >= 5:
                 logger.debug(
                     f"User: {message.from_user.id} try to ban worker with admin status: {worker.cid}"
                 )

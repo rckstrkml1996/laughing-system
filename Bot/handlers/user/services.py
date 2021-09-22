@@ -4,7 +4,7 @@ from loguru import logger
 
 from customutils.models import Worker, CasinoUser, CasinoUserHistory, CasinoPayment
 
-from loader import dp
+from loader import dp, casino_bot
 
 from data.payload import fart_off_text, fart_fif_text, fart_on_text, mamonth_delete_text
 from utils.executional import get_casino_mamonth_info
@@ -201,6 +201,49 @@ async def change_balance_command(message: types.Message, regexp_command):
                 user.delete_instance()  # delete user instance
                 await message.answer(mamonth_delete_text.format(name=user.fullname))
                 logger.debug("Mamonths deleted.")
+            except CasinoUser.DoesNotExist:
+                await message.reply("Такого мамонта не существует!")
+        elif id_info[:1] == "t" or id_info[:1] == "т":
+            await message.answer(id_info[1:])
+
+
+@dp.message_handler(  # ru and en
+    fullregexp_commands=[
+        "msg (c\d+|с\d+|t\d+|e\d+|\d+);(.+)",
+        "message (c\d+|с\d+|t\d+|e\d+|\d+);(.+)",
+    ],
+    state="*",
+    is_worker=True,
+)
+async def change_balance_command(message: types.Message, full_regexp):
+    try:
+        worker = Worker.get(cid=message.chat.id)
+    except Worker.DoesNotExist:
+        await message.answer("Мамонт не найден.")
+        return
+
+    id_info = full_regexp.group(1)
+    text = full_regexp.group(2)
+    if id_info.isdigit():
+        pass  # than telegram id
+    else:  # ru and en
+        if id_info[:1] == "c" or id_info[:1] == "с":
+            try:
+                user = CasinoUser.get(id=id_info[1:])
+                if user.owner != worker:
+                    logger.info(
+                        f"/msg Worker: {message.chat.id} try get different mamonth!"
+                    )
+                    return
+
+                try:
+                    await casino_bot.send_message(user.cid, text)
+                    await message.answer(
+                        f"Успешно отправил сообщение мамонту /c{user.id}"
+                    )
+                except Exception as e:
+                    await message.answer("Не отправилось :(")
+                    logger.exception(e)
             except CasinoUser.DoesNotExist:
                 await message.reply("Такого мамонта не существует!")
         elif id_info[:1] == "t" or id_info[:1] == "т":

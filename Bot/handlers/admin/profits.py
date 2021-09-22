@@ -128,6 +128,8 @@ async def truepay_qr_command(query: types.CallbackQuery):
 
         check = await made_check(profit.share)
         if check:
+            worker.ref_balance -= profit.share
+            worker.save()
             profit.done = True
             profit.save()
 

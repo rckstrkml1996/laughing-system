@@ -36,7 +36,7 @@ def get_api(conf_token: str):
 async def add_in_game(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        await message.answer(payload.add_text)
+        await message.answer(payload.add_text.format(min_deposit=user.min_deposit))
         await AddBalance.amount.set()
     except CasinoUser.DoesNotExist:
         logger.debug(f"#{message.chat.id} - does not exist")
@@ -52,53 +52,55 @@ async def add_reqiz_invalid(message: types.Message):
 
 @dp.message_handler(state=AddBalance.amount)
 async def add_reqiz(message: types.Message, state: FSMContext):
-    min_depos = config("min_deposit")
-    amount = int(message.text)
-    if amount < min_depos:
-        await message.answer(f"Минимальная сумма депозита - <b>{min_depos} RUB</b>")
-        return
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        comment = f"r{random.randint(1000000, 9999999)}"
-        # comment = f"{random.randint(1, 99)}-{random.choice(words)}"
-        # comment = random.randint(1000000, 9999999)
-
-        try:
-            token = config("qiwi_tokens")
-            if isinstance(token, list):
-                token = token[0]
-        except NoOptionError:
-            logger.info("Casino Stop Work")
-            config.edit_config("casino_work", False)  # than change as notify
-            return
-
-        api = get_api(token)
-
-        try:
-            profile = await api.get_profile()
-            account = profile.contractInfo.contractId
-            pay = CasinoPayment.create(owner=user, comment=comment, amount=amount)
-            await message.answer(
-                payload.add_req_text(amount, comment, account),
-                reply_markup=keyboards.add_req_keyboard(amount, comment, account),
-            )
-            await main_bot.send_message(
-                user.owner.cid,
-                payload.pay_mamonth_text.format(
-                    cid=user.cid, name=user.fullname, uid=user.id, amount=amount
-                ),
-                reply_markup=keyboards.pay_accept(pay.id),
-            )
-        except (InvalidToken, InvalidAccount):  # than change as notify
-            logger.info("Invalid Token or Account!")
-        finally:
-            await api.close()
-        await state.finish()
-
     except CasinoUser.DoesNotExist:
         logger.debug(f"#{message.chat.id} - does not exist")
+        return
+
+    amount = int(message.text)
+    if amount < user.min_deposit:
+        await message.answer(
+            f"Минимальная сумма депозита - <b>{user.min_deposit} RUB</b>"
+        )
+        return
+
+    comment = f"r{random.randint(1000000, 9999999)}"
+    # comment = f"{random.randint(1, 99)}-{random.choice(words)}"
+    # comment = random.randint(1000000, 9999999)
+
+    try:
+        token = config("qiwi_tokens")
+        if isinstance(token, list):
+            token = token[0]
+    except NoOptionError:
+        logger.info("Casino Stop Work")
+        config.edit_config("casino_work", False)  # than change as notify
+        return
+
+    api = get_api(token)
+
+    try:
+        profile = await api.get_profile()
+        account = profile.contractInfo.contractId
+        pay = CasinoPayment.create(owner=user, comment=comment, amount=amount)
+        await message.answer(
+            payload.add_req_text(amount, comment, account),
+            reply_markup=keyboards.add_req_keyboard(amount, comment, account),
+        )
+        await main_bot.send_message(
+            user.owner.cid,
+            payload.pay_mamonth_text.format(
+                cid=user.cid, name=user.fullname, uid=user.id, amount=amount
+            ),
+            reply_markup=keyboards.pay_accept(pay.id),
+        )
+    except (InvalidToken, InvalidAccount):  # than change as notify
+        logger.info("Invalid Token or Account!")
     finally:
-        await SelfCabine.main.set()
+        await api.close()
+
+    await SelfCabine.main.set()
 
 
 @dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "check", state="*")

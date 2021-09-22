@@ -123,7 +123,8 @@ alert_start_text = emojize(
     "Кол-во пользователей: <b>{len_users}</b>\n\n"
     "Сообщений отправлено: <b>{msg_count}</b>\n"
     "Заблокировали бота: <b>{blocked_count}</b>\n"
-    "Не найдено: <b>{not_found_count}</b>"
+    "Не найдено: <b>{not_found_count}</b>\n\n"
+    "Обновленно: {timenow}"
 )
 
 alert_complete_text = "Рассылка завершилась)"

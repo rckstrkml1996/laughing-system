@@ -9,11 +9,12 @@ from loguru import logger
 from customutils.models import CasinoUser, CasinoPayment, Worker
 from customutils.datefunc import datetime_local_now
 
-from config import config, html_style_url
-from loader import dp  # casino_bot
+from config import MinDepositValues, config, html_style_url
+from loader import dp, casino_bot
 from data import payload
 from data.states import Casino
 from data.keyboards import *
+from utils.alert import alert_users
 from utils.executional import get_correct_str, get_casino_mamonth_info
 
 
@@ -24,7 +25,6 @@ from utils.executional import get_correct_str, get_casino_mamonth_info
 )
 async def casino_command(message: types.Message, regexp_command):
     mb_id = regexp_command.group(1)
-    # if mb_id.isdigit():
     try:
         user = CasinoUser.get(id=mb_id)  # can get by str
     except CasinoUser.DoesNotExist:
@@ -40,7 +40,13 @@ async def casino_command(message: types.Message, regexp_command):
         logger.debug(f"/c Worker [{message.chat.id}] does not exist in base.")
         return
 
-    if user.owner != worker:
+    if user.owner == worker:
+        logger.debug(f"/c Worker [{message.chat.id}] get mamonth info.")
+    elif user.status >= 4:  # if user support and upper
+        logger.debug(
+            f"/c Admin:{user.status} [{message.chat.id}] get not self mamonth info"
+        )
+    else:
         logger.warning(f"/c Worker [{message.chat.id}] try get different mamonth!")
         return
 
@@ -50,9 +56,6 @@ async def casino_command(message: types.Message, regexp_command):
         text,
         reply_markup=markup,
     )
-
-    # else:
-    #     await message.reply("Команда введена неправильно!")
 
 
 @dp.message_handler(regexp="казин", state="*", is_worker=True)
@@ -168,6 +171,51 @@ async def update_mamonth_fart(query: types.CallbackQuery):
     )
 
 
+@dp.callback_query_handler(
+    lambda cb: cb.data.split("_")[0] == "updatemin",
+    state="*",
+    is_worker=True,
+)
+async def update_mamonth_fart(query: types.CallbackQuery):
+    mb_id = query.data.split("_")[1]
+    try:
+        user = CasinoUser.get(id=mb_id)  # can get by str
+    except CasinoUser.DoesNotExist:
+        logger.debug(
+            f"Mamonth [{mb_id}] that worker [{query.from_user.id}] want update fart does not exist."
+        )
+
+    try:
+        worker = Worker.get(cid=query.from_user.id)
+    except Worker.DoesNotExist:
+        logger.debug(f":updatefart: Worker [{message.chat.id}] does not exist in base.")
+        return
+
+    if user.owner != worker:
+        logger.warning(
+            f":update_info: Worker [{message.chat.id}] try get different mamonth!"
+        )
+        return
+
+    try:
+        index = MinDepositValues.index(user.min_deposit) + 1
+    except ValueError:
+        index = 0
+
+    if index > len(MinDepositValues) - 1:
+        index = 0
+
+    user.min_deposit = MinDepositValues[index]
+    user.save()
+
+    text, markup = await get_casino_mamonth_info(worker, user)
+
+    await query.message.edit_text(
+        text,
+        reply_markup=markup,
+    )
+
+
 def format_mamont(user: CasinoUser) -> str:
     return payload.small_mamonth_info_text.format(
         mid=user.id,
@@ -184,6 +232,7 @@ def format_mamont(user: CasinoUser) -> str:
 
 @dp.callback_query_handler(text="mamonths_cas", state="*", is_worker=True)
 async def all_mamonths_command(query: types.CallbackQuery):
+    page = 1  # raise if shit
     row_width = 20
 
     worker = Worker.get(cid=query.from_user.id)
@@ -194,7 +243,7 @@ async def all_mamonths_command(query: types.CallbackQuery):
     if mamonths_count == 0:
         await query.message.answer(payload.no_mamonths_text)
     else:  # format mamonth its a def on 176 line mb not()
-        mamonths = worker.cas_users[1 * row_width - row_width : 1 * row_width]
+        mamonths = worker.cas_users[page * row_width - row_width : page * row_width]
         if not mamonths:
             await query.message.answer(payload.no_mamonths_text)
             return  # logg plz
@@ -214,7 +263,7 @@ async def all_mamonths_command(query: types.CallbackQuery):
                 time=timenow,
             ),
             reply_markup=casino_mamonths_keyboard(
-                mamonths_count, page=1, row_width=row_width
+                mamonths_count, page=page, row_width=row_width
             ),
         )
         logger.debug("Got mamonths list.")
@@ -235,7 +284,7 @@ async def cas_mamonths_info(query: types.CallbackQuery):
     if mamonths_count == 0:
         await query.message.edit_text(payload.no_mamonths_text)
     else:  # format mamonth its a def on 176 line mb not()
-        mamonths = worker.cas_users[1 * row_width - row_width : 1 * row_width]
+        mamonths = worker.cas_users[page * row_width - row_width : page * row_width]
         if not mamonths:
             await query.message.answer(payload.no_mamonths_text)
             return  # logg plz
@@ -278,43 +327,42 @@ async def cas_mamonths_alert_text(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(text="alert_accept", state=Casino.alert_true, is_worker=True)
 async def cas_alert_true(query: types.CallbackQuery, state: FSMContext):
+    # print(alert_users([[1, 2]], casino_bot))
     worker = Worker.get(cid=query.from_user.id)
     async with state.proxy() as data:
-        await state.finish()
-        msg_count = 0
-        msg_len = worker.cas_users.count()
-        await query.message.edit_text(
-            payload.cas_alsend_text.format(
-                text=data["text"], msg_count=msg_count, msg_len=msg_len
-            )
-        )
-        for user in worker.cas_users:
-            try:
-                await casino_bot.send_message(user.cid, data["text"])
-                msg_count += 1
-                await sleep(0.5)
-            except (ChatNotFound, BotBlocked):
-                continue
-            except:
-                continue
+        text = data["text"]
+    await state.finish()
 
-            if msg_count % 5 == 0:
+    msg_len = worker.cas_users.count()
+    async for answer in alert_users(
+        text, map(lambda usr: usr.cid, worker.cas_users), casino_bot
+    ):
+        await sleep(0.3)  # delay
+        if answer["network_count"] > 0:
+            await query.message.edit_text("Телеграмм не отвечает на запрос :(")
+            return
+        elif answer["cantparse_count"] > 0:
+            await query.message.edit_text("Что-то с текстом, не парсит :(")
+            return
+        elif answer["internal_count"] > 0:
+            await query.message.edit_text("Какая-то ошибка в рассылке, сообщи кодеру!")
+            return
+        else:
+            try:
+                localnow = datetime_local_now()
+                timenow = localnow.strftime("%H:%M, %S cек")
                 await query.message.edit_text(
                     payload.cas_alsend_text.format(
-                        text=data["text"], msg_count=msg_count, msg_len=msg_len
+                        text=text,
+                        msg_count=answer["msg_count"],
+                        msg_len=msg_len,
+                        timenow=timenow,
                     )
                 )
-                await sleep(0.3)
+            except Exception as ex:
+                logger.exception(ex)
 
-    await sleep(0.2)
-    try:
-        await query.message.edit_text(
-            payload.cas_alsend_text.format(
-                text=data["text"], msg_count=msg_count, msg_len=msg_len
-            )
-        )
-    except:
-        pass
+    await query.message.reply("Рассылка завершилась.")
     logger.debug("Alert done.")
 
 

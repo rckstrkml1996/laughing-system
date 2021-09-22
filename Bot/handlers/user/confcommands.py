@@ -143,7 +143,7 @@ def get_place(i):
 @dp.message_handler(commands="top", workers_chat=True)
 async def team_top(message: types.Message):
     logger.debug(f"User - {message.from_user.id}, wants /top in chat.")
-    query = db_commands.get_topworkers_all()  # limit = 15
+    query = db_commands.get_topworkers_all(limit=10)  # limit = 15
     all_profits = db_commands.get_profits_all()
 
     if query.count() == 0:
@@ -173,7 +173,8 @@ async def team_top(message: types.Message):
             period="всё время",
             profits="\n".join(profit_text_list),
             all_profits=all_profits,
-        )
+        ),
+        disable_notification=True,
     )
     logger.debug(f"User {message.from_user.id} /top in chat succesfully.")
 
@@ -181,7 +182,7 @@ async def team_top(message: types.Message):
 @dp.message_handler(commands="topm", workers_chat=True)
 async def team_top_day(message: types.Message):
     logger.debug(f"User - {message.from_user.id}, wants /topm in chat.")
-    query = db_commands.get_topworkers_month()  # limit = 15 autodelta
+    query = db_commands.get_topworkers_month(limit=10)  # limit = 15 autodelta
     all_profits = db_commands.get_profits_month()
 
     if query.count() == 0:
@@ -211,7 +212,8 @@ async def team_top_day(message: types.Message):
             period="месяц",
             profits="\n".join(profit_text_list),
             all_profits=all_profits,
-        )
+        ),
+        disable_notification=True,
     )
     logger.debug(f"User {message.from_user.id} /topm in chat succesfully.")
 
@@ -219,7 +221,7 @@ async def team_top_day(message: types.Message):
 @dp.message_handler(commands="topd", workers_chat=True)
 async def team_top_day(message: types.Message):
     logger.debug(f"User - {message.from_user.id}, wants /topd in chat.")
-    query = db_commands.get_topworkers_day()  # limit = 15
+    query = db_commands.get_topworkers_day(limit=10)  # limit = 15
     all_profits = db_commands.get_profits_day_amount()
 
     if query.count() == 0:
@@ -249,6 +251,7 @@ async def team_top_day(message: types.Message):
             period="день",
             profits="\n".join(profit_text_list),
             all_profits=all_profits,
-        )
+        ),
+        disable_notification=True,
     )
     logger.debug(f"User {message.from_user.id} /topd in chat succesfully.")

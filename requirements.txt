@@ -2,8 +2,9 @@ aiohttp
 aiogram
 emoji
 fastapi
-uvicorn
+# uvicorn
 peewee
+peewee-migrate
 pytz
 python-multipart
 pyrogram

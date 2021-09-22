@@ -1,17 +1,22 @@
 import os
+from secrets import token_hex
 
 import peewee
+from peewee_migrate import Router
 from playhouse.shortcuts import ReconnectMixin
 
 from ..confparse import Config
 from ..datefunc import datetime_local_now
 
 path = os.path.normpath(os.path.join(os.getcwd(), "../config.cfg"))
-config = Config("Settings", path, {})
+config = Config("Settings", path, {"migrate": "0"})
 
 
 class DB(ReconnectMixin, peewee.MySQLDatabase):
-    pass
+    def migrate(self, router: Router):
+        name = token_hex(6)
+        router.create(name)
+        router.run()  # Run all unapplied migrations
 
 
 base = DB(
@@ -22,6 +27,10 @@ base = DB(
     port=3306,
     charset="utf8mb4",  # for emoji and symbols)
 )
+
+if config("migrate", bool):
+    migration_router = Router(base)
+    base.migrate(migration_router)
 
 
 class BaseModel(peewee.Model):

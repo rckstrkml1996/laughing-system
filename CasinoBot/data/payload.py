@@ -31,7 +31,7 @@ def welcome_text(first):
 
 # ПОПОЛНЕНИЕ
 add_text = emojize(
-    f":gem: Введите сумму пополнения от <b>{config('min_deposit', int)} до 10000 RUB</b>:"
+    ":gem: Введите сумму пополнения от <b>{min_deposit} до 10000 RUB</b>:"
 )
 
 

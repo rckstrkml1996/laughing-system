@@ -5,7 +5,6 @@ from loguru import logger
 from customutils.confparse import Config
 
 
-
 path = os.path.normpath(os.path.join(os.path.dirname(__file__), "../config.cfg"))
 section_name = "Settings"
 
@@ -61,8 +60,8 @@ StatusNames = [
     "Без статуса",
     "Заблокирован",
     "Воркер",
-    "Саппорт",
-    "Админ",
+    "Модер",
+    "Сапорт ТП",
     "Кодер",
     "ТС",
     "Dungeon Master",
@@ -70,11 +69,13 @@ StatusNames = [
 
 ServiceNames = ["Казино", "Эскорт", "Трейдинг", "Прямой перевод"]
 
-Rates = [  # виды ставок первая - стандартная
-    (75, 65, 55),
-    (70, 60, 60),
-    (80, 70, 50),
-]
+MinDepositValues = [config("min_deposit", int), 1000, 1500, 3000, 5000, 10000]
+
+# Rates = [  # виды ставок первая - стандартная
+#     (75, 65, 55),
+#     (70, 60, 60),
+#     (80, 70, 50),
+# ]
 
 # useless
 SKIP_UPDATES = True

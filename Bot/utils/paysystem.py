@@ -293,6 +293,9 @@ async def send_profit(profit: Profit, moll, payment=None):
     service = ServiceNames[profit.service]
     worker = profit.owner
 
+    worker.ref_balance += profit.share
+    worker.save()
+
     all_profit = db_commands.get_profits_sum(worker.id)
     profit_path = render_profit(
         all_profit, profit.amount, profit.share, service, worker.username

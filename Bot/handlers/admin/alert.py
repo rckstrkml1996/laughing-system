@@ -3,13 +3,16 @@ from asyncio import sleep
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.exceptions import ChatNotFound, BotBlocked
-from customutils.models import Worker, CasinoUser
+from customutils.models import Worker, CasinoUser, TradingUser
 from loguru import logger
 
-from loader import dp, casino_bot
+from customutils.datefunc import datetime_local_now
+
+from loader import dp, casino_bot, trading_bot
 from data import payload
 from data.keyboards import *
 from data.states import Alert
+from utils.alert import alert_users
 
 
 @dp.message_handler(
@@ -55,60 +58,40 @@ async def alert_edit(query: types.CallbackQuery):
 async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
     workers = Worker.select()
     len_users = workers.count()
-    msg_count = 0
-    blocked_count = 0
-    not_found_count = 0
-
     async with state.proxy() as data:
         text = data["text"]
     await state.finish()
 
-    try:
-        await dp.bot.send_message(config("workers_chat"), text)
-    except:
-        pass
-
-    for worker in workers:
-        try:
-            await dp.bot.send_message(worker.cid, text)
-            msg_count += 1
+    async for answer in alert_users(text, map(lambda usr: usr.cid, workers), dp.bot):
+        await sleep(0.3)  # delay
+        if answer["network_count"] > 0:
+            await query.message.edit_text("Телеграмм не отвечает на запрос :(")
+            return
+        elif answer["cantparse_count"] > 0:
+            await query.message.edit_text("Что-то с текстом, не парсит :(")
+            return
+        elif answer["internal_count"] > 0:
+            await query.message.edit_text("Какая-то ошибка в рассылке, сообщи кодеру!")
+            return
+        else:
             try:
-                if msg_count % 5 == 0:  # antispam
-                    await query.message.edit_text(
-                        payload.alert_start_text.format(
-                            len_users=len_users,
-                            msg_count=msg_count,
-                            blocked_count=blocked_count,
-                            not_found_count=not_found_count,
-                        )
+                localnow = datetime_local_now()
+                timenow = localnow.strftime("%H:%M, %S cек")
+                await query.message.edit_text(
+                    payload.alert_start_text.format(
+                        text=text,
+                        msg_count=answer["msg_count"],
+                        blocked_count=answer["block_count"],
+                        not_found_count=answer["notfound_count"],
+                        len_users=len_users,
+                        timenow=timenow,
                     )
-            except Exception as e:
-                logger.exception("Alert Exception" + str(e))
-            await sleep(0.3)
-        except ChatNotFound:
-            not_found_count += 1
-            continue
-        except BotBlocked:
-            blocked_count += 1
-            continue
-        except Exception as e:
-            logger.exception("Some exception while Alerting Workers" + str(e))
-            continue
+                )
+            except Exception as ex:
+                logger.exception(ex)
 
-    await sleep(0.2)
-    try:
-        await query.message.edit_text(
-            payload.alert_start_text.format(
-                len_users=len_users,
-                msg_count=msg_count,
-                blocked_count=blocked_count,
-                not_found_count=not_found_count,
-            )
-        )
-        await query.message.reply(payload.alert_complete_text)
-    except:
-        pass
-    logger.debug("Alert finished")
+    await query.message.reply("Рассылка завершилась.")
+    logger.info("Admin alert workers finished")
 
 
 # alert casino
@@ -147,51 +130,40 @@ async def alert_edit(query: types.CallbackQuery):
 async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
     users = CasinoUser.select()
     len_users = users.count()
-    msg_count = 0
-    blocked_count = 0
-    not_found_count = 0
     async with state.proxy() as data:
         text = data["text"]
     await state.finish()
 
-    for user in users:
-        try:
-            await casino_bot.send_message(user.cid, text)
-            await query.message.edit_text(
-                payload.alert_start_text.format(
-                    len_users=len_users,
-                    msg_count=msg_count,
-                    blocked_count=blocked_count,
-                    not_found_count=not_found_count,
+    async for answer in alert_users(text, map(lambda usr: usr.cid, users), casino_bot):
+        await sleep(0.3)  # delay
+        if answer["network_count"] > 0:
+            await query.message.edit_text("Телеграмм не отвечает на запрос :(")
+            return
+        elif answer["cantparse_count"] > 0:
+            await query.message.edit_text("Что-то с текстом, не парсит :(")
+            return
+        elif answer["internal_count"] > 0:
+            await query.message.edit_text("Какая-то ошибка в рассылке, сообщи кодеру!")
+            return
+        else:
+            try:
+                localnow = datetime_local_now()
+                timenow = localnow.strftime("%H:%M, %S cек")
+                await query.message.edit_text(
+                    payload.alert_start_text.format(
+                        text=text,
+                        msg_count=answer["msg_count"],
+                        blocked_count=answer["block_count"],
+                        not_found_count=answer["notfound_count"],
+                        len_users=len_users,
+                        timenow=timenow,
+                    )
                 )
-            )
-            msg_count += 1
-        except ChatNotFound:
-            not_found_count += 1
-            continue
-        except BotBlocked:
-            blocked_count += 1
-            continue
-        except:
-            logger.debug("Some exception while Alerting Casino")
-            continue
-        await sleep(0.4)
+            except Exception as ex:
+                logger.exception(ex)
 
-    sleep(0.2)
-    try:
-        await query.message.edit_text(
-            payload.alert_start_text.format(
-                len_users=len_users,
-                msg_count=msg_count,
-                blocked_count=blocked_count,
-                not_found_count=not_found_count,
-            )
-        )
-        await query.message.reply(payload.alert_complete_text)
-    except:
-        pass
-
-    logger.debug("Alert finished")
+    await query.message.reply("Рассылка завершилась.")
+    logger.info("Admin alert casino finished")
 
 
 # alert escort
@@ -221,8 +193,6 @@ async def alert_edit(query: types.CallbackQuery):
 
 
 # alert trading
-
-
 @dp.callback_query_handler(text="alert_trading", admins_chat=True, is_admin=True)
 async def alert_trading(query: types.CallbackQuery):
     await query.message.edit_text(payload.make_alert_text.format(bot_type="Трейдинга"))
@@ -245,7 +215,50 @@ async def text_alert_trading(message: types.Message, state: FSMContext):
 )
 async def alert_edit(query: types.CallbackQuery):
     await query.message.edit_text(payload.edit_alert_text.format(bot_type="Трейдинга"))
+    logger.debug("Admin changing trading alert text")
     await Alert.trading.set()
+
+
+@dp.callback_query_handler(
+    text="alert_accept", state=Alert.trading_accept, admins_chat=True
+)
+async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
+    users = TradingUser.select()
+    len_users = users.count()
+    async with state.proxy() as data:
+        text = data["text"]
+    await state.finish()
+
+    async for answer in alert_users(text, map(lambda usr: usr.cid, users), trading_bot):
+        await sleep(0.3)  # delay
+        if answer["network_count"] > 0:
+            await query.message.edit_text("Телеграмм не отвечает на запрос :(")
+            return
+        elif answer["cantparse_count"] > 0:
+            await query.message.edit_text("Что-то с текстом, не парсит :(")
+            return
+        elif answer["internal_count"] > 0:
+            await query.message.edit_text("Какая-то ошибка в рассылке, сообщи кодеру!")
+            return
+        else:
+            try:
+                localnow = datetime_local_now()
+                timenow = localnow.strftime("%H:%M, %S cек")
+                await query.message.edit_text(
+                    payload.alert_start_text.format(
+                        text=text,
+                        msg_count=answer["msg_count"],
+                        blocked_count=answer["block_count"],
+                        not_found_count=answer["notfound_count"],
+                        len_users=len_users,
+                        timenow=timenow,
+                    )
+                )
+            except Exception as ex:
+                logger.exception(ex)
+
+    await query.message.reply("Рассылка завершилась.")
+    logger.info("Admin alert trading finished")
 
 
 # reject all alerts

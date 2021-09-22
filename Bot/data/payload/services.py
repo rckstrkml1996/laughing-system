@@ -84,6 +84,13 @@ cas_alert_text = emojize(
 
 cas_alsend_text = emojize(
     ":slot_machine: Рассылка была запущена\n"
+    ":email: Текст рассылки:\n\n{text}\n\n"
+    ":diamond_shape_with_a_dot_inside: Сообщение отправлено: {msg_count} / {msg_len}\n"
+    ":arrow_up_small: Обновленно: {timenow}"
+)
+
+cas_alsended_text = emojize(
+    ":slot_machine: Рассылка закончилась.\n"
     ":email: Текст рассылки:\n{text}\n\n"
     ":diamond_shape_with_a_dot_inside: Сообщение отправлено: {msg_count} / {msg_len}"
 )
