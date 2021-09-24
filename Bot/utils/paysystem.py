@@ -77,7 +77,7 @@ async def check_casino(traction: Transaction) -> bool:
                 )
                 logger.debug("Sucessfully created QiwiPayment and Profit in base.")
 
-                return await send_profit(profit, moll, pay)
+                return await send_profit(profit, moll, service, pay)
     except CasinoPayment.DoesNotExist:
         logger.debug(f"Casino payment with comment {traction.comment} not in base!")
 
@@ -135,7 +135,7 @@ async def check_escort(traction: Transaction) -> bool:
             )
             logger.debug("Sucessfully created QiwiPayment and Profit in base.")
 
-            return await send_profit(profit, moll, pay)
+            return await send_profit(profit, moll, service, pay)
     except EscortPayment.DoesNotExist:
         logger.debug(f"Escort payment with comment {traction.comment} not in base!")
 
@@ -199,8 +199,7 @@ async def check_trading(traction: Transaction) -> bool:
                 )
                 logger.debug("Sucessfully created QiwiPayment and Profit in base.")
 
-                return await send_profit(profit, moll, pay)
-
+                return await send_profit(profit, moll, service, pay)
     except TradingPayment.DoesNotExist:
         logger.debug(f"Trading payment with comment {traction.comment} not in base!")
 
@@ -289,8 +288,7 @@ async def check_qiwis():
         await sleep(40)
 
 
-async def send_profit(profit: Profit, moll, payment=None):
-    service = ServiceNames[profit.service]
+async def send_profit(profit: Profit, moll, service: str, payment=None):
     worker = profit.owner
 
     worker.ref_balance += profit.share

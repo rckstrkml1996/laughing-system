@@ -252,7 +252,9 @@ async def make_profit_make(message: types.Message, state: FSMContext):
                                 share=int(int(textlist[1]) * moll),
                                 service=int(textlist[3]),
                             )
-                            await send_profit(profit, moll)
+                            await send_profit(
+                                profit, moll, ServiceNames[int(textlist[3])]
+                            )
                             await msg.edit_text("Выполнено!")
                             await state.finish()
                             return
