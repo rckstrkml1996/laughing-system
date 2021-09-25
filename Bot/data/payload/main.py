@@ -13,12 +13,12 @@ outs_link = config("outs_link")
 reviews_link = config("reviews_link")
 
 new_chat_member_text = emojize(
-    ":blueberries: WAsssUP, <a href='tg://user?id={chat_id}'>{name}</a>\n"
-    ":gem: Ботик для всего - @{bot_username}\n"
-    f":money_with_wings: Ыыплатамиы епта - <a href='{outs_link}'>*КЛИК*</a>\n"
-    f":wastebasket: Канал с инфармацией - <a href='{reviews_link}'>*КЛИК*</a>\n\n"
-    ":fire: Праценты выплат сматри в закрепе\n"
-    f":credit_card: Принимаем от <b>{config('min_deposit', int)} RUB</b> до <b>99999 RUB</b> ёёы"
+    ":blueberries: wassup, <a href='tg://user?id={chat_id}'>{name}</a>\n"
+    ":gem: Бот для всего - @{bot_username}\n"
+    f":money_with_wings: Выплаты - <a href='{outs_link}'>*КЛИК*</a>\n"
+    f":wastebasket: Информация, Мануалы - <a href='{reviews_link}'>*КЛИК*</a>\n\n"
+    ":fire: Процент выплат в закрепе\n"
+    f":credit_card: Пополнения от <b>{config('min_deposit', int)} RUB</b> до <b>99999 RUB</b>"
 )
 
 # multy use
@@ -35,7 +35,7 @@ startup_text = emojize("<b>Бот запущен!</b> :sparkle:")
 
 # dynamic pin
 
-standart_pin = emojize("СТАНДАРТНЫЙ КОНФИГ {time}")
+standart_pin = emojize("Стандартный закреп, {time}")
 
 pin_path = config("pin_path")
 
