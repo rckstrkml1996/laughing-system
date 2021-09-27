@@ -4,9 +4,7 @@ from aiogram.utils.emoji import emojize
 
 from config import config
 
-cancel_keyboard = InlineKeyboardMarkup()
-cancel_btn = InlineKeyboardButton("Отмена нахуй", callback_data="cancel")
-cancel_keyboard.add(cancel_btn)
+
 
 
 # worker panel

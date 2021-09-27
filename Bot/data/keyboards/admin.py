@@ -1,6 +1,10 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
+cancel_keyboard = InlineKeyboardMarkup()
+cancel_btn = InlineKeyboardButton("Отмена нахуй", callback_data="cancel")
+cancel_keyboard.add(cancel_btn)
+
 
 def summary_check_keyboard(chat_id):
     markup = InlineKeyboardMarkup()
