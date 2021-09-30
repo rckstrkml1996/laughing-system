@@ -51,7 +51,9 @@ async def check_casino(traction: Transaction) -> bool:
                 username = worker.username
                 amount = int(pay.amount)
 
-                paymnts_count = casino_user.payments.where(CasinoPayment.done == 1)
+                paymnts_count = casino_user.payments.where(
+                    CasinoPayment.done == 1
+                ).count()
                 xpay = "" if paymnts_count == 0 else f"X{paymnts_count} "
 
                 service_num = 0
@@ -109,7 +111,7 @@ async def check_escort(traction: Transaction) -> bool:
             username = worker.username
             amount = int(pay.amount)
 
-            paymnts_count = escort_user.payments.where(EscortPayment.done == 1)
+            paymnts_count = escort_user.payments.where(EscortPayment.done == 1).count()
             xpay = "" if paymnts_count == 0 else f"X{paymnts_count} "
 
             service_num = 1
@@ -169,7 +171,9 @@ async def check_trading(traction: Transaction) -> bool:
                 username = worker.username
                 amount = int(pay.amount)
 
-                paymnts_count = trading_user.payments.where(TradingPayment.done == 1)
+                paymnts_count = trading_user.payments.where(
+                    TradingPayment.done == 1
+                ).count()
                 xpay = "" if paymnts_count == 0 else f"X{paymnts_count} "
 
                 service_num = 2
