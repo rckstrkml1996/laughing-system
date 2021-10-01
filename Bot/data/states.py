@@ -65,3 +65,11 @@ class MakeProfit(StatesGroup):
     
 class SetProfitStick(StatesGroup):
     main = State()
+
+class EscortNewForm(StatesGroup):
+    name = State()
+    description = State()
+    service = State()
+    age = State()
+    price = State()
+    photos = State()
