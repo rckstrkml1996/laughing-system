@@ -215,22 +215,27 @@ async def on_new_payment(payments: Payments):
     try:
         for transaction in payments.data:
             if await check_casino(transaction):  # check if supply on casino
+                service = "Казино"
                 logger.info(
                     f"Casino, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
                 )
             elif await check_escort(transaction):  # check if on escort
+                service = "Эскорт"
                 logger.info(
                     f"Escort, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
                 )
             elif await check_trading(transaction):  # check
+                service = "Трейдинг"
                 logger.info(
                     f"Trading, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
                 )
             else:
+                service = "Без сервиса"
                 qiwi_pay = QiwiPayment.create(
                     person_id=transaction.personId,
                     account=transaction.account,
                     amount=transaction.total.amount,
+                    payment_type=transaction.trnsType,
                     currency=transaction.total.currency,
                     comment=transaction.comment,
                     date=transaction.date,
@@ -243,7 +248,7 @@ async def on_new_payment(payments: Payments):
             )
             await dp.bot.send_message(
                 config("admins_chat"),
-                f"Без сервиса, None в {transaction.personId}\nСумма: <b>{transaction.total.amount} RUB</b>\n{comment}",
+                f"{service}, в {transaction.personId}\nСумма: <b>{transaction.total.amount} RUB</b>\n{comment}",
             )
     except Exception as e:
         logger.exception(e)
@@ -275,8 +280,10 @@ async def check_qiwis():
 
             try:
                 await parser.check()
+                logger.debug(f"Check qiwi [{parser.api.token}] payments")
             except (ClientProxyConnectionError, TimeoutError):
                 delete_api_proxy(token)
+                logger.warning("Deleting Qiwi - Lock [TErr, ClErr]")
             except Exception as e:
                 logger.exception(e)
                 # update qiwi
@@ -289,7 +296,7 @@ async def check_qiwis():
         except NoOptionError:
             token = None
 
-        await sleep(40)
+        await sleep(60)
 
 
 async def send_profit(profit: Profit, moll, service: str, payment=None):

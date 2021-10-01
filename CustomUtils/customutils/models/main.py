@@ -38,11 +38,6 @@ class BaseModel(peewee.Model):
         database = base
 
 
-# def random_secret_id():
-#     # 4294967295 chance 16(hex) ** 8(digits) - 1(notused)
-#     return secrets.token_hex(4)  # hex with 8 digits
-
-
 class Worker(BaseModel):
     cid = peewee.IntegerField(unique=True)
     uniq_key = peewee.IntegerField(unique=True)
