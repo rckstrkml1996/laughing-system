@@ -69,7 +69,13 @@ StatusNames = [
 
 ServiceNames = ["Казино", "Эскорт", "Трейдинг", "Прямой перевод"]
 
-MinDepositValues = [config("min_deposit", int), 1000, 1500, 3000, 5000, 10000]
+alowed_values = [100, 300, 500, 750, 1000, 1500, 3000, 5000, 10000]
+
+MinDepositValues = [config("min_deposit")]
+for val in alowed_values:
+    if MinDepositValues[0] < val:
+        MinDepositValues.append(val)
+
 
 # Rates = [  # виды ставок первая - стандартная
 #     (75, 65, 55),

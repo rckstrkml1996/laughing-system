@@ -23,16 +23,18 @@ class IsWorkerFilter(BoundFilter):
         chat = self.get_target(obj)
         if chat.type == "private":
             try:
-                return self.is_worker == (Worker.get(cid=chat.id).status >= 2)
+                worker = Worker.get(cid=chat.id)
+                if self.is_worker == (worker.status >= 2):
+                    return {"worker": worker}
             except Worker.DoesNotExist:
                 return not self.is_worker  # not worker
-        elif chat.type == "group" or "supergroup":
+        else:
             return False
 
-        logger.debug(
-            f"IsWorkerFilter called not in private chat and group, type: {chat.type}, id: {chat.id}"
-        )
-        return False
+        # logger.debug(
+        #     f"IsWorkerFilter called not in private chat and group, type: {chat.type}, id: {chat.id}"
+        # )
+        # return False
 
 
 class IsAdminFilter(BoundFilter):

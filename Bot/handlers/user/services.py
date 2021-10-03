@@ -1,13 +1,98 @@
 from aiogram import types
 from aiogram.dispatcher.filters import RegexpCommandsFilter
+from aiogram.dispatcher import FSMContext
 from loguru import logger
 
 from customutils.models import Worker, CasinoUser, CasinoUserHistory, CasinoPayment
 
 from loader import dp, casino_bot
-
-from data.payload import fart_off_text, fart_fif_text, fart_on_text, mamonth_delete_text
+from config import config
+from data.payload import (
+    fart_off_text,
+    fart_fif_text,
+    fart_on_text,
+    mamonth_delete_text,
+    casino_text,
+    trading_text,
+    escort_text,
+)
+from data.keyboards import casino_keyboard, trading_keyboard, escort_keyboard
 from utils.executional import get_casino_mamonth_info
+
+
+@dp.message_handler(regexp="казин", state="*", is_worker=True)
+async def casino_info(message: types.Message, worker: Worker, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is not None:
+        logger.debug(f"Cancelling state {current_state} in bot start")
+        await state.finish()
+
+    logger.debug(f"Worker [{message.chat.id}] want get casino info")
+
+    await message.answer(
+        casino_text.format(
+            worker_id=worker.uniq_key,
+            pay_cards="\n".join(
+                map(
+                    lambda c: f"&#127479;&#127482; {c[1:]}"
+                    if c[0] == "r"
+                    else f"&#127482;&#127462; {c[1:]}",
+                    config("fake_cards"),
+                )
+            ),
+            pay_qiwis="\n".join(
+                map(
+                    lambda c: f"&#127479;&#127482; {c[1:]}"
+                    if c[0] == "r"
+                    else f"&#127482;&#127462; {c[1:]}",
+                    config("fake_numbers"),
+                )
+            ),
+        ),
+        reply_markup=casino_keyboard,
+        disable_web_page_preview=True,
+    )
+    # await Casino.commands.set()
+    logger.debug(f"Worker [{message.chat.id}] get casino info succesfully")
+
+
+@dp.message_handler(regexp="трейдин", is_worker=True, state="*")
+async def casino_info(message: types.Message, worker: Worker):
+    await message.answer(
+        trading_text.format(
+            worker_id=worker.uniq_key,
+            pay_cards="\n".join(
+                map(
+                    lambda c: f"&#127479;&#127482; {c[1:]}"
+                    if c[0] == "r"
+                    else f"&#127482;&#127462; {c[1:]}",
+                    config("fake_cards"),
+                )
+            ),
+            pay_qiwis="\n".join(
+                map(
+                    lambda c: f"&#127479;&#127482; {c[1:]}"
+                    if c[0] == "r"
+                    else f"&#127482;&#127462; {c[1:]}",
+                    config("fake_numbers"),
+                )
+            ),
+        ),
+        reply_markup=trading_keyboard,
+        disable_web_page_preview=True,
+    )
+
+
+@dp.message_handler(regexp="эскорт", is_worker=True, state="*")
+async def casino_info(message: types.Message, worker: Worker):
+    await message.answer(
+        escort_text.format(
+            worker_id=worker.uniq_key,
+        ),
+        reply_markup=escort_keyboard,
+        disable_web_page_preview=True,
+    )
+
 
 # only info
 @dp.message_handler(  # ru and en

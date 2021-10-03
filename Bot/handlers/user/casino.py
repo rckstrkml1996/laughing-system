@@ -3,13 +3,12 @@ from asyncio import sleep
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import RegexpCommandsFilter
-from aiogram.utils.exceptions import ChatNotFound, BotBlocked
 from loguru import logger
 
 from customutils.models import CasinoUser, CasinoPayment, Worker
 from customutils.datefunc import datetime_local_now
 
-from config import MinDepositValues, config, html_style_url
+from config import MinDepositValues, html_style_url
 from loader import dp, casino_bot
 from data import payload
 from data.states import Casino
@@ -23,7 +22,7 @@ from utils.executional import get_correct_str, get_casino_mamonth_info
     state="*",
     is_worker=True,
 )
-async def casino_command(message: types.Message, regexp_command):
+async def casino_command(message: types.Message, worker: Worker, regexp_command):
     mb_id = regexp_command.group(1)
     try:
         user = CasinoUser.get(id=mb_id)  # can get by str
@@ -34,11 +33,11 @@ async def casino_command(message: types.Message, regexp_command):
         )
         return
 
-    try:
-        worker = Worker.get(cid=message.chat.id)
-    except Worker.DoesNotExist:
-        logger.debug(f"/c Worker [{message.chat.id}] does not exist in base.")
-        return
+    # try:
+    #     worker = Worker.get(cid=message.chat.id)
+    # except Worker.DoesNotExist:
+    #     logger.debug(f"/c Worker [{message.chat.id}] does not exist in base.")
+    #     return
 
     if user.owner == worker:
         logger.debug(f"/c Worker [{message.chat.id}] get mamonth info.")
@@ -58,49 +57,10 @@ async def casino_command(message: types.Message, regexp_command):
     )
 
 
-@dp.message_handler(regexp="казин", state="*", is_worker=True)
-async def casino_info(message: types.Message, state: FSMContext):
-    current_state = await state.get_state()
-    if current_state is not None:
-        logger.debug(f"Cancelling state {current_state} in bot start")
-        await state.finish()
-
-    logger.debug(f"Worker [{message.chat.id}] want get casino info")
-    try:
-        worker = Worker.get(cid=message.chat.id)
-        await message.answer(
-            payload.casino_text.format(
-                worker_id=worker.uniq_key,
-                pay_cards="\n".join(
-                    map(
-                        lambda c: f"&#127479;&#127482; {c[1:]}"
-                        if c[0] == "r"
-                        else f"&#127482;&#127462; {c[1:]}",
-                        config("fake_cards"),
-                    )
-                ),
-                pay_qiwis="\n".join(
-                    map(
-                        lambda c: f"&#127479;&#127482; {c[1:]}"
-                        if c[0] == "r"
-                        else f"&#127482;&#127462; {c[1:]}",
-                        config("fake_numbers"),
-                    )
-                ),
-            ),
-            reply_markup=casino_keyboard,
-            disable_web_page_preview=True,
-        )
-        # await Casino.commands.set()
-        logger.debug(f"Worker [{message.chat.id}] get casino info succesfully")
-    except Worker.DoesNotExist:
-        logger.debug(f"Worker [{message.chat.id}] in casino info does not exist")
-
-
 @dp.callback_query_handler(
     lambda cb: cb.data.split("_")[0] == "updateinfo", is_worker=True, state="*"
 )
-async def update_mamonth_info(query: types.CallbackQuery):
+async def update_mamonth_info(query: types.CallbackQuery, worker: Worker):
     mb_id = query.data.split("_")[1]
     try:
         user = CasinoUser.get(id=mb_id)  # can get by str
@@ -110,13 +70,13 @@ async def update_mamonth_info(query: types.CallbackQuery):
         )
         return
 
-    try:
-        worker = Worker.get(cid=query.from_user.id)
-    except Worker.DoesNotExist:
-        logger.debug(
-            f":update_info: Worker [{message.chat.id}] does not exist in base."
-        )
-        return
+    # try:
+    #     worker = Worker.get(cid=query.from_user.id)
+    # except Worker.DoesNotExist:
+    #     logger.debug(
+    #         f":update_info: Worker [{message.chat.id}] does not exist in base."
+    #     )
+    #     return
 
     if user.owner != worker:
         logger.warning(
@@ -137,7 +97,7 @@ async def update_mamonth_info(query: types.CallbackQuery):
     state="*",
     is_worker=True,
 )
-async def update_mamonth_fart(query: types.CallbackQuery):
+async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
     mb_id = query.data.split("_")[1]
     try:
         user = CasinoUser.get(id=mb_id)  # can get by str
@@ -146,11 +106,11 @@ async def update_mamonth_fart(query: types.CallbackQuery):
             f"Mamonth [{mb_id}] that worker [{query.from_user.id}] want update fart does not exist."
         )
 
-    try:
-        worker = Worker.get(cid=query.from_user.id)
-    except Worker.DoesNotExist:
-        logger.debug(f":updatefart: Worker [{message.chat.id}] does not exist in base.")
-        return
+    # try:
+    #     worker = Worker.get(cid=query.from_user.id)
+    # except Worker.DoesNotExist:
+    #     logger.debug(f":updatefart: Worker [{message.chat.id}] does not exist in base.")
+    #     return
 
     if user.owner != worker:
         logger.warning(
@@ -176,7 +136,7 @@ async def update_mamonth_fart(query: types.CallbackQuery):
     state="*",
     is_worker=True,
 )
-async def update_mamonth_fart(query: types.CallbackQuery):
+async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
     mb_id = query.data.split("_")[1]
     try:
         user = CasinoUser.get(id=mb_id)  # can get by str
@@ -185,11 +145,11 @@ async def update_mamonth_fart(query: types.CallbackQuery):
             f"Mamonth [{mb_id}] that worker [{query.from_user.id}] want update fart does not exist."
         )
 
-    try:
-        worker = Worker.get(cid=query.from_user.id)
-    except Worker.DoesNotExist:
-        logger.debug(f":updatefart: Worker [{message.chat.id}] does not exist in base.")
-        return
+    # try:
+    #     worker = Worker.get(cid=query.from_user.id)
+    # except Worker.DoesNotExist:
+    #     logger.debug(f":updatefart: Worker [{message.chat.id}] does not exist in base.")
+    #     return
 
     if user.owner != worker:
         logger.warning(
@@ -231,11 +191,11 @@ def format_mamont(user: CasinoUser) -> str:
 
 
 @dp.callback_query_handler(text="mamonths_cas", state="*", is_worker=True)
-async def all_mamonths_command(query: types.CallbackQuery):
+async def all_mamonths_command(query: types.CallbackQuery, worker: Worker):
     page = 1  # raise if shit
     row_width = 20
 
-    worker = Worker.get(cid=query.from_user.id)
+    # worker = Worker.get(cid=query.from_user.id)
     mamonths_count = worker.cas_users.count()
     localnow = datetime_local_now()
     timenow = localnow.strftime("%H:%M, %S cек")
@@ -272,12 +232,12 @@ async def all_mamonths_command(query: types.CallbackQuery):
 @dp.callback_query_handler(
     lambda cb: cb.data.split("_")[0] == "updatemamonths", state="*", is_worker=True
 )
-async def cas_mamonths_info(query: types.CallbackQuery):
+async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
     page = int(query.data.split("_")[1])  # raise if shit
     row_width = 20
     # await query.answer("Вывожу!")
 
-    worker = Worker.get(cid=query.from_user.id)
+    # worker = Worker.get(cid=query.from_user.id)
     mamonths_count = worker.cas_users.count()
     localnow = datetime_local_now()
     timenow = localnow.strftime("%H:%M, %S cек")
@@ -315,6 +275,7 @@ async def cas_mamonths_info(query: types.CallbackQuery):
 async def cas_mamonths_alert(query: types.CallbackQuery):
     await query.message.answer_photo(html_style_url, caption=payload.cas_alert_text)
     await Casino.alert.set()
+    await query.answer("Лови.")
 
 
 @dp.message_handler(state=Casino.alert)  # is_worker=True
@@ -326,9 +287,9 @@ async def cas_mamonths_alert_text(message: types.Message, state: FSMContext):
 
 
 @dp.callback_query_handler(text="alert_accept", state=Casino.alert_true, is_worker=True)
-async def cas_alert_true(query: types.CallbackQuery, state: FSMContext):
+async def cas_alert_true(query: types.CallbackQuery, worker: Worker, state: FSMContext):
     # print(alert_users([[1, 2]], casino_bot))
-    worker = Worker.get(cid=query.from_user.id)
+    # worker = Worker.get(cid=query.from_user.id)
     async with state.proxy() as data:
         text = data["text"]
     await state.finish()
@@ -364,58 +325,6 @@ async def cas_alert_true(query: types.CallbackQuery, state: FSMContext):
 
     await query.message.reply("Рассылка завершилась.")
     logger.debug("Alert done.")
-
-
-# async def edit_balance(message: types.Message, user: CasinoUser, match):
-#     user.balance = int(match.group(2))
-#     user.save()
-#     await message.answer("Изменил баланс!")
-
-
-# # @dp.message_handler(commands="msg", state=Casino.commands, is_worker=True)
-# # async def cas_mamonth_msg(message: types.Message):
-# #     await match_command(message, r"\/msg (c\d+|\d+);(.+)", send_msg_command)
-
-
-# @dp.message_handler(commands="bal", state=Casino.commands, is_worker=True)
-# async def cas_mamonth_bal(message: types.Message):
-#     await match_command(message, r"\/bal (c\d+|\d+);(\d+)", edit_balance)
-
-
-# # @dp.message_handler(commands="info", state=Casino.commands, is_worker=True)
-# # async def cas_mamonth_info(message: types.Message):
-# #     await match_command(message, r"\/info (c\d+|\d+)", send_info_about_mamonth)
-
-
-# async def change_fart_mamonth(message: types.Message, user: CasinoUser, match):
-
-
-# @dp.message_handler(commands="fart", state=Casino.commands, is_worker=True)
-# async def cas_fart_command(message: types.Message):
-#     await match_command(message, r"\/fart (c\d+|\d+)", change_fart_mamonth)
-
-
-# async def delete_mamonth(message: types.Message, user: CasinoUser, match):
-
-
-# @dp.message_handler(commands="del", state=Casino.commands, is_worker=True)
-# async def cas_fart_command(message: types.Message):
-#     await match_command(message, r"\/del (c\d+|\d+)", delete_mamonth)
-
-
-# @dp.callback_query_handler(text="my_frazes", state=Casino.commands, is_worker=True)
-# async def cas_mamonths_phrazes(query: types.CallbackQuery):
-#     await query.answer("Работаю хули")
-
-
-# @dp.callback_query_handler(text="my_promos", state=Casino.commands, is_worker=True)
-# async def cas_mamonths_promos(query: types.CallbackQuery):
-#     await query.answer("Работаю")
-
-
-# @dp.callback_query_handler(text="my_delete_all", state=Casino.commands, is_worker=True)
-# async def cas_mamonths_delete(query: types.CallbackQuery):
-#     await query.answer("Работаю")
 
 
 @dp.callback_query_handler(
