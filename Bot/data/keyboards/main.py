@@ -95,6 +95,11 @@ escort_keyboard.add(esc_create_form)
 escort_keyboard.add(esc_msg_spam_btn)
 escort_keyboard.add(esc_delete_all_btn)
 
+escort_form_keyboard = ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)
+escort_form_end_btn = KeyboardButton(emojize("Создать анкету"))
+escort_form_back_btn = KeyboardButton(emojize("Назад"))
+escort_form_keyboard.add(escort_form_end_btn)
+escort_form_keyboard.add(escort_form_back_btn)
 
 tdng_mamoths_btn = InlineKeyboardButton(
     emojize("Мои мамонтята :elephant:"), callback_data="mamonths_tdng"

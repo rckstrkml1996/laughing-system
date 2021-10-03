@@ -111,6 +111,37 @@ escort_text = emojize(
     "/msg <code>[ID мамонта]</code>;<code>[Сообщение]</code> - сообщение от бота\n"
 )
 
+escort_new_name = emojize(
+    ":tipping_hand_woman: <b>Напишите</b> имя вашей девочки"
+)
+
+escort_new_description = emojize(
+    ":raising_hand_woman: <b>Напишите</b> инфо о вашей девочке, пример:\n\n"
+    "Молодая, гибкая, красивая) Встречу наедине гарантирую!Все фото мои и полностью соответствуют!!!"
+    "Приходи ко мне и я окуну тебя в мир соблазна, где нам никто не сможет помешать."
+)
+
+escort_new_service = emojize(
+    ":raising_hand_woman: <b>Напишите</b> список услуг вашей девочки, пример:\n\n"
+    "Основное - классика, анал. Минет - с резинкой, без резинки, кунилингус."
+    "Финиш - в рот, на лицо, на грудь. Стриптиз - не профи. Массаж - классический."
+) 
+
+escort_new_age = emojize(
+    ":raising_hand_woman: <b>Введите</b> возраст вашей девочки, пример:\n\n21"
+) 
+
+escort_new_price = emojize(
+    ":raising_hand_woman: <b>Введите</b> стоимость услуг за 1 час, пример:\n\n3100"
+)
+
+escort_new_photos = emojize(
+    ":raising_hand_woman: <b>Пришли</b> до 5 фоток твоей девочки:"
+)
+
+escort_new_photo_added = emojize(
+    ":raising_hand_woman: Фото добавлено, если хочешь добавить ещё фото, пришли мне его Если нет, нажми на кнопку создать анкету"
+)
 # trading info
 
 trading_text = emojize(
