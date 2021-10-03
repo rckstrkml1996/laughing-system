@@ -45,7 +45,7 @@ async def btc_price(message: types.Message):
 async def clc_command(message: types.Message):
     text = message.text.replace("/clc ", "")
     try:
-        result = exp_parser.parse(text).evaluate({})
+        result = exp_parser.parse(text).evaluate({"x": 0.8, "xx": 0.7})
     except:
         result = "хз"
     await message.reply(result)

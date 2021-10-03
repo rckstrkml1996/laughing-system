@@ -51,7 +51,8 @@ async def check_casino(traction: Transaction) -> bool:
                 username = worker.username
                 amount = int(pay.amount)
 
-                paymnts_count = casino_user.payments.where(
+                paymnts_count = CasinoPayment.where(
+                    CasinoPayment.owner == casino_user,
                     CasinoPayment.done == 1
                 ).count()
                 xpay = "" if paymnts_count == 0 else f"X{paymnts_count} "
@@ -111,7 +112,10 @@ async def check_escort(traction: Transaction) -> bool:
             username = worker.username
             amount = int(pay.amount)
 
-            paymnts_count = escort_user.payments.where(EscortPayment.done == 1).count()
+            paymnts_count = EscortPayment.where(
+                EscortPayment.owner == escort_user,
+                EscortPayment.done == 1
+            ).count()
             xpay = "" if paymnts_count == 0 else f"X{paymnts_count} "
 
             service_num = 1
@@ -171,8 +175,8 @@ async def check_trading(traction: Transaction) -> bool:
                 username = worker.username
                 amount = int(pay.amount)
 
-                paymnts_count = trading_user.payments.where(
-                    TradingPayment.done == 1
+                paymnts_count = TradingPayment.where(
+                    TradingPayment.owner == trading_user, TradingPayment.done == 1
                 ).count()
                 xpay = "" if paymnts_count == 0 else f"X{paymnts_count} "
 
@@ -301,9 +305,6 @@ async def check_qiwis():
 
 async def send_profit(profit: Profit, moll, service: str, payment=None):
     worker = profit.owner
-
-    worker.ref_balance += profit.share
-    worker.save()
 
     all_profit = db_commands.get_profits_sum(worker.id)
     profit_path = render_profit(
