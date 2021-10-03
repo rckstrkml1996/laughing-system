@@ -1,12 +1,10 @@
 from aiogram import types
 from aiogram.dispatcher.storage import FSMContext
-from customutils.models import Worker
-from customutils.models.models import EscortUser
 
 from loguru import logger
 
+from customutils.models import Worker, EscortUser, EscortGirl
 from customutils.datefunc import datetime_local_now
-from customutils.models import EscortGirl
 from data import keyboards
 from loader import dp
 from data import payload
