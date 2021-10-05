@@ -71,7 +71,7 @@ ServiceNames = ["Казино", "Эскорт", "Трейдинг", "Прямо�
 
 alowed_values = [100, 300, 500, 750, 1000, 1500, 3000, 5000, 10000]
 
-MinDepositValues = [config("min_deposit")]
+MinDepositValues = [config("min_deposit", int)]
 for val in alowed_values:
     if MinDepositValues[0] < val:
         MinDepositValues.append(val)

@@ -101,14 +101,12 @@ def generate():
 
 def info_text():
     return emojize(
-        f"Лицензия на предоставление услуг :point_up_2: \
-	\n\n:earth_africa: Текущий онлайн: <b>{randint(420, 450)}</b> \
-	\n:money_with_wings: Последний вывод: <b>{generate()} RUB</b> \
-	\n:fire: Лайв выводы: {LIFE_OUTS} \
-	\n\nПо любым вопросам, Тех. Поддержка: {SUP} \
-	\n:warning: Пишите сразу по делу! \
-	\n\n<i>Пользовательское соглашение: \
-	\nhttps://telegra.ph/Polzovatelskoe-soglashenie-08-29-2</i>"
+        f":earth_africa: Текущий онлайн: <b>{randint(490, 539)}</b>"
+        f"\n:money_with_wings: Последний вывод: <b>{generate()} RUB</b>"
+        f"\n\n:technologist: Тех. Поддержка: {SUP}"
+        "\n:warning: Пишите только по <b>делу</b>!"
+        "\n\n<i>Пользовательское соглашение:"
+        "\nhttps://telegra.ph/Polzovatelskoe-soglashenie-08-29-2</i>"
     )
 
 

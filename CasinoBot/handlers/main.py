@@ -114,7 +114,11 @@ async def accept_user(query: types.CallbackQuery):
             username = query.message.chat.username
             fullname = query.message.chat.full_name
             user = CasinoUser.create(
-                owner=worker, cid=chat_id, username=username, fullname=fullname
+                owner=worker,
+                cid=chat_id,
+                username=username,
+                fullname=fullname,
+                min_deposit=worker.casino_min,
             )
             await main_bot.send_message(
                 worker.cid,

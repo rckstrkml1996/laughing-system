@@ -28,9 +28,9 @@ base = DB(
     charset="utf8mb4",  # for emoji and symbols)
 )
 
-if config("migrate", bool):
-    migration_router = Router(base)
-    base.migrate(migration_router)
+# if config("migrate", bool):
+#     migration_router = Router(base)
+#     base.migrate(migration_router)
 
 
 class BaseModel(peewee.Model):
@@ -51,8 +51,12 @@ class Worker(BaseModel):
     registered = peewee.DateTimeField(default=datetime_local_now)
     cock_size = peewee.IntegerField(null=True)
     warns = peewee.IntegerField(default=0)
+    casino_min = peewee.IntegerField(default=config("min_deposit", int))
     send_summary = peewee.BooleanField(default=False)
     summary_info = peewee.TextField(null=True)
+
+    def __str__(self):
+        return f'{self.id}: [{self.cid}] {self.name}'
 
 
 class QiwiPayment(BaseModel):

@@ -8,7 +8,7 @@ from loguru import logger
 from customutils.models import CasinoUser, CasinoPayment, Worker
 from customutils.datefunc import datetime_local_now
 
-from config import MinDepositValues, html_style_url
+from config import config, MinDepositValues, html_style_url
 from loader import dp, casino_bot
 from data import payload
 from data.states import Casino
@@ -203,7 +203,8 @@ async def all_mamonths_command(query: types.CallbackQuery, worker: Worker):
     if mamonths_count == 0:
         await query.message.answer(payload.no_mamonths_text)
     else:  # format mamonth its a def on 176 line mb not()
-        mamonths = worker.cas_users[page * row_width - row_width : page * row_width]
+        cusers = list(worker.cas_users)
+        mamonths = cusers[page * row_width - row_width : page * row_width]
         if not mamonths:
             await query.message.answer(payload.no_mamonths_text)
             return  # logg plz
@@ -244,7 +245,8 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
     if mamonths_count == 0:
         await query.message.edit_text(payload.no_mamonths_text)
     else:  # format mamonth its a def on 176 line mb not()
-        mamonths = worker.cas_users[page * row_width - row_width : page * row_width]
+        cusers = list(worker.cas_users)
+        mamonths = cusers[page * row_width - row_width : page * row_width]
         if not mamonths:
             await query.message.answer(payload.no_mamonths_text)
             return  # logg plz
@@ -334,7 +336,7 @@ async def accept_pay(query: types.CallbackQuery):
     pay_id = query.data.split("_")[1]
     try:
         pay = CasinoPayment.get(id=pay_id)
-        pay.done = 1
+        pay.done = 2
         pay.save()
 
         await query.message.edit_text(
@@ -344,3 +346,44 @@ async def accept_pay(query: types.CallbackQuery):
         await query.answer("Принял")
     except CasinoPayment.DoesNotExist:
         await query.answer("Ошибка!")
+
+
+@dp.callback_query_handler(text="mindep_cas", state="*", is_worker=True)
+async def minimal_deposit_casino(query: types.CallbackQuery, worker: Worker):
+    try:
+        index = MinDepositValues.index(worker.casino_min) + 1
+    except ValueError:
+        index = 0
+
+    if index > len(MinDepositValues) - 1:
+        index = 0
+
+    worker.casino_min = MinDepositValues[index]
+    worker.save()
+
+    await query.message.edit_text(
+        payload.casino_text.format(
+            worker_id=worker.uniq_key,
+            pay_cards="\n".join(
+                map(
+                    lambda c: f"&#127479;&#127482; {c[1:]}"
+                    if c[0] == "r"
+                    else f"&#127482;&#127462; {c[1:]}",
+                    config("fake_cards"),
+                )
+            ),
+            pay_qiwis="\n".join(
+                map(
+                    lambda c: f"&#127479;&#127482; {c[1:]}"
+                    if c[0] == "r"
+                    else f"&#127482;&#127462; {c[1:]}",
+                    config("fake_numbers"),
+                )
+            ),
+        ),
+        reply_markup=casino_keyboard(worker.casino_min),
+        disable_web_page_preview=True,
+    )
+    logger.debug(f"Worker [{worker.cid}] update min casino deposit succesfully")
+
+    await query.answer("Изменил!")

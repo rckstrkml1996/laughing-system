@@ -21,7 +21,7 @@ from .render import render_profit
 
 
 async def check_casino(traction: Transaction) -> bool:
-    delta = datetime_local_now() - timedelta(days=1)
+    delta = datetime_local_now() - timedelta(days=3)
     try:
         del_count = (
             CasinoPayment.delete().where(CasinoPayment.created < delta).execute()
@@ -48,13 +48,10 @@ async def check_casino(traction: Transaction) -> bool:
                 casino_user = pay.owner
                 worker = casino_user.owner
 
-                username = worker.username
-                amount = int(pay.amount)
-
                 paymnts_count = CasinoPayment.where(
-                    CasinoPayment.owner == casino_user,
-                    CasinoPayment.done == 1
+                    CasinoPayment.owner.id == casino_user.id, CasinoPayment.done == 1
                 ).count()
+                logger.debug(f"Payments count: {paymnts_count}")
                 xpay = "" if paymnts_count == 0 else f"X{paymnts_count} "
 
                 service_num = 0
@@ -73,7 +70,7 @@ async def check_casino(traction: Transaction) -> bool:
                 )
                 profit = Profit.create(
                     owner=worker,
-                    amount=amount,
+                    amount=int(pay.amount),
                     share=share,
                     service=service_num,
                     payment=qiwi_pay,
@@ -88,7 +85,7 @@ async def check_casino(traction: Transaction) -> bool:
 
 
 async def check_escort(traction: Transaction) -> bool:
-    delta = datetime_local_now() - timedelta(days=1)
+    delta = datetime_local_now() - timedelta(days=3)
     del_count = EscortPayment.delete().where(EscortPayment.created < delta).execute()
     if del_count != 0:
         logger.info(f"Escort deleting old payments: {del_count}")
@@ -109,12 +106,8 @@ async def check_escort(traction: Transaction) -> bool:
             escort_user = pay.owner
             worker = escort_user.owner
 
-            username = worker.username
-            amount = int(pay.amount)
-
             paymnts_count = EscortPayment.where(
-                EscortPayment.owner == escort_user,
-                EscortPayment.done == 1
+                EscortPayment.owner == escort_user, EscortPayment.done == 1
             ).count()
             xpay = "" if paymnts_count == 0 else f"X{paymnts_count} "
 
@@ -134,7 +127,7 @@ async def check_escort(traction: Transaction) -> bool:
             )
             profit = Profit.create(
                 owner=worker,
-                amount=amount,
+                amount=int(pay.amount),
                 share=share,
                 service=service_num,
                 payment=qiwi_pay,
@@ -149,7 +142,7 @@ async def check_escort(traction: Transaction) -> bool:
 
 
 async def check_trading(traction: Transaction) -> bool:
-    delta = datetime_local_now() - timedelta(days=1)
+    delta = datetime_local_now() - timedelta(days=3)
     del_count = TradingPayment.delete().where(TradingPayment.created < delta).execute()
     if del_count != 0:
         logger.info(f"Trading deleting old payments: {del_count}")
@@ -171,9 +164,6 @@ async def check_trading(traction: Transaction) -> bool:
 
                 trading_user = pay.owner
                 worker = trading_user.owner
-
-                username = worker.username
-                amount = int(pay.amount)
 
                 paymnts_count = TradingPayment.where(
                     TradingPayment.owner == trading_user, TradingPayment.done == 1
@@ -200,7 +190,7 @@ async def check_trading(traction: Transaction) -> bool:
                 )
                 profit = Profit.create(
                     owner=worker,
-                    amount=amount,
+                    amount=int(pay.amount),
                     share=share,
                     service=service_num,
                     payment=qiwi_pay,
@@ -254,8 +244,8 @@ async def on_new_payment(payments: Payments):
                 config("admins_chat"),
                 f"{service}, в {transaction.personId}\nСумма: <b>{transaction.total.amount} RUB</b>\n{comment}",
             )
-    except Exception as e:
-        logger.exception(e)
+    except Exception as ex:
+        logger.error(ex)
 
 
 async def check_qiwis():

@@ -49,7 +49,7 @@ async def casino_info(message: types.Message, worker: Worker, state: FSMContext)
                 )
             ),
         ),
-        reply_markup=casino_keyboard,
+        reply_markup=casino_keyboard(worker.casino_min),
         disable_web_page_preview=True,
     )
     # await Casino.commands.set()

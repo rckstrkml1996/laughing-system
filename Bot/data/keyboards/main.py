@@ -5,8 +5,6 @@ from aiogram.utils.emoji import emojize
 from config import config
 
 
-
-
 # worker panel
 menu_keyboard = ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)
 profile_btn = KeyboardButton(emojize(":woman_tipping_hand: Мой профиль"))
@@ -56,9 +54,9 @@ cas_mamoths_btn = InlineKeyboardButton(
 cas_promos_btn = InlineKeyboardButton(
     emojize("Мои промокоды :receipt:"), callback_data="promos_cas"
 )
-cas_fraze_btn = InlineKeyboardButton(
-    emojize("Свои фразы при выводе :book:"), callback_data="frazes_cas"
-)
+# cas_fraze_btn = InlineKeyboardButton(
+#     emojize("Свои фразы при выводе :book:"), callback_data="frazes_cas"
+# )
 cas_msg_spam_btn = InlineKeyboardButton(
     emojize("Массовая рассылка :diamond_shape_with_a_dot_inside:"),
     callback_data="all_alerts_cas",
@@ -67,12 +65,23 @@ cas_delete_all_btn = InlineKeyboardButton(
     emojize("Удалить всех :warning:"), callback_data="delete_all_cas"
 )
 
-casino_keyboard = InlineKeyboardMarkup()
-casino_keyboard.add(cas_mamoths_btn)
-casino_keyboard.add(cas_promos_btn)
-casino_keyboard.add(cas_fraze_btn)
-casino_keyboard.add(cas_msg_spam_btn)
-casino_keyboard.add(cas_delete_all_btn)
+
+def casino_keyboard(min_dep: int):
+    markup = InlineKeyboardMarkup()
+    markup.add(cas_mamoths_btn)
+    markup.add(cas_promos_btn)
+    # markup.add(cas_fraze_btn)
+    markup.add(cas_msg_spam_btn)
+    markup.add(cas_delete_all_btn)
+
+    cas_mindep_btn = InlineKeyboardButton(
+        emojize(f"Минималка: {min_dep} RUB :money_with_wings:"),
+        callback_data="mindep_cas",
+    )
+
+    markup.add(cas_mindep_btn)
+
+    return markup
 
 
 esc_mamoths_btn = InlineKeyboardButton(
@@ -95,7 +104,9 @@ escort_keyboard.add(esc_create_form)
 escort_keyboard.add(esc_msg_spam_btn)
 escort_keyboard.add(esc_delete_all_btn)
 
-escort_form_keyboard = ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)
+escort_form_keyboard = ReplyKeyboardMarkup(
+    one_time_keyboard=False, resize_keyboard=True
+)
 escort_form_end_btn = KeyboardButton(emojize("Создать анкету"))
 escort_form_back_btn = KeyboardButton(emojize("Назад"))
 escort_form_keyboard.add(escort_form_end_btn)
