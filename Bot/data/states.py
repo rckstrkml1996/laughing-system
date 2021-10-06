@@ -60,11 +60,14 @@ class Trading(StatesGroup):
     alert = State()
     alert_true = State()
 
+
 class MakeProfit(StatesGroup):
     main = State()
-    
+
+
 class SetProfitStick(StatesGroup):
     main = State()
+
 
 class EscortNewForm(StatesGroup):
     name = State()
@@ -73,3 +76,9 @@ class EscortNewForm(StatesGroup):
     age = State()
     price = State()
     photos = State()
+
+
+class Render(StatesGroup):
+    qiwi_balance = State()
+    qiwi_trans = State()
+    sber_trans = State()

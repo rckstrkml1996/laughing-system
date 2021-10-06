@@ -23,6 +23,40 @@ async def worker_profile(message: types.Message, state: FSMContext):
     await worker_welcome(message)
 
 
+@dp.callback_query_handler(text="menu", is_worker=True, state="*")
+async def worker_profile_callback(query: types.CallbackQuery, worker: Worker):
+    logger.debug(f"Worker - {query.from_user.id}, wants back to profile")
+
+    # worker.username = query.from_user.username
+    # worker.save()  # update worker username
+    in_team = datetime_local_now() - worker.registered
+
+    len_profits = worker.profits.count()
+    all_balance = db_commands.get_profits_sum(worker.id)
+    middle_profits = 0
+    if len_profits:
+        middle_profits = int(all_balance / len_profits)
+
+    logger.debug(
+        f"Worker - {query.from_user.id} get profile, {all_balance=} {len_profits=} {middle_profits=}"
+    )
+
+    await query.message.edit_text(
+        payload.worker_menu_text.format(
+            chat_id=query.from_user.id,
+            status=StatusNames[worker.status],
+            all_balance=all_balance,
+            ref_balance=worker.ref_balance,
+            middle_profits=middle_profits,
+            profits=get_correct_str(len_profits, "профит", "профита", "профитов"),
+            in_team=get_correct_str(in_team.days, "день", "дня", "дней"),
+            warns=0,
+            team_status=emojize(":full_moon: <b>Всё работает</b>, воркаем!"),
+        ),
+        reply_markup=panel_keyboard(worker.username_hide),
+    )
+
+
 async def worker_welcome(message: types.Message):
     logger.debug(f"Worker - {message.chat.id}, wants get profile")
 
@@ -77,10 +111,6 @@ async def project_info(message: types.Message, state: FSMContext):
         reply_markup=about_project_keyboard,
     )
     logger.debug(f"Worker - {message.chat.id}, get project info")
-
-
-
-
 
 
 @dp.callback_query_handler(text="toggleusername", is_worker=True)

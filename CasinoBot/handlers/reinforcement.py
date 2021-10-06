@@ -139,39 +139,20 @@ async def add_check(query: types.CallbackQuery):
 async def out_game(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        await message.answer(
-            payload.out_req_text,
-            reply_markup=keyboards.cancel_keyboard,
-        )
-        await OutBalance.number.set()
+        if user.balance > 0:
+            await message.answer(
+                payload.out_req_text,
+                reply_markup=keyboards.cancel_keyboard,
+            )
+            await OutBalance.number.set()
+        else:
+            await message.answer(
+                payload.invalid_outbalance_text.format(
+                    amount=user.balance,
+                ),
+            )
     except CasinoUser.DoesNotExist:
         logger.debug(f"#{message.chat.id} - does not exist")
-
-
-# @dp.message_handler(
-#     lambda mes: not mes.text.isdigit() or mes.text == "0",
-#     state=OutBalance.amount,
-# )
-# async def out_amount_invalid(message: types.Message):
-#     await message.reply(quote_html("Вы ввели некорректную сумму вывода!"))
-
-
-# @dp.message_handler(state=OutBalance.amount)
-# async def out_amount(message: types.Message, state: FSMContext):
-#     try:
-#         user = CasinoUser.get(cid=message.chat.id)
-#         if user.balance >= int(message.text):
-#             async with state.proxy() as data:
-#                 data["amount"] = int(message.text)
-#             await message.answer(payload.out_req_text)
-#             await OutBalance.number.set()
-#         elif user.balance < int(message.text):
-#             await message.answer(
-#                 "Недостаточно средств для вывода",
-#                 reply_markup=keyboards.cancel_keyboard,
-#             )
-#     except CasinoUser.DoesNotExist:
-#         logger.debug(f"#{message.chat.id} - does not exist")
 
 
 @dp.message_handler(regexp="\+\d{10,}|\d{10,}", state=OutBalance.number)

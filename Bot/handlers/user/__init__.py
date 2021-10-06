@@ -1,6 +1,7 @@
 from .main import dp
 from .summary import dp
 from .panel import dp
+from .render import dp
 from .confcommands import dp
 from .inline import dp
 

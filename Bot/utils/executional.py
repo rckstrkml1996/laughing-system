@@ -24,8 +24,8 @@ async def get_casino_mamonth_info(worker: Worker, user: CasinoUser):
     games_win = user.history.where(CasinoUserHistory.editor == 2).count()
     adds = user.history.where(CasinoUserHistory.editor == 0)
     adds_count = adds.count()
-    adds_amount = db_commands.casino_history_sum(user.id)  # editor == 0
-    pays_amount = db_commands.casino_history_sum(user.id, editor=2)
+    adds_amount = db_commands.casino_history_sum(user.id, editor=2)
+    pays_amount = db_commands.casino_history_sum(user.id)  # editor == 0
     # pays_amount = db_commands.casino_pays_sum(user.id)  # done == 2
     games_lose = user.history.where(CasinoUserHistory.editor == 3).count()
 

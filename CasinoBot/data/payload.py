@@ -59,6 +59,8 @@ out_req_text = emojize(
     ":credit_card: Вывод возможен только на те реквизиты, с которых пополнялся ваш баланс!</b>"
 )
 
+invalid_outbalance_text = emojize("Нечего выводить!\n" "Баланс: <b>{amount} RUB</b>")
+
 out_req_succesful = emojize(
     "Заявка на вывод средств отправлена \
 	\n:warning: Средства придут к Вам на счёт в течении 2 до 30 минут.\nОжидайте!"

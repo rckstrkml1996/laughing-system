@@ -17,6 +17,12 @@ menu_keyboard.add(casino_btn, traiding_btn, escort_btn)
 menu_keyboard.add(about_btn)
 
 
+render_btn = InlineKeyboardButton(
+    emojize("Отрисовка :receipt:"),
+    callback_data="render",
+)
+
+
 def panel_keyboard(namehide) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     username_btn = InlineKeyboardButton(
@@ -24,6 +30,7 @@ def panel_keyboard(namehide) -> InlineKeyboardMarkup:
         callback_data="toggleusername",
     )
     markup.add(username_btn)
+    markup.add(render_btn)
 
     return markup
 

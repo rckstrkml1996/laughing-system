@@ -55,6 +55,7 @@ async def start_bot(dispatcher: Dispatcher, notify=True, skip_updates=True):
 
     if skip_updates:
         await dispatcher.skip_updates()
+    
     logger.info(f"Starting bot...")
     await dispatcher.start_polling(timeout=3)  # change if internet slow)
 

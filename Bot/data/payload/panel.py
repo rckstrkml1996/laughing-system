@@ -3,8 +3,7 @@ from aiogram.utils.emoji import emojize
 from config import config
 
 worker_menu_text = emojize(
-    ":woman_tipping_hand: <b>Твой профиль</b>\n\n"
-    ":rocket: Telegram ID: <b>{chat_id}</b>\n"
+    ":woman_tipping_hand: <b>Твой профиль</b> [<code>{chat_id}</code>]\n\n"
     "Реф баланс: <b>{ref_balance} RUB</b>\n\n"
     ":money_with_wings: У тебя {profits} на сумму <b>{all_balance}₽</b>\n"
     "Средний профит ~ <b>{middle_profits}₽</b>\n\n"
