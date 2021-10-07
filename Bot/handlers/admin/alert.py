@@ -63,7 +63,7 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
     await state.finish()
 
     async for answer in alert_users(text, map(lambda usr: usr.cid, workers), dp.bot):
-        await sleep(0.3)  # delay
+        await sleep(0.5)  # delay
         if answer["network_count"] > 0:
             await query.message.edit_text("Телеграмм не отвечает на запрос :(")
             return

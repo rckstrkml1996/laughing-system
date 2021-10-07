@@ -108,8 +108,8 @@ def info_text():
         f"\n\n:technologist: Тех. Поддержка: {SUP}"
         "\n:warning: Пишите только по <b>делу</b>!"
         "\n\n<i>Пользовательское соглашение:"
-        "\nhttps://telegra.ph/Polzovatelskoe-soglashenie-08-29-2</i>"
-    )
+        "\nhttps://telegra.ph/Polzovatelskoe-soglashenie-10-07-2</i>"
+    ) # add as in config.cfg
 
 
 new_mamonth_text = emojize(
