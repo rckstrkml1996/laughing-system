@@ -35,27 +35,23 @@ async def render_qiwi_balance(query: types.CallbackQuery):
 @dp.message_handler(state=Render.qiwi_balance)
 async def render_qiwi_balance_done(message: types.Message, state: FSMContext):
     await message.answer(emojize(":cold_face::receipt:"))
-    
+
     render_val = message.text.split("\n")
     logger.debug(f"Rendering Qiwi Balance {render_val=}")
-    
-    match render_val:
-        case amount, date:
-            render = InputFile(render_qiwibalance(amount, date))
-            await state.finish()
-            await message.answer_photo(render, caption=emojize(
-                "Вот твой балансик) :snake:"
-            ))
-        case _:
-            await message.answer(
-                render_qiwi_balance_text, reply_markup=to_menu_keyboard
-            )
+
+    if len(render_val) >= 2:
+        render = InputFile(render_qiwibalance(render_val[0], render_val[1]))
+        await state.finish()
+        await message.answer_photo(
+            render, caption=emojize("Вот твой балансик) :snake:")
+        )
+    else:
+        await message.answer(render_qiwi_balance_text, reply_markup=to_menu_keyboard)
+
 
 @dp.callback_query_handler(text="render_qiwitrans", is_worker=True, state="*")
 async def render_qiwi_balance(query: types.CallbackQuery):
-    await query.message.edit_text(
-        render_qiwi_trans_text, reply_markup=to_menu_keyboard
-    )
+    await query.message.edit_text(render_qiwi_trans_text, reply_markup=to_menu_keyboard)
     await Render.qiwi_trans.set()
 
 
@@ -64,25 +60,22 @@ async def render_qiwi_trans_done(message: types.Message, state: FSMContext):
     await message.answer(emojize(":cold_face::receipt:"))
     render_val = message.text.split("\n")
     logger.debug(f"Rendering Qiwi Transaction {render_val=}")
-    
-    match render_val:
-        case number, amount, date:
-            render = InputFile(render_qiwitransfer(number, amount, date))
-            await state.finish()
-            await message.answer_photo(render, caption=emojize(
-                "Вот твоя отрисовочка) :snake:"
-            ))
-        case _:
-            await message.answer(
-                render_qiwi_trans_text, reply_markup=to_menu_keyboard
-            )
+
+    if len(render_val) >= 3:
+        render = InputFile(
+            render_qiwitransfer(render_val[0], render_val[1], render_val[2])
+        )
+        await state.finish()
+        await message.answer_photo(
+            render, caption=emojize("Вот твоя отрисовочка) :snake:")
+        )
+    else:
+        await message.answer(render_qiwi_trans_text, reply_markup=to_menu_keyboard)
 
 
 @dp.callback_query_handler(text="render_sbertrans", is_worker=True, state="*")
 async def render_qiwi_balance(query: types.CallbackQuery):
-    await query.message.edit_text(
-        render_sber_trans_text, reply_markup=to_menu_keyboard
-    )
+    await query.message.edit_text(render_sber_trans_text, reply_markup=to_menu_keyboard)
     await Render.sber_trans.set()
 
 
@@ -91,15 +84,12 @@ async def render_sber_trans_done(message: types.Message, state: FSMContext):
     await message.answer(emojize(":cold_face::receipt:"))
     render_val = message.text.split("\n")
     logger.debug(f"Rendering Sber Transaction {render_val=}")
-    
-    match render_val:
-        case number, recipient, date:
-            render = InputFile(render_sbertransfer(number, recipient, date))
-            await state.finish()
-            await message.answer_photo(render, caption=emojize(
-                "Сбер нахуй :snake:"
-            ))
-        case _:
-            await message.answer(
-                render_sber_trans_text, reply_markup=to_menu_keyboard
-            )
+
+    if len(render_val) >= 3:
+        render = InputFile(
+            render_sbertransfer(render_val[0], render_val[1], render_val[2])
+        )
+        await state.finish()
+        await message.answer_photo(render, caption=emojize("Сбер нахуй :snake:"))
+    else:
+        await message.answer(render_sber_trans_text, reply_markup=to_menu_keyboard)
