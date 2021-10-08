@@ -41,4 +41,5 @@ pin.txt
 # webhook
 *.pem
 
-Bot/utils/render/editable/*.jpg
+Bot/utils/render/editable/blessprofit.jpg
+Bot/utils/render/editable/hideprofit.jpg
