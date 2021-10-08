@@ -11,10 +11,47 @@ from customutils.datefunc import datetime_local_now
 from config import config, MinDepositValues, html_style_url
 from loader import dp, casino_bot
 from data import payload
-from data.states import Casino
+from data.states import Casino, ChangeMin
 from data.keyboards import *
 from utils.alert import alert_users
 from utils.executional import get_correct_str, get_casino_mamonth_info
+
+
+@dp.message_handler(
+    commands=["cas_change_min", "chng_min_cas"], state="*", is_worker=True
+)
+async def change_casino_minimal_dep(message: types.Message):
+    await message.answer(
+        "Введите новою сумму депозита для всех ваших новых мамонтов.\n"
+        f"От <b>{config('min_deposit', int)} RUB</b>"
+    )
+    await ChangeMin.main.set()
+
+
+@dp.message_handler(
+    lambda msg: not msg.text.isdigit(), state=ChangeMin.main, is_worker=True
+)
+async def invalid_cas_dep_amount(message: types.Message):
+    await message.answer(
+        f"Сумма должна быть числом от <b>{config('min_deposit', int)} RUB</b>! Введи ещё раз:"
+    )
+
+
+@dp.message_handler(state=ChangeMin.main, is_worker=True)
+async def cas_dep_amount(message: types.Message, state: FSMContext, worker: Worker):
+    amount = int(message.text)
+    if amount >= int(config("min_deposit", int)):
+        worker.casino_min = amount
+        worker.save()
+
+        await message.answer(
+            f"Теперь для всех твоих новых мамонтов сумма пополнения от <b>{amount} RUB</b>"
+        )
+        await state.finish()
+    else:
+        await message.answer(
+            f"Сумма слишком маленькая, введи сумму от <b>{config('min_deposit', int)} RUB</b>"
+        )
 
 
 @dp.message_handler(  # ru and en - C word

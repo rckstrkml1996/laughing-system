@@ -8,7 +8,6 @@ class Config:  # section and path must not be different, standart setting not
         self.section = section_name
 
         self.standart_config = standart_setting
-        self.config = configparser.ConfigParser()
 
         self.check_config_file()
         self.restrict_config()
@@ -24,9 +23,10 @@ class Config:  # section and path must not be different, standart setting not
         return int(val) if val.replace("-", "").isdigit() else val
 
     def __call__(self, what, type_as=None):
-        self.config.read(self.path)
+        config = configparser.ConfigParser()
+        config.read(self.path)
 
-        value = self.config.get(self.section, what)
+        value = config.get(self.section, what)
         if "," in value:
             return list(
                 map(lambda v: self.right_type(v, type_as=type_as), value.split(","))
@@ -47,28 +47,31 @@ class Config:  # section and path must not be different, standart setting not
             self.create_config()
 
     def create_config(self):
-        self.config.add_section(self.section)
+        config = configparser.ConfigParser()
+        config.add_section(self.section)
 
         for key, val in self.standart_config.items():
-            self.config.set(self.section, key, val)
+            config.set(self.section, key, val)
 
         with open(self.path, "w") as config_file:
-            self.config.write(config_file)
+            config.write(config_file)
 
     def restrict_config(self):
-        self.config.read(self.path)
+        config = configparser.ConfigParser()
+        config.read(self.path)
 
         for key, val in self.standart_config.items():
             try:
-                self.config.get(self.section, key)
+                config.get(self.section, key)
             except configparser.NoOptionError:
-                self.config.set(self.section, key, val)
+                config.set(self.section, key, val)
 
         with open(self.path, "w") as config_file:
-            self.config.write(config_file)
+            config.write(config_file)
 
     def edit_config(self, setting, value=None):
-        self.config.read(self.path)
+        config = configparser.ConfigParser()
+        config.read(self.path)
 
         if isinstance(value, bool):
             value = str(int(value))
@@ -78,9 +81,9 @@ class Config:  # section and path must not be different, standart setting not
             value = ",".join(map(lambda i: str(i), value))
 
         if not value:
-            self.config.remove_option(self.section, setting)
+            config.remove_option(self.section, setting)
         else:
-            self.config.set(self.section, setting, value)
+            config.set(self.section, setting, value)
 
         with open(self.path, "w") as config_file:
-            self.config.write(config_file)
+            config.write(config_file)

@@ -42,8 +42,17 @@ cck_size_text = "Мой размер чилена - {size}см {smile}"
 # admins commands
 adm_work_command = emojize("<b>Состояние</b> сервисов:\n" "{services_status}")
 
+# work command
 setwork_text = emojize(":white_check_mark: <b>Поставлен</b> ворк")
 setdontwork_text = emojize(":x: <b>Поставлен</b> неворк")
+
+casino_setwork_text = emojize(":white_check_mark: Казино - <b>Поставлен</b> ворк")
+casino_setdontwork_text = emojize(":x: Казино - <b>Поставлен</b> неворк")
+escort_setwork_text = emojize(":white_check_mark: Эскорт - <b>Поставлен</b> ворк")
+escort_setdontwork_text = emojize(":x: Эскорт - <b>Поставлен</b> неворк")
+trading_setwork_text = emojize(":white_check_mark: Трейдинг - <b>Поставлен</b> ворк")
+trading_setdontwork_text = emojize(":x: Трейдинг - <b>Поставлен</b> неворк")
+
 
 qiwi_command_text = emojize(
     "Информация по киви кошелькам.\n\n" "Общий баланс: <b>{all_balance} RUB</b>"

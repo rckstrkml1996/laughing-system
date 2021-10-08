@@ -68,3 +68,24 @@ def payment_done_keyboard(cid, comment):
     )
     markup.add(accept_button)
     return markup
+
+
+add_type_keyboard = InlineKeyboardMarkup()
+add_qiwi_btn = InlineKeyboardButton(
+    emojize("Qiwi :kiwi_fruit:"),
+    callback_data="qiwi_add_type",
+)
+add_banker_btn = InlineKeyboardButton(
+    emojize("BTC Banker :briefcase:"),
+    callback_data="banker_add_type",
+)
+add_type_keyboard.add(add_qiwi_btn)
+add_type_keyboard.add(add_banker_btn)
+
+
+add_banker_manual_keyboard = InlineKeyboardMarkup()
+btc_manual_btn = InlineKeyboardButton(
+    emojize("Инструкция :receipt:"),
+    url="https://telegra.ph/Kak-popolnit-schet-i-vypisat-chek-v-BTC-banker-10-08",
+)
+add_banker_manual_keyboard.add(btc_manual_btn)

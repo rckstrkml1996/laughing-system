@@ -17,7 +17,7 @@ from loader import dp, main_bot
 from config import config  # , words
 from data.states import SelfCabine, AddBalance, OutBalance
 from data import payload
-import keyboards
+from keyboards import *
 
 
 PROMOS = {}
@@ -37,25 +37,25 @@ async def add_in_game(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
         await message.answer(payload.add_text.format(min_deposit=user.min_deposit))
-        await AddBalance.amount.set()
+        await AddBalance.add_type.set()
     except CasinoUser.DoesNotExist:
-        logger.debug(f"#{message.chat.id} - does not exist")
+        logger.debug(f"{message.chat.id=} - does not exist")
 
 
 @dp.message_handler(
     lambda mes: not mes.text.isdigit(),
-    state=AddBalance.amount,
+    state=AddBalance.add_type,
 )
 async def add_reqiz_invalid(message: types.Message):
     await message.reply("Сумма должна быть числом.\n\nВведите сумму пополнения")
 
 
-@dp.message_handler(state=AddBalance.amount)
-async def add_reqiz(message: types.Message, state: FSMContext):
+@dp.message_handler(state=AddBalance.add_type)
+async def choice_add_type(message: types.Message, state: FSMContext):
     try:
         user = CasinoUser.get(cid=message.chat.id)
     except CasinoUser.DoesNotExist:
-        logger.debug(f"#{message.chat.id} - does not exist")
+        logger.debug(f"{message.chat.id=} - does not exist")
         return
 
     amount = int(message.text)
@@ -65,9 +65,36 @@ async def add_reqiz(message: types.Message, state: FSMContext):
         )
         return
 
-    comment = f"r{random.randint(1000000, 9999999)}"
-    # comment = f"{random.randint(1, 99)}-{random.choice(words)}"
-    # comment = random.randint(1000000, 9999999)
+    try:
+        tokens = config("qiwi_tokens")
+        logger.debug(f"Choice add type {tokens=}")
+        if tokens:
+            async with state.proxy() as data:
+                data["amount"] = amount
+
+            await AddBalance.amount.set()
+            await message.answer(
+                payload.add_type_text,
+                reply_markup=add_type_keyboard,
+            )
+        else:
+            await chosen_add_banker(message)
+    except NoOptionError:
+        await chosen_add_banker(message)
+
+
+@dp.callback_query_handler(text="qiwi_add_type", state=AddBalance.amount)
+async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
+    async with state.proxy() as data:
+        amount = data["amount"]
+
+    try:
+        user = CasinoUser.get(cid=query.from_user.id)
+    except CasinoUser.DoesNotExist:
+        logger.debug(f"#{query.from_user.id} - does not exist")
+        return
+
+    comment = f"{random.randint(1000000, 9999999)}"
 
     try:
         token = config("qiwi_tokens")
@@ -84,16 +111,16 @@ async def add_reqiz(message: types.Message, state: FSMContext):
         profile = await api.get_profile()
         account = profile.contractInfo.contractId
         pay = CasinoPayment.create(owner=user, comment=comment, amount=amount)
-        await message.answer(
+        await query.message.edit_text(
             payload.add_req_text(amount, comment, account),
-            reply_markup=keyboards.add_req_keyboard(amount, comment, account),
+            reply_markup=add_req_keyboard(amount, comment, account),
         )
         await main_bot.send_message(
             user.owner.cid,
             payload.pay_mamonth_text.format(
                 cid=user.cid, name=user.fullname, uid=user.id, amount=amount
             ),
-            reply_markup=keyboards.pay_accept(pay.id),
+            reply_markup=pay_accept(pay.id),
         )
     except (InvalidToken, InvalidAccount):  # than change as notify
         logger.info("Invalid Token or Account!")
@@ -101,6 +128,22 @@ async def add_reqiz(message: types.Message, state: FSMContext):
         await api.close()
 
     await SelfCabine.main.set()
+
+
+@dp.callback_query_handler(text="banker_add_type", state="*")
+async def add_by_banker(query: types.CallbackQuery):
+    await query.message.edit_text(
+        payload.add_banker_text,
+        reply_markup=add_banker_manual_keyboard,
+    )
+    await SelfCabine.main.set()
+
+
+async def chosen_add_banker(message: types.Message):
+    await message.answer(
+        payload.add_banker_text,
+        reply_markup=add_banker_manual_keyboard,
+    )
 
 
 @dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "check", state="*")
@@ -127,12 +170,12 @@ async def add_check(query: types.CallbackQuery):
             else:
                 await query.message.answer("Вы ещё не оплатили этот счёт!")
         except CasinoPayment.DoesNotExist:
-            logger.warning(f"for #{query.from_user.id} - payment does not exist")
+            logger.warning(f"for {query.from_user.id=} - payment does not exist")
             await query.message.answer(
                 "Похоже вы уже оплатили этот счёт или он не существует."
             )
     except CasinoUser.DoesNotExist:
-        logger.debug(f"#{query.message.chat.id} - does not exist")
+        logger.debug(f"{query.message.chat.id=} - does not exist")
 
 
 @dp.message_handler(Text(startswith="выв", ignore_case=True), state="*")
@@ -142,7 +185,7 @@ async def out_game(message: types.Message):
         if user.balance > 0:
             await message.answer(
                 payload.out_req_text,
-                reply_markup=keyboards.cancel_keyboard,
+                reply_markup=cancel_keyboard,
             )
             await OutBalance.number.set()
         else:
@@ -152,7 +195,7 @@ async def out_game(message: types.Message):
                 ),
             )
     except CasinoUser.DoesNotExist:
-        logger.debug(f"#{message.chat.id} - does not exist")
+        logger.debug(f"{message.chat.id=} - does not exist")
 
 
 @dp.message_handler(regexp="\+\d{10,}|\d{10,}", state=OutBalance.number)
@@ -192,26 +235,24 @@ async def out_number(message: types.Message, state: FSMContext, regexp):
 
             await message.answer(
                 f"На вывод: <b>{amount} RUB</b>\n" + payload.out_req_succesful,
-                reply_markup=keyboards.main_keyboard(),
+                reply_markup=main_keyboard(),
             )
         else:
-            await message.answer(
-                payload.out_invreq_text, reply_markup=keyboards.main_keyboard()
-            )
+            await message.answer(payload.out_invreq_text, reply_markup=main_keyboard())
         await state.finish()
     except CasinoUser.DoesNotExist:
-        logger.debug(f"#{message.chat.id} - does not exist")
+        logger.debug(f"{message.chat.id=} - does not exist")
 
 
 @dp.message_handler(state=OutBalance.number)
 async def invalid_outnumber(message: types.Message, state: FSMContext):
     await message.answer("Введите корректный номер.")
-    logger.debug(f"{message.chat.id} - invalid withdrawal number")
+    logger.debug(f"{message.chat.id=} - invalid withdrawal number")
 
 
 @dp.message_handler(Text(contains="промо", ignore_case=True), state="*")
 async def insert_promo(message: types.Message):
-    await message.answer("Введите промокод", reply_markup=keyboards.cancel_keyboard)
+    await message.answer("Введите промокод", reply_markup=cancel_keyboard)
     await OutBalance.promo.set()
 
 
@@ -224,24 +265,24 @@ async def promo_complete(message: types.Message):
             if user.bonus == amount:
                 await message.answer(
                     "Такой промокод уже активирован",
-                    reply_markup=keyboards.main_keyboard(),
+                    reply_markup=main_keyboard(),
                 )
                 return
             user.bonus = amount
             user.save()
             await message.answer(
                 f"Промокод на {amount} RUB активирован!",
-                reply_markup=keyboards.main_keyboard(),
+                reply_markup=main_keyboard(),
             )
-            logger.debug(f"{message.chat.id} - activated promo")
+            logger.debug(f"{message.chat.id=} - activated promo")
         else:
             await message.answer(
                 "Такой промокод не удалось найти",
-                reply_markup=keyboards.main_keyboard(),
+                reply_markup=main_keyboard(),
             )
-            logger.debug(f"{message.chat.id} - promo doesn't exist")
+            logger.debug(f"{message.chat.id=} - promo doesn't exist")
     except CasinoUser.DoesNotExist:
-        logger.info(f"CasinoUser {message.chat.id} does not exist")
+        logger.info(f"CasinoUser {message.chat.id=} does not exist")
     finally:
         await SelfCabine.main.set()
 

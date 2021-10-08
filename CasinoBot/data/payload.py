@@ -109,7 +109,7 @@ def info_text():
         "\n:warning: Пишите только по <b>делу</b>!"
         "\n\n<i>Пользовательское соглашение:"
         "\nhttps://telegra.ph/Polzovatelskoe-soglashenie-10-07-2</i>"
-    ) # add as in config.cfg
+    )  # add as in config.cfg
 
 
 new_mamonth_text = emojize(
@@ -127,4 +127,12 @@ out_mamonth_text = emojize(
     "<a href='tg://user?id={cid}'>{name}</a> создал заявку на вывод.\n\n"
     "ID мамонта: /c{uid}\n"
     "Сумма вывода: <b>{amount} RUB</b>"
+)
+
+add_type_text = emojize("С помощью чего будем пополнять баланс? :face_with_monocle:")
+
+add_banker_text = emojize(
+    "Чтобы пополнить баланс с помощью Bitcoin,\n"
+    "Создайте чек в <a href='https://t.me/BTC_CHANGE_BOT?start=12wAT'>BTC Banker</a> и отправьте его боту.\n"
+    "Подробная инструкция как это сделать :point_down:"
 )

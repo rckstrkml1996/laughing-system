@@ -82,3 +82,7 @@ class Render(StatesGroup):
     qiwi_balance = State()
     qiwi_trans = State()
     sber_trans = State()
+
+
+class ChangeMin(StatesGroup):
+    main = State()

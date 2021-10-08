@@ -15,7 +15,7 @@ async def on_startup(dispatcher: Dispatcher):
     Настройка всех компонентов для работы бота,
     Запуск бота
     """
-    setup_logger(level="INFO")
+    setup_logger(level="DEBUG")
     logger.info("Setuping handlers...")
     import handlers
 
