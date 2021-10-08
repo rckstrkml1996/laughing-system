@@ -69,7 +69,7 @@ def render_profit(
         os.path.join(
             package_directory,
             "fonts",
-            "SFUIText-SemiboldItalic.ttf",
+            "SFUIText-Semibold.ttf",
         ),
         65,
     )

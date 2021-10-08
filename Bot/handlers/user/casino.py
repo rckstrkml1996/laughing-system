@@ -70,14 +70,6 @@ async def update_mamonth_info(query: types.CallbackQuery, worker: Worker):
         )
         return
 
-    # try:
-    #     worker = Worker.get(cid=query.from_user.id)
-    # except Worker.DoesNotExist:
-    #     logger.debug(
-    #         f":update_info: Worker [{message.chat.id}] does not exist in base."
-    #     )
-    #     return
-
     if user.owner != worker:
         logger.warning(
             f":update_info: Worker [{message.chat.id}] try get different mamonth!"
@@ -105,12 +97,6 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
         logger.debug(
             f"Mamonth [{mb_id}] that worker [{query.from_user.id}] want update fart does not exist."
         )
-
-    # try:
-    #     worker = Worker.get(cid=query.from_user.id)
-    # except Worker.DoesNotExist:
-    #     logger.debug(f":updatefart: Worker [{message.chat.id}] does not exist in base.")
-    #     return
 
     if user.owner != worker:
         logger.warning(
@@ -144,12 +130,6 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
         logger.debug(
             f"Mamonth [{mb_id}] that worker [{query.from_user.id}] want update fart does not exist."
         )
-
-    # try:
-    #     worker = Worker.get(cid=query.from_user.id)
-    # except Worker.DoesNotExist:
-    #     logger.debug(f":updatefart: Worker [{message.chat.id}] does not exist in base.")
-    #     return
 
     if user.owner != worker:
         logger.warning(
@@ -203,7 +183,7 @@ async def all_mamonths_command(query: types.CallbackQuery, worker: Worker):
     if mamonths_count == 0:
         await query.message.answer(payload.no_mamonths_text)
     else:  # format mamonth its a def on 176 line mb not()
-        cusers = list(worker.cas_users)
+        cusers = list(worker.cas_users)[::-1]
         mamonths = cusers[page * row_width - row_width : page * row_width]
         if not mamonths:
             await query.message.answer(payload.no_mamonths_text)
@@ -245,7 +225,7 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
     if mamonths_count == 0:
         await query.message.edit_text(payload.no_mamonths_text)
     else:  # format mamonth its a def on 176 line mb not()
-        cusers = list(worker.cas_users)
+        cusers = list(worker.cas_users)[::-1]
         mamonths = cusers[page * row_width - row_width : page * row_width]
         if not mamonths:
             await query.message.answer(payload.no_mamonths_text)
