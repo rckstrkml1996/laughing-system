@@ -32,6 +32,11 @@ def get_api(conf_token: str):
     return QiwiApi(conf_token)
 
 
+# @dp.message_handler(regexp="BTC_CHANGE_BOT?start=c", state="*")
+# async def postupil_checketpa(message: types.Message):
+#     await message.answer("Принимаю обрабаотываю")
+
+
 @dp.message_handler(Text(startswith="пополн", ignore_case=True), state="*")
 async def add_in_game(message: types.Message):
     try:

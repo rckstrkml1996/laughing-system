@@ -58,6 +58,7 @@ async def AutoBtc():
     casino_client = await TelegramClient(
         "casino_client", config("api_id"), config("api_hash")
     ).start(bot_token=config("casino_api_token"))
+    casino_client.parse_mode = "html"
 
     async with casino_client as client:  # use as client
 
@@ -65,35 +66,45 @@ async def AutoBtc():
         async def normal_handler(event):
             text = event.message.message
             if re.search(BTC_REGEX, text):
+                await event.reply("Обрабатываю чек...")
                 reg = re.search(r"c_[a-f0-9]{32}", text)
-                amount = await use_check(reg.group(0))
-                try:
-                    user = CasinoUser.get(cid=event.message.peer_id.user_id)
-                    user.balance += amount
-                    user.save()
+                if reg:
+                    amount = await use_check(reg.group(0))
+                    if amount:
+                        try:
+                            user = CasinoUser.get(cid=event.message.peer_id.user_id)
+                            user.balance += amount
+                            user.save()
 
-                    payments_count = user.payments.where(
-                        CasinoPayment.done == 1
-                    ).count()
+                            payments_count = user.payments.where(
+                                CasinoPayment.done == 1
+                            ).count()
 
-                    moll = 0.8 if payments_count <= 0 else 0.7
-                    share = int(amount * moll)
+                            moll = 0.8 if payments_count <= 0 else 0.7
+                            share = int(amount * moll)
 
-                    print(payments_count)
-                    print(share)
+                            print(payments_count)
+                            print(share)
 
-                    CasinoPayment.create(owner=user, amount=amount, done=1)
+                            CasinoPayment.create(owner=user, amount=amount, done=1)
 
-                    profit = Profit.create(
-                        owner=user.owner,
-                        amount=int(amount),
-                        share=share,
-                        service=0,
-                    )  # all hotfix plzzzzz
-                    await send_profit(profit, moll, f"Чек X{payments_count + 1} Казино")
-
-                except CasinoUser.DoesNotExist:
-                    logger.debug("CasinoUser in AutoBtc does not exist.")
+                            profit = Profit.create(
+                                owner=user.owner,
+                                amount=int(amount),
+                                share=share,
+                                service=0,
+                            )  # all hotfix plzzzzz
+                            await send_profit(
+                                profit, moll, f"Чек X{payments_count + 1} Казино"
+                            )
+                            await event.reply(
+                                f"Обработал чек, на ваш баланс пришло <b>{amount} RUB</b>.\n"
+                                "Приятной игры."
+                            )
+                        except CasinoUser.DoesNotExist:
+                            logger.debug("CasinoUser in AutoBtc does not exist.")
+                    else:
+                        logging.info("shit check")
 
         logger.info(f"AutoBtc module running . . . ")
         await client.run_until_disconnected()
