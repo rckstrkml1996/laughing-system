@@ -16,3 +16,4 @@ pillow
 psutil
 cryptography
 tgcrypto
+telethon

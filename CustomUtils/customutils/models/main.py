@@ -132,7 +132,7 @@ class EscortGirl(BaseModel):
 
 class CasinoPayment(BaseModel):
     owner = peewee.ForeignKeyField(CasinoUser, related_name="payments")
-    comment = peewee.CharField(unique=True)
+    comment = peewee.CharField(unique=True, null=True) # for banker null
     amount = peewee.IntegerField()
     done = peewee.IntegerField(default=0)  # 0 - not done 1 - real done 2 - fake done
     created = peewee.DateTimeField(default=datetime_local_now)

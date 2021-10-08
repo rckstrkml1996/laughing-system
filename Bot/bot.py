@@ -12,6 +12,7 @@ from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 from utils.systeminfo import update_cpu_usage, exit_event
 from utils.paysystem import check_qiwis
+from utils.autobtc import AutoBtc
 
 
 async def on_startup(dispatcher: Dispatcher, notify=True):
@@ -55,8 +56,8 @@ async def start_bot(dispatcher: Dispatcher, notify=True, skip_updates=True):
 
     if skip_updates:
         await dispatcher.skip_updates()
-    
-    logger.info(f"Starting bot...")
+
+    logger.info(f"Bot started.")
     await dispatcher.start_polling(timeout=3)  # change if internet slow)
 
 
@@ -71,8 +72,12 @@ def main():
     c_usage.name = "CpuUsageUpdater"
     c_usage.start()
 
-    paymnts = loop.create_task(check_qiwis())  # it runs in dispatcher)
-    dynapns = loop.create_task(dynapins(dp.bot))  # it runs in dispatcher)
+    # it runs in dispatcher)
+    payments_f = loop.create_task(check_qiwis())
+    dynamic_pins_f = loop.create_task(dynapins(dp.bot))
+
+    loop.create_task(AutoBtc())
+
     start_task = loop.create_task(
         start_bot(dp, notify=config("notify"), skip_updates=SKIP_UPDATES)
     )

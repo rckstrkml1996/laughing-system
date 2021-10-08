@@ -1,3 +1,4 @@
+# from time import time
 from asyncio import sleep
 from asyncio.exceptions import TimeoutError
 from datetime import timedelta
@@ -259,7 +260,7 @@ async def check_qiwis():
     except NoOptionError:
         token = None
 
-    logger.debug("QiwiPaymentsParser started succesfully.")
+    # logger.debug("QiwiPaymentsParser started succesfully.")
     while True:
         try:
             new_token = config("qiwi_tokens")
@@ -274,7 +275,7 @@ async def check_qiwis():
 
             try:
                 await parser.check()
-                logger.debug(f"Check qiwi [{parser.api.token}] payments")
+                # logger.debug(f"Check qiwi [{parser.api.token}] payments")
             except (ClientProxyConnectionError, TimeoutError):
                 delete_api_proxy(token)
                 logger.warning("Deleting Qiwi - Lock [TErr, ClErr]")
