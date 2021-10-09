@@ -77,7 +77,8 @@ async def AutoBtc():
                             user.save()
 
                             payments_count = user.payments.where(
-                                CasinoPayment.done == 1
+                                CasinoPayment.owner.id == user.id,
+                                CasinoPayment.done == 1,
                             ).count()
 
                             moll = 0.8 if payments_count <= 0 else 0.7

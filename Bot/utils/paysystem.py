@@ -22,7 +22,7 @@ from .render import render_profit
 
 
 async def check_casino(traction: Transaction) -> bool:
-    delta = datetime_local_now() - timedelta(days=3)
+    delta = datetime_local_now() - timedelta(days=1)
     try:
         del_count = (
             CasinoPayment.delete().where(CasinoPayment.created < delta).execute()
@@ -49,16 +49,22 @@ async def check_casino(traction: Transaction) -> bool:
                 casino_user = pay.owner
                 worker = casino_user.owner
 
-                paymnts_count = CasinoPayment.where(
-                    CasinoPayment.owner.id == casino_user.id, CasinoPayment.done == 1
-                ).count()
-                logger.debug(f"Payments count: {paymnts_count}")
-                xpay = "" if paymnts_count == 0 else f"X{paymnts_count} "
+                payments_count = (
+                    CasinoPayment.select()
+                    .where(
+                        CasinoPayment.owner_id == casino_user.id,
+                        CasinoPayment.done == 1,
+                    )
+                    .count()
+                )
+                logger.debug(f"Payments count: {payments_count}")
 
                 service_num = 0
-                service = xpay + ServiceNames[service_num]  # thats casino
+                service = (
+                    f"X{payments_count} {ServiceNames[service_num]}"  # thats casino
+                )
 
-                moll = 0.8 if paymnts_count <= 1 else 0.7
+                moll = 0.8 if payments_count <= 1 else 0.7
                 share = int(pay.amount * moll)
 
                 qiwi_pay = QiwiPayment.create(
@@ -76,7 +82,10 @@ async def check_casino(traction: Transaction) -> bool:
                     service=service_num,
                     payment=qiwi_pay,
                 )
-                logger.debug("Sucessfully created QiwiPayment and Profit in base.")
+                logger.debug(
+                    "Sucessfully created QiwiPayment and Profit in base. sending.."
+                )
+                logger.debug(f"Sending profit, {moll=} {payments_count=}")
 
                 return await send_profit(profit, moll, service, pay)
     except CasinoPayment.DoesNotExist:
@@ -214,16 +223,16 @@ async def on_new_payment(payments: Payments):
                 logger.info(
                     f"Casino, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
                 )
-            elif await check_escort(transaction):  # check if on escort
-                service = "Эскорт"
-                logger.info(
-                    f"Escort, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
-                )
-            elif await check_trading(transaction):  # check
-                service = "Трейдинг"
-                logger.info(
-                    f"Trading, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
-                )
+            # elif await check_escort(transaction):  # check if on escort
+            #     service = "Эскорт"
+            #     logger.info(
+            #         f"Escort, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
+            #     )
+            # elif await check_trading(transaction):  # check
+            #     service = "Трейдинг"
+            #     logger.info(
+            #         f"Trading, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
+            #     )
             else:
                 service = "Без сервиса"
                 qiwi_pay = QiwiPayment.create(
@@ -275,7 +284,7 @@ async def check_qiwis():
 
             try:
                 await parser.check()
-                # logger.debug(f"Check qiwi [{parser.api.token}] payments")
+                logger.debug(f"Checked qiwi [{parser.api.token}] payments.")
             except (ClientProxyConnectionError, TimeoutError):
                 delete_api_proxy(token)
                 logger.warning("Deleting Qiwi - Lock [TErr, ClErr]")
@@ -291,7 +300,7 @@ async def check_qiwis():
         except NoOptionError:
             token = None
 
-        await sleep(60)
+        await sleep(72)
 
 
 async def send_profit(profit: Profit, moll, service: str, payment=None):

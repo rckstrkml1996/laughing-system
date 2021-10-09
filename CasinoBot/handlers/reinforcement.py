@@ -106,8 +106,8 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
         if isinstance(token, list):
             token = token[0]
     except NoOptionError:
-        logger.info("Casino Stop Work")
-        config.edit_config("casino_work", False)  # than change as notify
+        logger.info("Casino No Qiwi!")
+        # config.edit_config("casino_work", False)  # than change as notify
         return
 
     api = get_api(token)
@@ -127,8 +127,9 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
             ),
             reply_markup=pay_accept(pay.id),
         )
-    except (InvalidToken, InvalidAccount):  # than change as notify
-        logger.info("Invalid Token or Account!")
+    except (InvalidToken, InvalidAccount) as ex:  # than change as notify
+        logger.warning(f"Invalid Token or Account! {ex}")
+        await main_bot.send_message(config("admins_chat"), f"Invalid qiwi? {ex}")
     finally:
         await api.close()
 
@@ -173,7 +174,7 @@ async def add_check(query: types.CallbackQuery):
                 payment.delete_instance()
                 await query.message.delete()
             else:
-                await query.message.answer("Вы ещё не оплатили этот счёт!")
+                await query.message.answer(payload.add_unsuccesful)
         except CasinoPayment.DoesNotExist:
             logger.warning(f"for {query.from_user.id=} - payment does not exist")
             await query.message.answer(
