@@ -51,7 +51,7 @@ async def get_casino_mamonth_info(worker: Worker, user: CasinoUser):
             if user.fort_chance == 0
             else f"{user.fort_chance} %",
         ),
-        cas_info_keyboard(user.fort_chance, user.id, user.min_deposit),
+        cas_info_keyboard(user.id, user.fort_chance, user.min_deposit, user.stopped),
     )
 
 

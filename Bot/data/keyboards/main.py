@@ -139,7 +139,9 @@ trading_keyboard.add(tdng_msg_spam_btn)
 trading_keyboard.add(tdng_delete_all_btn)
 
 
-def cas_info_keyboard(fart, uid, minpay) -> InlineKeyboardMarkup:
+def cas_info_keyboard(uid, fart, minpay, stopped: bool) -> InlineKeyboardMarkup:
+    stopped = "Вкл" if stopped else "Выкл"
+
     markup = InlineKeyboardMarkup()
     cas_fart_btn = InlineKeyboardButton(
         f"Фарт: {fart} %", callback_data=f"updatefart_{uid}"
@@ -147,10 +149,14 @@ def cas_info_keyboard(fart, uid, minpay) -> InlineKeyboardMarkup:
     cas_min_btn = InlineKeyboardButton(
         f"Мин: {minpay} RUB", callback_data=f"updatemin_{uid}"
     )
+    cas_stop_btn = InlineKeyboardButton(
+        f"Тех работы: {stopped}", callback_data=f"updatestopped_{uid}"
+    )
     cas_info_update_btn = InlineKeyboardButton(
         emojize(":arrows_counterclockwise:"), callback_data=f"updateinfo_{uid}"
     )
     markup.add(cas_fart_btn, cas_min_btn)
+    markup.add(cas_stop_btn)
     markup.add(cas_info_update_btn)
 
     return markup

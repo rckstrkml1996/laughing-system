@@ -29,13 +29,12 @@ async def self_cabine(chat_id: int):
 
     # Сообщения для личного кабинета, не вынес в payload тк. нужен доступ к базе данных
     return emojize(
-        f":pushpin: Личный кабинет \
-		\n\n:dollar: Баланс: <b>{user.balance} RUB</b> \
-		\n\n:high_brightness: Игр сыграно: <b>{games}</b>\
-		\n:four_leaf_clover: Игр выиграно: <b>{games_win}</b>\
-		\n:black_heart: Игр проиграно: <b>{games_lose}</b>\
-		\n\n:bust_in_silhouette: Ваша реферальная ссылка :bust_in_silhouette: \
-		\n{await get_start_link(user.id)} "
+        ":pushpin: Личный кабинет\n\n"
+        f":dollar: Баланс: <b>{user.balance} RUB</b>\n\n"
+        f":high_brightness: Игр сыграно: <b>{games}</b>\n"
+        f":four_leaf_clover: Игр выиграно: <b>{games_win}</b>\n"
+        f":black_heart: Игр проиграно: <b>{games_lose}</b>\n\n"
+        f"<a href='{await get_start_link(user.id)}'>Ваша реферальная ссылка</a>"
     )
 
 
@@ -148,5 +147,3 @@ async def game_support(message: types.Message):
 @dp.message_handler(regexp="назад", state="*")
 async def cancel(message: types.Message, state: FSMContext):
     await main_menu(message, state)
-
-

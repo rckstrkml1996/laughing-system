@@ -193,6 +193,37 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
     )
 
 
+@dp.callback_query_handler(
+    lambda cb: cb.data.split("_")[0] == "updatestopped",
+    state="*",
+    is_worker=True,
+)
+async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
+    mb_id = query.data.split("_")[1]
+    try:
+        user = CasinoUser.get(id=mb_id)  # can get by str
+    except CasinoUser.DoesNotExist:
+        logger.debug(
+            f"Mamonth [{mb_id}] that worker [{query.from_user.id}] want updatestopped does not exist."
+        )
+
+    if user.owner != worker:
+        logger.warning(
+            f":updatestopped: Worker [{message.chat.id}] try get different mamonth!"
+        )
+        return
+
+    user.stopped = not user.stopped
+    user.save()
+
+    text, markup = await get_casino_mamonth_info(worker, user)
+
+    await query.message.edit_text(
+        text,
+        reply_markup=markup,
+    )
+
+
 def format_mamont(user: CasinoUser) -> str:
     return payload.small_mamonth_info_text.format(
         mid=user.id,

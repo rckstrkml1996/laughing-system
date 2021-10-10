@@ -1,7 +1,7 @@
 import os
 from secrets import token_hex
 
-import peewee
+from peewee import *
 from peewee_migrate import Router
 from playhouse.shortcuts import ReconnectMixin
 
@@ -12,7 +12,7 @@ path = os.path.normpath(os.path.join(os.getcwd(), "../config.cfg"))
 config = Config("Settings", path, {"migrate": "0"})
 
 
-class DB(ReconnectMixin, peewee.MySQLDatabase):
+class DB(ReconnectMixin, MySQLDatabase):
     def migrate(self, router: Router):
         name = token_hex(6)
         router.create(name)
@@ -33,30 +33,30 @@ base = DB(
 #     base.migrate(migration_router)
 
 
-class BaseModel(peewee.Model):
+class BaseModel(Model):
     class Meta:
         database = base
 
 
 class Worker(BaseModel):
-    cid = peewee.IntegerField(unique=True)
-    uniq_key = peewee.IntegerField(unique=True)
-    username = peewee.CharField(null=True)
-    username_hide = peewee.BooleanField(default=False)
-    name = peewee.CharField()
-    rate = peewee.IntegerField(default=0)  # ставка
-    ref_balance = peewee.FloatField(default=0)
-    status = peewee.IntegerField(default=0)
-    level = peewee.IntegerField(default=0)
-    registered = peewee.DateTimeField(default=datetime_local_now)
-    cock_size = peewee.IntegerField(null=True)
-    warns = peewee.IntegerField(default=0)
-    casino_min = peewee.IntegerField(default=config("min_deposit", int))
-    send_summary = peewee.BooleanField(default=False)
-    summary_info = peewee.TextField(null=True)
+    cid = IntegerField(unique=True)
+    uniq_key = IntegerField(unique=True)
+    username = CharField(null=True)
+    username_hide = BooleanField(default=False)
+    name = CharField()
+    rate = IntegerField(default=0)  # ставка
+    ref_balance = FloatField(default=0)
+    status = IntegerField(default=0)
+    level = IntegerField(default=0)
+    registered = DateTimeField(default=datetime_local_now)
+    cock_size = IntegerField(null=True)
+    warns = IntegerField(default=0)
+    casino_min = IntegerField(default=config("min_deposit", int))
+    send_summary = BooleanField(default=False)
+    summary_info = TextField(null=True)
 
     def __str__(self):
-        return f'{self.id}: [{self.cid}] {self.name}'
+        return f"{self.id}: [{self.cid}] {self.name}"
 
 
 class QiwiPayment(BaseModel):
@@ -69,24 +69,24 @@ class QiwiPayment(BaseModel):
         profit_obj.payment = self
         profit_obj.save(only=[Profit.payment])
 
-    person_id = peewee.CharField()  # наш аккаунт киви
-    account = peewee.CharField()  # аккаунт перевода или пополнения
-    amount = peewee.IntegerField()
-    payment_type = peewee.CharField(default="IN")
-    currency = peewee.IntegerField(default=643)
-    comment = peewee.CharField(null=True)
-    date = peewee.DateTimeField()
+    person_id = CharField()  # наш аккаунт киви
+    account = CharField()  # аккаунт перевода или пополнения
+    amount = IntegerField()
+    payment_type = CharField(default="IN")
+    currency = IntegerField(default=643)
+    comment = CharField(null=True)
+    date = DateTimeField()
 
 
 class Profit(BaseModel):
-    owner = peewee.ForeignKeyField(Worker, related_name="profits")
-    amount = peewee.IntegerField()
-    share = peewee.IntegerField()
-    service = peewee.IntegerField(default=0)
-    created = peewee.DateTimeField(default=datetime_local_now)
-    done = peewee.BooleanField(default=False)  # dont nesessary.(S(das))
-    msg_url = peewee.CharField(null=True)
-    payment = peewee.ForeignKeyField(
+    owner = ForeignKeyField(Worker, related_name="profits")
+    amount = IntegerField()
+    share = IntegerField()
+    service = IntegerField(default=0)
+    created = DateTimeField(default=datetime_local_now)
+    done = BooleanField(default=False)  # dont nesessary.(S(das))
+    msg_url = CharField(null=True)
+    payment = ForeignKeyField(
         QiwiPayment,
         backref="profits",
         unique=True,
@@ -95,74 +95,75 @@ class Profit(BaseModel):
 
 
 class CasinoUser(BaseModel):
-    owner = peewee.ForeignKeyField(Worker, related_name="cas_users")
-    cid = peewee.IntegerField(unique=True)
-    balance = peewee.IntegerField(default=0)
-    fort_chance = peewee.IntegerField(default=100)  # val from 0 to 100
-    bonus = peewee.IntegerField(default=0)
-    username = peewee.CharField(null=True)
-    fullname = peewee.CharField(null=True)
-    min_deposit = peewee.IntegerField(default=config("min_deposit", int))
+    owner = ForeignKeyField(Worker, related_name="cas_users")
+    cid = IntegerField(unique=True)
+    balance = IntegerField(default=0)
+    fort_chance = IntegerField(default=100)  # val from 0 to 100
+    bonus = IntegerField(default=0)
+    username = CharField(null=True)
+    fullname = CharField(null=True)
+    min_deposit = IntegerField(default=config("min_deposit", int))
+    stopped = BooleanField(default=False)  # stopwork status for single user
 
     def __str__(self):
         return f"#{self.id} {self.cid}"
 
 
 class EscortUser(BaseModel):
-    owner = peewee.ForeignKeyField(Worker, related_name="esc_users")
-    cid = peewee.IntegerField(unique=True)
-    balance = peewee.IntegerField(default=0)
-    username = peewee.CharField(default="Без юзернейма")
-    fullname = peewee.CharField(default="Без имени")
+    owner = ForeignKeyField(Worker, related_name="esc_users")
+    cid = IntegerField(unique=True)
+    balance = IntegerField(default=0)
+    username = CharField(default="Без юзернейма")
+    fullname = CharField(default="Без имени")
 
 
 class EscortPayment(BaseModel):
-    owner = peewee.ForeignKeyField(EscortUser, related_name="payments")
-    amount = peewee.IntegerField(null=True)  # sets dynamic
-    comment = peewee.CharField(unique=True)
-    done = peewee.IntegerField(default=0)  # 0 - not done 1 - real done 2 - fake done
-    created = peewee.DateTimeField(default=datetime_local_now)
+    owner = ForeignKeyField(EscortUser, related_name="payments")
+    amount = IntegerField(null=True)  # sets dynamic
+    comment = CharField(unique=True)
+    done = IntegerField(default=0)  # 0 - not done 1 - real done 2 - fake done
+    created = DateTimeField(default=datetime_local_now)
 
 
 class EscortGirl(BaseModel):
-    photos = peewee.CharField()
-    info = peewee.CharField(default="Без описания")
-    price = peewee.IntegerField(default=1500)
+    photos = CharField()
+    info = CharField(default="Без описания")
+    price = IntegerField(default=1500)
 
 
 class CasinoPayment(BaseModel):
-    owner = peewee.ForeignKeyField(CasinoUser, related_name="payments")
-    comment = peewee.CharField(unique=True, null=True) # for banker null
-    amount = peewee.IntegerField()
-    done = peewee.IntegerField(default=0)  # 0 - not done 1 - real done 2 - fake done
-    created = peewee.DateTimeField(default=datetime_local_now)
+    owner = ForeignKeyField(CasinoUser, related_name="payments")
+    comment = CharField(unique=True, null=True)  # for banker null
+    amount = IntegerField()
+    done = IntegerField(default=0)  # 0 - not done 1 - real done 2 - fake done
+    created = DateTimeField(default=datetime_local_now)
 
 
 class CasinoUserHistory(BaseModel):
-    owner = peewee.ForeignKeyField(CasinoUser, related_name="history")
-    editor = peewee.IntegerField(default=0)
-    amount = peewee.IntegerField()
-    balance = peewee.IntegerField()
-    created = peewee.CharField(default=datetime_local_now)
+    owner = ForeignKeyField(CasinoUser, related_name="history")
+    editor = IntegerField(default=0)
+    amount = IntegerField()
+    balance = IntegerField()
+    created = CharField(default=datetime_local_now)
 
 
 class TradingUser(BaseModel):
-    owner = peewee.ForeignKeyField(Worker, related_name="tdg_users")
-    cid = peewee.IntegerField(unique=True)
-    balance = peewee.IntegerField(default=0)
-    fullname = peewee.CharField(default="Без имени")
-    username = peewee.CharField(default="Юзернейм скрыт")
+    owner = ForeignKeyField(Worker, related_name="tdg_users")
+    cid = IntegerField(unique=True)
+    balance = IntegerField(default=0)
+    fullname = CharField(default="Без имени")
+    username = CharField(default="Юзернейм скрыт")
 
     def __str__(self):
         return f"#{self.id} {self.cid}"
 
 
 class TradingPayment(BaseModel):
-    owner = peewee.ForeignKeyField(TradingUser, related_name="payments")
-    comment = peewee.CharField(unique=True)
-    amount = peewee.IntegerField()
-    done = peewee.IntegerField(default=0)  # 0 - not done 1 - real done 2 - fake done
-    created = peewee.DateTimeField(default=datetime_local_now)
+    owner = ForeignKeyField(TradingUser, related_name="payments")
+    comment = CharField(unique=True)
+    amount = IntegerField()
+    done = IntegerField(default=0)  # 0 - not done 1 - real done 2 - fake done
+    created = DateTimeField(default=datetime_local_now)
 
 
 base.connect()
