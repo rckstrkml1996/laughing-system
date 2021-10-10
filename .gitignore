@@ -36,6 +36,7 @@ test.py
 
 pin.txt
 *.session
+*.session-journal
 
 .env/
 # webhook
