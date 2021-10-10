@@ -7,13 +7,13 @@ from config import config
 
 # worker panel
 menu_keyboard = ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)
-profile_btn = KeyboardButton(emojize(":woman_tipping_hand: Мой профиль"))
-casino_btn = KeyboardButton(emojize(":slot_machine: Казино"))
-traiding_btn = KeyboardButton(emojize(":chart_with_upwards_trend: Трейдинг"))
-escort_btn = KeyboardButton(emojize(":gift_heart: Эскорт"))
-about_btn = KeyboardButton(emojize(":woman_technologist: О проекте"))
+profile_btn = KeyboardButton(emojize("Профиль :cold_face:"))
+casino_btn = KeyboardButton(emojize("Казик :slot_machine:"))
+# traiding_btn = KeyboardButton(emojize(":chart_with_upwards_trend: Трейдинг"))
+# escort_btn = KeyboardButton(emojize(":gift_heart: Эскорт"))
+about_btn = KeyboardButton(emojize("О проекте :man_technologist:"))
 menu_keyboard.add(profile_btn)
-menu_keyboard.add(casino_btn, traiding_btn, escort_btn)
+menu_keyboard.add(casino_btn)  # , traiding_btn, escort_btn)
 menu_keyboard.add(about_btn)
 
 
@@ -37,17 +37,19 @@ def panel_keyboard(namehide) -> InlineKeyboardMarkup:
 
 about_project_keyboard = InlineKeyboardMarkup()
 ref_btn = InlineKeyboardButton(
-    emojize(":handshake: Реф. система"), callback_data="refsystem"
+    emojize("Реф. система :handshake: "), callback_data="refsystem"
 )
-rules_btn = InlineKeyboardButton(emojize(":scroll: Правила"), callback_data="showrules")
+rules_btn = InlineKeyboardButton(
+    emojize("Правила :scroll: "), callback_data="showrules"
+)
 out_btn = InlineKeyboardButton(
-    emojize(":money_with_wings: Выплаты"), url=config("outs_link")
+    emojize("Выплаты :money_with_wings:"), url=config("outs_link")
 )
 info_btn = InlineKeyboardButton(
-    emojize(":wastebasket: Инфоканал"), url=config("reviews_link")
+    emojize("Инфоканал :wastebasket:"), url=config("reviews_link")
 )
 chat_btn = InlineKeyboardButton(
-    emojize(":dolphin: Чат воркеров"), url=config("workers_link")
+    emojize("Чат воркеров :hot_face:"), url=config("workers_link")
 )
 about_project_keyboard.add(ref_btn, rules_btn)
 about_project_keyboard.add(info_btn, out_btn)
@@ -65,7 +67,7 @@ cas_promos_btn = InlineKeyboardButton(
 #     emojize("Свои фразы при выводе :book:"), callback_data="frazes_cas"
 # )
 cas_msg_spam_btn = InlineKeyboardButton(
-    emojize("Массовая рассылка :diamond_shape_with_a_dot_inside:"),
+    emojize("Рассылка мамонтам :diamond_shape_with_a_dot_inside:"),
     callback_data="all_alerts_cas",
 )
 cas_delete_all_btn = InlineKeyboardButton(

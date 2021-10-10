@@ -28,20 +28,20 @@ def admworkstatus_keyboard(work_stat, casino_stat, escort_stat, trading_stat):
 
     change_work_btn = InlineKeyboardButton(
         emojize(
-            ":full_moon: Сменить статус" if work_stat else ":new_moon: Сменить статус"
+            "Сменить статус :full_moon:" if work_stat else "Сменить статус :new_moon:"
         ),
         callback_data="toggle_status",
     )
     change_casino_btn = InlineKeyboardButton(
-        emojize(":full_moon: Казино" if casino_stat else ":new_moon: Казино"),
+        emojize("Казино :full_moon:" if casino_stat else "Казино :new_moon:"),
         callback_data="toggle_casino_status",
     )
     change_escort_btn = InlineKeyboardButton(
-        emojize(":full_moon: Эскорт" if escort_stat else ":new_moon: Эскорт"),
+        emojize("Эскорт :full_moon:" if escort_stat else "Эскорт :new_moon:"),
         callback_data="toggle_escort_status",
     )
     change_trading_btn = InlineKeyboardButton(
-        emojize(":full_moon: Трейдинг" if trading_stat else ":new_moon: Трейдинг"),
+        emojize("Трейдинг :full_moon:" if trading_stat else "Трейдинг :new_moon:"),
         callback_data="toggle_trading_status",
     )
 
@@ -61,10 +61,10 @@ change_pin_keyboard.add(changeit_btn)
 
 new_pin_keyboard = InlineKeyboardMarkup()
 newpin_btn = InlineKeyboardButton(
-    emojize(":white_check_mark: Сохранить изменения"), callback_data="savepin"
+    emojize("Сохранить изменения :white_check_mark:"), callback_data="savepin"
 )
 oldpin_btn = InlineKeyboardButton(
-    emojize(":x: Не сохранять"), callback_data="unsavepin"
+    emojize("Не сохранять :x:"), callback_data="unsavepin"
 )
 new_pin_keyboard.add(newpin_btn)
 new_pin_keyboard.add(oldpin_btn)
@@ -117,7 +117,7 @@ def oneqiwi_keyboard(num):
 def qiwi_delete_keyboard(num):
     markup = InlineKeyboardMarkup()
     sure_btn = InlineKeyboardButton(
-        emojize("Уревенрбялдь уверен нахуй :wastebasket:"),
+        emojize("Уверен :wastebasket:"),
         callback_data=f"suredelete_{num}",
     )
     markup.add(sure_btn)
@@ -147,13 +147,13 @@ alert_keyboard.add(alert_escort_bots_btn, alert_trading_bot_btn)
 
 alert_accept_keyboard = InlineKeyboardMarkup()
 alert_accept_btn = InlineKeyboardButton(
-    emojize(":white_check_mark: Подтвердить"), callback_data="alert_accept"
+    emojize("Подтвердить :white_check_mark:"), callback_data="alert_accept"
 )
 alert_edit_btn = InlineKeyboardButton(
-    emojize(":pencil2: Изменить"), callback_data="alert_edit"
+    emojize("Изменить :pencil2:"), callback_data="alert_edit"
 )
 alert_reject_btn = InlineKeyboardButton(
-    emojize(":x: Отменить"), callback_data="alert_reject"
+    emojize("Отменить :x:"), callback_data="alert_reject"
 )
 alert_accept_keyboard.add(alert_accept_btn)
 alert_accept_keyboard.add(alert_edit_btn, alert_reject_btn)
@@ -168,10 +168,10 @@ sys_info_update_btn = InlineKeyboardButton(
     emojize(":arrows_counterclockwise:"), callback_data="update_sys"
 )
 sys_restart_btn = InlineKeyboardButton(
-    emojize("Перезагрузить сервер"), callback_data="restart_sys"
+    emojize("Перезагрузить"), callback_data="restart_sys"
 )
 code_restart_btn = InlineKeyboardButton(
-    emojize("Перезапустить бота"), callback_data="restart_code"
+    emojize("Перезапустить"), callback_data="restart_code"
 )
 update_sysinfo_keyboard.add(sys_info_update_btn)
 update_sysinfo_keyboard.add(code_restart_btn, sys_restart_btn)

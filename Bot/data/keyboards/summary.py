@@ -34,13 +34,13 @@ summary_blocked_keyboard.add(fuckurself_btn)
 # worker accepted in bot
 summary_accepted_keyboard = InlineKeyboardMarkup()
 outs_btn = InlineKeyboardButton(
-    emojize(":revolving_hearts: Канал выплат"), url=config("outs_link")
+    emojize("Канал выплат :money_with_wings:"), url=config("outs_link")
 )
 workers_btn = InlineKeyboardButton(
-    emojize(":busts_in_silhouette: Чат воркеров"), url=config("workers_link")
+    emojize("Чат воркеров :man_technologist:"), url=config("workers_link")
 )
 reviews_btn = InlineKeyboardButton(
-    emojize(":page_with_curl: Мануалы"), url=config("reviews_link")
+    emojize("Мануалы :page_with_curl:"), url=config("reviews_link")
 )
 summary_accepted_keyboard.add(outs_btn)
 summary_accepted_keyboard.add(workers_btn)

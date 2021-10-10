@@ -34,7 +34,7 @@ lzt_text = emojize(
     "{message_count}, {like_count} симп"
 )
 
-lolz_down_text = "Задержка запроса, скорей всего LOLZ упал :("
+lolz_down_text = "Задержка запроса, скорей всего <b>Лолзтим</b> упал :("
 
 cck_size_text = "Мой размер чилена - {size}см {smile}"
 
@@ -43,22 +43,22 @@ cck_size_text = "Мой размер чилена - {size}см {smile}"
 adm_work_command = emojize("<b>Состояние</b> сервисов:\n" "{services_status}")
 
 # work command
-setwork_text = emojize(":white_check_mark: <b>Поставлен</b> ворк")
-setdontwork_text = emojize(":x: <b>Поставлен</b> неворк")
+setwork_text = emojize("<b>Поставлен</b> ворк :white_check_mark:")
+setdontwork_text = emojize("<b>Поставлен</b> неворк :x:")
 
-casino_setwork_text = emojize(":white_check_mark: Казино - <b>Поставлен</b> ворк")
-casino_setdontwork_text = emojize(":x: Казино - <b>Поставлен</b> неворк")
-escort_setwork_text = emojize(":white_check_mark: Эскорт - <b>Поставлен</b> ворк")
-escort_setdontwork_text = emojize(":x: Эскорт - <b>Поставлен</b> неворк")
-trading_setwork_text = emojize(":white_check_mark: Трейдинг - <b>Поставлен</b> ворк")
-trading_setdontwork_text = emojize(":x: Трейдинг - <b>Поставлен</b> неворк")
+casino_setwork_text = emojize("Казино - <b>Поставлен</b> ворк :white_check_mark:")
+casino_setdontwork_text = emojize("Казино - <b>Поставлен</b> неворк :x:")
+escort_setwork_text = emojize("Эскорт - <b>Поставлен</b> ворк :white_check_mark:")
+escort_setdontwork_text = emojize("Эскорт - <b>Поставлен</b> неворк :x:")
+trading_setwork_text = emojize("Трейдинг - <b>Поставлен</b> ворк :white_check_mark:")
+trading_setdontwork_text = emojize("Трейдинг - <b>Поставлен</b> неворк :x:")
 
 
 qiwi_command_text = emojize(
-    "Информация по киви кошелькам.\n\n" "Общий баланс: <b>{all_balance} RUB</b>"
+    ":kiwi_fruit: Информация по киви кошелькам.\n\n" "Общий баланс: <b>{all_balance} RUB</b>"
 )
 
-no_qiwis_text = emojize("У вас нет привязанных кошельков!")
+no_qiwis_text = emojize("У вас нет привязанных кошельков! :x:")
 
 qiwi_error_text = emojize(
     "Какая-то ошибка в киви, попробуй еще раз или позови кодера) :warning:"

@@ -20,7 +20,7 @@ from data.keyboards import casino_keyboard, trading_keyboard, escort_keyboard
 from utils.executional import get_casino_mamonth_info
 
 
-@dp.message_handler(regexp="казин", state="*", is_worker=True)
+@dp.message_handler(regexp="казин|казик", state="*", is_worker=True)
 async def casino_info(message: types.Message, worker: Worker, state: FSMContext):
     current_state = await state.get_state()
     if current_state is not None:
