@@ -22,7 +22,7 @@ from .render import render_profit
 
 
 async def check_casino(traction: Transaction) -> bool:
-    delta = datetime_local_now() - timedelta(days=1)
+    delta = datetime_local_now() - timedelta(days=5)
     try:
         del_count = (
             CasinoPayment.delete().where(CasinoPayment.created < delta).execute()
