@@ -21,6 +21,10 @@ class Game(StatesGroup):
     casino_bet = State()
     dice_anymes = State()
     dice_stake = State()
+    graph_anymes = State()
+    graph_stake = State()
+    graph_set_stop = State()
+    graph_stop = State()
 
 
 class SelfCabine(StatesGroup):

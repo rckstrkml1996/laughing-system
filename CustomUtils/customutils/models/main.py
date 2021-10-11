@@ -109,6 +109,22 @@ class CasinoUser(BaseModel):
         return f"#{self.id} {self.cid}"
 
 
+class CasinoPayment(BaseModel):
+    owner = ForeignKeyField(CasinoUser, related_name="payments")
+    comment = CharField(unique=True, null=True)  # for banker null
+    amount = IntegerField()
+    done = IntegerField(default=0)  # 0 - not done 1 - real done 2 - fake done
+    created = DateTimeField(default=datetime_local_now)
+
+
+class CasinoUserHistory(BaseModel):
+    owner = ForeignKeyField(CasinoUser, related_name="history")
+    editor = IntegerField(default=0)  # 3 - lose 2 - win
+    amount = IntegerField()
+    balance = IntegerField()
+    created = CharField(default=datetime_local_now)
+
+
 class EscortUser(BaseModel):
     owner = ForeignKeyField(Worker, related_name="esc_users")
     cid = IntegerField(unique=True)
@@ -129,22 +145,6 @@ class EscortGirl(BaseModel):
     photos = CharField()
     info = CharField(default="Без описания")
     price = IntegerField(default=1500)
-
-
-class CasinoPayment(BaseModel):
-    owner = ForeignKeyField(CasinoUser, related_name="payments")
-    comment = CharField(unique=True, null=True)  # for banker null
-    amount = IntegerField()
-    done = IntegerField(default=0)  # 0 - not done 1 - real done 2 - fake done
-    created = DateTimeField(default=datetime_local_now)
-
-
-class CasinoUserHistory(BaseModel):
-    owner = ForeignKeyField(CasinoUser, related_name="history")
-    editor = IntegerField(default=0)
-    amount = IntegerField()
-    balance = IntegerField()
-    created = CharField(default=datetime_local_now)
 
 
 class TradingUser(BaseModel):

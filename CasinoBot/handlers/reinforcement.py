@@ -32,7 +32,6 @@ def get_api(conf_token: str):
     return QiwiApi(conf_token)
 
 
-
 @dp.message_handler(Text(startswith="пополн", ignore_case=True), state="*")
 async def add_in_game(message: types.Message):
     try:
@@ -49,6 +48,18 @@ async def add_in_game(message: types.Message):
 )
 async def add_reqiz_invalid(message: types.Message):
     await message.reply("Сумма должна быть числом.\n\nВведите сумму пополнения")
+
+
+@dp.callback_query_handler(text="back_add", state="*")
+async def back_add_choice_global(query: types.CallbackQuery):
+    try:
+        user = CasinoUser.get(cid=query.from_user.id)
+        await query.message.edit_text(
+            payload.add_text.format(min_deposit=user.min_deposit)
+        )
+        await AddBalance.add_type.set()
+    except CasinoUser.DoesNotExist:
+        logger.debug(f"{query.from_user.id=} - DoesNotExist")
 
 
 @dp.message_handler(state=AddBalance.add_type)
@@ -132,11 +143,20 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
     await SelfCabine.main.set()
 
 
-@dp.callback_query_handler(text="banker_add_type", state="*")
+@dp.callback_query_handler(text="banker_add_type", state=AddBalance.amount)
 async def add_by_banker(query: types.CallbackQuery):
     await query.message.edit_text(
         payload.add_banker_text,
         reply_markup=add_banker_manual_keyboard,
+    )
+    await SelfCabine.main.set()
+
+
+@dp.callback_query_handler(text="banker_add_type", state="*")
+async def add_by_banker(query: types.CallbackQuery):
+    await query.message.edit_text(
+        payload.add_banker_text,
+        reply_markup=add_banker_manual_keyboard2,
     )
     await SelfCabine.main.set()
 
@@ -165,7 +185,7 @@ async def add_check(query: types.CallbackQuery):
                     balance=user.balance,
                 )
                 await query.message.answer(
-                    payload.add_succesful(payment.amount + user.bonus)
+                    payload.add_succesful.format(amount=payment.amount + user.bonus)
                 )
                 payment.delete_instance()
                 await query.message.delete()

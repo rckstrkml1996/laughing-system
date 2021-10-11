@@ -27,5 +27,5 @@ class IsWorking(BoundFilter):
             user_work = True
 
         working = self.is_working == (casino_work and user_work)
-        logger.debug(f"IsWorking filter checked {working=}")
+        # logger.debug(f"IsWorking filter checked {working=}")
         return working

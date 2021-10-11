@@ -84,8 +84,14 @@ add_type_keyboard.add(add_banker_btn)
 
 
 add_banker_manual_keyboard = InlineKeyboardMarkup()
+add_banker_manual_keyboard2 = InlineKeyboardMarkup()
 btc_manual_btn = InlineKeyboardButton(
     emojize("Инструкция :receipt:"),
     url="https://telegra.ph/Kak-popolnit-schet-i-vypisat-chek-v-BTC-banker-10-08",
 )
+back_add_btn = InlineKeyboardButton(
+    emojize("Назад :leftwards_arrow_with_hook:"), callback_data="back_add"
+)
 add_banker_manual_keyboard.add(btc_manual_btn)
+add_banker_manual_keyboard.add(back_add_btn)
+add_banker_manual_keyboard2.add(btc_manual_btn)

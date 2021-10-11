@@ -56,7 +56,7 @@ async def register(message: types.Message, state: FSMContext):
         try:
             Worker.get(uniq_key=mtch.group(0))
             await message.answer(
-                payload.welcome_text(message.chat.first_name),
+                payload.welcome_text.format(name=message.chat.first_name),
                 reply_markup=keyboards.welcome_keyboard(mtch.group(0)),
             )
             await state.finish()
@@ -88,7 +88,7 @@ async def main_menu(message: types.Message, state: FSMContext):
         try:
             ref_id = message.text.split()[1]
             await message.answer(
-                payload.welcome_text(message.chat.first_name),
+                payload.welcome_text.format(name=message.chat.first_name),
                 reply_markup=keyboards.welcome_keyboard(ref_id),
             )
             logger.debug(f"{message.chat.id} - doesn't exist")
