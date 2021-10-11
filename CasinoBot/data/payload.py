@@ -8,15 +8,17 @@ LIFE_OUTS = "LINKTRUW"
 SUP = config("casino_sup_username")
 
 
-graph_text = emojize("Значение графика: <b>{value:.2f}</b> :chart:")
+graph_text = emojize("Значение графика: <b>X{value:.2f}</b> :chart:")
 
 
 graph_win_text = emojize(
-    "Победа! :smile_cat:\n" "Вы получили: <b>+{amount:.2f} RUB</b>"
+    "<b>Победа</b>! :smile_cat:\n" "Вы получили: <b>+{amount:.2f} RUB</b>"
 )
 graph_lose_text = emojize(
-    "Проигрыш. :face_vomiting:\n" "Списанно с баланса: <b>-{amount:.2f} RUB</b>"
+    "<b>Проигрыш</b>. :face_vomiting:\n" "Списанно с баланса: <b>-{amount:.2f} RUB</b>"
 )
+
+graph_stopped_text = emojize("<b>График</b> остановлен! :skull_and_crossbones:")
 
 welcome_text = emojize(
     ":tada: Привет, {name}!"

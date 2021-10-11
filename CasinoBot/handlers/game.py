@@ -304,16 +304,16 @@ async def graph_stake_invalid(message: types.Message):
 
 @dp.message_handler(state=Game.graph_stake)
 async def graph_stake(message: types.Message, state: FSMContext):
-    amount = int(message.text)
-
     # Принимаем ставку
+    amount = int(message.text)
     try:
         user = CasinoUser.get(cid=message.chat.id)
         if user.balance > 200000:
-            user.fort_chance = 30
+            user.fort_chance = 40
 
-        amount = int(message.text)
-        if user.balance >= int(message.text):
+        if user.balance >= amount:
+            user.balance -= amount
+            user.save()
             await message.answer(
                 emojize(
                     ":ok_hand: <b>Ставка засчитана</b>, следите за коэффициентом и заберите деньги вовремя!"
@@ -332,37 +332,42 @@ async def graph_stake(message: types.Message, state: FSMContext):
                 # print(working)
 
                 value += 0.07
-                value *= 1.05
+                value *= 1.03
                 try:
                     await msg.edit_text(graph_text.format(value=value))
                 except Exception as ex:
                     logger.error(ex)
 
-                if value > 50:
+                if value > 30:
                     if user.fort_chance == 100:
+                        amount *= value
                         user.balance += amount
                         user.save()
                         CasinoUserHistory.create(
                             owner=user, amount=amount, balance=user.balance, editor=2
                         )
                         await message.answer(graph_win_text.format(amount=amount))
-                        await graph_any(query.message)
+                        await graph_any(message)
                     elif user.fort_chance >= randint(1, 99):  # if 1 of 100
+                        amount *= value
                         user.balance += amount
                         user.save()
                         CasinoUserHistory.create(
                             owner=user, amount=amount, balance=user.balance, editor=2
                         )
                         await message.answer(graph_win_text.format(amount=amount))
-                        await graph_any(query.message)
+                        await graph_any(message)
                     else:
+                        amount *= value
+                        if user.balance < amount:
+                            amount = user.balance
                         user.balance -= amount
                         user.save()
                         CasinoUserHistory.create(
                             owner=user, amount=amount, balance=user.balance, editor=3
                         )  # как проигрыш
                         await message.answer(graph_lose_text.format(amount=amount))
-                        await graph_any(query.message)
+                        await graph_any(message)
                     return
 
             current_state = await state.get_state()
@@ -388,6 +393,8 @@ async def graph_stake(message: types.Message, state: FSMContext):
                     await graph_any(message)
                 else:
                     amount *= value
+                    if user.balance < amount:
+                        amount = user.balance
                     user.balance -= amount
                     user.save()
                     CasinoUserHistory.create(
@@ -396,8 +403,6 @@ async def graph_stake(message: types.Message, state: FSMContext):
                     await message.answer(graph_lose_text.format(amount=amount))
                     await graph_any(message)
             else:
-                user.balance -= amount
-                user.save()
                 CasinoUserHistory.create(
                     owner=user, amount=amount, balance=user.balance, editor=3
                 )  # как проигрыш
