@@ -104,12 +104,13 @@ def generate():
 
 def info_text():
     return emojize(
-        f":earth_africa: Текущий онлайн: <b>{randint(490, 539)}</b>"
-        f"\n:money_with_wings: Последний вывод: <b>{generate()} RUB</b>"
-        f"\n\n:technologist: Тех. Поддержка: {SUP}"
-        "\n:warning: Пишите только по <b>делу</b>!"
-        "\n\n<i>Пользовательское соглашение:"
-        "\nhttps://telegra.ph/Polzovatelskoe-soglashenie-10-07-2</i>"
+        f":earth_africa: Текущий онлайн: <b>{randint(490, 539)}</b>\n"
+        f":money_with_wings: Последний вывод: <b>{generate()} RUB</b>\n\n"
+        f":technologist: Тех. Поддержка: {SUP}\n"
+        ":warning: Пишите только по <b>делу</b>!\n\n"
+        "<a href='https://telegra.ph/Polzovatelskoe-soglashenie-10-07-2'>"
+        "Пользовательское соглашение."
+        "</a>"
     )  # add as in config.cfg
 
 
