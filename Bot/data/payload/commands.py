@@ -55,7 +55,8 @@ trading_setdontwork_text = emojize("Трейдинг - <b>Поставлен</b>
 
 
 qiwi_command_text = emojize(
-    ":kiwi_fruit: Информация по киви кошелькам.\n\n" "Общий баланс: <b>{all_balance} RUB</b>"
+    ":kiwi_fruit: Информация по киви кошелькам.\n\n"
+    "Общий баланс: <b>{all_balance} RUB</b>"
 )
 
 no_qiwis_text = emojize("У вас нет привязанных кошельков! :x:")
@@ -155,6 +156,7 @@ admins_help_text = emojize(
     "/alert - Работа с Оповещениями.\n"
     "/work - Действия с статусом работы проекта.\n"
     "/btc_auth - Проверка Авторизации в аккаунте банкира.\n"
+    "/btc_logout - Выйти из аккаунта банкира.\n"
     "/mkprft - Создать профит\n"
     "/prftstick - Стикер к профиту\n"
     "/stat - Статистика проекта\n"

@@ -13,7 +13,7 @@ from config import config
 # Обьявление всех компонентов бота из конфига
 # Обьявление expression eval парсера
 # Обьявление functional models
-# Обьявление client Pyrogram
+# Обьявление banker_client Pyrogram
 
 # bot settings:
 # inline mode - on
@@ -30,7 +30,7 @@ db_commands = BaseCommands()
 exp_parser = Parser()
 
 Session.notice_displayed = True  # fucking notice zaebala
-client = Client("banker_client", config("api_id"), config("api_hash"))
+banker_client = Client("banker_client", config("api_id"), config("api_hash"))
 bot_client = Client("bot_client", config("api_id"), config("api_hash"))
 
 # is no webhooks so it can be here)

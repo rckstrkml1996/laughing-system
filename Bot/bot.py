@@ -12,7 +12,8 @@ from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 from utils.systeminfo import update_cpu_usage, exit_event
 from utils.paysystem import check_qiwis
-from utils.autobtc import AutoBtc
+
+# from utils.autobtc import AutoBtc
 
 
 async def on_startup(dispatcher: Dispatcher, notify=True):
@@ -76,7 +77,7 @@ def main():
     payments_f = loop.create_task(check_qiwis())
     dynamic_pins_f = loop.create_task(dynapins(dp.bot))
 
-    loop.create_task(AutoBtc())
+    # loop.create_task(AutoBtc())
 
     start_task = loop.create_task(
         start_bot(dp, notify=config("notify"), skip_updates=SKIP_UPDATES)

@@ -86,4 +86,4 @@ for val in alowed_values:
 # useless
 SKIP_UPDATES = True
 
-BTC_REGEX = r"BTC_CHANGE_BOT\?start="
+BTC_REGEX = r"BTC_CHANGE_BOT\?start=(c_[a-f0-9]{32})"
