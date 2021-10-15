@@ -1,4 +1,5 @@
-import random
+from random import randint
+from asyncio import sleep
 from asyncio.exceptions import TimeoutError
 from datetime import datetime
 
@@ -47,8 +48,10 @@ async def clc_command(message: types.Message):
     text = message.text.replace("/clc ", "")
     try:
         result = exp_parser.parse(text).evaluate({"x": 0.8, "xx": 0.7})
-    except:
+    except Exception as ex:
+        loguru.error(ex)
         result = "хз"
+
     await message.reply(result)
     logger.debug(f"Chat User - {message.from_user.id}, /clc {text} result: {result}")
 
@@ -119,7 +122,7 @@ async def cock_size_command(message: types.Message):
     try:
         worker = Worker.get(cid=message.from_user.id)
         if worker.cock_size is None:
-            worker.cock_size = random.randint(2, 24)
+            worker.cock_size = randint(2, 24)
             worker.save()
         smile = (
             ":cry:"
@@ -151,12 +154,14 @@ def get_place(i):
 
 @dp.message_handler(commands="top", workers_chat=True)
 async def team_top(message: types.Message):
+    await message.delete()
+
     logger.debug(f"User - {message.from_user.id}, wants /top in chat.")
     query = db_commands.get_topworkers_all(limit=10)  # limit = 15
     all_profits = db_commands.get_profits_all()
 
     if query.count() == 0:
-        await message.reply(payload.top_none_text)
+        await message.answer(payload.top_none_text)
         return  # logg
 
     profit_text_list = []
@@ -177,7 +182,7 @@ async def team_top(message: types.Message):
                 f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
             )
 
-    await message.reply(
+    msg = await message.answer(
         payload.top_text.format(
             period="всё время",
             profits="\n".join(profit_text_list),
@@ -187,15 +192,20 @@ async def team_top(message: types.Message):
     )
     logger.debug(f"User {message.from_user.id} /top in chat succesfully.")
 
+    await sleep(15)
+    await msg.delete()
+
 
 @dp.message_handler(commands="topm", workers_chat=True)
 async def team_top_day(message: types.Message):
+    await message.delete()
+
     logger.debug(f"User - {message.from_user.id}, wants /topm in chat.")
     query = db_commands.get_topworkers_month(limit=10)  # limit = 15 autodelta
     all_profits = db_commands.get_profits_month()
 
     if query.count() == 0:
-        await message.reply(payload.top_none_text)
+        await message.answer(payload.top_none_text)
         return  # logg
 
     profit_text_list = []
@@ -216,7 +226,7 @@ async def team_top_day(message: types.Message):
                 f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
             )
 
-    await message.reply(
+    msg = await message.answer(
         payload.top_text.format(
             period="месяц",
             profits="\n".join(profit_text_list),
@@ -226,15 +236,20 @@ async def team_top_day(message: types.Message):
     )
     logger.debug(f"User {message.from_user.id} /topm in chat succesfully.")
 
+    await sleep(15)
+    await msg.delete()
+
 
 @dp.message_handler(commands="topd", workers_chat=True)
 async def team_top_day(message: types.Message):
+    await message.delete()
+
     logger.debug(f"User - {message.from_user.id}, wants /topd in chat.")
     query = db_commands.get_topworkers_day(limit=10)  # limit = 15
     all_profits = db_commands.get_profits_day_amount()
 
     if query.count() == 0:
-        await message.reply(payload.top_none_text)
+        await message.answer(payload.top_none_text)
         return  # logg
 
     profit_text_list = []
@@ -255,7 +270,7 @@ async def team_top_day(message: types.Message):
                 f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
             )
 
-    await message.reply(
+    msg = await message.answer(
         payload.top_text.format(
             period="день",
             profits="\n".join(profit_text_list),
@@ -264,3 +279,5 @@ async def team_top_day(message: types.Message):
         disable_notification=True,
     )
     logger.debug(f"User {message.from_user.id} /topd in chat succesfully.")
+    await sleep(15)
+    await msg.delete()
