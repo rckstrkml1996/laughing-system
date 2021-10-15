@@ -4,13 +4,13 @@ from config import config
 
 worker_menu_text = emojize(
     ":green_apple: <b>Твой профиль</b> [<code>{chat_id}</code>]\n\n"
-    "Реф баланс: <b>{ref_balance} RUB</b>\n\n"
+    ":cold_face: <i>Реф баланс:</i> {ref_balance} RUB\n\n"
     ":money_with_wings: У тебя {profits} на сумму <b>{all_balance}₽</b>\n"
     "Средний профит ~ <b>{middle_profits}₽</b>\n\n"
     ":gem: Приглашено: <b>0 воркеров</b>\n\n"
     ":sunglasses: Статус: <b>{status}</b>\n\n"
     ":warning: Предупреждений: <b>[{warns}/3]</b>\n"
-    "В команде: <b>{in_team}</b>\n\n"
+    "<i>В команде:</i> {in_team}\n\n"
     "{team_status}"
 )
 

@@ -1,5 +1,9 @@
+from time import time
+from secrets import token_hex
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
+from aiogram.types.input_file import InputFile
 from aiogram.utils.emoji import emojize
 from loguru import logger
 
@@ -11,6 +15,7 @@ from customutils.datefunc import datetime_local_now
 from data import payload
 from data.keyboards import *
 from utils.executional import get_correct_str, get_work_status
+from utils.render import render_profile
 
 
 @dp.message_handler(regexp="профил", is_worker=True, state="*")
@@ -41,7 +46,8 @@ async def worker_profile_callback(query: types.CallbackQuery, worker: Worker):
         f"Worker - {query.from_user.id} get profile, {all_balance=} {len_profits=} {middle_profits=}"
     )
 
-    await query.message.edit_text(
+    await query.message.delete()
+    await query.message.answer(
         payload.worker_menu_text.format(
             chat_id=query.from_user.id,
             status=StatusNames[worker.status],
@@ -58,6 +64,7 @@ async def worker_profile_callback(query: types.CallbackQuery, worker: Worker):
 
 
 async def worker_welcome(message: types.Message):
+    a = time()
     logger.debug(f"Worker - {message.chat.id}, wants get profile")
 
     worker = Worker.get(cid=message.chat.id)
@@ -76,8 +83,20 @@ async def worker_welcome(message: types.Message):
     )
 
     await message.answer(emojize(":zap:"), reply_markup=menu_keyboard)
-    await message.answer(
-        payload.worker_menu_text.format(
+
+    profile_pictures = await dp.bot.get_user_profile_photos(message.chat.id)
+    photo_path = f"media/{message.chat.id}.jpg"
+    active = False
+    if profile_pictures.total_count != 0:
+        active = True
+        await profile_pictures.photos[-1][-1].download(photo_path)
+
+    render_profile(photo_path, active)  # make some shit
+    profile_photo = InputFile(photo_path)
+
+    await message.answer_photo(
+        profile_photo,
+        caption=payload.worker_menu_text.format(
             chat_id=message.chat.id,
             status=StatusNames[worker.status],
             all_balance=all_balance,
@@ -90,6 +109,9 @@ async def worker_welcome(message: types.Message):
         ),
         reply_markup=panel_keyboard(worker.username_hide),
     )
+
+    time_to_do = time() - a
+    logger.debug(f"worker_welcome:{time_to_do=}")
 
 
 @dp.message_handler(regexp="проект", is_worker=True, state="*")

@@ -89,7 +89,7 @@ async def dice_stake(message: types.Message, state: FSMContext):
             if user_dice.dice.value > bot_dice.dice.value:
                 await message.answer(
                     emojize(
-                        f":heart: Вы победили! \
+                        f":green_heart: Вы победили! \
 					\nВаше число - {user_dice.dice.value}, число бота - {bot_dice.dice.value}"
                     )
                 )

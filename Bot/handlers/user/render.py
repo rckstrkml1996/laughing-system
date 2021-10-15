@@ -18,7 +18,8 @@ from utils.render import render_sbertransfer, render_qiwitransfer, render_qiwiba
 
 @dp.callback_query_handler(text="render")
 async def render_main(query: types.CallbackQuery):
-    await query.message.edit_text(
+    await query.message.delete()  # delete than answer) im 15 years old)
+    await query.message.answer(
         render_main_text,
         reply_markup=render_main_keyboard,
     )

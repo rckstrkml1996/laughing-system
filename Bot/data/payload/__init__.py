@@ -5,3 +5,4 @@ from .panel import *
 from .summary import *
 from .services import *
 from .btc_auth import *
+from .card import *

@@ -18,7 +18,7 @@ async def on_startup_notify(dp: Dispatcher):
             logger.warning("Chat with admin not found.")
         except BotBlocked:
             logger.warning("Admin blocked bot.")
-        except:
-            logger.warning("Somethink error notify!")
+        except Exception as ex:
+            logger.exception(ex)
 
         await sleep(0.2)

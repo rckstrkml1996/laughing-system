@@ -86,3 +86,6 @@ class Render(StatesGroup):
 
 class ChangeMin(StatesGroup):
     main = State()
+
+class Card(StatesGroup):
+    main = State()

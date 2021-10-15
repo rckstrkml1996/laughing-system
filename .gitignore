@@ -25,7 +25,7 @@ build2/
 
 # my shit
 static
-rendered/
+media/
 # Ignore dynaconf secret files
 .secrets.*
 # Ignore cfg files

@@ -43,7 +43,7 @@ emojis = [
     ":crown:",
     ":ring:",
     ":gem:",
-    ":heart:",
+    ":green_heart:",
     ":black_heart:",
     ":sparkling_heart:",
     ":cat:",

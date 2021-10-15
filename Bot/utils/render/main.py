@@ -1,167 +1,23 @@
-from copy import deepcopy
 import re
-import secrets
-import os
+from secrets import token_hex
+from os import path
 
-from PIL import Image, ImageFont, ImageDraw, ImageFilter
+from PIL import Image, ImageFont, ImageDraw
 from loguru import logger
 
-from config import config
-from ..executional import get_random_analog
 
-package_directory = os.path.dirname(os.path.abspath(__file__))
-
-
-@logger.catch
-def render_profit(
-    all_profit: int, profit_sum: int, share_sum: int, service: str, username: str
-):
-    image = Image.open(os.path.join(package_directory, "editable", "profit.jpg"))
-
-    profit_color = tuple(config("profit_render_color", int))  # 240,230,100,255
-    profit_light = (112, 191, 78, 255)
-
-    general_text = "{:,}".format(all_profit).replace(",", " ") + " RUB"
-
-    font_general = ImageFont.truetype(
-        os.path.join(
-            package_directory,
-            "fonts",
-            "SFUIText-Semibold.ttf",
-        ),
-        85,
-    )
-
-    font_analog = ImageFont.truetype(
-        os.path.join(
-            package_directory,
-            "fonts",
-            "SFUIText-Semibold.ttf",
-        ),
-        30,
-    )
-
-    w, h = font_general.getsize(general_text)
-    ligthText(
-        image,
-        ((image.size[0] - w) / 2, 350),
-        general_text,
-        font=font_general,
-        width=15,
-        fillMain=profit_color,
-        fillLight=profit_light,
-    )
-
-    analog = get_random_analog(all_profit)
-
-    w, h = font_analog.getsize(analog)
-    ligthText(
-        image,
-        ((image.size[0] - w) / 2, 440),
-        analog,
-        font=font_analog,
-        width=15,
-        fillMain=profit_color,
-        fillLight=profit_light,
-    )
-
-    font_info = ImageFont.truetype(
-        os.path.join(
-            package_directory,
-            "fonts",
-            "SFUIText-Semibold.ttf",
-        ),
-        65,
-    )
-
-    profit_text = "{:,}".format(profit_sum).replace(",", " ") + " RUB"
-
-    w, h = font_info.getsize(profit_text)
-    ligthText(
-        image,
-        (1625 - w, 550),
-        profit_text,
-        font=font_info,
-        width=15,
-        fillMain=profit_color,
-        fillLight=profit_light,
-    )
-
-    share_text = "{:,}".format(share_sum).replace(",", " ") + " RUB"
-
-    w, h = font_info.getsize(share_text)
-    ligthText(
-        image,
-        (1625 - w, 680),
-        share_text,
-        font=font_info,
-        width=15,
-        fillMain=profit_color,
-        fillLight=profit_light,
-    )
-
-    ligthText(
-        image,
-        (206, 550),
-        service,
-        font=font_info,
-        width=15,
-        fillMain=profit_color,
-        fillLight=profit_light,
-    )
-
-    ligthText(
-        image,
-        (206, 680),
-        username,
-        font=font_info,
-        width=15,
-        fillMain=profit_color,
-        fillLight=profit_light,
-    )
-
-    img_path = f"rendered/{secrets.token_hex(6)}.jpg"
-    image.save(img_path)
-    return img_path
-
-
-@logger.catch
-def ligthText(
-    image, pos, text, font, width, fillMain=(0, 0, 0, 255), fillLight=(0, 0, 0, 255)
-):
-    imageligth = Image.new("RGBA", image.size, (0, 0, 0, 0))
-    draw = ImageDraw.Draw(imageligth)
-    draw.text(pos, text, fillMain, font=font)
-
-    imageligth = textLightEffect(
-        imageligth, pos, text, width, font=font, fill=fillLight
-    )
-
-    image.paste(imageligth, imageligth)
-
-
-@logger.catch
-def textLightEffect(image, pos, text, width, font, fill):
-    # Create piece of canvas to draw text on and blur
-    blurred = Image.new("RGBA", image.size, (0, 0, 0, 0))
-    draw = ImageDraw.Draw(blurred)
-    draw.text(pos, text=text, fill=fill, font=font)
-    blurred = blurred.filter(ImageFilter.BoxBlur(width))
-    # Paste soft text onto background
-    blurred.paste(image, image)
-
-    return blurred
+package_directory = path.dirname(path.abspath(__file__))
 
 
 @logger.catch
 def render_qiwibalance(balance, date):
-    image = Image.open(os.path.join(package_directory, "editable", "qiwibalance.png"))
+    image = Image.open(path.join(package_directory, "editable", "qiwibalance.png"))
     image_w, image_h = image.size
 
     text_amount = f"{balance} ₽"
 
     font_medium = ImageFont.truetype(
-        os.path.join(
+        path.join(
             package_directory,
             "fonts",
             "SFUIDisplay-Medium.ttf",
@@ -170,7 +26,7 @@ def render_qiwibalance(balance, date):
     )
 
     font_semi = ImageFont.truetype(
-        os.path.join(
+        path.join(
             package_directory,
             "fonts",
             "SFUIText-Semibold.ttf",
@@ -195,21 +51,21 @@ def render_qiwibalance(balance, date):
 
     image_editable.text((64, 31), date, (0, 0, 0), font=font_medium)
 
-    img_path = f"rendered/{secrets.token_hex(6)}.png"
+    img_path = f"media/{token_hex(6)}.png"
     image.save(img_path)
     return img_path
 
 
 @logger.catch
 def render_qiwitransfer(number: str, amount: str, date: str):
-    image = Image.open(os.path.join(package_directory, "editable", "qiwitransfer.jpg"))
+    image = Image.open(path.join(package_directory, "editable", "qiwitransfer.jpg"))
     image_w, image_h = image.size
 
     text_transfer = f"- {amount} ₽"
     text_amount = f"{amount} ₽"
 
     font_bold = ImageFont.truetype(
-        os.path.join(
+        path.join(
             package_directory,
             "fonts",
             "SFUIText-Bold.ttf",
@@ -218,7 +74,7 @@ def render_qiwitransfer(number: str, amount: str, date: str):
     )
 
     font_regular = ImageFont.truetype(
-        os.path.join(
+        path.join(
             package_directory,
             "fonts",
             "SBSansDisplay-Regular.otf",
@@ -241,14 +97,14 @@ def render_qiwitransfer(number: str, amount: str, date: str):
 
     image_editable.text((31, 1167), text_amount, (0, 0, 0), font=font_regular)
 
-    img_path = f"rendered/{secrets.token_hex(6)}.jpg"
+    img_path = f"media/{token_hex(6)}.jpg"
     image.save(img_path)
     return img_path
 
 
 @logger.catch
 def render_sbertransfer(amount, recipient, date):
-    image = Image.open(os.path.join(package_directory, "editable", "sbertransfer.png"))
+    image = Image.open(path.join(package_directory, "editable", "sbertransfer.png"))
     image_w, image_h = image.size
 
     text_amount = f"{amount} ₽"
@@ -257,7 +113,7 @@ def render_sbertransfer(amount, recipient, date):
         text_amount = text_amount.replace(i, "{:,}".format(int(i)).replace(",", " "))
 
     font_bold = ImageFont.truetype(
-        os.path.join(
+        path.join(
             package_directory,
             "fonts",
             "SFUIText-Bold.ttf",
@@ -266,7 +122,7 @@ def render_sbertransfer(amount, recipient, date):
     )
 
     font_medium = ImageFont.truetype(
-        os.path.join(
+        path.join(
             package_directory,
             "fonts",
             "SFUIDisplay-Medium.ttf",
@@ -275,7 +131,7 @@ def render_sbertransfer(amount, recipient, date):
     )
 
     font_display = ImageFont.truetype(
-        os.path.join(
+        path.join(
             package_directory,
             "fonts",
             "SBSansDisplay-Regular.otf",
@@ -307,6 +163,6 @@ def render_sbertransfer(amount, recipient, date):
 
     image_editable.text((44, 28), date, (255, 255, 255), font=font_medium)
 
-    img_path = f"rendered/{secrets.token_hex(6)}.png"
+    img_path = f"media/{token_hex(6)}.png"
     image.save(img_path)
     return img_path
