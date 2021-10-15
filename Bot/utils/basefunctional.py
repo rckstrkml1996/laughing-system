@@ -1,8 +1,10 @@
 from random import randint
 from datetime import timedelta
 
+from aiogram.utils.markdown import quote_html
 from peewee import ModelSelect, fn, JOIN, SQL
 from loguru import logger
+
 from customutils.models import Profit, Worker
 from customutils.models import CasinoPayment, CasinoUserHistory
 from customutils.datefunc import datetime_local_now
@@ -206,7 +208,7 @@ class BaseCommands:
         return Worker.create(
             cid=chat_id,
             uniq_key=self.get_uniq_key(),
-            name=name,
+            name=quote_html(name),
             username=username,
         )
 

@@ -4,7 +4,6 @@ from configparser import NoOptionError
 
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
-from aiogram.utils.markdown import quote_html
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.emoji import emojize
 from loguru import logger
