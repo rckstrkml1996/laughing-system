@@ -7,6 +7,8 @@ from configparser import NoOptionError
 from loguru import logger
 from aiohttp.client_exceptions import ClientProxyConnectionError
 from aiogram.types.input_file import InputFile
+from aiogram.utils.emoji import emojize
+
 from customutils.datefunc import datetime_local_now
 from customutils.models import QiwiPayment, Profit
 from customutils.models import CasinoPayment, EscortPayment, TradingPayment
@@ -255,7 +257,7 @@ async def on_new_payment(payments: Payments):
                 f"{service}, в {transaction.personId}\nСумма: <b>{transaction.total.amount} RUB</b>\n{comment}",
             )
     except Exception as ex:
-        logger.error(ex)
+        logger.exception(ex)
 
 
 async def check_qiwis():
@@ -288,8 +290,8 @@ async def check_qiwis():
             except (ClientProxyConnectionError, TimeoutError):
                 delete_api_proxy(token)
                 logger.warning("Deleting Qiwi - Lock [TErr, ClErr]")
-            except Exception as e:
-                logger.exception(e)
+            except Exception as ex:
+                logger.exception(ex)
                 # update qiwi
                 token = new_token
                 api, proxy_url = get_api(token)
@@ -306,20 +308,24 @@ async def check_qiwis():
 async def send_profit(profit: Profit, moll, service: str, payment=None):
     worker = profit.owner
 
+    name = "Скрыт."
+    link = emojize("Скрылся :green_heart:")
+    if not worker.username_hide:
+        name = worker.username if worker.username else worker.name
+        link = f"<a href='tg://user?id={worker.cid}'>{name}</a>"
+
     all_profit = db_commands.get_profits_sum(worker.id)
-    profit_path = render_profit(
-        all_profit, profit.amount, profit.share, service, worker.username
-    )
+    profit_path = render_profit(all_profit, profit.amount, profit.share, service, name)
     logger.debug(
         f"Succesfully rendered profit path: {profit_path}, sending to outs chat"
     )
+
     profit_text = str(
         payload.profit_text.format(
             service=service,
             share=profit.share,
             amount=profit.amount,
-            cid=worker.cid,
-            name=worker.username if worker.username else worker.name,
+            link=link,
         ),
     )
 

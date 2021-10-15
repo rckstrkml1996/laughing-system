@@ -63,10 +63,12 @@ async def summary_accepted(query: types.CallbackQuery):
         )
 
         await query.answer("Принят!")
+
         try:
             await dp.bot.unban_chat_member(config("workers_chat"), worker.cid)
-        except:
-            pass
+        except Exception as ex:
+            logger.exception(ex)
+
         await dp.bot.send_message(
             worker.cid,
             payload.summary_accepted_text,

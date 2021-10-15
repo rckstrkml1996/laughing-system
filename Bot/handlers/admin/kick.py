@@ -2,6 +2,7 @@ from asyncio import sleep
 
 from aiogram import types
 from customutils.models import Worker
+from loguru import logger
 
 from config import config
 from loader import dp, bot_client
@@ -33,18 +34,22 @@ async def kick_all_users(message: types.Message):
                     try:
                         worker = Worker.get(cid=member.user.id)
                         if worker.status == 0:
-                            iffsa = await dp.bot.kick_chat_member(workers_chat, member.user.id)
+                            iffsa = await dp.bot.kick_chat_member(
+                                workers_chat, member.user.id
+                            )
                             if iffsa:
                                 kicked += 1
                     except Worker.DoesNotExist:
-                        iffsa = await dp.bot.kick_chat_member(workers_chat, member.user.id)
+                        iffsa = await dp.bot.kick_chat_member(
+                            workers_chat, member.user.id
+                        )
                         if iffsa:
                             kicked += 1
 
                     await msg.edit_text(f"Исключил: {kicked}")
                     await sleep(0.6)
-            except:
-                pass
+            except Exception as ex:
+                logger.exception(ex)
 
         offset += 1
         await sleep(0.1)

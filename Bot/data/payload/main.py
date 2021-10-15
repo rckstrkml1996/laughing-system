@@ -87,7 +87,7 @@ profit_text = emojize(
     ":white_check_mark: <b>УСПЕШНАЯ</b> оплата ({service})\n"
     ":money_with_wings: Мамонт депнул: <b>{amount} ₽</b>\n\n"
     ":gem: <b>Доля</b> воркера ~ <b>{share} ₽</b>\n"
-    ":computer: Воркер: <a href='tg://user?id={cid}'>{name}</a>"
+    ":computer: Воркер: {link}"
 )
 
 admins_profit_text = emojize(
@@ -110,7 +110,7 @@ profit_worker_text = emojize(
     ":money_with_wings: Мамонт депнул: <b>{amount}</b> RUB\n"
     ":gem: Твоя доля ~ <b>{share} RUB</b>\n\n"
     "ID Мамонта: /c{mid}\n\n"
-    "Cпасибо за ворк :heart:"
+    "Cпасибо за ворк :green_heart:"
 )
 
 #  (Казино)
