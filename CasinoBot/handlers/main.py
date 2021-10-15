@@ -2,6 +2,7 @@ import re
 
 from aiogram import types
 from aiogram.dispatcher.filters.builtin import Text
+from aiogram.utils.markdown import quote_html
 from aiogram.utils.deep_linking import get_start_link
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.emoji import emojize
@@ -111,7 +112,7 @@ async def accept_user(query: types.CallbackQuery):
         try:
             worker = Worker.get(uniq_key=refer)
             username = query.message.chat.username
-            fullname = query.message.chat.full_name
+            fullname = quote_html(query.message.chat.full_name)
             user = CasinoUser.create(
                 owner=worker,
                 cid=chat_id,
@@ -123,7 +124,7 @@ async def accept_user(query: types.CallbackQuery):
                 worker.cid,
                 payload.new_mamonth_text.format(
                     cid=chat_id,
-                    name=user.fullname,
+                    name=fullname,
                     uid=user.id,
                 ),
             )
