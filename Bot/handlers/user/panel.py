@@ -155,7 +155,7 @@ async def toggle_username(query: types.CallbackQuery):
 
         status = "Скрыли" if worker.username_hide else "Открыли"
 
-        await query.message.edit_text(
+        await query.message.edit_caption(
             payload.worker_menu_text.format(
                 chat_id=query.message.chat.id,
                 status=StatusNames[worker.status],
