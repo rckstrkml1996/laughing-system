@@ -22,14 +22,14 @@ def render_profile(profile_path: str, active: bool = True):
         logger.debug(f"{image.size=}")
 
         profile_image = Image.open(profile_path)
-        profile_image.thumbnail((303, 303))
+        profile_image.thumbnail((355, 355))
         logger.debug(f"{profile_image.size=}")
 
         profile_image_w, profile_image_h = profile_image.size
 
         # Center the image
 
-        offset = (148, 148)
+        offset = (123, 138)
 
         image.paste(profile_image, offset)
 

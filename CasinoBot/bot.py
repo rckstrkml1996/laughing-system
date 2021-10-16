@@ -60,6 +60,11 @@ if __name__ == "__main__":
     finally:
         loop.run_until_complete(shutdown(dp))
 
+    # if sys.platform == "linux" or sys.platform == "linux2":
+    #     pass
+    # else:
+    #     print("windows")
+
     # executor.start_polling(
     #     dp, skip_updates=SKIP_UPDATES, on_startup=on_startup
     # )  # , on_shutdown=on_shutdown)
