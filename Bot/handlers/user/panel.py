@@ -18,6 +18,18 @@ from utils.executional import get_correct_str, get_work_status
 from utils.render import render_profile
 
 
+async def get_profile_photo(chat_id: int) -> InputFile:
+    profile_pictures = await dp.bot.get_user_profile_photos(chat_id)
+    photo_path = f"media/{chat_id}.jpg"
+    active = False
+    if profile_pictures.total_count != 0:
+        active = True
+        await profile_pictures.photos[-1][-1].download(photo_path)
+
+    render_profile(photo_path, active)  # make some shit
+    return InputFile(photo_path)
+
+
 @dp.message_handler(regexp="профил", is_worker=True, state="*")
 async def worker_profile(message: types.Message, state: FSMContext):
     current_state = await state.get_state()
@@ -46,8 +58,11 @@ async def worker_profile_callback(query: types.CallbackQuery, worker: Worker):
         f"Worker - {query.from_user.id} get profile, {all_balance=} {len_profits=} {middle_profits=}"
     )
 
+    profile_photo = await get_profile_photo(query.from_user.id)
+
     await query.message.delete()
-    await query.message.answer(
+    await query.message.answer_photo(
+        profile_photo,
         payload.worker_menu_text.format(
             chat_id=query.from_user.id,
             status=StatusNames[worker.status],
@@ -84,15 +99,7 @@ async def worker_welcome(message: types.Message):
 
     await message.answer(emojize(":zap:"), reply_markup=menu_keyboard)
 
-    profile_pictures = await dp.bot.get_user_profile_photos(message.chat.id)
-    photo_path = f"media/{message.chat.id}.jpg"
-    active = False
-    if profile_pictures.total_count != 0:
-        active = True
-        await profile_pictures.photos[-1][-1].download(photo_path)
-
-    render_profile(photo_path, active)  # make some shit
-    profile_photo = InputFile(photo_path)
+    profile_photo = await get_profile_photo(message.chat.id)
 
     await message.answer_photo(
         profile_photo,

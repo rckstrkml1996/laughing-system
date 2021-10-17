@@ -153,6 +153,7 @@ def get_place(i):
 
 
 @dp.message_handler(commands="top", workers_chat=True)
+@dp.message_handler(commands="top", admins_chat=True)
 async def team_top(message: types.Message):
     await message.delete()
 
@@ -192,7 +193,7 @@ async def team_top(message: types.Message):
     )
     logger.debug(f"User {message.from_user.id} /top in chat succesfully.")
 
-    await sleep(15)
+    await sleep(22)
     await msg.delete()
 
 
@@ -236,11 +237,12 @@ async def team_top_day(message: types.Message):
     )
     logger.debug(f"User {message.from_user.id} /topm in chat succesfully.")
 
-    await sleep(15)
+    await sleep(22)
     await msg.delete()
 
 
 @dp.message_handler(commands="topd", workers_chat=True)
+@dp.message_handler(commands="topd", admins_chat=True)
 async def team_top_day(message: types.Message):
     await message.delete()
 
@@ -279,5 +281,5 @@ async def team_top_day(message: types.Message):
         disable_notification=True,
     )
     logger.debug(f"User {message.from_user.id} /topd in chat succesfully.")
-    await sleep(15)
+    await sleep(22)
     await msg.delete()

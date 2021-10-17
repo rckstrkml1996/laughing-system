@@ -43,7 +43,8 @@ standart_config = {
     "escort_username": "escort_bot",
     "trading_username": "trading_bot",
     "notify": "0",
-    "qiwi_card": ""
+    "qiwi_card": "",
+    "qiwi_check_time": "80",
 }
 
 config = Config(section_name, path, standart_config)

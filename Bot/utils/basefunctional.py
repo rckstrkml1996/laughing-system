@@ -1,4 +1,5 @@
 from random import randint
+from typing import Union
 from datetime import timedelta
 
 from aiogram.utils.markdown import quote_html
@@ -6,13 +7,48 @@ from peewee import ModelSelect, fn, JOIN, SQL
 from loguru import logger
 
 from customutils.models import Profit, Worker
-from customutils.models import CasinoPayment, CasinoUserHistory
+from customutils.models import (
+    CasinoPayment,
+    EscortPayment,
+    TradingPayment,
+    CasinoUser,
+    EscortUser,
+    TradingUser,
+    CasinoUserHistory,
+)
 from customutils.datefunc import datetime_local_now
 
 from config import config
 
 
 class BaseCommands:
+    def delete_old_payments(
+        self, payment_type: Union[CasinoPayment, EscortPayment, TradingPayment]
+    ) -> None:
+        delta = datetime_local_now() - timedelta(days=5)
+        try:  # define in drugaya func epta
+            del_count = (
+                payment_type.delete().where(payment_type.created < delta).execute()
+            )
+            if del_count != 0:
+                logger.info(f"check_casino {del_count=}")
+        except Exception as ex:
+            logger.exception(ex)
+
+    def get_payments_count(
+        self,
+        payment_type: Union[CasinoPayment, EscortPayment, TradingPayment],
+        pay_owner: Union[CasinoUser, EscortUser, TradingUser],
+    ) -> int:
+        return (
+            payment_type.select()
+            .where(
+                payment_type.owner_id == pay_owner.id,
+                payment_type.done == 1,
+            )
+            .count()
+        )
+
     def casino_history_sum(self, user_id, editor=0) -> int:
         return int(
             (

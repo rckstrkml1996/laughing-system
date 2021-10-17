@@ -4,10 +4,10 @@ from asyncio.exceptions import TimeoutError
 from datetime import timedelta
 from configparser import NoOptionError
 
-from loguru import logger
 from aiohttp.client_exceptions import ClientProxyConnectionError
 from aiogram.types.input_file import InputFile
 from aiogram.utils.emoji import emojize
+from loguru import logger
 
 from customutils.datefunc import datetime_local_now
 from customutils.models import QiwiPayment, Profit
@@ -22,44 +22,37 @@ from data.keyboards import profit_pay_keyboard
 from utils.executional import get_api, delete_api_proxy
 from .render import render_profit
 
-
+# 0 - not done
+# 1 - real done
+# 2 - fake done
 async def check_casino(traction: Transaction) -> bool:
-    delta = datetime_local_now() - timedelta(days=5)
-    try:
-        del_count = (
-            CasinoPayment.delete().where(CasinoPayment.created < delta).execute()
-        )
-        if del_count != 0:
-            logger.info(f"Casino deleting old payments: {del_count}")
-    except Exception as e:
-        logger.exception(e)
+    db_commands.delete_old_payments(CasinoPayment)
 
     if traction.trnsType != "IN":
         return False
+
     try:
         pay = CasinoPayment.get(comment=traction.comment)
 
-        if pay.amount <= traction.transactionSum.amount and pay.done == 0:
-            logger.debug(f"Some payment with {pay.amount} amount")
+        if traction.transactionSum.amount >= pay.amount:
+            logger.debug(f"check_casino Some payment with {pay.amount=}")
+
             if traction.transactionSum.currency == 643:
-                pay.done = 1
+                pay.done = 1  # (real done)
                 pay.save()
+
                 logger.info(
-                    f"Apply payment {pay.amount} amount in base and making pay."
+                    f"check_casino For pay {pay.amount=} set {pay.done=} and making pay."
                 )
 
                 casino_user = pay.owner
                 worker = casino_user.owner
 
-                payments_count = (
-                    CasinoPayment.select()
-                    .where(
-                        CasinoPayment.owner_id == casino_user.id,
-                        CasinoPayment.done == 1,
-                    )
-                    .count()
+                payments_count = db_commands.get_payments_count(
+                    CasinoPayment, casino_user
                 )
-                logger.debug(f"Payments count: {payments_count}")
+
+                logger.debug(f"check_casino Payments count: {payments_count}")
 
                 service_num = 0
                 service = (
@@ -96,11 +89,9 @@ async def check_casino(traction: Transaction) -> bool:
     return False
 
 
+# dont work
 async def check_escort(traction: Transaction) -> bool:
-    delta = datetime_local_now() - timedelta(days=3)
-    del_count = EscortPayment.delete().where(EscortPayment.created < delta).execute()
-    if del_count != 0:
-        logger.info(f"Escort deleting old payments: {del_count}")
+    db_commands.delete_old_payments(EscortPayment)
 
     if traction.trnsType != "IN":
         return False
@@ -154,10 +145,7 @@ async def check_escort(traction: Transaction) -> bool:
 
 
 async def check_trading(traction: Transaction) -> bool:
-    delta = datetime_local_now() - timedelta(days=3)
-    del_count = TradingPayment.delete().where(TradingPayment.created < delta).execute()
-    if del_count != 0:
-        logger.info(f"Trading deleting old payments: {del_count}")
+    db_commands.delete_old_payments(TradingPayment)
 
     if traction.trnsType != "IN":
         return False
