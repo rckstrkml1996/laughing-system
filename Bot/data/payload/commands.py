@@ -8,7 +8,7 @@ btc_text = emojize(
 
 
 help_text = emojize(
-    ":woman_tipping_hand: <b>Команды</b> конфы\n"
+    ":woman_tipping_hand: <b>Команды</b> конфы\n\n"
     "/clc <code>[выражение]</code> - Посчитать на калькуляторе\n"
     "/lzt <code>[ник на LZT]</code> - Найти профить лолза\n"
     "/hash <code>[хэш]</code> - Инфо о BTC хэше\n"
@@ -161,6 +161,8 @@ admins_help_text = emojize(
     "/prftstick - Стикер к профиту\n"
     "/stat - Статистика проекта\n"
     "/card - Изменить карту для прямиков\n"
+    "/nstatus <code>[ID Воркера]</code> - Изменить статус воркера\n"
+    # "/card - Изменить карту для прямиков\n"
     "/new_dsgn - Бета хуета ещо нету)\n"
 )
 

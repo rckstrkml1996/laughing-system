@@ -49,7 +49,9 @@ class IsAdminFilter(BoundFilter):
     async def check(self, obj):
         user = self.get_target(obj)
         try:
-            return self.is_admin == (Worker.get(cid=user.id).status >= 5)
+            worker = Worker.get(cid=user.id)
+            if self.is_admin == (worker.status >= 5):
+                return {"worker": worker}
         except Worker.DoesNotExist:
             return not self.is_admin  # not admin
 
@@ -66,7 +68,9 @@ class IsSupportFilter(BoundFilter):
     async def check(self, obj):
         user = self.get_target(obj)
         try:
-            return self.is_support == (Worker.get(cid=user.id).status >= 3)
+            worker = Worker.get(cid=user.id)
+            if self.is_support == (worker.status >= 3):
+                return {"worker": worker}
         except Worker.DoesNotExist:
             return not self.is_support  # not admin
 

@@ -9,6 +9,7 @@ from .profits import dp
 from .statistic import dp
 from .commands import dp
 from .kick import dp
+from .worker import dp
 from .card import dp
 
 __all__ = ["dp"]

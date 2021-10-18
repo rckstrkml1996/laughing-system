@@ -6,7 +6,7 @@ games_keyboard = ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=Tru
 casino_button = KeyboardButton(emojize("Числа :1234:"))
 dice_button = KeyboardButton(emojize("Кости :game_die:"))
 graph_button = KeyboardButton(emojize("График :chart:"))
-cancel_button = KeyboardButton("Назад")
+cancel_button = KeyboardButton(emojize("Назад :leftwards_arrow_with_hook:"))
 games_keyboard.add(casino_button)
 games_keyboard.add(dice_button, graph_button)
 games_keyboard.add(cancel_button)

@@ -13,14 +13,14 @@ cancel_button = KeyboardButton(emojize("Назад"))
 
 def main_keyboard():
     main_keyboard = ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)
-    play_button = KeyboardButton(emojize("Играть"))
-    in_button = KeyboardButton(emojize("Пополнить"))
-    promo_button = KeyboardButton(emojize("Ввести промокод"))
-    out_button = KeyboardButton(emojize("Вывести"))
-    sup_button = KeyboardButton(emojize("Информация"))
-    selfcab_button = KeyboardButton(emojize("Личный кабинет"))
+    play_button = KeyboardButton(emojize("Играть :four_leaf_clover:"))
+    in_button = KeyboardButton(emojize("Пополнить :arrow_down:"))
+    # promo_button = KeyboardButton(emojize("Ввести промокод"))
+    out_button = KeyboardButton(emojize("Вывести :arrow_up:"))
+    sup_button = KeyboardButton(emojize("Информация :information_source:"))
+    selfcab_button = KeyboardButton(emojize("Личный кабинет :selfie:"))
     main_keyboard.row(play_button)
-    main_keyboard.row(in_button, promo_button, out_button)
+    main_keyboard.row(in_button, out_button)  # promo_button
     main_keyboard.row(sup_button, selfcab_button)
 
     return main_keyboard
