@@ -11,7 +11,7 @@ from data.payload import worker_defenition, set_new_worker_status, worker_choice
 
 
 @dp.message_handler(
-    RegexpCommandsFilter(regexp_commands=["nstatus ([0-9])+", "set_status ([0-9])+"]),
+    RegexpCommandsFilter(regexp_commands=["nstatus ([0-9]+)", "set_status ([0-9]+)"]),
     admins_chat=True,
     is_admin=True,
 )
@@ -20,18 +20,22 @@ async def worker_new_status(message: types.Message, worker: Worker, regexp_comma
 
     try:
         diff_worker = Worker.get(id=worker_id)
-        if diff_worker.id == worker.id:
-            await message.answer("Ты дурак? Себе самому статус менять??")
-            return
-
-        logger.debug(f"{message.text=} {diff_worker.id=} {diff_worker.status=}")
-
-        await message.answer(
-            worker_choice_one_plz.format(status_len=worker.status),
-            reply_markup=new_status_keyboard(diff_worker.id, worker.status),
-        )
     except Worker.DoesNotExist:
-        await message.answer("Воркера с таким ID нету!")
+        diff_worker = Worker.get(cid=worker_id)
+    except Worker.DoesNotExist:
+        await message.answer("Такого воркера нету!")
+        return
+
+    if diff_worker.id == worker.id:
+        await message.answer("Ты дурак? Себе самому статус менять??")
+        return
+
+    logger.debug(f"{message.text=} {diff_worker.id=} {diff_worker.status=}")
+
+    await message.answer(
+        worker_choice_one_plz.format(status_len=worker.status),
+        reply_markup=new_status_keyboard(diff_worker.id, worker.status),
+    )
 
 
 @dp.callback_query_handler(regexp="w([0-9])+_([0-9])+", admins_chat=True, is_admin=True)
