@@ -12,12 +12,11 @@ from data.payload import (
     fart_fif_text,
     fart_on_text,
     mamonth_delete_text,
-    casino_text,
     trading_text,
     escort_text,
 )
 from data.keyboards import casino_keyboard, trading_keyboard, escort_keyboard
-from utils.executional import get_casino_mamonth_info
+from utils.executional import get_casino_mamonth_info, get_casino_info
 
 
 @dp.message_handler(regexp="казин|казик", state="*", is_worker=True)
@@ -30,25 +29,7 @@ async def casino_info(message: types.Message, worker: Worker, state: FSMContext)
     logger.debug(f"Worker [{message.chat.id}] want get casino info")
 
     await message.answer(
-        casino_text.format(
-            worker_id=worker.uniq_key,
-            pay_cards="\n".join(
-                map(
-                    lambda c: f"&#127479;&#127482; {c[1:]}"
-                    if c[0] == "r"
-                    else f"&#127482;&#127462; {c[1:]}",
-                    config("fake_cards"),
-                )
-            ),
-            pay_qiwis="\n".join(
-                map(
-                    lambda c: f"&#127479;&#127482; {c[1:]}"
-                    if c[0] == "r"
-                    else f"&#127482;&#127462; {c[1:]}",
-                    config("fake_numbers"),
-                )
-            ),
-        ),
+        get_casino_info(worker.uniq_key),
         reply_markup=casino_keyboard(worker.casino_min),
         disable_web_page_preview=True,
     )
@@ -124,7 +105,7 @@ async def info_command(message: types.Message, regexp_command):
                     )
                     return
 
-                text, markup = await get_casino_mamonth_info(worker, user)
+                text, markup = get_casino_mamonth_info(worker, user)
                 await message.answer(text, reply_markup=markup)
             except CasinoUser.DoesNotExist:
                 await message.reply("Такого мамонта не существует!")

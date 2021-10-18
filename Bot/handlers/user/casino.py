@@ -87,7 +87,7 @@ async def casino_command(message: types.Message, worker: Worker, regexp_command)
         logger.warning(f"/c Worker [{message.chat.id}] try get different mamonth!")
         return
 
-    text, markup = await get_casino_mamonth_info(worker, user)
+    text, markup = get_casino_mamonth_info(worker, user)
 
     await message.answer(
         text,
@@ -114,7 +114,7 @@ async def update_mamonth_info(query: types.CallbackQuery, worker: Worker):
         )
         return
 
-    text, markup = await get_casino_mamonth_info(worker, user)
+    text, markup = get_casino_mamonth_info(worker, user)
 
     await query.message.edit_text(
         text,
@@ -147,7 +147,7 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
     )
     user.save()
 
-    text, markup = await get_casino_mamonth_info(worker, user)
+    text, markup = get_casino_mamonth_info(worker, user)
 
     await query.message.edit_text(
         text,
@@ -186,7 +186,7 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
     user.min_deposit = MinDepositValues[index]
     user.save()
 
-    text, markup = await get_casino_mamonth_info(worker, user)
+    text, markup = get_casino_mamonth_info(worker, user)
 
     await query.message.edit_text(
         text,
@@ -217,7 +217,7 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
     user.stopped = not user.stopped
     user.save()
 
-    text, markup = await get_casino_mamonth_info(worker, user)
+    text, markup = get_casino_mamonth_info(worker, user)
 
     await query.message.edit_text(
         text,
@@ -387,7 +387,7 @@ async def accept_pay(query: types.CallbackQuery):
         pay = CasinoPayment.get(id=pay_id)
         check_time = config("qiwi_check_time", int) * 2  # - 3 just for somethink)
         exact_time = (datetime_local_now() - pay.created).seconds
-        
+
         logger.debug(f"{check_time=}, {exact_time=}")
 
         if pay.done == 1:
@@ -426,25 +426,7 @@ async def minimal_deposit_casino(query: types.CallbackQuery, worker: Worker):
     worker.save()
 
     await query.message.edit_text(
-        payload.casino_text.format(
-            worker_id=worker.uniq_key,
-            pay_cards="\n".join(
-                map(
-                    lambda c: f"&#127479;&#127482; {c[1:]}"
-                    if c[0] == "r"
-                    else f"&#127482;&#127462; {c[1:]}",
-                    config("fake_cards"),
-                )
-            ),
-            pay_qiwis="\n".join(
-                map(
-                    lambda c: f"&#127479;&#127482; {c[1:]}"
-                    if c[0] == "r"
-                    else f"&#127482;&#127462; {c[1:]}",
-                    config("fake_numbers"),
-                )
-            ),
-        ),
+        get_casino_info(worker.uniq_key),
         reply_markup=casino_keyboard(worker.casino_min),
         disable_web_page_preview=True,
     )

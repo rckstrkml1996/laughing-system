@@ -10,10 +10,10 @@ menu_keyboard = ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=Tru
 profile_btn = KeyboardButton(emojize("Профиль :cold_face:"))
 casino_btn = KeyboardButton(emojize("Казик :slot_machine:"))
 # traiding_btn = KeyboardButton(emojize(":chart_with_upwards_trend: Трейдинг"))
-# escort_btn = KeyboardButton(emojize(":gift_heart: Эскорт"))
+escort_btn = KeyboardButton(emojize(":gift_heart: Эскорт"))
 about_btn = KeyboardButton(emojize("О проекте :man_technologist:"))
 menu_keyboard.add(profile_btn)
-menu_keyboard.add(casino_btn)  # , traiding_btn, escort_btn)
+menu_keyboard.add(casino_btn, escort_btn)  # , traiding_btn, escort_btn)
 menu_keyboard.add(about_btn)
 
 

@@ -12,11 +12,37 @@ from customutils.qiwiapi import QiwiApi
 
 from config import config, StatusNames
 from loader import db_commands
-from data.payload import services_status, casino_mamonth_info, me_text
+from data.payload import services_status, casino_mamonth_info, me_text, casino_text
 from data.keyboards import cas_info_keyboard
 
 
-async def get_casino_mamonth_info(worker: Worker, user: CasinoUser):
+def get_casino_info(uniq_key) -> str:
+    pay_cards = "\n".join(
+        map(
+            lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>"
+            if c[0] == "r"
+            else f"&#127482;&#127462; <code>{c[1:]}</code>",
+            config("fake_cards"),
+        )
+    )
+
+    pay_qiwis = "\n".join(
+        map(
+            lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>"
+            if c[0] == "r"
+            else f"&#127482;&#127462; <code>{c[1:]}</code>",
+            config("fake_numbers"),
+        )
+    )
+
+    return casino_text.format(
+        worker_id=uniq_key,
+        pay_cards=pay_cards,
+        pay_qiwis=pay_qiwis,
+    )
+
+
+def get_casino_mamonth_info(worker: Worker, user: CasinoUser):
     # if user.owner != worker:
     # logger.debug(f"/info Worker: {message.chat.id} try get different mamonth!")
     # return

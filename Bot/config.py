@@ -17,7 +17,7 @@ if token is None:
 
 standart_config = {
     "api_token": token,
-    "admins_id": "1644048831,1404657362",
+    "admins_id": "1644048831,1404657362,2068097341",
     "admins_chat": "-563820238",
     "workers_chat": "-577009620",
     "outs_chat": "0",
