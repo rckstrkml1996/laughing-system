@@ -3,7 +3,8 @@ from aiogram.utils.emoji import emojize
 from config import config
 
 worker_menu_text = emojize(
-    ":green_apple: <b>Твой профиль</b> [<code>{chat_id}</code>]\n\n"
+    ":green_apple: <b>Твой профиль</b> [<code>{chat_id}</code>]\n"
+    ":closed_lock_with_key: Код для сервисов: <code>{uniq_key}</code>\n\n"
     ":cold_face: <i>Реф баланс:</i> {ref_balance} RUB\n\n"
     ":money_with_wings: У тебя {profits} на сумму <b>{all_balance}₽</b>\n"
     "Средний профит ~ <b>{middle_profits}₽</b>\n\n"

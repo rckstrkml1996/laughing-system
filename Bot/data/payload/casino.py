@@ -35,15 +35,15 @@ no_user_text = emojize(":warning: Нету мамонта с этим ID")
 no_mamonth_text = emojize(":warning: У вас нет мамонта с этим ID")
 invalid_match_text = emojize(":warning: Неправильно введены данные.")
 
-small_mamonth_info_text = "(/c{mid}) - &#127479;&#127482; <a href='tg://user?id={cid}'>{name}</a> - {balance} ₽, фарт - {fortune}"
+cas_mamonth_info_text = "(/c{mid}) - <a href='tg://user?id={cid}'>{name}</a> - <b>{balance} RUB</b>, фарт - {fortune}"
 
 
 no_mamonths_text = emojize(":slot_machine: <b>У тебя ещё нету мамонтов!</b>")
 
-all_mamonths_text = emojize(
-    ":slot_machine: <b>У тебя</b> {mamonths_plur}:\n\n"
+all_cas_mamonths_text = emojize(
+    ":slot_machine: У тебя <b>{mamonths_plur}</b>:\n\n"
     "{all_mamonths}\n\n"
-    "Обновлено в {time}"
+    "Обновлено в <i>{time}</i>"
 )
 
 casino_mamonth_info = emojize(

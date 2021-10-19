@@ -226,7 +226,7 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
 
 
 def format_mamont(user: CasinoUser) -> str:
-    return payload.small_mamonth_info_text.format(
+    return payload.cas_mamonth_info_text.format(
         mid=user.id,
         cid=user.cid,
         name=user.fullname,
@@ -265,7 +265,7 @@ async def all_mamonths_command(query: types.CallbackQuery, worker: Worker):
             )
         )
         await query.message.answer(
-            payload.all_mamonths_text.format(
+            payload.all_cas_mamonths_text.format(
                 mamonths_plur=get_correct_str(
                     mamonths_count, "Мамонт", "Мамонта", "Мамонтов"
                 ),
@@ -280,7 +280,7 @@ async def all_mamonths_command(query: types.CallbackQuery, worker: Worker):
 
 
 @dp.callback_query_handler(
-    lambda cb: cb.data.split("_")[0] == "updatemamonths", state="*", is_worker=True
+    lambda cb: cb.data.split("_")[0] == "casupdatemamonths", state="*", is_worker=True
 )
 async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
     page = int(query.data.split("_")[1])  # raise if shit
@@ -308,7 +308,7 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
         )
 
         await query.message.edit_text(
-            payload.all_mamonths_text.format(
+            payload.all_cas_mamonths_text.format(
                 mamonths_plur=get_correct_str(
                     mamonths_count, "Мамонт", "Мамонта", "Мамонтов"
                 ),

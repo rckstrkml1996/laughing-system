@@ -94,7 +94,7 @@ def casino_keyboard(min_dep: int):
 
 
 esc_mamoths_btn = InlineKeyboardButton(
-    emojize("Мои мамонтята :elephant:"), callback_data="mamonths_esc"
+    emojize("Мои мамонтята :elephant:"), callback_data="escupdatemamonths_0"
 )
 esc_msg_spam_btn = InlineKeyboardButton(
     emojize("Массовая рассылка :diamond_shape_with_a_dot_inside:"),
@@ -170,7 +170,7 @@ def casino_mamonths_keyboard(
 ) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     update_btn = InlineKeyboardButton(
-        emojize(":arrows_counterclockwise:"), callback_data=f"updatemamonths_{page}"
+        emojize(":arrows_counterclockwise:"), callback_data=f"casupdatemamonths_{page}"
     )
 
     # 51 rows - 3 pages
@@ -183,11 +183,11 @@ def casino_mamonths_keyboard(
 
         back_btn = InlineKeyboardButton(
             f"[{back_num}/{max_pages_count}]",
-            callback_data=f"updatemamonths_{back_num}",
+            callback_data=f"casupdatemamonths_{back_num}",
         )
         next_btn = InlineKeyboardButton(
             f"[{next_num}/{max_pages_count}]",
-            callback_data=f"updatemamonths_{next_num}",
+            callback_data=f"casupdatemamonths_{next_num}",
         )
         markup.add(back_btn, update_btn, next_btn)
     else:

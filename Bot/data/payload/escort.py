@@ -17,6 +17,16 @@ escort_text = emojize(
     "/msg <code>[ID мамонта]</code>;<code>[Сообщение]</code> - сообщение от бота\n"
 )
 
+all_esc_mamonths_text = emojize(
+    ":kiss: У тебя <b>{mamonths_plur}</b>:\n\n"
+    "{all_mamonths}\n\n"
+    "Обновлено в <i>{time}</i>"
+)
+
+esc_mamonth_info_text = emojize(
+    "(/e{mid}) - <a href='tg://user?id={cid}'>{name}</a> - <b>{balance} RUB</b>"
+)
+
 escort_new_name = emojize(":tipping_hand_woman: <b>Напишите</b> имя вашей девочки")
 
 escort_new_description = emojize(
