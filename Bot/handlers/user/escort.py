@@ -1,3 +1,4 @@
+from asyncio import sleep
 from aiogram import types
 from aiogram.dispatcher.storage import FSMContext
 
@@ -47,7 +48,7 @@ async def all_mamonths_command(query: types.CallbackQuery):
     worker = Worker.get(cid=query.from_user.id)
     mamonths_count = worker.esc_users.count()
     localnow = datetime_local_now()
-    timenow = localnow.strftime("%H:%M, %S cек")
+    timenow = localnow.strftime("%H:%M, %S Сек.")
 
     if mamonths_count == 0:
         await query.message.answer(payload.no_mamonths_text)
@@ -74,8 +75,9 @@ async def all_mamonths_command(query: types.CallbackQuery):
         }
 
         if q_page == 0:
-            await query.answer("Лови!")
             await query.message.answer(**data)
+            await sleep(0.25)  # some random
+            await query.answer("Лови!")
         else:
             await query.message.edit_text(**data)
         logger.debug("Got mamonths list.")

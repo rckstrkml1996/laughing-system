@@ -1,4 +1,5 @@
 from aiogram import types
+
 from aiogram.dispatcher.filters import RegexpCommandsFilter
 from aiogram.dispatcher import FSMContext
 from loguru import logger
@@ -17,6 +18,8 @@ from data.payload import (
 )
 from data.keyboards import casino_keyboard, trading_keyboard, escort_keyboard
 from utils.executional import get_casino_mamonth_info, get_casino_info
+from utils.filters import ServiceCommandsFilter
+from utils.types import SERVICE_FIRST_LETTERS
 
 
 @dp.message_handler(regexp="казин|казик", state="*", is_worker=True)
@@ -77,11 +80,9 @@ async def casino_info(message: types.Message, worker: Worker):
 
 # only info
 @dp.message_handler(  # ru and en
-    RegexpCommandsFilter(
-        regexp_commands=[
-            "info (c\d+|с\d+|t\d+|\d+)",
-            "information (c\d+|с\d+|t\d+|\d+)",
-        ]
+    ServiceCommandsFilter(
+        command_names=["info", "information"],
+        services=SERVICE_FIRST_LETTERS,
     ),
     state="*",
     is_worker=True,
@@ -116,11 +117,10 @@ async def info_command(message: types.Message, regexp_command):
 
 
 @dp.message_handler(  # ru and en
-    RegexpCommandsFilter(
-        regexp_commands=[
-            "bal (c\d+|с\d+|t\d+|\d+);(\d+)",
-            "balance (c\d+|с\d+|t\d+|\d+);(\d+)",
-        ]
+    ServiceCommandsFilter(
+        command_names=["bal", "balance"],
+        services=SERVICE_FIRST_LETTERS,
+        with_id=True,
     ),
     state="*",
     is_worker=True,
@@ -163,16 +163,14 @@ async def change_balance_command(message: types.Message, regexp_command):
 
 
 @dp.message_handler(  # ru and en
-    RegexpCommandsFilter(
-        regexp_commands=[
-            "fart (c\d+|с\d+|t\d+|\d+)",
-            "fort (c\d+|с\d+|t\d+|\d+)",
-        ]
+    ServiceCommandsFilter(
+        ["fart", "fort", "fortune"],
+        SERVICE_FIRST_LETTERS,
     ),
     state="*",
     is_worker=True,
 )
-async def change_balance_command(message: types.Message, regexp_command):
+async def fart_command(message: types.Message, regexp_command):
     try:
         worker = Worker.get(cid=message.chat.id)
     except Worker.DoesNotExist:
@@ -226,16 +224,14 @@ async def change_balance_command(message: types.Message, regexp_command):
 
 
 @dp.message_handler(  # ru and en
-    RegexpCommandsFilter(
-        regexp_commands=[
-            "del (c\d+|с\d+|t\d+|e\d+|\d+)",
-            "delete (c\d+|с\d+|t\d+|e\d+|\d+)",
-        ]
+    ServiceCommandsFilter(
+        ["del", "delete", "del"],
+        SERVICE_FIRST_LETTERS,
     ),
     state="*",
     is_worker=True,
 )
-async def change_balance_command(message: types.Message, regexp_command):
+async def delete_command(message: types.Message, regexp_command):
     try:
         worker = Worker.get(cid=message.chat.id)
     except Worker.DoesNotExist:
@@ -274,22 +270,21 @@ async def change_balance_command(message: types.Message, regexp_command):
 
 
 @dp.message_handler(  # ru and en
-    fullregexp_commands=[
-        "msg (c\d+|с\d+|t\d+|e\d+|\d+);(.+)",
-        "message (c\d+|с\d+|t\d+|e\d+|\d+);(.+)",
-    ],
+    ServiceCommandsFilter(
+        ["msg", "message", "text"], SERVICE_FIRST_LETTERS, with_text=True
+    ),
     state="*",
     is_worker=True,
 )
-async def change_balance_command(message: types.Message, full_regexp):
+async def message_command(message: types.Message, regexp_command):
     try:
         worker = Worker.get(cid=message.chat.id)
     except Worker.DoesNotExist:
         await message.answer("Мамонт не найден.")
         return
 
-    id_info = full_regexp.group(1)
-    text = full_regexp.group(2)
+    id_info = regexp_command.group(1)
+    text = regexp_command.group(2)
     if id_info.isdigit():
         pass  # than telegram id
     else:  # ru and en

@@ -182,7 +182,11 @@ ban_success_text = emojize("Успешно забанил <a href='tg://user?id=
 kick_success_text = emojize("Успешно кикнул <a href='tg://user?id={cid}'>{name}</a>")
 
 worker_warn_text = emojize(
-    "<a href='tg://user?id={cid}'>{name}</a> предупреждён ({warns}/3)."
+    "Для <a href='tg://user?id={cid}'>{name}</a> поставленно предупреждение! ({warns}/3)."
+)
+
+worker_unwarn_text = emojize(
+    "Для <a href='tg://user?id={cid}'>{name}</a> снято предупреждение ({warns}/3)."
 )
 
 statistic_text = emojize(

@@ -9,6 +9,10 @@ from config import StatusNames
 from data.keyboards import new_status_keyboard
 from data.payload import worker_defenition, set_new_worker_status, worker_choice_one_plz
 
+@dp.message_handler(commands=["nstatus", "set_status"])
+async def inv_worker_new_status(message: types.Message):
+    await message.reply("/nstatus 123")
+
 
 @dp.message_handler(
     RegexpCommandsFilter(regexp_commands=["nstatus ([0-9]+)", "set_status ([0-9]+)"]),

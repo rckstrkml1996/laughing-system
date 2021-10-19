@@ -4,10 +4,15 @@ from .main import (
     SendSummaryFilter,
     AdminsChatFilter,
     WorkersChatFilter,
-    IsWorkerFilter,
-    IsAdminFilter,
-    IsSupportFilter,
     FullRegexpCommandsFilter,
+)
+from .whois import (
+    IsWorkerFilter,
+    IsSupportFilter,
+    IsAdminFilter,
+) 
+from .services import (
+    ServiceCommandsFilter,
 )
 
 

@@ -251,7 +251,7 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
     # worker = Worker.get(cid=query.from_user.id)
     mamonths_count = worker.cas_users.count()
     localnow = datetime_local_now()
-    timenow = localnow.strftime("%H:%M, %S cек")
+    timenow = localnow.strftime("%H:%M, %S Сек.")
     if mamonths_count == 0:
         await query.message.edit_text(payload.no_mamonths_text)
     else:  # format mamonth its a def on 176 line mb not()
@@ -283,6 +283,7 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
 
         if q_page == 0:
             await query.message.answer(**data)
+            await sleep(0.25)
             await query.answer("Лови!")
         else:
             await query.message.edit_text(**data)

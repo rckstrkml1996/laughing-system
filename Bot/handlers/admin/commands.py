@@ -127,3 +127,23 @@ async def warn_command(message: types.Message):
                 await message.reply("У Воркера высокий статус!")
         except Worker.DoesNotExist:
             await message.reply("Пользователь не является Воркером!")
+
+
+@dp.message_handler(commands="unwarn", workers_chat=True, is_support=True)
+async def warn_command(message: types.Message):
+    if message.reply_to_message:
+        chat_id = message.reply_to_message.from_user.id
+        try:
+            worker = Worker.get(cid=chat_id)
+            if worker.status <= 2:
+                worker.warns -= 1
+                worker.save()
+                await message.reply(
+                    payload.worker_unwarn_text.format(
+                        cid=worker.cid, name=worker.name, warns=worker.warns
+                    )
+                )
+            else:
+                await message.reply("У Воркера высокий статус!")
+        except Worker.DoesNotExist:
+            await message.reply("Пользователь не является Воркером!")
