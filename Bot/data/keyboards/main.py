@@ -58,7 +58,7 @@ about_project_keyboard.add(chat_btn)
 
 cas_mamoths_btn = InlineKeyboardButton(
     emojize("Мои мамонтята :elephant:"),
-    callback_data="mamonths_cas",  #
+    callback_data="casupdatemamonths_0",  #
 )
 cas_promos_btn = InlineKeyboardButton(
     emojize("Мои промокоды :receipt:"), callback_data="promos_cas"

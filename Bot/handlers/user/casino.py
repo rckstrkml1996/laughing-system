@@ -239,53 +239,14 @@ def format_mamont(user: CasinoUser) -> str:
     )
 
 
-@dp.callback_query_handler(text="mamonths_cas", state="*", is_worker=True)
-async def all_mamonths_command(query: types.CallbackQuery, worker: Worker):
-    page = 1  # raise if shit
-    row_width = 20
-
-    # worker = Worker.get(cid=query.from_user.id)
-    mamonths_count = worker.cas_users.count()
-    localnow = datetime_local_now()
-    timenow = localnow.strftime("%H:%M, %S cек")
-
-    if mamonths_count == 0:
-        await query.message.answer(payload.no_mamonths_text)
-    else:  # format mamonth its a def on 176 line mb not()
-        cusers = list(worker.cas_users)[::-1]
-        mamonths = cusers[page * row_width - row_width : page * row_width]
-        if not mamonths:
-            await query.message.answer(payload.no_mamonths_text)
-            return  # logg plz
-
-        mamonths_text = "\n".join(
-            map(
-                format_mamont,
-                mamonths,
-            )
-        )
-        await query.message.answer(
-            payload.all_cas_mamonths_text.format(
-                mamonths_plur=get_correct_str(
-                    mamonths_count, "Мамонт", "Мамонта", "Мамонтов"
-                ),
-                all_mamonths=mamonths_text,
-                time=timenow,
-            ),
-            reply_markup=casino_mamonths_keyboard(
-                mamonths_count, page=page, row_width=row_width
-            ),
-        )
-        logger.debug("Got mamonths list.")
-
-
 @dp.callback_query_handler(
     lambda cb: cb.data.split("_")[0] == "casupdatemamonths", state="*", is_worker=True
 )
 async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
-    page = int(query.data.split("_")[1])  # raise if shit
+    q_page = int(query.data.split("_")[1])  # raise if shit
+    page = q_page if q_page != 0 else 1
+
     row_width = 20
-    # await query.answer("Вывожу!")
 
     # worker = Worker.get(cid=query.from_user.id)
     mamonths_count = worker.cas_users.count()
@@ -307,18 +268,25 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
             )
         )
 
-        await query.message.edit_text(
-            payload.all_cas_mamonths_text.format(
+        data = {
+            "text": payload.all_cas_mamonths_text.format(
                 mamonths_plur=get_correct_str(
                     mamonths_count, "Мамонт", "Мамонта", "Мамонтов"
                 ),
                 all_mamonths=mamonths_text,
                 time=timenow,
             ),
-            reply_markup=casino_mamonths_keyboard(
+            "reply_markup": casino_mamonths_keyboard(
                 mamonths_count, page=page, row_width=row_width
             ),
-        )
+        }
+
+        if q_page == 0:
+            await query.message.answer(**data)
+            await query.answer("Лови!")
+        else:
+            await query.message.edit_text(**data)
+
         logger.debug("Got mamonths list.")
 
 
