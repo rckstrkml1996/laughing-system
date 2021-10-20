@@ -28,7 +28,7 @@ choice_text = "Выберите девушку 👧"
 add_unsuccesful = emojize(":pensive: Счёт не оплачен, проверьте оплату ещё раз!")
 
 add_succesful = lambda amount: emojize(
-    f":white_check_mark: Платеж на сумму <b>{amount} RUB</b>, прошел успешно! \
+    f"Платеж на сумму <b>{amount} RUB</b>, прошел успешно! \
 	\nПриятного вечера! :green_heart:"
 )
 
@@ -40,15 +40,18 @@ wrong_key_text = emojize(
     ":gift_heart: Наш бот является закрытым, вы ввели неправильный 6 значный код, попробуйте ещё раз"
 )
 
+
 def info_user_text(cid, balance):
-	return emojize(
-	":japanese_ogre: <b>Информация об аккаунте:</b>\n\n"
-	f":id: <b>Telegram ID</b>: {cid}"
-	f":dollar: <b>Баланс</b>: {balance} RUB"
-)
+    return emojize(
+        ":japanese_ogre: <b>Информация об аккаунте:</b>\n\n"
+        f":id: <b>Telegram ID</b>: {cid}"
+        f":dollar: <b>Баланс</b>: {balance} RUB"
+    )
+
 
 def mamonth_delete_text(name):
-	return f":white_check_mark: <b>Мамонт {name} удален!</b>"
+    return f":white_check_mark: <b>Мамонт {name} удален!</b>"
+
 
 def mamonth_msg_text(name):
-	return f":white_check_mark: <b>Сообщение отправлено {name}!</b>"
+    return f":white_check_mark: <b>Сообщение отправлено {name}!</b>"

@@ -186,7 +186,6 @@ async def add_check(query: types.CallbackQuery):
                 await query.message.answer(
                     payload.add_succesful.format(amount=payment.amount + user.bonus)
                 )
-                payment.delete_instance()
                 await query.message.delete()
             else:
                 await query.message.answer(payload.add_unsuccesful)

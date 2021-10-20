@@ -52,12 +52,14 @@ def add_req_text(amount, comment, number):
 
 
 add_succesful = emojize(
-    ":white_check_mark: Платеж на сумму {amount} RUB, прошел успешно!\n"
-    "Приятной игры! :green_heart:"
+    "Платеж на сумму <b>{amount} RUB</b>, прошел <b>успешно</b>!\n\n"
+    "<b>Приятной игры!</b> :green_heart:"
 )
 
-
-add_unsuccesful = emojize(":pensive: Счёт не оплачен, проверьте оплату ещё раз!")
+add_unsuccesful = emojize(
+    ":pensive: Счёт не оплачен!\n"
+    "<b>проверьте оплату ещё раз</b> через <b>60</b> секунд!"
+)
 
 # ВЫВОД
 out_req_text = emojize(

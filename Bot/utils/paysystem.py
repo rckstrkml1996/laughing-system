@@ -26,8 +26,6 @@ from .render import render_profit
 # 1 - real done
 # 2 - fake done
 async def check_casino(traction: Transaction) -> bool:
-    db_commands.delete_old_payments(CasinoPayment)
-
     if traction.trnsType != "IN":
         return False
 
@@ -35,9 +33,11 @@ async def check_casino(traction: Transaction) -> bool:
         pay = CasinoPayment.get(comment=traction.comment)
 
         if traction.transactionSum.amount >= pay.amount:
-            logger.debug(f"check_casino Some payment with {pay.amount=}")
+            logger.debug(
+                f":check_casino: Some new payment with +{pay.amount=} {traction.transactionSum.currency}"
+            )
 
-            if traction.transactionSum.currency == 643:
+            if traction.transactionSum.currency == 643:  # rub
                 pay.done = 1  # (real done)
                 pay.save()
 
@@ -51,7 +51,6 @@ async def check_casino(traction: Transaction) -> bool:
                 payments_count = db_commands.get_payments_count(
                     CasinoPayment, casino_user
                 )
-
                 logger.debug(f"check_casino Payments count: {payments_count}")
 
                 service_num = 0
@@ -244,6 +243,14 @@ async def on_new_payment(payments: Payments):
                 config("admins_chat"),
                 f"{service}, в {transaction.personId}\nСумма: <b>{transaction.total.amount} RUB</b>\n{comment}",
             )
+
+            payments_count = 0
+
+            payments_count += db_commands.delete_old_payments(CasinoPayment)
+            payments_count += db_commands.delete_old_payments(EscortPayment)
+            payments_count += db_commands.delete_old_payments(TradingPayment)
+
+            logger.info(f"Deleted {payments_count} payments.")
     except Exception as ex:
         logger.exception(ex)
 
@@ -290,7 +297,7 @@ async def check_qiwis():
         except NoOptionError:
             token = None
 
-        await sleep(72)
+        await sleep(config("qiwi_check_time"), int)
 
 
 async def send_profit(profit: Profit, moll, service: str, payment=None):

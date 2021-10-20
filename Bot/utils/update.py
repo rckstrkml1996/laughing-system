@@ -19,9 +19,6 @@ def check_repo_on_update(path: str) -> bool:
 
     logger.debug(f"Curr = {current:.15}, Last = {last_commit:.15}")
 
-    print(current)
-    print(last_commit)
-
     if current != last_commit:
         logger.warning(f"Repo updated!")
         return True

@@ -24,14 +24,10 @@ from config import config
 class BaseCommands:
     def delete_old_payments(
         self, payment_type: Union[CasinoPayment, EscortPayment, TradingPayment]
-    ) -> None:
-        delta = datetime_local_now() - timedelta(days=5)
+    ) -> int:
+        delta = datetime_local_now() - timedelta(days=14)
         try:  # define in drugaya func epta
-            del_count = (
-                payment_type.delete().where(payment_type.created < delta).execute()
-            )
-            if del_count != 0:
-                logger.info(f"check_casino {del_count=}")
+            return payment_type.delete().where(payment_type.created < delta).execute()
         except Exception as ex:
             logger.exception(ex)
 

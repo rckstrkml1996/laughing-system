@@ -36,9 +36,9 @@ async def summary_reject(query: types.CallbackQuery):
             payload.summary_rejected_text,
             reply_markup=summary_start_keyboard,
         )
-        logger.debug(f"{query.message.chat.id} - summary denied")
+        logger.info(f"{query.message.chat.id} - summary denied")
     except Worker.DoesNotExist:
-        logger.debug(f"{query.message.chat.id} - doen't exist")
+        logger.warning(f"{query.message.chat.id} - doen't exist")
 
 
 @dp.callback_query_handler(
@@ -74,13 +74,21 @@ async def summary_accepted(query: types.CallbackQuery):
             payload.summary_accepted_text,
             reply_markup=summary_accepted_keyboard,
         )
-        logger.debug(f"{query.message.chat.id} - summary accepted")
         await dp.bot.send_message(
-            worker.cid, emojize(":zap:"), reply_markup=menu_keyboard
+            worker.cid,
+            emojize(":hankey::green_heart:"),
+            reply_markup=menu_keyboard,
+        )
+        await dp.bot.send_message(
+            worker.cid,
+            "Можешь воспользоваться клавиатурой!",
+            reply_markup=menu_keyboard,
         )
 
+        logger.info(f"{query.message.chat.id} - summary accepted")
+
     except Worker.DoesNotExist:
-        logger.debug(f"{query.message.chat.id} - doen't exist")
+        logger.warning(f"{query.message.chat.id} - doen't exist")
 
 
 @dp.callback_query_handler(
@@ -110,6 +118,6 @@ async def summary_accepted(query: types.CallbackQuery):
             payload.summary_blocked_text,
             reply_markup=summary_blocked_keyboard,
         )
-        logger.debug(f"{query.message.chat.id} - summary blocked")
+        logger.info(f"{query.message.chat.id} - summary blocked")
     except Worker.DoesNotExist:
-        logger.debug(f"{query.message.chat.id} - doen't exist")
+        logger.warning(f"{query.message.chat.id} - doen't exist")

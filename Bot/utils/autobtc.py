@@ -84,8 +84,8 @@ async def AutoBtc():
                             moll = 0.8 if payments_count <= 0 else 0.7
                             share = int(amount * moll)
 
-                            print(payments_count)
-                            print(share)
+                            logger.debug(payments_count)
+                            logger.debug(share)
 
                             CasinoPayment.create(owner=user, amount=amount, done=1)
 
