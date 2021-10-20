@@ -4,7 +4,7 @@ from hashlib import md5
 from loguru import logger
 from customutils.confparse import Config
 
-
+project_path = path = os.path.normpath(os.path.join(os.path.dirname(__file__), "../"))
 path = os.path.normpath(os.path.join(os.path.dirname(__file__), "../config.cfg"))
 section_name = "Settings"
 

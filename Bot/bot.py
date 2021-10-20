@@ -6,12 +6,14 @@ from aiogram import Dispatcher
 from loguru import logger
 
 from loader import dp, db_commands
-from config import config, SKIP_UPDATES
+from config import config, project_path, SKIP_UPDATES
+
 from utils.pinner import dynapins
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 from utils.systeminfo import update_cpu_usage, exit_event
 from utils.paysystem import check_qiwis
+from utils.update import check_on_update
 
 # from utils.autobtc import AutoBtc
 
@@ -94,4 +96,5 @@ def main():
 
 
 if __name__ == "__main__":
+    check_on_update(project_path)
     main()

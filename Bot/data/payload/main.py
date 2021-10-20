@@ -31,7 +31,8 @@ services_status = (
 # inline use
 about_worker_text = "{status}\n{profits} на сумму {profits_sum} р"
 
-startup_text = emojize("<b>Бот запущен!</b> :sparkle:")
+startup_text = emojize("Бот <b>запущен</b>! :sparkle:")
+updated_startup_text = emojize("Бот <b>запущен и обновился</b>! :chart:")
 
 
 # dynamic pin
