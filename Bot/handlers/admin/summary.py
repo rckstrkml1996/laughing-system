@@ -76,7 +76,7 @@ async def summary_accepted(query: types.CallbackQuery):
         )
         await dp.bot.send_message(
             worker.cid,
-            emojize(":hankey::green_heart:"),
+            emojize(":cold_face: :green_heart:"),
             reply_markup=menu_keyboard,
         )
         await dp.bot.send_message(
