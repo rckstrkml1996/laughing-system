@@ -42,9 +42,11 @@ standart_config = {
     "casino_username": "casino_bot",
     "escort_username": "escort_bot",
     "trading_username": "trading_bot",
-    "notify": "0",
+    "notify": "1",
     "qiwi_card": "",
     "qiwi_check_time": "80",
+    "updated": "1",
+    "last_commit": "0",
 }
 
 config = Config(section_name, path, standart_config)
