@@ -1,6 +1,7 @@
 from aiogram.utils.emoji import emojize
 
 
+
 btc_authed_text = emojize(
     "<i>Авторизовался!</i> :cold_face:\n" "Имя: <b>{name}</b>\n" "Юзернейм: @{username}"
 )

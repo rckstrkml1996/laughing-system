@@ -14,3 +14,4 @@ oldnew_card_text = emojize(
     ":briefs: <i>Старая карта:</i> {old_card}\n"
     ":star: <i>Новая карта:</i> <b>{new_card}</b>\nДобавленна!"
 )
+
