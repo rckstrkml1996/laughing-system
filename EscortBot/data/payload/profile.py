@@ -6,5 +6,3 @@ profile_text = emojize(
     ":sparkle: Ваш Telegram ID: <code>[{chat_id}]</code>\n"
     ":eight_spoked_asterisk: Ваш логин: @{username}"
 )
-
-in_profile_text = "Вы уже тут!"

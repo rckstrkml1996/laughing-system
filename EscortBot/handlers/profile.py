@@ -2,7 +2,7 @@ from aiogram.types import CallbackQuery
 from aiogram.utils.exceptions import MessageNotModified
 
 from loader import dp
-from data.payload import profile_text, in_profile_text
+from data.payload import profile_text, already_in_text
 from data.keyboards import welcome_keyboard
 
 
@@ -16,4 +16,4 @@ async def profile(query: CallbackQuery):
             reply_markup=welcome_keyboard,
         )
     except MessageNotModified:
-        await query.answer(in_profile_text)
+        await query.answer(already_in_text)

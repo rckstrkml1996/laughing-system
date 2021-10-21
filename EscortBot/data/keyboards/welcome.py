@@ -6,9 +6,7 @@ from config import config
 welcome_keyboard = InlineKeyboardMarkup()
 
 profile_btn = InlineKeyboardButton(emojize("Профиль :wrench:"), callback_data="profile")
-ankets_btn = InlineKeyboardButton(
-    emojize("Анкеты :green_heart:"), callback_data="ankets"
-)
+girls_btn = InlineKeyboardButton(emojize("Анкеты :green_heart:"), callback_data="girls")
 about_btn = InlineKeyboardButton(
     emojize("О нас :grey_question:"), callback_data="about"
 )
@@ -21,5 +19,5 @@ support_btn = InlineKeyboardButton(
 otz_chat = config("esc_otz_chat")
 resume_btn = InlineKeyboardButton(emojize("Отзывы :receipt:"), url=f"t.me/{otz_chat}")
 
-welcome_keyboard.add(profile_btn, ankets_btn, about_btn)
+welcome_keyboard.add(profile_btn, girls_btn, about_btn)
 welcome_keyboard.add(support_btn, resume_btn)
