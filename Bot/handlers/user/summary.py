@@ -5,8 +5,13 @@ from loguru import logger
 from loader import dp
 from data.states import Summary
 from data import payload
-from config import config  # ADMINS_CHAT
-from data.keyboards import *
+from config import config
+from data.keyboards import (
+    summary_start_keyboard,
+    summary_rules_keyboard,
+    summary_send_keyboard,
+    summary_check_keyboard,
+)
 from customutils.models import Worker
 
 

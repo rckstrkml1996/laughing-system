@@ -134,9 +134,17 @@ class EscortPayment(BaseModel):
 
 
 class EscortGirl(BaseModel):
-    photos = CharField()
-    info = CharField(default="Без описания")
-    price = IntegerField(default=1500)
+    owner = ForeignKeyField(Worker, related_name="escort_girls")
+    name = CharField(default="Настя")
+    about = CharField(default="Без описания")
+    services = CharField(default="Без услуг")
+    age = IntegerField(default=20)
+    price = IntegerField(default=1500)  # photo * 1 * 2 * 1.5
+
+
+class EscortGirlPhoto(BaseModel):
+    owner = ForeignKeyField(EscortGirl, related_name="photos")
+    file_id = CharField()
 
 
 class TradingUser(BaseModel):
@@ -171,6 +179,7 @@ base.create_tables(
         TradingPayment,
         EscortUser,
         EscortGirl,
+        EscortGirlPhoto,
         EscortPayment,
     ]
 )

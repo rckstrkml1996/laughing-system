@@ -18,6 +18,24 @@ from utils.alert import alert_users
 from utils.executional import get_correct_str, get_casino_mamonth_info, get_casino_info
 
 
+@dp.message_handler(regexp="казин|казик", state="*", is_worker=True)
+async def casino_info(message: types.Message, worker: Worker, state: FSMContext):
+    current_state = await state.get_state()
+    if current_state is not None:
+        logger.debug(f"Cancelling state {current_state} in bot start")
+        await state.finish()
+
+    logger.debug(f"Worker [{message.chat.id}] want get casino info")
+
+    await message.answer(
+        get_casino_info(worker.uniq_key),
+        reply_markup=casino_keyboard(worker.casino_min),
+        disable_web_page_preview=True,
+    )
+    # await Casino.commands.set()
+    logger.debug(f"Worker [{message.chat.id}] get casino info succesfully")
+
+
 @dp.message_handler(
     commands=["cas_change_min", "chng_min_cas"], state="*", is_worker=True
 )

@@ -1,18 +1,15 @@
 from asyncio import sleep
-from aiogram import types
-from aiogram.dispatcher.storage import FSMContext
 
+from aiogram import types
 from loguru import logger
 
-from customutils.models import Worker, EscortUser, EscortGirl
+from customutils.models import Worker, EscortUser
 from customutils.datefunc import datetime_local_now
-from data import keyboards
+
 from loader import dp
 from data import payload
-from data.states import EscortNewForm
-from data.keyboards import *
+from data.keyboards import escort_keyboard, escort_mamonths_keyboard
 from utils.executional import get_correct_str
-from .panel import worker_welcome
 
 
 @dp.message_handler(regexp="эскорт", is_worker=True, state="*")
@@ -81,70 +78,3 @@ async def all_mamonths_command(query: types.CallbackQuery):
         else:
             await query.message.edit_text(**data)
         logger.debug("Got mamonths list.")
-
-
-# @dp.callback_query_handler(text="create_form_esc", state="*", is_worker=True)
-# async def create_girl_name(query: types.CallbackQuery):
-#     await query.message.answer(payload.escort_new_name)
-#     await EscortNewForm.name.set()
-
-
-# @dp.message_handler(state=EscortNewForm.name, is_worker=True)
-# async def create_girl_desc(message: types.Message, state: FSMContext):
-#     print("asd")
-#     async with state.proxy() as data:
-#         data["girl_name"] = message.text.replace(";", " ")
-#     await message.answer(payload.escort_new_description)
-#     await EscortNewForm.description.set()
-
-
-# @dp.message_handler(state=EscortNewForm.description, is_worker=True)
-# async def create_girl_service(message: types.Message, state: FSMContext):
-#     async with state.proxy() as data:
-#         data["girl_description"] = message.text.replace(";", " ")
-#     await message.answer(payload.escort_new_service)
-#     await EscortNewForm.service.set()
-
-
-# @dp.message_handler(state=EscortNewForm.service, is_worker=True)
-# async def create_girl_age(message: types.Message, state: FSMContext):
-#     async with state.proxy() as data:
-#         data["girl_service"] = message.text.replace(";", " ")
-#     await message.answer(payload.escort_new_age)
-#     await EscortNewForm.age.set()
-
-
-# @dp.message_handler(state=EscortNewForm.age, is_worker=True)
-# async def create_girl_price(message: types.Message, state: FSMContext):
-#     async with state.proxy() as data:
-#         data["girl_age"] = message.text.replace(";", " ")
-#     await message.answer(payload.escort_new_price)
-#     await EscortNewForm.price.set()
-
-
-# @dp.message_handler(state=EscortNewForm.price, is_worker=True)
-# async def create_girl_photo(message: types.Message, state: FSMContext):
-#     async with state.proxy() as data:
-#         data["girl_price"] = message.text.replace(";", " ")
-#     await message.answer(payload.escort_new_photos)
-#     await EscortNewForm.photos.set()
-
-
-# @dp.message_handler(content_types=["photo"], state=EscortNewForm.photos)
-# async def create_girl_end(message: types.Message, state: FSMContext):
-#     async with state.proxy() as data:
-#         data["girl_photo"] = message.photo[-1].file_id
-#     await message.answer(
-#         payload.escort_new_photo_added, reply_markup=keyboards.escort_form_keyboard
-#     )
-#     await state.finish()
-
-
-# @dp.message_handler(regexp="Создать", is_worker=True)
-# async def create_form(message: types.Message):
-#     girl = EscortGirl.create()
-
-
-# @dp.message_handler(regexp="наза", is_worker=True)
-# async def back_menu(message: types.Message):
-#     await worker_welcome(message)
