@@ -1,21 +1,15 @@
-import os
+from os import path
 
-from loguru import logger
 from customutils.confparse import Config
 
 
-path = os.path.normpath(os.path.join(os.path.dirname(__file__), "../config.cfg"))
+config_path = path.normpath(path.join(path.dirname(__file__), "../config.cfg"))
 section_name = "Settings"
 
-token = os.getenv("ESC_TOKEN")  # or set it into config.cfg file))
-if token is None:
-    token = ""
-    logger.warning("TOKEN DOES NOT SET IN ENV")
 
 standart_config = {
-    "esc_otz_chat": "otzif",
-    "escort_api_token": token,
-    "escort_sup_username": "@escort18support",
+    "escort_api_token": "urtoken",
+    "skip_updates": "1",
 }
 
-config = Config(section_name, path, standart_config)
+config = Config(section_name, config_path, standart_config)

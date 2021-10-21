@@ -47,6 +47,7 @@ standart_config = {
     "qiwi_check_time": "80",
     "updated": "1",
     "last_commit": "0",
+    "skip_updates": "1",
 }
 
 config = Config(section_name, path, standart_config)
@@ -88,6 +89,4 @@ for val in alowed_values:
 # ]
 
 # useless
-SKIP_UPDATES = True
-
 BTC_REGEX = r"BTC_CHANGE_BOT\?start=(c_[a-f0-9]{32})"

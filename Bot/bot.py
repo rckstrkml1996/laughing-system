@@ -6,7 +6,7 @@ from aiogram import Dispatcher
 from loguru import logger
 
 from loader import dp, db_commands
-from config import config, project_path, SKIP_UPDATES
+from config import config, project_path
 
 from utils.pinner import dynapins
 from utils.notify import on_startup_notify
@@ -84,7 +84,7 @@ def main():
     # loop.create_task(AutoBtc())
 
     start_task = loop.create_task(
-        start_bot(dp, notify=config("notify"), skip_updates=SKIP_UPDATES)
+        start_bot(dp, notify=config("notify"), skip_updates=config("skip_updates"))
     )
 
     try:

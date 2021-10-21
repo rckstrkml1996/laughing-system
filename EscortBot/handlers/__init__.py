@@ -1,6 +1,5 @@
-from .other import dp
-from .main import dp
-from .reinforcement import dp
-from .commands import dp
+from .welcome import dp
+from .profile import dp
+from .working import dp
 
-__all__ = ["dp"]
+__all__ = ("dp",)

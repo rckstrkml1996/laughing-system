@@ -13,6 +13,4 @@ class IsWorking(BoundFilter):
         self.is_working = is_working
 
     async def check(self, obj):
-        work = config("escort_work")
-        logger.debug(f"IsWorking check work: {work}")
-        return self.is_working == work
+        return self.is_working == config("escort_work", bool)
