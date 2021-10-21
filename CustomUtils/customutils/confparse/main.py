@@ -69,7 +69,7 @@ class Config:  # section and path must not be different, standart setting not
         with open(self.path, "w") as config_file:
             config.write(config_file)
 
-    def edit_config(self, setting, value=None):
+    def edit(self, setting, value=None):
         config = configparser.ConfigParser()
         config.read(self.path)
 

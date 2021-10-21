@@ -82,7 +82,7 @@ async def deposit_entered(message: types.Message, state: FSMContext):
         if isinstance(token, list):
             token = token[0]
     except NoOptionError:
-        config.edit_config("trading_work", False)  # than change as notify
+        config.edit("trading_work", False)  # than change as notify
         return
 
     try:

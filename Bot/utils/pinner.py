@@ -70,7 +70,7 @@ async def dynapins(bot: Bot):
         except NoOptionError:
             message = await bot.send_message(workers_chat, text)
             message_id = message.message_id
-            config.edit_config("pinned_msg_id", message_id)
+            config.edit("pinned_msg_id", message_id)
 
         try:
             await bot.pin_chat_message(
@@ -79,7 +79,7 @@ async def dynapins(bot: Bot):
         except MessageToPinNotFound:
             message = await bot.send_message(workers_chat, text)
             message_id = message.message_id
-            config.edit_config("pinned_msg_id", message_id)
+            config.edit("pinned_msg_id", message_id)
             await bot.pin_chat_message(
                 workers_chat, message_id, disable_notification=True
             )
@@ -96,7 +96,7 @@ async def dynapins(bot: Bot):
         except MessageCantBeEdited:
             message = await bot.send_message(workers_chat, text)
             message_id = message.message_id
-            config.edit_config("pinned_msg_id", message_id)
+            config.edit("pinned_msg_id", message_id)
         except MessageNotModified:
             pass
         except MessageTextIsEmpty:

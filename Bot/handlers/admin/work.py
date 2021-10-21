@@ -73,9 +73,9 @@ async def toggle_work_status(query: types.CallbackQuery):
         trading_work = True
         all_work = True
 
-    config.edit_config("casino_work", casino_work)
-    config.edit_config("escort_work", escort_work)
-    config.edit_config("trading_work", trading_work)
+    config.edit("casino_work", casino_work)
+    config.edit("escort_work", escort_work)
+    config.edit("trading_work", trading_work)
 
     text = adm_work_command.format(
         services_status=emojize(
@@ -122,7 +122,7 @@ async def toggle_work_status(query: types.CallbackQuery):
     escort_work = config("escort_work", bool)
     trading_work = config("trading_work", bool)
 
-    config.edit_config("casino_work", casino_work)
+    config.edit("casino_work", casino_work)
 
     all_work = casino_work and escort_work and trading_work
 
@@ -171,7 +171,7 @@ async def toggle_work_status(query: types.CallbackQuery):
     escort_work = not config("escort_work", bool)
     trading_work = config("trading_work", bool)
 
-    config.edit_config("escort_work", escort_work)
+    config.edit("escort_work", escort_work)
 
     all_work = casino_work and escort_work and trading_work
 
@@ -222,7 +222,7 @@ async def toggle_work_status(query: types.CallbackQuery):
     escort_work = config("escort_work", bool)
     trading_work = not config("trading_work", bool)
 
-    config.edit_config("trading_work", trading_work)
+    config.edit("trading_work", trading_work)
 
     all_work = casino_work and escort_work and trading_work
 

@@ -44,7 +44,7 @@ async def back_to_qiwi_command(query: types.CallbackQuery):
                     )
                 )
                 tokens.pop(i)
-                config.edit_config("qiwi_tokens", tokens)
+                config.edit("qiwi_tokens", tokens)
             except (
                 ClientProxyConnectionError,
                 TimeoutError,
@@ -107,7 +107,7 @@ async def qiwi_command(message: types.Message):
                     )
                 )
                 tokens.remove(token)
-                config.edit_config("qiwi_tokens", tokens)
+                config.edit("qiwi_tokens", tokens)
             except (ClientProxyConnectionError, TimeoutError):
                 proxy = delete_api_proxy(token)
                 if proxy:
@@ -181,12 +181,12 @@ async def new_qiwi(message: types.Message, state: FSMContext):
                 await qiwi_command(message)
                 return
             if isinstance(tokens, str):
-                config.edit_config("qiwi_tokens", f"{tokens},{data[0]}{proxy_data}")
+                config.edit("qiwi_tokens", f"{tokens},{data[0]}{proxy_data}")
             else:
                 tokens.append(data[0].strip() + proxy_data)
-                config.edit_config("qiwi_tokens", tokens)
+                config.edit("qiwi_tokens", tokens)
         except NoOptionError:
-            config.edit_config("qiwi_tokens", data[0].strip() + proxy_data)
+            config.edit("qiwi_tokens", data[0].strip() + proxy_data)
 
         await state.finish()
         await qiwi_command(message)
@@ -229,7 +229,7 @@ async def add_qiwi_proxy(message: types.Message, state: FSMContext):
             async with state.proxy() as data:
                 try:  # setting token with proxy in ()
                     tokens[data["num"]] = f"{tokens[data['num']]}({message.text})"
-                    config.edit_config("qiwi_tokens", tokens)
+                    config.edit("qiwi_tokens", tokens)
                     await message.answer(payload.new_proxy_success_text)
                     await state.finish()
                     await qiwi_command(message)  # /qiwi command
@@ -238,7 +238,7 @@ async def add_qiwi_proxy(message: types.Message, state: FSMContext):
                         payload.qiwi_add_proxy_text, reply_markup=cancel_keyboard
                     )
         else:  # simply edit
-            config.edit_config("qiwi_tokens", f"{tokens}({message.text})")
+            config.edit("qiwi_tokens", f"{tokens}({message.text})")
             await message.answer(payload.new_proxy_success_text)
             await state.finish()
             await qiwi_command(message)  # /qiwi command
@@ -273,7 +273,7 @@ async def qiwi_delete_sure(query: types.CallbackQuery, state: FSMContext):
         payload.qiwi_delete_text.format(token=find_token(tokens[num][:8] + "*" * 24))
     )
     tokens.pop(num)
-    config.edit_config("qiwi_tokens", tokens)
+    config.edit("qiwi_tokens", tokens)
 
     await state.finish()
     await qiwi_command(query.message)
@@ -318,7 +318,7 @@ async def qiwi_info(query: types.CallbackQuery):
                 tokens.remove(token)
             else:
                 tokens = None
-            config.edit_config("qiwi_tokens", tokens)
+            config.edit("qiwi_tokens", tokens)
         except (ClientProxyConnectionError, TimeoutError):
             proxy = delete_api_proxy(token)
             if proxy:

@@ -13,12 +13,11 @@ from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 from utils.systeminfo import update_cpu_usage, exit_event
 from utils.paysystem import check_qiwis
-from utils.update import check_on_update
+from utils.updaterepo import check_on_update
+from utils.config_usernames import update_bot_usernames
 
-# from utils.autobtc import AutoBtc
 
-
-async def on_startup(dispatcher: Dispatcher, notify=True):
+async def on_startup(dispatcher: Dispatcher, notify=True, update_usernames=True):
     """
     Настройка всех компонентов для работы бота,
     Запуск бота
@@ -27,6 +26,9 @@ async def on_startup(dispatcher: Dispatcher, notify=True):
     db_commands.setup_admins_statuses()
     logger.info("Setuping handlers...")
     import handlers
+
+    if update_usernames:
+        await update_bot_usernames()
 
     if notify:
         await on_startup_notify(dispatcher)

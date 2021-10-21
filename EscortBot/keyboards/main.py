@@ -15,6 +15,7 @@ garanties_btn = KeyboardButton("🔐 Гарантии")
 promo_btn = KeyboardButton("🤑 Промокод")
 main_keyboard.add(girls_btn, balance_btn, garanties_btn, promo_btn, support_btn)
 
+
 balance_keyboard = ReplyKeyboardMarkup(
     one_time_keyboard=True, resize_keyboard=True, row_width=1
 )

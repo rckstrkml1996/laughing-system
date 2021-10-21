@@ -13,7 +13,7 @@ traiding_btn = KeyboardButton(emojize(":chart_with_upwards_trend: Трейдин
 escort_btn = KeyboardButton(emojize(":gift_heart: Эскорт"))
 about_btn = KeyboardButton(emojize("О проекте :man_technologist:"))
 menu_keyboard.add(profile_btn)
-menu_keyboard.add(casino_btn)  # , traiding_btn, escort_btn)
+menu_keyboard.add(casino_btn, escort_btn)  # , traiding_btn, escort_btn)
 menu_keyboard.add(about_btn)
 
 
@@ -49,7 +49,8 @@ info_btn = InlineKeyboardButton(
     emojize("Инфоканал :wastebasket:"), url=f't.me/{config("reviews_link")}'
 )
 chat_btn = InlineKeyboardButton(
-    emojize("Чат воркеров :hot_face:"), url=f'https://t.me/joinchat/{config("workers_link")}'
+    emojize("Чат воркеров :hot_face:"),
+    url=f'https://t.me/joinchat/{config("workers_link")}',
 )
 about_project_keyboard.add(ref_btn, rules_btn)
 about_project_keyboard.add(info_btn, out_btn)

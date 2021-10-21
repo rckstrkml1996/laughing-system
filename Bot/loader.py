@@ -36,5 +36,6 @@ bot_client = Client("bot_client", config("api_id"), config("api_hash"))
 # is no webhooks so it can be here)
 casino_bot = Bot(config("casino_api_token"), parse_mode=ParseMode.HTML)
 trading_bot = Bot(config("trading_api_token"), parse_mode=ParseMode.HTML)
+escort_bot = Bot(config("escort_api_token"), parse_mode=ParseMode.HTML)
 
 # casino_client = Client("casino_client", config("api_id"), config("api_hash"))

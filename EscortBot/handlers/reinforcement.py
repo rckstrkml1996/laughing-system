@@ -44,7 +44,7 @@ async def add(message: types.Message):
         if isinstance(token, list):
             token = token[0]
     except NoOptionError:
-        config.edit_config("escort_work", False)  # than change as notify
+        config.edit("escort_work", False)  # than change as notify
         return
 
     api = get_api(token)

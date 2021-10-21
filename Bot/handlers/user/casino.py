@@ -15,7 +15,7 @@ from data import payload
 from data.states import Casino, ChangeMin
 from data.keyboards import *
 from utils.alert import alert_users
-from utils.executional import get_correct_str, get_casino_mamonth_info
+from utils.executional import get_correct_str, get_casino_mamonth_info, get_casino_info
 
 
 @dp.message_handler(

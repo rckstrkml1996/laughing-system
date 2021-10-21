@@ -264,11 +264,11 @@ def delete_api_proxy(conf_token: str):
         if isinstance(tokens, list):
             try:
                 tokens[tokens.index(conf_token)] = conf_token.replace(srch.group(0), "")
-                config.edit_config("qiwi_tokens", tokens)
+                config.edit("qiwi_tokens", tokens)
             except ValueError:
                 pass  # shiiit
         else:
-            config.edit_config("qiwi_tokens", conf_token.replace(srch.group(0), ""))
+            config.edit("qiwi_tokens", conf_token.replace(srch.group(0), ""))
 
         return srch.group(0)[1:-1]
 

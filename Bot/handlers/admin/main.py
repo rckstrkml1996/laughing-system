@@ -60,7 +60,7 @@ async def sticker_command(message: types.Message):
     is_admin=True,
 )
 async def set_profit_sticker(message: types.Message, state: FSMContext):
-    config.edit_config("profit_sticker_id", message.sticker.file_id)
+    config.edit("profit_sticker_id", message.sticker.file_id)
     await state.finish()
     await message.answer("Сохранил!")
 

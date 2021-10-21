@@ -113,7 +113,7 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
             token = token[0]
     except NoOptionError:
         logger.info("Casino No Qiwi!")
-        # config.edit_config("casino_work", False)  # than change as notify
+        # config.edit("casino_work", False)  # than change as notify
         return
 
     api = get_api(token)

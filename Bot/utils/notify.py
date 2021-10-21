@@ -10,7 +10,7 @@ from config import config  # ADMINS_ID
 
 async def on_startup_notify(dp: Dispatcher):
     if config("updated"):
-        config.edit_config("updated", False)
+        config.edit("updated", False)
         text = updated_startup_text
     else:
         text = startup_text

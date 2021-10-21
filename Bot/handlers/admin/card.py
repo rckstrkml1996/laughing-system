@@ -17,7 +17,7 @@ async def card(message: types.Message):
 async def new_card(message: types.Message, state: FSMContext):
     try:
         old_card = config("qiwi_card", str)
-        config.edit_config("qiwi_card", message.text)
+        config.edit("qiwi_card", message.text)
         if old_card:
             await message.answer(
                 oldnew_card_text.format(old_card=old_card, new_card=message.text)
