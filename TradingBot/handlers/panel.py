@@ -3,7 +3,7 @@ from random import randint
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from customutils.qiwiapi import QiwiApi
+from customutils.qiwiapi import QiwiApi, get_api
 from customutils.qiwiapi.exceptions import InvalidToken, InvalidAccount
 from customutils.models import TradingUser, TradingPayment
 
@@ -12,15 +12,6 @@ from data import payload
 from data.keyboards import *
 from data.states import Withdraw, Deposit
 from config import config
-
-
-def get_api(conf_token: str):
-    srch = re.search(r"\(([^\(^\)]+)\)", conf_token)
-    if srch:
-        return QiwiApi(
-            token=conf_token.replace(srch.group(0), ""), proxy_url=srch.group(1)
-        )
-    return QiwiApi(conf_token)
 
 
 @dp.message_handler(regexp="профил")
@@ -91,7 +82,7 @@ async def deposit_entered(message: types.Message, state: FSMContext):
         if int(message.text) < config("min_deposit"):
             await message.answer(payload.deposit_minerror_text)
         else:
-            api = get_api(token)
+            api, proxy_url = get_api(token)
             try:
                 profile = await api.get_profile()
                 await api.close()

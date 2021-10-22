@@ -20,8 +20,13 @@ from .escort_create_girl import (
     esc_create_name_text,
     esc_create_about_text,
     esc_create_services_text,
+    inv_esc_create_age_text,
     esc_create_age_text,
+    inv_esc_create_price_text,
     esc_create_price_text,
+    esc_created_text,
+    esc_create_photo_text,
+    esc_create_photos_text,
 )
 
 from .other import worker_choice_one_plz, set_new_worker_status

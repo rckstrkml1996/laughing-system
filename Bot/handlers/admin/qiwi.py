@@ -6,7 +6,7 @@ from asyncio.exceptions import TimeoutError
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiohttp.client_exceptions import ClientProxyConnectionError
-from customutils.qiwiapi import get_currency, get_identification_level
+from customutils.qiwiapi import get_currency, get_identification_level, get_api
 from customutils.qiwiapi.exceptions import InvalidToken, InvalidAccount
 from customutils.datefunc import normalized_local_now
 
@@ -15,7 +15,7 @@ from config import config
 from data import payload
 from data.keyboards import *
 from data.states import Qiwi
-from utils.executional import find_token, get_api, delete_api_proxy, check_proxy
+from utils.executional import find_token, delete_api_proxy, check_proxy
 
 
 # говнокод лень фиксить)

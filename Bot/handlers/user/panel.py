@@ -11,8 +11,14 @@ from config import config
 from config import StatusNames
 from customutils.models import Worker, Profit
 from customutils.datefunc import datetime_local_now
-from data import payload
-from data.keyboards import *
+from data.payload import (
+    zap_text,
+    worker_menu_text,
+    referral_system_text,
+    rules_text,
+    about_project_text,
+)
+from data.keyboards import panel_keyboard, about_project_keyboard, menu_keyboard
 from utils.executional import get_correct_str, get_work_status
 from utils.render import render_profile
 
@@ -29,7 +35,7 @@ async def get_profile_photo(chat_id: int) -> InputFile:
     return InputFile(photo_path)
 
 
-@dp.message_handler(regexp="профил", is_worker=True, state="*")
+@dp.message_handler(text=emojize("Профиль :cold_face:"), is_worker=True, state="*")
 async def worker_profile(message: types.Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state is not None:
@@ -62,7 +68,7 @@ async def worker_profile_callback(query: types.CallbackQuery, worker: Worker):
     await query.message.delete()
     await query.message.answer_photo(
         profile_photo,
-        payload.worker_menu_text.format(
+        worker_menu_text.format(
             chat_id=query.from_user.id,
             uniq_key=worker.uniq_key,
             status=StatusNames[worker.status],
@@ -97,13 +103,13 @@ async def worker_welcome(message: types.Message):
         f"Worker - {message.chat.id} get profile, profits all: {all_balance} len: {len_profits} middle: {middle_profits}"
     )
 
-    await message.answer(emojize(":zap:"), reply_markup=menu_keyboard)
+    await message.answer(zap_text, reply_markup=menu_keyboard)
 
     profile_photo = await get_profile_photo(message.chat.id)
 
     await message.answer_photo(
         profile_photo,
-        caption=payload.worker_menu_text.format(
+        caption=worker_menu_text.format(
             chat_id=message.chat.id,
             uniq_key=worker.uniq_key,
             status=StatusNames[worker.status],
@@ -122,7 +128,9 @@ async def worker_welcome(message: types.Message):
     logger.debug(f"worker_welcome:{time_to_do=}")
 
 
-@dp.message_handler(regexp="проект", is_worker=True, state="*")
+@dp.message_handler(
+    text=emojize("О проекте :man_technologist:"), is_worker=True, state="*"
+)
 async def project_info(message: types.Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state is not None:
@@ -132,7 +140,7 @@ async def project_info(message: types.Message, state: FSMContext):
     team_profits = Profit.select().count()
 
     await message.answer(
-        payload.about_project_text.format(
+        about_project_text.format(
             team_start=config("team_start"),
             team_profits=team_profits,
             profits_sum=db_commands.all_profits_sum(),
@@ -164,7 +172,7 @@ async def toggle_username(query: types.CallbackQuery):
         status = "Скрыли" if worker.username_hide else "Открыли"
 
         await query.message.edit_caption(
-            payload.worker_menu_text.format(
+            worker_menu_text.format(
                 chat_id=query.message.chat.id,
                 uniq_key=worker.uniq_key,
                 status=StatusNames[worker.status],
@@ -185,11 +193,11 @@ async def toggle_username(query: types.CallbackQuery):
 
 @dp.callback_query_handler(text="showrules", is_worker=True)
 async def show_rules(query: types.CallbackQuery):
-    await query.message.answer(payload.rules_text(True))
+    await query.message.answer(rules_text(True))
 
 
 @dp.callback_query_handler(text="refsystem", is_worker=True)
 async def ref_system(query: types.CallbackQuery):
     await query.message.answer(
-        payload.referral_system_text.format(user_id=query.message.chat.id)
+        referral_system_text.format(user_id=query.message.chat.id)
     )

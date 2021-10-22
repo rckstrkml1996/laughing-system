@@ -1,3 +1,4 @@
+from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
@@ -31,3 +32,16 @@ def escort_mamonths_keyboard(
         markup.add(update_btn)
 
     return markup
+
+
+esc_create_girl_keyboard = ReplyKeyboardMarkup(
+    one_time_keyboard=True, resize_keyboard=True
+)
+end_btn = KeyboardButton(emojize("Завершить :x:"))
+esc_create_girl_keyboard.add(end_btn)
+
+esc_delete_girl_keyboard = InlineKeyboardMarkup()
+esc_delete_btn = InlineKeyboardButton(
+    emojize("Удалить :x:"), callback_data="delete_form_esc"
+)
+esc_delete_girl_keyboard.add(esc_delete_btn)

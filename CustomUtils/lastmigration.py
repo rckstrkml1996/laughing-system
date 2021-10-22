@@ -20,6 +20,6 @@ base = MySQLDatabase(
 
 migrator = MySQLMigrator(base)
 
-stopped = BooleanField(default=False)  # stopwork status for single user
+for_all = BooleanField(default=False)  # stopwork status for single user
 
-migrate(migrator.add_column("casinouser", "stopped", stopped))
+migrate(migrator.add_column("escortgirl", "for_all", for_all))

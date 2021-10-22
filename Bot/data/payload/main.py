@@ -4,6 +4,9 @@ from aiogram.utils.emoji import emojize
 
 from config import config
 
+
+zap_text = emojize(":zap:")
+
 worker_defenition = "<a href='tg://user?id={chat_id}'>{name}</a>"
 
 
@@ -16,9 +19,9 @@ reviews_link = config("reviews_link")
 
 new_chat_member_text = emojize(
     ":green_heart: Привет, <a href='tg://user?id={chat_id}'>{name}</a>\n"
-    ":gem: Бот для всего - @{bot_username}\n"
-    f":money_with_wings: Выплаты - <a href='{outs_link}'>*КЛИК*</a>\n"
-    ":fire: Процент выплат в смотри закрепе\n"
+    ":gem: <a href='t.me/{bot_username}'>Бот для всего</a>\n"
+    f":money_with_wings: <a href='t.me/{outs_link}'>Выплаты</a>\n"
+    ":fire: Процент выплат в смотри <b>закрепе</b>\n"
     f":credit_card: Пополнения от <b>{config('min_deposit', int)} RUB</b>"
 )
 
@@ -76,21 +79,11 @@ top_text = emojize(
 )
 
 
-profits_text = emojize(":lizard: Какую статистику отобразить?")
-
-week_profitinv_text = emojize("Список Ваших профитов за неделю пуст.")
-
-week_profit_text = emojize(
-    ":chart: Статистика за неделю.\n\n"
-    "<b>Средний чек:</b> {middle_profits:.0f} RUB\n"
-    "<b>Кол-во залетов:</b> {profits_len}"
-)
-
 profit_text = emojize(
-    ":white_check_mark: <b>УСПЕШНАЯ</b> оплата ({service})\n"
-    ":money_with_wings: Мамонт депнул: <b>{amount} ₽</b>\n\n"
-    ":gem: <b>Доля</b> воркера ~ <b>{share} ₽</b>\n"
-    ":computer: Воркер: {link}"
+    ":white_check_mark: <b><i>УСПЕШНАЯ</i></b> оплата ({service})\n\n"
+    ":money_with_wings: Мамонт депнул: <b>{amount} RUB</b>\n"
+    ":gem: Доля воркера: <b>{share} RUB</b>\n\n"
+    ":man_technologist: Воркер: {link}"
 )
 
 admins_profit_text = emojize(
@@ -115,11 +108,3 @@ profit_worker_text = emojize(
     "ID Мамонта: /c{mid}\n\n"
     "Cпасибо за ворк :green_heart:"
 )
-
-#  (Казино)
-# 💸 Мамонт депнул: 2500 ₽
-# 💎 Твоя доля ~ 1750 ₽
-
-# ID Мамонта: /C222
-
-# Cпасибо за ворк❤️

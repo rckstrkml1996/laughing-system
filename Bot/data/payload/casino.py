@@ -7,7 +7,7 @@ from config import config
 casino_text = emojize(
     "Казик :slot_machine:\n\n"
     "Твой код - {worker_id}\n"
-    f"Мануалы - {config('reviews_link')}\n\n"
+    f"Мануалы - @{config('reviews_link')}\n\n"
     f"Скам бот - @{config('casino_username')}\n"
     f"Тех. поддержка - @{config('casino_sup_username')}\n\n"
     f"<a href='https://t.me/{config('casino_username')}"

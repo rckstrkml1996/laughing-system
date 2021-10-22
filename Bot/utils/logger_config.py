@@ -4,14 +4,16 @@ from loguru import logger
 from sys import stderr  # stdin, stdout or stderr
 
 
-def setup_logger(level: Union[str, int] = 'DEBUG', colorize: Optional[bool] = True, as_session=False):
+def setup_logger(
+    level: Union[str, int] = "DEBUG", colorize: Optional[bool] = True, as_session=False
+):
     logger.remove()
     logger.add(
         sink=stderr,
         level=level,
         colorize=colorize,
         enqueue=True,
-        format="<lvl>{level}</lvl> - <green>{message}</green>"
+        format="<red>{line}:{module}</red> <lvl>{level}</lvl> - <lvl>{message}</lvl>",
     )
     log_file = "session.log"
     if as_session:
@@ -21,6 +23,6 @@ def setup_logger(level: Union[str, int] = 'DEBUG', colorize: Optional[bool] = Tr
         log_file,
         format="{time:MM-DD at HH:mm:ss} | {level} | {message}",
         level=level,
-        rotation="5 MB"
+        rotation="5 MB",
     )
     logger.info("Logging setuped succesfully")

@@ -5,7 +5,7 @@ from config import config
 # trading info
 
 trading_text = emojize(
-    "📈 <b>Трейдинг</b> SCAM\n\n"
+    ":chart_with_upwards_trend: <b>Трейдинг</b> SCAM\n\n"
     "Твой код - {worker_id}\n"
     f"Скам бот - @{config('trading_username')}\n"
     f"Тех. поддержка - {config('trading_sup_username')}\n\n"

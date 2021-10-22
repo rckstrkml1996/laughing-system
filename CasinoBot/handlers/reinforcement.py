@@ -8,7 +8,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.utils.emoji import emojize
 from loguru import logger
 
-from customutils.qiwiapi import QiwiApi
+from customutils.qiwiapi import QiwiApi, get_api
 from customutils.models import CasinoUser, CasinoUserHistory, CasinoPayment
 from customutils.qiwiapi.exceptions import InvalidToken, InvalidAccount
 
@@ -20,15 +20,6 @@ from keyboards import *
 
 
 PROMOS = {}
-
-
-def get_api(conf_token: str):
-    srch = re.search(r"\(([^\(^\)]+)\)", conf_token)
-    if srch:
-        return QiwiApi(
-            token=conf_token.replace(srch.group(0), ""), proxy_url=srch.group(1)
-        )
-    return QiwiApi(conf_token)
 
 
 @dp.message_handler(Text(startswith="пополн", ignore_case=True), state="*")
@@ -105,7 +96,7 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
         logger.debug(f"#{query.from_user.id} - does not exist")
         return
 
-    comment = f"{random.randint(1000000, 9999999)}"
+    comment = random.randint(1000000, 9999999)
 
     try:
         token = config("qiwi_tokens")
@@ -116,7 +107,7 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
         # config.edit("casino_work", False)  # than change as notify
         return
 
-    api = get_api(token)
+    api, proxy_url = get_api(token)
 
     try:
         profile = await api.get_profile()

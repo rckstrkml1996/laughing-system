@@ -1,3 +1,4 @@
+import re
 from time import time
 from datetime import datetime
 from typing import Union
@@ -195,3 +196,13 @@ class QiwiApi:
         session = self.session  # bugfix
         if session is not None:
             await session.close()
+
+
+def get_api(conf_token: str):
+    srch = re.search(r"\(([^\(^\)]+)\)", conf_token)
+    proxy_url = None
+    if srch:
+        proxy_url = srch.group(1)
+        return QiwiApi(token=conf_token.replace(srch.group(0), ""), proxy_url=proxy_url)
+
+    return QiwiApi(conf_token), proxy_url

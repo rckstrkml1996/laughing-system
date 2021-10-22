@@ -2,6 +2,7 @@ from asyncio import sleep
 from datetime import timedelta
 
 from aiogram import types
+from aiogram.utils.emoji import emojize
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import RegexpCommandsFilter
 from loguru import logger
@@ -12,13 +13,13 @@ from customutils.datefunc import datetime_local_now
 from config import config, MinDepositValues, html_style_url
 from loader import dp, casino_bot
 from data import payload
-from data.states import Casino, ChangeMin
+from data.states import CasinoAlert, ChangeMin
 from data.keyboards import *
 from utils.alert import alert_users
 from utils.executional import get_correct_str, get_casino_mamonth_info, get_casino_info
 
 
-@dp.message_handler(regexp="казин|казик", state="*", is_worker=True)
+@dp.message_handler(text=emojize("Казик :slot_machine:"), state="*", is_worker=True)
 async def casino_info(message: types.Message, worker: Worker, state: FSMContext):
     current_state = await state.get_state()
     if current_state is not None:
@@ -32,7 +33,8 @@ async def casino_info(message: types.Message, worker: Worker, state: FSMContext)
         reply_markup=casino_keyboard(worker.casino_min),
         disable_web_page_preview=True,
     )
-    # await Casino.commands.set()
+
+    # await CasinoAlert.commands.set() # old deleted from states.py
     logger.debug(f"Worker [{message.chat.id}] get casino info succesfully")
 
 
@@ -312,19 +314,21 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
 @dp.callback_query_handler(text="all_alerts_cas", state="*", is_worker=True)
 async def cas_mamonths_alert(query: types.CallbackQuery):
     await query.message.answer_photo(html_style_url, caption=payload.cas_alert_text)
-    await Casino.alert.set()
+    await CasinoAlert.alert.set()
     await query.answer("Лови.")
 
 
-@dp.message_handler(state=Casino.alert)  # is_worker=True
+@dp.message_handler(state=CasinoAlert.alert)  # is_worker=True
 async def cas_mamonths_alert_text(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["text"] = message.text
     await message.answer(message.text, reply_markup=serv_alaccept_keyboard)
-    await Casino.alert_true.set()
+    await CasinoAlert.alert_true.set()
 
 
-@dp.callback_query_handler(text="alert_accept", state=Casino.alert_true, is_worker=True)
+@dp.callback_query_handler(
+    text="alert_accept", state=CasinoAlert.alert_true, is_worker=True
+)
 async def cas_alert_true(query: types.CallbackQuery, worker: Worker, state: FSMContext):
     # print(alert_users([[1, 2]], casino_bot))
     # worker = Worker.get(cid=query.from_user.id)

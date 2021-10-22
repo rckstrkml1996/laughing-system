@@ -48,7 +48,7 @@ class Worker(BaseModel):
     summary_info = TextField(null=True)
 
     def __str__(self):
-        return f"{self.id}: [{self.cid}] {self.name}"
+        return f"{self.id}: [{self.cid}] @{self.username} n{self.status}"
 
 
 class QiwiPayment(BaseModel):
@@ -98,7 +98,7 @@ class CasinoUser(BaseModel):
     stopped = BooleanField(default=False)  # stopwork status for single user
 
     def __str__(self):
-        return f"#{self.id} {self.cid}"
+        return f"#{self.id} [{self.cid}] {self.balance} RUB, @{self.username} {self.fullname}"
 
 
 class CasinoPayment(BaseModel):
@@ -116,6 +116,9 @@ class CasinoUserHistory(BaseModel):
     balance = IntegerField()
     created = CharField(default=datetime_local_now)
 
+    def __str__(self):
+        return f"#{self.id} editor = {self.editor} {self.amount} RUB, {self.created}"
+
 
 class EscortUser(BaseModel):
     owner = ForeignKeyField(Worker, related_name="esc_users")
@@ -124,27 +127,55 @@ class EscortUser(BaseModel):
     username = CharField(default="Без юзернейма")
     fullname = CharField(default="Без имени")
 
+    def __str__(self):
+        return f"#{self.id} [{self.cid}] {self.balance} RUB, {self.fullname}"
+
 
 class EscortPayment(BaseModel):
     owner = ForeignKeyField(EscortUser, related_name="payments")
-    amount = IntegerField(null=True)  # sets dynamic
+    # amount: amount of hour - two hours - night
+    amount = IntegerField()
     comment = CharField(unique=True)
-    done = IntegerField(default=0)  # 0 - not done 1 - real done 2 - fake done
+    # done: 0 - not done 1 - done hour 2 - done two hours 3 - done three hours
+    done = IntegerField(default=0)
     created = DateTimeField(default=datetime_local_now)
 
+    @property
+    def two_amount(self):
+        return self.amount * 2
+
+    @property
+    def three_amount(self):
+        return self.amount * 3
+
+    def __str__(self):
+        return f"#{self.id} amount={self.amount} done={self.done}"
 
 class EscortGirl(BaseModel):
-    owner = ForeignKeyField(Worker, related_name="escort_girls")
+    owner = ForeignKeyField(Worker, related_name="escort_girls", null=True)
     name = CharField(default="Настя")
     about = CharField(default="Без описания")
     services = CharField(default="Без услуг")
     age = IntegerField(default=20)
-    price = IntegerField(default=1500)  # photo * 1 * 2 * 1.5
+    price = IntegerField(default=1500)
+    for_all = BooleanField(default=False)
+
+    @property
+    def two_price(self):
+        return self.price * 2
+
+    @property
+    def three_price(self):
+        return self.price * 3
+
+    def __str__(self):
+        return f"#{self.id} age={self.age} price={self.price} name={self.name}"
 
 
 class EscortGirlPhoto(BaseModel):
     owner = ForeignKeyField(EscortGirl, related_name="photos")
-    file_id = CharField()
+    saved_path = CharField()
+    file_id = CharField(null=True, unique=True)  # may be delete unique = True!
 
 
 class TradingUser(BaseModel):
@@ -153,9 +184,6 @@ class TradingUser(BaseModel):
     balance = IntegerField(default=0)
     fullname = CharField(default="Без имени")
     username = CharField(default="Юзернейм скрыт")
-
-    def __str__(self):
-        return f"#{self.id} {self.cid}"
 
 
 class TradingPayment(BaseModel):

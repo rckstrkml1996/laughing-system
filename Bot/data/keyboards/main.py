@@ -9,8 +9,8 @@ from config import config
 menu_keyboard = ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)
 profile_btn = KeyboardButton(emojize("Профиль :cold_face:"))
 casino_btn = KeyboardButton(emojize("Казик :slot_machine:"))
-traiding_btn = KeyboardButton(emojize(":chart_with_upwards_trend: Трейдинг"))
-escort_btn = KeyboardButton(emojize(":gift_heart: Эскорт"))
+traiding_btn = KeyboardButton(emojize("Трейдинг :chart_with_upwards_trend:"))
+escort_btn = KeyboardButton(emojize("Эскорт :green_heart:"))
 about_btn = KeyboardButton(emojize("О проекте :man_technologist:"))
 menu_keyboard.add(profile_btn)
 menu_keyboard.add(casino_btn, escort_btn)  # , traiding_btn, escort_btn)
@@ -101,26 +101,32 @@ esc_msg_spam_btn = InlineKeyboardButton(
     emojize("Массовая рассылка :diamond_shape_with_a_dot_inside:"),
     callback_data="all_alerts_esc",
 )
-esc_create_form = InlineKeyboardButton(
-    emojize(":envelope: Создать анкету :envelope:"), callback_data="create_form_esc"
+
+esc_create_form_btn = InlineKeyboardButton(
+    emojize("Создать анкету :envelope:"), callback_data="create_form_esc"
 )
+esc_form_btn = InlineKeyboardButton(
+    emojize("Анкета :lipstick:"), callback_data="form_esc"
+)
+
 esc_delete_all_btn = InlineKeyboardButton(
     emojize("Удалить всех :warning:"), callback_data="delete_all_esc"
 )
 
-escort_keyboard = InlineKeyboardMarkup()
-escort_keyboard.add(esc_mamoths_btn)
-escort_keyboard.add(esc_create_form)
-escort_keyboard.add(esc_msg_spam_btn)
-escort_keyboard.add(esc_delete_all_btn)
 
-escort_form_keyboard = ReplyKeyboardMarkup(
-    one_time_keyboard=False, resize_keyboard=True
-)
-escort_form_end_btn = KeyboardButton(emojize("Создать анкету"))
-escort_form_back_btn = KeyboardButton(emojize("Назад"))
-escort_form_keyboard.add(escort_form_end_btn)
-escort_form_keyboard.add(escort_form_back_btn)
+def escort_keyboard(girl_created: bool) -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup()
+
+    markup.add(esc_mamoths_btn)
+
+    girl_button = esc_form_btn if girl_created else esc_create_form_btn
+    markup.add(girl_button)
+
+    markup.add(esc_msg_spam_btn)
+    markup.add(esc_delete_all_btn)
+
+    return markup
+
 
 tdng_mamoths_btn = InlineKeyboardButton(
     emojize("Мои мамонтята :elephant:"), callback_data="mamonths_tdng"

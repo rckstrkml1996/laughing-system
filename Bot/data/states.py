@@ -13,9 +13,9 @@ class Summary(StatesGroup):
 
 
 class Render(StatesGroup):
-    qiwibalance = State()
-    qiwitransfer = State()
-    sbertransfer = State()
+    qiwi_balance = State()
+    qiwi_trans = State()
+    sber_trans = State()
 
 
 class Pin(StatesGroup):
@@ -29,8 +29,7 @@ class Qiwi(StatesGroup):
     delete = State()
 
 
-class Casino(StatesGroup):
-    commands = State()
+class CasinoAlert(StatesGroup):
     alert = State()
     alert_true = State()
 
@@ -55,12 +54,6 @@ class BtcClient(StatesGroup):
     new_code = State()
 
 
-class Trading(StatesGroup):
-    commands = State()
-    alert = State()
-    alert_true = State()
-
-
 class MakeProfit(StatesGroup):
     main = State()
 
@@ -71,21 +64,24 @@ class SetProfitStick(StatesGroup):
 
 class EscortNewForm(StatesGroup):
     name = State()
-    description = State()
-    service = State()
+    about = State()
+    services = State()
     age = State()
     price = State()
+    photo = State()
     photos = State()
 
 
-class Render(StatesGroup):
-    qiwi_balance = State()
-    qiwi_trans = State()
-    sber_trans = State()
+# name = CharField(default="Настя")
+# about = CharField(default="Без описания")
+# services = CharField(default="Без услуг")
+# age = IntegerField(default=20)
+# price = IntegerField(default=1500)
 
 
 class ChangeMin(StatesGroup):
     main = State()
+
 
 class Card(StatesGroup):
     main = State()

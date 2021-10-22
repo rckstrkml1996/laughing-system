@@ -10,3 +10,12 @@ welcome_text = emojize(
     "остерегайтесь мошенников, спасибо, "
     "что выбираете нас! :sunglasses:"
 )
+
+
+new_user_text = emojize(
+    ":sunglasses: Привет, <b>{name}</b> Введи <b>6-значный код</b> авторизации"
+)
+
+new_user_wrong_code_text = emojize(
+    ":hankey: Неправильный код, введи ещё раз <b>6-значный</b> код авторизации"
+)

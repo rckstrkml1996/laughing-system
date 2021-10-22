@@ -248,15 +248,6 @@ def find_token(conf_token: str):
     return conf_token
 
 
-def get_api(conf_token: str):
-    srch = re.search(r"\(([^\(^\)]+)\)", conf_token)
-    if srch:
-        return QiwiApi(
-            token=conf_token.replace(srch.group(0), ""), proxy_url=srch.group(1)
-        ), srch.group(1)
-    return QiwiApi(conf_token), None
-
-
 def delete_api_proxy(conf_token: str):
     srch = re.search(r"\(([^\(^\)]+)\)", conf_token)
     if srch:

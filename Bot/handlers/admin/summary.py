@@ -67,7 +67,7 @@ async def summary_accepted(query: types.CallbackQuery):
         try:
             await dp.bot.unban_chat_member(config("workers_chat"), worker.cid)
         except Exception as ex:
-            logger.exception(ex)
+            logger.warning(ex)
 
         await dp.bot.send_message(
             worker.cid,

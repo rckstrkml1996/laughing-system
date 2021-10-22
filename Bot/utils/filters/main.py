@@ -4,8 +4,9 @@ from aiogram.types import CallbackQuery, Message
 from aiogram.dispatcher.filters import BoundFilter
 from loguru import logger
 
-from config import config  # ADMINS_ID
 from customutils.models import Worker
+
+from config import config  # ADMINS_ID
 
 
 class SendSummaryFilter(BoundFilter):

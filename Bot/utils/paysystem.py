@@ -12,14 +12,14 @@ from loguru import logger
 from customutils.datefunc import datetime_local_now
 from customutils.models import QiwiPayment, Profit
 from customutils.models import CasinoPayment, EscortPayment, TradingPayment
-from customutils.qiwiapi import QiwiPaymentsParser
+from customutils.qiwiapi import QiwiPaymentsParser, get_api
 from customutils.qiwiapi.types import Payments, Transaction
 
 from loader import dp, db_commands
 from config import config, ServiceNames
 from data import payload
 from data.keyboards import profit_pay_keyboard
-from utils.executional import get_api, delete_api_proxy
+from utils.executional import delete_api_proxy
 from .render import render_profit
 
 # 0 - not done
