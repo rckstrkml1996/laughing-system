@@ -91,12 +91,6 @@ async def casino_command(message: types.Message, worker: Worker, regexp_command)
         )
         return
 
-    # try:
-    #     worker = Worker.get(cid=message.chat.id)
-    # except Worker.DoesNotExist:
-    #     logger.debug(f"/c Worker [{message.chat.id}] does not exist in base.")
-    #     return
-
     if user.owner == worker:
         logger.debug(f"/c Worker [{message.chat.id}] get mamonth info.")
     elif user.status >= 4:  # if user support and upper
@@ -107,7 +101,7 @@ async def casino_command(message: types.Message, worker: Worker, regexp_command)
         logger.warning(f"/c Worker [{message.chat.id}] try get different mamonth!")
         return
 
-    text, markup = get_casino_mamonth_info(worker, user)
+    text, markup = get_casino_mamonth_info(user)
 
     await message.answer(
         text,
@@ -116,7 +110,7 @@ async def casino_command(message: types.Message, worker: Worker, regexp_command)
 
 
 @dp.callback_query_handler(
-    lambda cb: cb.data.split("_")[0] == "updateinfo", is_worker=True, state="*"
+    lambda cb: cb.data.split("_")[0] == "casupdateinfo", is_worker=True, state="*"
 )
 async def update_mamonth_info(query: types.CallbackQuery, worker: Worker):
     mb_id = query.data.split("_")[1]
@@ -134,7 +128,7 @@ async def update_mamonth_info(query: types.CallbackQuery, worker: Worker):
         )
         return
 
-    text, markup = get_casino_mamonth_info(worker, user)
+    text, markup = get_casino_mamonth_info(user)
 
     await query.message.edit_text(
         text,
@@ -167,7 +161,7 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
     )
     user.save()
 
-    text, markup = get_casino_mamonth_info(worker, user)
+    text, markup = get_casino_mamonth_info(user)
 
     await query.message.edit_text(
         text,
@@ -206,7 +200,7 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
     user.min_deposit = MinDepositValues[index]
     user.save()
 
-    text, markup = get_casino_mamonth_info(worker, user)
+    text, markup = get_casino_mamonth_info(user)
 
     await query.message.edit_text(
         text,
@@ -237,7 +231,7 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
     user.stopped = not user.stopped
     user.save()
 
-    text, markup = get_casino_mamonth_info(worker, user)
+    text, markup = get_casino_mamonth_info(user)
 
     await query.message.edit_text(
         text,

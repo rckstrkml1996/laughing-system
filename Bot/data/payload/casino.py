@@ -48,7 +48,7 @@ all_cas_mamonths_text = emojize(
 
 casino_mamonth_info = emojize(
     "{smile} Мамонт с ID <b>c{uid}</b>\n\n"
-    "Telegram ID: <b>{chat_id}</b>\n"
+    "Telegram ID: <code>[{chat_id}]</code>\n"
     "ID мамонта: <b>c{uid}</b>\n"
     "Имя: <a href='tg://user?id={chat_id}'>{name}</a>\n\n"
     "Баланс: <b>{balance}</b> ₽\n"
@@ -64,7 +64,7 @@ casino_mamonth_info = emojize(
     "<code>Введите свой QIWI кошелёк или карту\n\n"
     "Вывод возможен только на тот QIWI кошелек или карту с которой ваш баланс был пополнен впервые\n"
     "Для смены кошелька обратитесь в тех. поддержку</code>\n\n"
-    "Обновлено в {time}"
+    "Обновлено в <i>{time}</i>"
 )
 
 fart_on_text = emojize(":full_moon: <b>Вы</b> включили фарт мамонту {name}")

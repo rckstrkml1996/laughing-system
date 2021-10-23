@@ -47,7 +47,7 @@ async def info_command(message: types.Message, regexp_command):
                     )
                     return
 
-                text, markup = get_casino_mamonth_info(worker, user)
+                text, markup = get_casino_mamonth_info(user)
                 await message.answer(text, reply_markup=markup)
             except CasinoUser.DoesNotExist:
                 await message.reply("Такого мамонта не существует!")

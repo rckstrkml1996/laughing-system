@@ -6,14 +6,13 @@ from PIL import Image, ImageFont, ImageDraw, ImageFilter
 from loguru import logger
 
 from config import config
-from ..executional import get_random_analog
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
 
 
 @logger.catch
 def render_profit(
-    all_profit: int, profit_sum: int, share_sum: int, service: str, username: str
+    all_profit: int, profit_sum: int, share_sum: int, service: str, username: str, analog: str
 ):
     image = Image.open(os.path.join(package_directory, "editable", "profit.jpg"))
 
@@ -50,8 +49,6 @@ def render_profit(
         fillMain=profit_color,
         fillLight=profit_light,
     )
-
-    analog = get_random_analog(all_profit)
 
     w, h = font_analog.getsize(analog)
     ligthText(

@@ -7,4 +7,5 @@ from .escort import (
     escort_mamonths_keyboard,
     esc_create_girl_keyboard,
     esc_delete_girl_keyboard,
+    esc_info_keyboard,
 )

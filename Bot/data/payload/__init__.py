@@ -8,6 +8,13 @@ from .casino import *
 from .trading import *
 from .escort import *
 
+from .profit import (
+    profit_text,
+    admins_profit_text,
+    profit_complete_text,
+    profit_worker_text,
+)
+
 from .btc_auth import (
     btc_authed_text,
     check_true_text,

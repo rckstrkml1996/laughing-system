@@ -45,3 +45,12 @@ esc_delete_btn = InlineKeyboardButton(
     emojize("Удалить :x:"), callback_data="delete_form_esc"
 )
 esc_delete_girl_keyboard.add(esc_delete_btn)
+
+def esc_info_keyboard(uid) -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup()
+    esc_update_btn = InlineKeyboardButton(
+        emojize(":arrows_counterclockwise:"), callback_data=f"escupdateinfo_{uid}"
+    )
+    markup.add(esc_update_btn)
+
+    return markup

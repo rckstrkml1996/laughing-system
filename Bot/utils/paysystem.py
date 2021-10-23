@@ -17,8 +17,8 @@ from loader import dp, db_commands
 from config import config, ServiceNames
 from data import payload
 from data.keyboards import profit_pay_keyboard
-from utils.executional import delete_api_proxy
-from .render import render_profit
+from utils.executional import delete_api_proxy, get_random_analog
+from utils.render import render_profit
 
 # 0 - not done
 # 1 - real done
@@ -253,13 +253,15 @@ async def send_profit(profit: Profit, moll, service: str, payment=None):
     worker = profit.owner
 
     name = "Скрыт."
-    link = emojize("Скрылся :green_heart:")
-    if not worker.username_hide:
-        name = worker.username if worker.username else worker.name
-        link = f"<a href='tg://user?id={worker.cid}'>{name}</a>"
+    if worker.username_hide:
+        link = payload.profit_worker_hide
+    else:
+        link = f"<a href='tg://user?id={worker.cid}'>{worker.name}</a>"
 
     all_profit = db_commands.get_profits_sum(worker.id)
-    profit_path = render_profit(all_profit, profit.amount, profit.share, service, name)
+    profit_path = render_profit(
+        all_profit, profit.amount, profit.share, service, name, get_random_analog()
+    )
     logger.debug(
         f"Succesfully rendered profit path: {profit_path}, sending to outs chat"
     )
@@ -303,7 +305,7 @@ async def send_profit(profit: Profit, moll, service: str, payment=None):
                 service=service,
                 share=profit.share,
                 amount=profit.amount,
-                mid="незнаюблядь",
+                mid="ХЗ",
             ),
         )
         await dp.bot.send_message(

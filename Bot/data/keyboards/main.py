@@ -162,7 +162,7 @@ def cas_info_keyboard(uid, fart, minpay, stopped: bool) -> InlineKeyboardMarkup:
         f"Тех работы: {stopped}", callback_data=f"updatestopped_{uid}"
     )
     cas_info_update_btn = InlineKeyboardButton(
-        emojize(":arrows_counterclockwise:"), callback_data=f"updateinfo_{uid}"
+        emojize(":arrows_counterclockwise:"), callback_data=f"casupdateinfo_{uid}"
     )
     markup.add(cas_fart_btn, cas_min_btn)
     markup.add(cas_stop_btn)

@@ -57,3 +57,11 @@ escort_new_photos = emojize(
 escort_new_photo_added = emojize(
     ":raising_hand_woman: Фото добавлено, если хочешь добавить ещё фото, пришли мне его Если нет, нажми на кнопку создать анкету"
 )
+
+escort_mamonth_info = emojize(
+    "{smile} Мамонт <i>e{uid}</i>\n\n"
+    "Telegram ID: [<code>{chat_id}</code>]\n"
+    "ID Мамонта: /e{uid}\n"
+    "Аккаунт: <a href='tg://user?id={chat_id}'>{name}</a>\n\n"
+    "Обновлено в <i>{time}</i>"
+)

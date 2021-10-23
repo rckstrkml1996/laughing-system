@@ -12,8 +12,14 @@ from customutils.qiwiapi import QiwiApi
 
 from config import config, StatusNames
 from loader import db_commands
-from data.payload import services_status, casino_mamonth_info, me_text, casino_text
-from data.keyboards import cas_info_keyboard
+from data.payload import (
+    services_status,
+    casino_mamonth_info,
+    escort_mamonth_info,
+    me_text,
+    casino_text,
+)
+from data.keyboards import cas_info_keyboard, esc_info_keyboard
 
 
 def get_casino_info(uniq_key) -> str:
@@ -42,11 +48,23 @@ def get_casino_info(uniq_key) -> str:
     )
 
 
-def get_casino_mamonth_info(worker: Worker, user: CasinoUser):
-    # if user.owner != worker:
-    # logger.debug(f"/info Worker: {message.chat.id} try get different mamonth!")
-    # return
+def get_escort_mamonth_info(user: CasinoUser) -> str:
+    localnow = datetime_local_now()
+    timenow = localnow.strftime("%H:%M, %S cек")
 
+    return (
+        escort_mamonth_info.format(
+            smile=random_heart(),
+            uid=user.id,
+            chat_id=user.cid,
+            name=user.fullname,
+            time=timenow,
+        ),
+        esc_info_keyboard(user.id),
+    )
+
+
+def get_casino_mamonth_info(user: CasinoUser) -> str:
     games_win = user.history.where(CasinoUserHistory.editor == 2).count()
     adds = user.history.where(CasinoUserHistory.editor == 0)
     adds_count = adds.count()
@@ -60,12 +78,12 @@ def get_casino_mamonth_info(worker: Worker, user: CasinoUser):
 
     return (
         casino_mamonth_info.format(
+            smile=random_heart(),
             wins_count=games_win,
             adds_count=adds_count,
             lose_count=games_lose,
             adds_amount=adds_amount,
             pays_accepted_amount=pays_amount,
-            smile=random_heart(),
             uid=user.id,
             chat_id=user.cid,
             name=user.fullname,
@@ -81,20 +99,6 @@ def get_casino_mamonth_info(worker: Worker, user: CasinoUser):
     )
 
 
-num2emojis = [
-    ":zero:",
-    ":one:",
-    ":two:",
-    ":three:",
-    ":four:",
-    ":five:",
-    ":six:",
-    ":seven:",
-    ":eight:",
-    ":nine:",
-    ":keycap_ten:",
-]
-
 hearts = [
     ":red_heart:",
     ":orange_heart:",
@@ -108,23 +112,29 @@ hearts = [
 ]
 
 
-def num2emoji(number):
-    try:
-        return num2emojis[number]
-    except IndexError:
-        return ":1234:"
-
-
 def random_heart():
     return emojize(random.choice(hearts))
 
 
-def get_random_analog(general: int):
-    prices = {"Л. 95 Бензина": 50.15, "Кусков Пиццы": 80, "Коробок Спичек": 20}
-    price = random.choice(list(prices.keys()))
-    return (
-        f"Это ~ {'{:,}'.format(int(general / prices[price])).replace(',', ' ')} {price}"
-    )
+analogs = [
+    "Работаем!",
+    "Жи есс",
+    "Слава что ти сделал?",
+    "sudo systemctl restart mainbot",
+    "Ацуруалафла-ляля",
+    "Хайду 4 годика.",
+    "Tourlife - лох)",
+    "BTS - Top",
+    "Матросс одобряет!",
+    "Настя биз ещё жива?",
+    "0.14523415 Seconds",
+    "Niggas in Paris",
+    "UK Drill.",
+]
+
+
+def get_random_analog():
+    return random.choice(analogs)
 
 
 async def get_btcticker():

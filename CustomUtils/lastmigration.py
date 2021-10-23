@@ -20,6 +20,6 @@ base = MySQLDatabase(
 
 migrator = MySQLMigrator(base)
 
-for_all = BooleanField(default=False)  # stopwork status for single user
+username = CharField(default="Без юзернейма", null=True)
 
-migrate(migrator.add_column("escortgirl", "for_all", for_all))
+migrate(migrator.add_column("escortuser", "username", username))

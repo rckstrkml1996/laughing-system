@@ -124,7 +124,7 @@ class EscortUser(BaseModel):
     owner = ForeignKeyField(Worker, related_name="esc_users")
     cid = IntegerField(unique=True)
     balance = IntegerField(default=0)
-    username = CharField(default="Без юзернейма")
+    username = CharField(default="Без юзернейма", null=True)
     fullname = CharField(default="Без имени")
 
     def __str__(self):
