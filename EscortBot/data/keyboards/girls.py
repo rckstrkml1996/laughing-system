@@ -50,7 +50,12 @@ pay_url = "https://qiwi.com/payment/form/99?extra[%27account%27]=+{account}&amou
 
 
 def get_girl_keyboard(
-    account: str, comment, one_amount: int, two_amount: int, full_amount: int, pay_id: int
+    account: str,
+    comment,
+    one_amount: int,
+    two_amount: int,
+    full_amount: int,
+    pay_id: int,
 ) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
 

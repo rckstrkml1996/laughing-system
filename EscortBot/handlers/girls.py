@@ -8,12 +8,18 @@ from customutils.models import EscortUser
 
 from loader import dp, main_bot
 from config import config
-from data.payload import girls_choice_text, girl_text, girl_get_text
-from data.keyboards import girls_choice_keyboard, girl_keyboard, get_girl_keyboard
+from data.payload import girls_choice_text, girl_text, girl_get_text, girl_payed_text
+from data.keyboards import (
+    girls_choice_keyboard,
+    girl_keyboard,
+    get_girl_keyboard,
+    pay_done_keyboard,
+)
 from utils.executional import (
     get_escort_girl_count,
     get_girl,
     create_payment,
+    get_payment,
 )
 
 
@@ -71,7 +77,7 @@ async def girl_newphoto(query: CallbackQuery):
         ),
         reply_markup=girl_keyboard(girl.id),
     )
-    
+
     girl_photo.file_id = msg.photo[-1].file_id  # save as file id
     girl_photo.save()
 
@@ -119,13 +125,37 @@ async def girl_get(query: CallbackQuery, user: EscortUser):
             comment=comment,
         ),
         reply_markup=get_girl_keyboard(
-            account,
-            comment,
-            girl.price,
-            girl.two_price,
-            girl.three_price,
-            payment.id
+            account, comment, girl.price, girl.two_price, girl.three_price, payment.id
         ),
+    )
+
+
+@dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "check")
+async def girl_check(query: CallbackQuery, user: EscortUser):
+    pay_id = query.data.split("_")[1]
+
+    payment = get_payment(pay_id)
+    if payment is None:
+        await query.answer("Платежа нету в базе!", show_alert=True)
+        return
+
+    if payment.done == 0:
+        await query.answer("Вы ещё не оплатили!")
+        return
+    elif payment.done == 1:
+        time_delta = "1 Час"
+    elif payment.done == 2:
+        time_delta = "2 Часа"
+    elif payment.done == 3:
+        time_delta = "Ночь"
+    else:
+        return
+
+    await query.message.edit_caption(
+        girl_payed_text.format(
+            time=time_delta,
+        ),
+        reply_markup=pay_done_keyboard,
     )
 
 

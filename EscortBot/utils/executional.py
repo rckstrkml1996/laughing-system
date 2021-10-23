@@ -28,6 +28,11 @@ def create_payment(user, amount, comment):
         comment=comment,
     )
 
+def get_payment(payment_id: int) -> EscortPayment:
+    try:
+        return EscortPayment.get(id=payment_id)
+    except EscortPayment.DoesNotExist:
+        return None
 
 def get_girl(girl_id: int) -> EscortGirl:
     try:

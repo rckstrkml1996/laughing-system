@@ -21,3 +21,7 @@ resume_btn = InlineKeyboardButton(emojize("Отзывы :receipt:"), url=f"t.me/
 
 welcome_keyboard.add(profile_btn, girls_btn, about_btn)
 welcome_keyboard.add(support_btn, resume_btn)
+
+
+pay_done_keyboard = InlineKeyboardMarkup()
+pay_done_keyboard.add(support_btn)
