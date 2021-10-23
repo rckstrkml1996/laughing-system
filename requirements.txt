@@ -1,7 +1,7 @@
 aiohttp
 aiogram
 emoji
-fastapi
+# fastapi
 # uvicorn
 peewee
 peewee-migrate

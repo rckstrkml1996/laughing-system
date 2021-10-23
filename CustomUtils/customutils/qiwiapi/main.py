@@ -203,6 +203,9 @@ def get_api(conf_token: str):
     proxy_url = None
     if srch:
         proxy_url = srch.group(1)
-        return QiwiApi(token=conf_token.replace(srch.group(0), ""), proxy_url=proxy_url)
+        return (
+            QiwiApi(token=conf_token.replace(srch.group(0), ""), proxy_url=proxy_url),
+            proxy_url,
+        )
 
     return QiwiApi(conf_token), proxy_url
