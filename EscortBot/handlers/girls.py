@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, choice
 
 from aiogram.types import CallbackQuery, InputFile
 from loguru import logger
@@ -55,8 +55,6 @@ async def girl_newphoto(query: CallbackQuery):
     if girl is None:
         await query.answer("Ошибка!")
         return
-
-    from random import choice
 
     girl_photo = choice(girl.photos)
     photo = (

@@ -81,7 +81,7 @@ class QiwiApi:
 
     def get_new_session(self) -> aiohttp.ClientSession:
         return aiohttp.ClientSession(
-            connector=aiohttp.TCPConnector(verify_ssl=False),
+            connector=aiohttp.TCPConnector(),
             headers=self.headers,
             timeout=aiohttp.ClientTimeout(5),
             trust_env=True,
