@@ -1,7 +1,6 @@
 # from time import time
 from asyncio import sleep
 from asyncio.exceptions import TimeoutError
-from datetime import timedelta
 from configparser import NoOptionError
 
 from aiohttp.client_exceptions import ClientProxyConnectionError
@@ -9,7 +8,6 @@ from aiogram.types.input_file import InputFile
 from aiogram.utils.emoji import emojize
 from loguru import logger
 
-from customutils.datefunc import datetime_local_now
 from customutils.models import QiwiPayment, Profit
 from customutils.models import CasinoPayment, EscortPayment, TradingPayment
 from customutils.qiwiapi import QiwiPaymentsParser, get_api
@@ -29,61 +27,127 @@ async def check_casino(traction: Transaction) -> bool:
     if traction.trnsType != "IN":
         return False
 
+    if traction.transactionSum.currency != 643:
+        return False
+
     try:
         pay = CasinoPayment.get(comment=traction.comment)
 
         if traction.transactionSum.amount >= pay.amount:
             logger.debug(
-                f":check_casino: Some new payment with +{pay.amount=} {traction.transactionSum.currency}"
+                f"Some new payment with {pay.amount=} {traction.transactionSum.currency}"
             )
 
-            if traction.transactionSum.currency == 643:  # rub
-                pay.done = 1  # (real done)
-                pay.save()
+            pay.done = 1  # (real done)
+            pay.save()
 
-                logger.info(
-                    f"check_casino For pay {pay.amount=} set {pay.done=} and making pay."
-                )
+            logger.info(f"For pay {pay.amount=} set {pay.done=} and making pay.")
 
-                casino_user = pay.owner
-                worker = casino_user.owner
+            casino_user = pay.owner
+            worker = casino_user.owner
 
-                payments_count = db_commands.get_payments_count(
-                    CasinoPayment, casino_user
-                )
-                logger.debug(f"check_casino Payments count: {payments_count}")
+            payments_count = db_commands.get_payments_count(CasinoPayment, casino_user)
+            logger.debug(f"Payments count: {payments_count}")
 
-                service_num = 0
-                service = (
-                    f"X{payments_count} {ServiceNames[service_num]}"  # thats casino
-                )
+            service_num = 0
+            service = f"X{payments_count} {ServiceNames[service_num]}"  # thats casino
 
-                moll = 0.8 if payments_count <= 1 else 0.7
-                share = int(pay.amount * moll)
+            moll = 0.8 if payments_count <= 1 else 0.7
+            share = int(pay.amount * moll)
 
-                qiwi_pay = QiwiPayment.create(
-                    person_id=traction.personId,
-                    account=traction.account,
-                    amount=traction.total.amount,
-                    currency=traction.total.currency,
-                    comment=traction.comment,
-                    date=traction.date,
-                )
-                profit = Profit.create(
-                    owner=worker,
-                    amount=int(pay.amount),
-                    share=share,
-                    service=service_num,
-                    payment=qiwi_pay,
-                )
-                logger.debug(
-                    "Sucessfully created QiwiPayment and Profit in base. sending.."
-                )
-                logger.debug(f"Sending profit, {moll=} {payments_count=}")
+            qiwi_pay = QiwiPayment.create(
+                person_id=traction.personId,
+                account=traction.account,
+                amount=traction.total.amount,
+                currency=traction.total.currency,
+                comment=traction.comment,
+                date=traction.date,
+            )
+            profit = Profit.create(
+                owner=worker,
+                amount=int(pay.amount),
+                share=share,
+                service=service_num,
+                payment=qiwi_pay,
+            )
+            logger.debug(
+                "Sucessfully created QiwiPayment and Profit in base. sending.."
+            )
+            logger.debug(f"Sending profit, {moll=} {payments_count=}")
 
-                return await send_profit(profit, moll, service, pay)
+            return await send_profit(profit, moll, service, pay)
     except CasinoPayment.DoesNotExist:
         logger.debug(f"Casino payment with comment {traction.comment} not in base!")
+
+    return False
+
+
+async def check_escort(traction: Transaction) -> bool:
+    if traction.trnsType != "IN":
+        return False
+
+    if traction.transactionSum.currency != 643:
+        return False
+
+    try:
+        pay = EscortPayment.get(comment=traction.comment)
+
+        if traction.transactionSum.amount >= pay.three_amount:
+            pay.done = 3  # hour - two_hours - night
+            pay.save()
+        elif traction.transactionSum.amount >= pay.two_amount:
+            pay.done = 2  # hour - two_hours - night
+            pay.save()
+        elif traction.transactionSum.amount >= pay.amount:
+            pay.done = 1  # hour - two_hours - night
+            pay.save()
+        else:
+            return False
+
+        logger.info(
+            f"Escort - Some new payment with {pay.amount=} {traction.transactionSum.currency}"
+        )
+
+        escort_user = pay.owner
+        worker = escort_user.owner
+
+        payments_count = (
+            EscortPayment.select()
+            .where(
+                (EscortPayment.owner == escort_user) & (EscortPayment.done == 1)
+                | (EscortPayment.done == 2)
+                | (EscortPayment.done == 3)
+            )
+            .count()
+        )
+        logger.debug(f"Escort - Payments count: {payments_count}")
+
+        service_num = 1
+        service = f"X{payments_count} {ServiceNames[service_num]}"  # thats casino
+
+        moll = 0.8 if payments_count <= 1 else 0.7
+        share = int(pay.amount * moll)
+
+        qiwi_pay = QiwiPayment.create(
+            person_id=traction.personId,
+            account=traction.account,
+            amount=traction.total.amount,
+            currency=traction.total.currency,
+            comment=traction.comment,
+            date=traction.date,
+        )
+        profit = Profit.create(
+            owner=worker,
+            amount=int(pay.amount),
+            share=share,
+            service=service_num,
+            payment=qiwi_pay,
+        )
+        logger.debug(f"Created QiwiPayment and Profit. Sending profit {service=}")
+
+        return await send_profit(profit, moll, service, pay)
+    except EscortPayment.DoesNotExist:
+        logger.debug(f"EscortPayment with comment {traction.comment} not in base!")
 
     return False
 
@@ -97,11 +161,11 @@ async def on_new_payment(payments: Payments):
                 logger.info(
                     f"Casino, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
                 )
-            # elif await check_escort(transaction):  # check if on escort
-            #     service = "Эскорт"
-            #     logger.info(
-            #         f"Escort, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
-            #     )
+            elif await check_escort(transaction):  # check if on escort
+                service = "Эскорт"
+                logger.info(
+                    f"Escort, new payment in active qiwi {transaction.personId} sum: {transaction.total.amount}"
+                )
             # elif await check_trading(transaction):  # check
             #     service = "Трейдинг"
             #     logger.info(

@@ -260,4 +260,4 @@ class BaseCommands:
                     worker.status = 5
                     worker.save()
             except Worker.DoesNotExist:
-                logger.info(f"Admin with chat_id {admin_id} not found in base.")
+                logger.info(f"Admin [{admin_id}] not found in base.")
