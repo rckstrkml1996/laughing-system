@@ -5,7 +5,7 @@ from aiogram.utils.emoji import emojize
 from config import config
 
 LIFE_OUTS = "LINKTRUW"
-SUP = config("casino_sup_username")
+SUP = "@" + config("casino_sup_username", str)
 
 
 graph_text = emojize("Значение графика: <b>X{value:.2f}</b> :chart:")
