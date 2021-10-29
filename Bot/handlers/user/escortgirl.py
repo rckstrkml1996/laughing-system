@@ -6,7 +6,6 @@ from aiogram.dispatcher import FSMContext
 from aiogram.utils.markdown import quote_html
 
 from models import Worker, EscortGirl, EscortGirlPhoto
-
 from loader import dp
 from data.payload import (
     zap_text,

@@ -8,8 +8,6 @@ from aiogram.utils.emoji import emojize
 from loguru import logger
 
 from models import Worker
-
-
 from loader import dp, exp_parser, db_commands
 from data import payload
 from utils.executional import (

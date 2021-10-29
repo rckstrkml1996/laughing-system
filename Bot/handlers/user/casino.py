@@ -1,5 +1,4 @@
 from asyncio import sleep
-from datetime import timedelta
 
 from aiogram import types
 from aiogram.utils.emoji import emojize
@@ -9,8 +8,6 @@ from loguru import logger
 
 from models import CasinoUser, CasinoPayment, Worker
 from customutils import datetime_local_now
-
-
 from loader import dp, casino_bot
 from data import payload
 from data.states import CasinoAlert, ChangeMin

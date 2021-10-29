@@ -4,7 +4,6 @@ from aiogram.types import InlineQuery
 from loguru import logger
 
 from loader import dp, db_commands
-
 from data import payload
 from data.inlineresults import tagbot_article, services_status_article, about_worker_article
 from utils.executional import get_work_status, get_correct_str, get_info_about_worker
