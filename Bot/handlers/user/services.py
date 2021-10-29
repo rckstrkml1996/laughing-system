@@ -1,19 +1,14 @@
 from aiogram import types
-
 from loguru import logger
 
-from models import Worker, CasinoUser, CasinoUserHistory, CasinoPayment
-
 from loader import dp, casino_bot
-
+from models import Worker, CasinoUser, CasinoUserHistory, CasinoPayment
 from data.payload import (
     fart_off_text,
     fart_fif_text,
     fart_on_text,
     mamonth_delete_text,
-    trading_text,
 )
-from data.keyboards import trading_keyboard
 from utils.executional import get_casino_mamonth_info
 from utils.filters import ServiceCommandsFilter
 from utils.types import SERVICE_FIRST_LETTERS

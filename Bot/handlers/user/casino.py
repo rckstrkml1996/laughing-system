@@ -8,7 +8,7 @@ from aiogram.dispatcher.filters import RegexpCommandsFilter
 from loguru import logger
 
 from models import CasinoUser, CasinoPayment, Worker
-from customutils.datefunc import datetime_local_now
+from customutils import datetime_local_now
 
 
 from loader import dp, casino_bot

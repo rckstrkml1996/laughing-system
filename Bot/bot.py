@@ -5,7 +5,7 @@ import sys
 from aiogram import Dispatcher
 from loguru import logger
 
-from loader import dp, db_commands
+from loader import config, dp, db_commands
 from utils.pinner import dynapins
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger

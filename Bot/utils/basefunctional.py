@@ -16,7 +16,7 @@ from models import (
     TradingUser,
     CasinoUserHistory,
 )
-from customutils.datefunc import datetime_local_now
+from customutils import datetime_local_now
 
 
 

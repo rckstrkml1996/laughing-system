@@ -1,16 +1,14 @@
 from asyncio import sleep
 import re
-from time import time
 
 from pyrogram.errors.exceptions.not_acceptable_406 import PhoneNumberInvalid
 from aiogram.utils.emoji import emojize
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from models import Worker, Profit
 from loguru import logger
 
 from loader import dp, banker_client
-
+from models import Worker, Profit
 from utils.paysystem import send_profit
 from data import payload
 from data.keyboards import *
@@ -18,30 +16,12 @@ from data.states import BtcClient, MakeProfit
 from data.payload import (
     btc_authed_text,
     check_true_text,
-    btc_log_out_success,
-    btc_log_out_invalid,
 )
 
 
 @dp.message_handler(commands=["btc_logout"], admins_chat=True, is_admin=True)
 async def logout_btc_account(message: types.Message):
     await message.answer("Пока не сделал)")
-    # if not banker_client.is_connected:
-    #     authed = await banker_client.connect()
-    # else:
-    #     await banker_client.disconnect()  # get new con info
-    #     authed = await banker_client.connect()
-    # if not authed:
-    #     await message.answer("Не авторизован!\nВведи номер телеграмм:")
-    #     await BtcClient.new_phone.set()
-    #     return
-
-    # log_out = await banker_client.log_out()
-    # if log_out:
-    #     await message.answer(btc_log_out_success)
-    # else:
-    #     await message.answer(btc_log_out_invalid)
-
 
 @dp.message_handler(regexp=BTC_REGEX, admins_chat=True, is_admin=True)
 async def new_btc_check(message: types.Message, regexp):

@@ -1,8 +1,5 @@
-from asyncio import sleep
-
 from aiogram.dispatcher.filters import BoundFilter
 from aiogram.types import CallbackQuery
-from loguru import logger
 
 from models import EscortUser
 

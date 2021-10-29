@@ -2,12 +2,10 @@ from asyncio import sleep
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.utils.exceptions import ChatNotFound, BotBlocked
 from models import Worker, CasinoUser, TradingUser
 from loguru import logger
 
-from customutils.datefunc import datetime_local_now
-
+from customutils import datetime_local_now
 from loader import dp, casino_bot, trading_bot
 from data import payload
 from data.keyboards import *

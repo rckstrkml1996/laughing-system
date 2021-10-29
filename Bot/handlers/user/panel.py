@@ -7,10 +7,8 @@ from aiogram.utils.emoji import emojize
 from loguru import logger
 
 from loader import dp, db_commands
-
-
 from models import Worker, Profit
-from customutils.datefunc import datetime_local_now
+from customutils import datetime_local_now
 from data.payload import (
     zap_text,
     worker_menu_text,

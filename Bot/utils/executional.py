@@ -7,7 +7,7 @@ from aiohttp.client_exceptions import ClientProxyConnectionError
 from aiogram.utils.emoji import emojize
 
 from models import Worker, CasinoUser, CasinoUserHistory
-from customutils.datefunc import datetime_local_now
+from customutils import datetime_local_now
 from qiwiapi import QiwiApi
 
 

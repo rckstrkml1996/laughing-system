@@ -1,11 +1,10 @@
 from asyncio import sleep
 
 from aiogram import types
-from models import Worker
 from loguru import logger
 
-
 from loader import dp, bot_client
+from models import Worker
 
 
 @dp.message_handler(commands=["allkick"], admins_chat=True, is_admin=True)

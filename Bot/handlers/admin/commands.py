@@ -1,11 +1,8 @@
-from asyncio import sleep
-
 from aiogram import types
-from models import Worker
+from aiogram.utils.exceptions import ChatAdminRequired
 from loguru import logger
 
-from aiogram.utils.exceptions import ChatAdminRequired
-
+from models import Worker
 from loader import dp
 from data import payload
 from data.keyboards import *

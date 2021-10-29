@@ -11,7 +11,7 @@ from aiogram.utils.exceptions import (
     ChatNotFound,
     MessageCantBeEdited,
 )
-from customutils.datefunc import datetime_local_now
+from customutils import datetime_local_now
 from models import CasinoUser, TradingUser, EscortUser
 
 from loader import db_commands

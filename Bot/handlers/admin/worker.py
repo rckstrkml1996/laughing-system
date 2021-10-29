@@ -3,9 +3,7 @@ from aiogram.dispatcher.filters import RegexpCommandsFilter
 from loguru import logger
 
 from models import Worker
-
 from loader import dp
-
 from data.keyboards import new_status_keyboard
 from data.payload import worker_defenition, set_new_worker_status, worker_choice_one_plz
 

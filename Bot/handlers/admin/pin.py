@@ -1,7 +1,6 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.utils.text_decorations import html_decoration
-
 from loguru import logger
 
 from loader import dp

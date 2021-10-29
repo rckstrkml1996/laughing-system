@@ -1,8 +1,8 @@
 from aiogram import types
-from models import Worker, Profit
-from models import CasinoUser, TradingUser, EscortUser
 
 from loader import dp, db_commands
+from models import Worker, Profit
+from models import CasinoUser, TradingUser, EscortUser
 from data.payload import statistic_text
 
 

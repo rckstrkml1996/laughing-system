@@ -8,14 +8,13 @@ from aiogram.dispatcher import FSMContext
 from aiohttp.client_exceptions import ClientProxyConnectionError
 from qiwiapi import get_currency, get_identification_level, get_api
 from qiwiapi.exceptions import InvalidToken, InvalidAccount
-from customutils.datefunc import normalized_local_now
 
 from loader import dp
-
 from data import payload
 from data.keyboards import *
 from data.states import Qiwi
 from utils.executional import find_token, delete_api_proxy, check_proxy
+from customutils import normalized_local_now
 
 
 # говнокод лень фиксить)

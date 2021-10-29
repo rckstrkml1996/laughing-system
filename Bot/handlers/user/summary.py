@@ -2,17 +2,16 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from loguru import logger
 
-from loader import dp
+from loader import dp, config
+from models import Worker
 from data.states import Summary
 from data import payload
-
 from data.keyboards import (
     summary_start_keyboard,
     summary_rules_keyboard,
     summary_send_keyboard,
     summary_check_keyboard,
 )
-from models import Worker
 
 
 async def new_request(message: types.Message):

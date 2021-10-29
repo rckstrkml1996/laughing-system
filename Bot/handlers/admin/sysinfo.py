@@ -1,8 +1,8 @@
-from aiogram import types
-from aiogram.utils.exceptions import MessageNotModified
-
 import psutil
 from time import time
+
+from aiogram import types
+from aiogram.utils.exceptions import MessageNotModified
 
 from loader import dp
 from data import payload
