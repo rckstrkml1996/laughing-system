@@ -4,12 +4,12 @@ from aiogram.utils.exceptions import ChatNotFound, BotBlocked
 from aiogram import Dispatcher
 from loguru import logger
 
-from config import config
+
 
 
 async def on_startup_notify(dp: Dispatcher):
     logger.info("Оповещение администрации...")
-    for admin_id in config("admins_id"):
+    for admin_id in config.admins_id:
         try:
             await dp.bot.send_message(
                 admin_id, "Бот был успешно запущен", disable_notification=True

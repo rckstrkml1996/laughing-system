@@ -2,7 +2,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
-from config import config
+
 
 
 # worker panel
@@ -43,14 +43,14 @@ rules_btn = InlineKeyboardButton(
     emojize("Правила :scroll: "), callback_data="showrules"
 )
 out_btn = InlineKeyboardButton(
-    emojize("Выплаты :money_with_wings:"), url=f't.me/{config("outs_link")}'
+    emojize("Выплаты :money_with_wings:"), url=f't.me/{config.outs_link}'
 )
 info_btn = InlineKeyboardButton(
-    emojize("Инфоканал :wastebasket:"), url=f't.me/{config("reviews_link")}'
+    emojize("Инфоканал :wastebasket:"), url=f't.me/{config.reviews_link}'
 )
 chat_btn = InlineKeyboardButton(
     emojize("Чат воркеров :hot_face:"),
-    url=f'https://t.me/joinchat/{config("workers_link")}',
+    url=f'https://t.me/joinchat/{config.workers_link}',
 )
 about_project_keyboard.add(ref_btn, rules_btn)
 about_project_keyboard.add(info_btn, out_btn)

@@ -12,7 +12,6 @@ class JSONProvider(AbstractProvider):  # from abs class
             self._settings = json.load(f)  # open and read
 
     def edit(self, name, value):
-        print("edit", name, value)
         self._settings.update({name: value}) # add value to dict
         with open(self.config_path, "w") as f:
             json.dump(self._settings, f, indent=4)
@@ -109,7 +108,6 @@ class BotConfig(Config):
 
 
     def __setattr__(self, name: str, value):
-        print("__setattr__", name, value)
         field = getattr(BotConfig, name, None)
         if field is not None:
             json_value = provider.get(field.name)

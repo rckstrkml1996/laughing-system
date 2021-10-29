@@ -5,18 +5,18 @@ from aiogram import Dispatcher
 from loguru import logger
 
 from data.payload import startup_text, updated_startup_text
-from config import config  # ADMINS_ID
+
 
 
 async def on_startup_notify(dp: Dispatcher):
-    if config("updated"):
-        config.edit("updated", False)
+    if config.updated:
+        config.updated = False
         text = updated_startup_text
     else:
         text = startup_text
 
     logger.info("Admins notify...")
-    for admin_id in config("admins_id"):
+    for admin_id in config.admins_id:
         try:
             await dp.bot.send_message(admin_id, text, disable_notification=True)
             logger.debug(f"Notify message send to admin: [{admin_id}]")
@@ -32,11 +32,11 @@ async def on_startup_notify(dp: Dispatcher):
         await sleep(0.2)
 
     try:
-        admins_chat = config("admins_chat")
+        admins_chat = config.admins_chat
         await dp.bot.send_message(admins_chat, text, disable_notification=True)
         logger.debug(f"Notify message send to Admins Chat {admins_chat}")
         await sleep(0.2)
-        workers_chat = config("workers_chat")
+        workers_chat = config.workers_chat
         await dp.bot.send_message(workers_chat, text, disable_notification=True)
         logger.debug(f"Notify message send to Admins Chat {admins_chat}")
     except:

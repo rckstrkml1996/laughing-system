@@ -3,11 +3,11 @@ from random import randint, choice
 from aiogram.types import CallbackQuery, InputFile
 from loguru import logger
 
-from customutils.qiwiapi import get_api
-from customutils.models import EscortUser
+from qiwiapi import get_api
+from models import EscortUser
 
 from loader import dp, main_bot
-from config import config
+
 from data.payload import girls_choice_text, girl_text, girl_get_text, girl_payed_text
 from data.keyboards import (
     girls_choice_keyboard,
@@ -90,12 +90,12 @@ async def girl_get(query: CallbackQuery, user: EscortUser):
         return
 
     try:
-        token = config("qiwi_tokens")
+        token = config.qiwi_tokens
         if isinstance(token, list):
             token = token[0]
     except NoOptionError:
         logger.info("ESCORT NO Qiwi Tokens in config!")
-        await main_bot.send_message(config("admins_chat"), "Escort girl NoOptionError")
+        await main_bot.send_message(config.admins_chat, "Escort girl NoOptionError")
         return
 
     api, proxy_url = get_api(token)
@@ -105,7 +105,7 @@ async def girl_get(query: CallbackQuery, user: EscortUser):
         account = profile.contractInfo.contractId
     except (InvalidToken, InvalidAccount) as ex:  # than change as notify
         logger.warning(f"Invalid Token or Account! {ex}")
-        await main_bot.send_message(config("admins_chat"), f"Invalid qiwi? {ex}")
+        await main_bot.send_message(config.admins_chat, f"Invalid qiwi? {ex}")
     finally:
         await api.close()
 

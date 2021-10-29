@@ -1,6 +1,6 @@
 from peewee import fn
 
-from customutils.models import (
+from models import (
     Worker,
     EscortUser,
     EscortGirl,

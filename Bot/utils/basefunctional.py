@@ -6,8 +6,8 @@ from aiogram.utils.markdown import quote_html
 from peewee import ModelSelect, fn, JOIN, SQL
 from loguru import logger
 
-from customutils.models import Profit, Worker
-from customutils.models import (
+from models import Profit, Worker
+from models import (
     CasinoPayment,
     EscortPayment,
     TradingPayment,
@@ -18,7 +18,7 @@ from customutils.models import (
 )
 from customutils.datefunc import datetime_local_now
 
-from config import config
+
 
 
 class BaseCommands:
@@ -253,7 +253,7 @@ class BaseCommands:
         )
 
     def setup_admins_statuses(self):
-        for admin_id in config("admins_id"):
+        for admin_id in config.admins_id:
             try:
                 worker = Worker.get(cid=admin_id)
                 if worker.status == 2:

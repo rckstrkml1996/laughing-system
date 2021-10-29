@@ -4,13 +4,13 @@ from loguru import logger
 from aiogram import Dispatcher
 from asyncio import sleep
 
-from config import config
+
 from data.payload import startup_text
 
 
 async def on_startup_notify(dp: Dispatcher, sleep_time = 0.2):
     logger.info("Notifying admins...")
-    for admin_id in config("admins_id"):
+    for admin_id in config.admins_id:
         try:
             await dp.bot.send_message(admin_id, startup_text, disable_notification=True)
             logger.debug(f"Send notify message to [{admin_id}]")

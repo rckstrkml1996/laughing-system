@@ -1,13 +1,12 @@
-import os
-
 from git import Repo
 from loguru import logger
 
-from config import config
+from loader import config
 
 
-def check_on_update(path: str):
-    config.edit("updated", check_repo_on_update(path))
+
+def check_on_update():
+    config.updated = check_repo_on_update("..")
 
 
 def check_repo_on_update(path: str) -> bool:
@@ -15,7 +14,7 @@ def check_repo_on_update(path: str) -> bool:
 
     current = str(repo.head.commit)  # repo class to string
     last_commit = config("last_commit", str)
-    config.edit("last_commit", current)
+    config.last_commit = current
 
     logger.debug(f"Curr = {current:.15}, Last = {last_commit:.15}")
 

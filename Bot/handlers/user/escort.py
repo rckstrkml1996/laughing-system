@@ -5,7 +5,7 @@ from aiogram.utils.emoji import emojize
 from aiogram.dispatcher.filters import RegexpCommandsFilter
 from loguru import logger
 
-from customutils.models import Worker, EscortUser, EscortGirl
+from models import Worker, EscortUser, EscortGirl
 from customutils.datefunc import datetime_local_now
 
 from loader import dp

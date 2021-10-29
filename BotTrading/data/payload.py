@@ -1,5 +1,5 @@
 from aiogram.utils.emoji import emojize
-from config import config
+
 
 startup_text = "* Бот запущен!"
 
@@ -87,7 +87,7 @@ ecn_show_text = "Выберите актив:"
 
 ecn_selected_text = emojize(
     ":moneybag: Введите сумму инвестиций\n"
-    f"<code>Минимальная сумма инвестиций - {config('min_deposit')} RUB</code>\n\n"
+    f"<code>Минимальная сумма инвестиций - {config.min_deposit} RUB</code>\n\n"
     "Ваш баланс: {balance} RUB"
 )
 

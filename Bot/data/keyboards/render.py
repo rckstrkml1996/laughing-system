@@ -2,7 +2,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
-# from config import config
+# 
 
 
 render_main_keyboard = InlineKeyboardMarkup()

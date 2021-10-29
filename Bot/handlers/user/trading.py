@@ -1,9 +1,9 @@
 from aiogram import types
 
-from customutils.models import Worker
+from models import Worker
 
 from loader import dp
-from config import config
+
 from data.payload import trading_text
 from data.keyboards import trading_keyboard
 
@@ -18,7 +18,7 @@ async def casino_info(message: types.Message, worker: Worker):
                     lambda c: f"&#127479;&#127482; {c[1:]}"
                     if c[0] == "r"
                     else f"&#127482;&#127462; {c[1:]}",
-                    config("fake_cards"),
+                    config.fake_cards,
                 )
             ),
             pay_qiwis="\n".join(
@@ -26,7 +26,7 @@ async def casino_info(message: types.Message, worker: Worker):
                     lambda c: f"&#127479;&#127482; {c[1:]}"
                     if c[0] == "r"
                     else f"&#127482;&#127462; {c[1:]}",
-                    config("fake_numbers"),
+                    config.fake_numbers,
                 )
             ),
         ),

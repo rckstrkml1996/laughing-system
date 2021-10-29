@@ -4,8 +4,8 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from loguru import logger
 
-from customutils.models import TradingUser
-from config import config, photos
+from models import TradingUser
+
 from data.states import Asset
 from data import payload
 from data.keyboards import *
@@ -73,13 +73,13 @@ async def requisites_entered(message: types.Message, state: FSMContext):
         user = TradingUser.get(cid=message.chat.id)
         try:
             bet_count = int(message.text)
-            if bet_count <= user.balance and bet_count >= config("min_deposit"):
+            if bet_count <= user.balance and bet_count >= config.min_deposit:
                 async with state.proxy() as data:
                     data['bet_count'] = message.text.replace(" ", ";")
                     await message.answer(payload.ecn_bet_start.format(
-                        bet_timer=config("bet_timer")
+                        bet_timer=config.bet_timer
                     ))
-                    await asyncio.sleep(config("bet_timer"))
+                    await asyncio.sleep(config.bet_timer)
                     user.balance += int(data['bet_count'])
                     user.save()
                     await message.answer(payload.ecn_bet_win.format(

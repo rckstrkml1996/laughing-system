@@ -6,12 +6,12 @@ from asyncio.exceptions import TimeoutError
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiohttp.client_exceptions import ClientProxyConnectionError
-from customutils.qiwiapi import get_currency, get_identification_level, get_api
-from customutils.qiwiapi.exceptions import InvalidToken, InvalidAccount
+from qiwiapi import get_currency, get_identification_level, get_api
+from qiwiapi.exceptions import InvalidToken, InvalidAccount
 from customutils.datefunc import normalized_local_now
 
 from loader import dp
-from config import config
+
 from data import payload
 from data.keyboards import *
 from data.states import Qiwi
@@ -22,7 +22,7 @@ from utils.executional import find_token, delete_api_proxy, check_proxy
 @dp.callback_query_handler(text="backqiwi", admins_chat=True, is_admin=True)
 async def back_to_qiwi_command(query: types.CallbackQuery):
     try:
-        tokens = config("qiwi_tokens")
+        tokens = config.qiwi_tokens
         if isinstance(tokens, str):
             tokens = [tokens]
 
@@ -44,7 +44,7 @@ async def back_to_qiwi_command(query: types.CallbackQuery):
                     )
                 )
                 tokens.pop(i)
-                config.edit("qiwi_tokens", tokens)
+                config.qiwi_tokens = tokens
             except (
                 ClientProxyConnectionError,
                 TimeoutError,
@@ -85,7 +85,7 @@ async def back_to_qiwi_command(query: types.CallbackQuery):
 @dp.message_handler(commands="qiwi", admins_chat=True, is_admin=True)
 async def qiwi_command(message: types.Message):
     try:
-        tokens = config("qiwi_tokens")
+        tokens = config.qiwi_tokens
         if isinstance(tokens, str):
             tokens = [tokens]
 
@@ -107,7 +107,7 @@ async def qiwi_command(message: types.Message):
                     )
                 )
                 tokens.remove(token)
-                config.edit("qiwi_tokens", tokens)
+                config.qiwi_tokens = tokens
             except (ClientProxyConnectionError, TimeoutError):
                 proxy = delete_api_proxy(token)
                 if proxy:
@@ -173,20 +173,20 @@ async def new_qiwi(message: types.Message, state: FSMContext):
 
     if re.fullmatch(r"[a-f0-9]{32}", data[0].strip()):
         try:
-            tokens = config("qiwi_tokens")
+            tokens = config.qiwi_tokens
             if data[0].strip() in map(find_token, tokens):
                 await message.answer(payload.same_qiwi_text)
                 await state.finish()
-                message.chat.id = config("admins_chat")  # change to send to admins
+                message.chat.id = config.admins_chat  # change to send to admins
                 await qiwi_command(message)
                 return
             if isinstance(tokens, str):
-                config.edit("qiwi_tokens", f"{tokens},{data[0]}{proxy_data}")
+                config.qiwi_tokens = f"{tokens},{data[0]}{proxy_data}"
             else:
                 tokens.append(data[0].strip() + proxy_data)
-                config.edit("qiwi_tokens", tokens)
+                config.qiwi_tokens = tokens
         except NoOptionError:
-            config.edit("qiwi_tokens", data[0].strip() + proxy_data)
+            config.qiwi_tokens = data[0].strip() + proxy_data
 
         await state.finish()
         await qiwi_command(message)
@@ -224,12 +224,12 @@ async def add_qiwi_proxy(message: types.Message, state: FSMContext):
             await qiwi_command(message)  # /qiwi commands esadkasd
             return
 
-        tokens = config("qiwi_tokens")
+        tokens = config.qiwi_tokens
         if isinstance(tokens, list):  # if list than find the correct
             async with state.proxy() as data:
                 try:  # setting token with proxy in ()
                     tokens[data["num"]] = f"{tokens[data['num']]}({message.text})"
-                    config.edit("qiwi_tokens", tokens)
+                    config.qiwi_tokens = tokens
                     await message.answer(payload.new_proxy_success_text)
                     await state.finish()
                     await qiwi_command(message)  # /qiwi command
@@ -238,7 +238,7 @@ async def add_qiwi_proxy(message: types.Message, state: FSMContext):
                         payload.qiwi_add_proxy_text, reply_markup=cancel_keyboard
                     )
         else:  # simply edit
-            config.edit("qiwi_tokens", f"{tokens}({message.text})")
+            config.qiwi_tokens = f"{tokens}({message.text})"
             await message.answer(payload.new_proxy_success_text)
             await state.finish()
             await qiwi_command(message)  # /qiwi command
@@ -265,7 +265,7 @@ async def qiwi_delete(query: types.CallbackQuery):
 )
 async def qiwi_delete_sure(query: types.CallbackQuery, state: FSMContext):
     num = int(query.data.split("_")[1])
-    tokens = config("qiwi_tokens")
+    tokens = config.qiwi_tokens
     if isinstance(tokens, str):
         tokens = [tokens]
 
@@ -273,7 +273,7 @@ async def qiwi_delete_sure(query: types.CallbackQuery, state: FSMContext):
         payload.qiwi_delete_text.format(token=find_token(tokens[num][:8] + "*" * 24))
     )
     tokens.pop(num)
-    config.edit("qiwi_tokens", tokens)
+    config.qiwi_tokens = tokens
 
     await state.finish()
     await qiwi_command(query.message)
@@ -284,7 +284,7 @@ async def qiwi_delete_sure(query: types.CallbackQuery, state: FSMContext):
 )
 async def qiwi_info(query: types.CallbackQuery):
     try:
-        tokens = config("qiwi_tokens")  # [str, str]
+        tokens = config.qiwi_tokens  # [str, str]
         num = query.data.split("_")[1]
         if isinstance(tokens, list):
             token = tokens[int(num)]
@@ -309,7 +309,7 @@ async def qiwi_info(query: types.CallbackQuery):
             last_transactions = await api.get_transactions(rows=7)
             level = profile.contractInfo.identificationInfo[0].identificationLevel
         except (InvalidToken, InvalidAccount):
-            await message.answer(
+            await query.message.answer(
                 payload.qiwi_delete_text.format(
                     token=token[:8] + "*" * 24,
                 )
@@ -318,7 +318,7 @@ async def qiwi_info(query: types.CallbackQuery):
                 tokens.remove(token)
             else:
                 tokens = None
-            config.edit("qiwi_tokens", tokens)
+            config.qiwi_tokens = tokens
         except (ClientProxyConnectionError, TimeoutError):
             proxy = delete_api_proxy(token)
             if proxy:

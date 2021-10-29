@@ -4,9 +4,9 @@ from loguru import logger
 
 from loader import dp
 from data import payload
-from config import config
+
 from data.keyboards import *
-from customutils.models import Worker
+from models import Worker
 
 
 @dp.callback_query_handler(
@@ -65,7 +65,7 @@ async def summary_accepted(query: types.CallbackQuery):
         await query.answer("Принят!")
 
         try:
-            await dp.bot.unban_chat_member(config("workers_chat"), worker.cid)
+            await dp.bot.unban_chat_member(config.workers_chat, worker.cid)
         except Exception as ex:
             logger.warning(ex)
 

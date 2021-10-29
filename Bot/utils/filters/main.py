@@ -4,9 +4,9 @@ from aiogram.types import CallbackQuery, Message
 from aiogram.dispatcher.filters import BoundFilter
 from loguru import logger
 
-from customutils.models import Worker
+from models import Worker
 
-from config import config  # ADMINS_ID
+
 
 
 class SendSummaryFilter(BoundFilter):
@@ -48,7 +48,7 @@ class AdminsChatFilter(BoundFilter):
             return True
 
         chat = self.get_target(obj)
-        if chat.id == config("admins_chat"):
+        if chat.id == config.admins_chat:
             return self.admins_chat
         return not self.admins_chat
 
@@ -71,7 +71,7 @@ class WorkersChatFilter(BoundFilter):
             return True
 
         chat = self.get_target(obj)
-        if chat.id == config("workers_chat"):
+        if chat.id == config.workers_chat:
             return self.workers_chat
         return not self.workers_chat
 

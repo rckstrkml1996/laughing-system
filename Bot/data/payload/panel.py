@@ -1,6 +1,6 @@
 from aiogram.utils.emoji import emojize
 
-from config import config
+
 
 worker_menu_text = emojize(
     ":green_apple: <b>Твой профиль</b> [<code>{chat_id}</code>]\n"

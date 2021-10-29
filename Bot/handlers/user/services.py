@@ -2,10 +2,10 @@ from aiogram import types
 
 from loguru import logger
 
-from customutils.models import Worker, CasinoUser, CasinoUserHistory, CasinoPayment
+from models import Worker, CasinoUser, CasinoUserHistory, CasinoPayment
 
 from loader import dp, casino_bot
-from config import config
+
 from data.payload import (
     fart_off_text,
     fart_fif_text,

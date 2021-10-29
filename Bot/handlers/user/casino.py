@@ -7,10 +7,10 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import RegexpCommandsFilter
 from loguru import logger
 
-from customutils.models import CasinoUser, CasinoPayment, Worker
+from models import CasinoUser, CasinoPayment, Worker
 from customutils.datefunc import datetime_local_now
 
-from config import config, MinDepositValues, html_style_url
+
 from loader import dp, casino_bot
 from data import payload
 from data.states import CasinoAlert, ChangeMin

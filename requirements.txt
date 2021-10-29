@@ -1,12 +1,8 @@
 aiohttp
 aiogram
 emoji
-# fastapi
-# uvicorn
 peewee
-peewee-migrate
 pytz
-python-multipart
 pyrogram
 loguru
 py_expression_eval
@@ -16,4 +12,4 @@ pillow
 psutil
 cryptography
 tgcrypto
-telethon
+betterconf

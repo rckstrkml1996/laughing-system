@@ -1,6 +1,6 @@
 from aiogram import types
-from customutils.models import Worker, Profit
-from customutils.models import CasinoUser, TradingUser, EscortUser
+from models import Worker, Profit
+from models import CasinoUser, TradingUser, EscortUser
 
 from loader import dp, db_commands
 from data.payload import statistic_text

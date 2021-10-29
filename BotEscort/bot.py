@@ -4,7 +4,7 @@ from loguru import logger
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 from utils.filters import setup
-from config import config
+
 from loader import dp
 
 

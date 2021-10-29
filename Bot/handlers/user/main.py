@@ -5,7 +5,7 @@ from loguru import logger
 from loader import dp, db_commands
 from data import payload
 from data.keyboards import summary_start_keyboard, summary_blocked_keyboard
-from customutils.models import Worker
+from models import Worker
 from .summary import new_request
 from .panel import worker_welcome
 

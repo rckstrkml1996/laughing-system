@@ -11,7 +11,7 @@ from keyboards import *
 from data.payload import *
 from data.states import Game
 from loader import dp
-from customutils.models import CasinoUser, CasinoUserHistory
+from models import CasinoUser, CasinoUserHistory
 
 
 @dp.message_handler(regexp="закончить игру", state="*")

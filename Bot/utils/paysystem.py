@@ -8,13 +8,13 @@ from aiogram.types.input_file import InputFile
 from aiogram.utils.emoji import emojize
 from loguru import logger
 
-from customutils.models import QiwiPayment, Profit
-from customutils.models import CasinoPayment, EscortPayment, TradingPayment
-from customutils.qiwiapi import QiwiPaymentsParser, get_api
-from customutils.qiwiapi.types import Payments, Transaction
+from models import QiwiPayment, Profit
+from models import CasinoPayment, EscortPayment, TradingPayment
+from qiwiapi import QiwiPaymentsParser, get_api
+from qiwiapi.types import Payments, Transaction
 
 from loader import dp, db_commands
-from config import config, ServiceNames
+
 from data import payload
 from data.keyboards import profit_pay_keyboard
 from utils.executional import delete_api_proxy, get_random_analog
@@ -189,7 +189,7 @@ async def on_new_payment(payments: Payments):
                 else ":)"
             )
             await dp.bot.send_message(
-                config("admins_chat"),
+                config.admins_chat,
                 f"{service}, в {transaction.personId}\nСумма: <b>{transaction.total.amount} RUB</b>\n{comment}",
             )
 
@@ -206,7 +206,7 @@ async def on_new_payment(payments: Payments):
 
 async def check_qiwis():
     try:
-        token = config("qiwi_tokens")
+        token = config.qiwi_tokens
         if isinstance(token, list):
             token = token[0]
 
@@ -218,7 +218,7 @@ async def check_qiwis():
     # logger.debug("QiwiPaymentsParser started succesfully.")
     while True:
         try:
-            new_token = config("qiwi_tokens")
+            new_token = config.qiwi_tokens
             if isinstance(new_token, list):
                 new_token = new_token[0]
 
@@ -246,7 +246,7 @@ async def check_qiwis():
         except NoOptionError:
             token = None
 
-        await sleep(config("qiwi_check_time"), int)
+        await sleep(config.qiwi_check_time, int)
 
 
 async def send_profit(profit: Profit, moll, service: str, payment=None):
@@ -276,23 +276,23 @@ async def send_profit(profit: Profit, moll, service: str, payment=None):
     )
 
     msg = await dp.bot.send_photo(
-        config("outs_chat"),
+        config.outs_chat,
         InputFile(profit_path),
         caption=profit_text,
     )
 
     stick_id = None
     try:
-        stick_id = config("profit_sticker_id")
+        stick_id = config.profit_sticker_id
     except NoOptionError:
-        await dp.bot.send_message(config("admins_chat"), "Задай стик к профита ежжи)")
+        await dp.bot.send_message(config.admins_chat, "Задай стик к профита ежжи)")
 
     if stick_id:
         await dp.bot.send_sticker(
-            config("workers_chat"),
+            config.workers_chat,
             stick_id,
         )  # Sticker's id
-    await dp.bot.send_message(config("workers_chat"), profit_text)
+    await dp.bot.send_message(config.workers_chat, profit_text)
 
     profit.msg_url = msg.url  # save then send
     profit.save()
@@ -309,7 +309,7 @@ async def send_profit(profit: Profit, moll, service: str, payment=None):
             ),
         )
         await dp.bot.send_message(
-            config("admins_chat"),
+            config.admins_chat,
             payload.admins_profit_text.format(
                 profit_link=msg.url,
                 cid=worker.cid,
@@ -335,7 +335,7 @@ async def send_profit(profit: Profit, moll, service: str, payment=None):
             ),
         )
         await dp.bot.send_message(
-            config("admins_chat"),
+            config.admins_chat,
             payload.admins_profit_text.format(
                 profit_link=msg.url,
                 cid=worker.cid,

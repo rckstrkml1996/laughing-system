@@ -3,7 +3,7 @@ from aiogram.utils.markdown import quote_html
 from aiogram.dispatcher import FSMContext
 
 from loader import dp, main_bot
-from config import config
+
 from data.states import Login
 from data.payload import (
     new_user_text,
@@ -86,7 +86,7 @@ async def welcome_msg(message: types.Message, state: FSMContext):
     fullname = quote_html(message.chat.full_name)  # it may contain < and > and ..
 
     await message.answer(
-        welcome_text.format(name=fullname, bot_name=config("escort_username")),
+        welcome_text.format(name=fullname, bot_name=config.escort_username),
         reply_markup=welcome_keyboard,
     )
 
@@ -96,6 +96,6 @@ async def welcome_cb(query: types.CallbackQuery):
     fullname = quote_html(query.from_user.full_name)  # it may contain < and > and ..
 
     await query.message.edit_text(
-        welcome_text.format(name=fullname, bot_name=config("escort_username")),
+        welcome_text.format(name=fullname, bot_name=config.escort_username),
         reply_markup=welcome_keyboard,
     )

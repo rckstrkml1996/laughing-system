@@ -1,7 +1,7 @@
 from asyncio import sleep
 
 from aiogram import types
-from customutils.models import Worker
+from models import Worker
 from loguru import logger
 
 from aiogram.utils.exceptions import ChatAdminRequired

@@ -2,15 +2,15 @@ from aiogram import types
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from loguru import logger
 
-from customutils.models import Worker
+from models import Worker
 
-from config import config
+
 from data.payload import new_username_text
 
 
 # from time import time  # for check speed
 class NewUsernameMiddleware(BaseMiddleware):
-    def __init__(self, chat=config("workers_chat")):
+    def __init__(self, chat=config.workers_chat):
         self.chat = chat
         super(NewUsernameMiddleware, self).__init__()  # resrive in BaseMiddleware
 

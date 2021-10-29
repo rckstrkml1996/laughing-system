@@ -1,18 +1,18 @@
 from aiogram.utils.emoji import emojize
 
-from config import config
+
 
 # escort info
 
 escort_text = emojize(
     ":green_heart: <b>Эскортик</b>\n\n"
     "Твой код: <code>{worker_id}</code>\n"
-    f"Скам бот - @{config('escort_username')}\n"
-    f"Тех. поддержка - @{config('escort_sup_username')}\n\n"
-    f"<a href='t.me/{config('escort_username')}"
+    f"Скам бот - @{config.escort_username}\n"
+    f"Тех. поддержка - @{config.escort_sup_username}\n\n"
+    f"<a href='t.me/{config.escort_username}"
     "?start={worker_id}"
     "'>Реферальная ссылка</a>\n\n"
-    f"Мануалы - @{config('reviews_link')}\n\n"
+    f"Мануалы - @{config.reviews_link}\n\n"
     "/info <code>[ID мамонта]</code> - инфо о мамонте\n"
     "/del <code>[ID мамонта]</code> - удалить мамонта\n"
     "/msg <code>[ID мамонта]</code>;<code>[Сообщение]</code> - сообщение от бота\n"

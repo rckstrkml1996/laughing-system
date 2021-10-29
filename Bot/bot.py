@@ -6,8 +6,6 @@ from aiogram import Dispatcher
 from loguru import logger
 
 from loader import dp, db_commands
-from config import config, project_path
-
 from utils.pinner import dynapins
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
@@ -84,7 +82,7 @@ def main():
     # loop.create_task(AutoBtc())
 
     start_task = loop.create_task(
-        start_bot(dp, notify=config("notify"), skip_updates=config("skip_updates"))
+        start_bot(dp, notify=config.notify, skip_updates=config.skip_updates)
     )
 
     try:
@@ -98,5 +96,5 @@ def main():
 
 
 if __name__ == "__main__":
-    check_on_update(project_path)
+    check_on_update()
     main()

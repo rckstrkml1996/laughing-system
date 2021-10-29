@@ -12,7 +12,7 @@ from data.states import SelfCabine, Register
 import keyboards
 from data import payload
 from loader import dp, main_bot
-from customutils.models import Worker, CasinoUser, CasinoUserHistory
+from models import Worker, CasinoUser, CasinoUserHistory
 
 
 @dp.message_handler(state="*", is_working=False)

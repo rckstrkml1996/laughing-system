@@ -4,7 +4,7 @@ from aiogram.utils.exceptions import MessageNotModified
 from loguru import logger
 
 from loader import dp
-from config import config
+
 from data.payload import (
     adm_work_command,
     services_status,
@@ -22,9 +22,9 @@ from data.keyboards import *
 
 @dp.message_handler(commands="work", admins_chat=True)
 async def work_command(message: types.Message):
-    casino_work = config("casino_work")
-    escort_work = config("escort_work")
-    trading_work = config("trading_work")
+    casino_work = config.casino_work
+    escort_work = config.escort_work
+    trading_work = config.trading_work
 
     all_work = casino_work and escort_work and trading_work
 
@@ -73,9 +73,9 @@ async def toggle_work_status(query: types.CallbackQuery):
         trading_work = True
         all_work = True
 
-    config.edit("casino_work", casino_work)
-    config.edit("escort_work", escort_work)
-    config.edit("trading_work", trading_work)
+    config.casino_work = casino_work
+    config.escort_work = escort_work
+    config.trading_work = trading_work
 
     text = adm_work_command.format(
         services_status=emojize(
@@ -110,7 +110,7 @@ async def toggle_work_status(query: types.CallbackQuery):
     except MessageNotModified:
         pass
     await dp.bot.send_message(
-        config("workers_chat"),
+        config.workers_chat,
         setwork_text if all_work else setdontwork_text,
     )
 
@@ -122,7 +122,7 @@ async def toggle_work_status(query: types.CallbackQuery):
     escort_work = config("escort_work", bool)
     trading_work = config("trading_work", bool)
 
-    config.edit("casino_work", casino_work)
+    config.casino_work = casino_work
 
     all_work = casino_work and escort_work and trading_work
 
@@ -159,7 +159,7 @@ async def toggle_work_status(query: types.CallbackQuery):
     except MessageNotModified:
         logger.warning("Change work status, MessageNotModified")
     await dp.bot.send_message(
-        config("workers_chat"),
+        config.workers_chat,
         casino_setwork_text if casino_work else casino_setdontwork_text,
     )
 
@@ -171,7 +171,7 @@ async def toggle_work_status(query: types.CallbackQuery):
     escort_work = not config("escort_work", bool)
     trading_work = config("trading_work", bool)
 
-    config.edit("escort_work", escort_work)
+    config.escort_work = escort_work
 
     all_work = casino_work and escort_work and trading_work
 
@@ -208,7 +208,7 @@ async def toggle_work_status(query: types.CallbackQuery):
     except MessageNotModified:
         logger.warning("Change work status, MessageNotModified")
     await dp.bot.send_message(
-        config("workers_chat"),
+        config.workers_chat,
         escort_setwork_text if escort_work else escort_setdontwork_text,
     )
 
@@ -222,7 +222,7 @@ async def toggle_work_status(query: types.CallbackQuery):
     escort_work = config("escort_work", bool)
     trading_work = not config("trading_work", bool)
 
-    config.edit("trading_work", trading_work)
+    config.trading_work = trading_work
 
     all_work = casino_work and escort_work and trading_work
 
@@ -259,6 +259,6 @@ async def toggle_work_status(query: types.CallbackQuery):
     except MessageNotModified:
         logger.warning("Change work status, MessageNotModified")
     await dp.bot.send_message(
-        config("workers_chat"),
+        config.workers_chat,
         trading_setwork_text if trading_work else trading_setdontwork_text,
     )

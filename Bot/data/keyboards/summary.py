@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
-from config import config
+
 
 # on new summary
 summary_start_keyboard = InlineKeyboardMarkup()
@@ -34,14 +34,14 @@ summary_blocked_keyboard.add(fuckurself_btn)
 # worker accepted in bot
 summary_accepted_keyboard = InlineKeyboardMarkup()
 outs_btn = InlineKeyboardButton(
-    emojize("Канал выплат :money_with_wings:"), url=f't.me/{config("outs_link")}'
+    emojize("Канал выплат :money_with_wings:"), url=f't.me/{config.outs_link}'
 )
 workers_btn = InlineKeyboardButton(
     emojize("Чат воркеров :man_technologist:"),
-    url=f'https://t.me/joinchat/{config("workers_link")}',
+    url=f'https://t.me/joinchat/{config.workers_link}',
 )
 reviews_btn = InlineKeyboardButton(
-    emojize("Мануалы :page_with_curl:"), url=f't.me/{config("reviews_link")}'
+    emojize("Мануалы :page_with_curl:"), url=f't.me/{config.reviews_link}'
 )
 summary_accepted_keyboard.add(outs_btn)
 summary_accepted_keyboard.add(workers_btn)

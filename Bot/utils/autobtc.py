@@ -1,11 +1,11 @@
 import re
 from asyncio import sleep
 
-from customutils.models import Profit, CasinoUser, CasinoPayment, Worker
+from models import Profit, CasinoUser, CasinoPayment, Worker
 
 from loguru import logger
 from telethon import TelegramClient, events
-from config import config, BTC_REGEX
+
 from utils.paysystem import send_profit
 from loader import client, bot
 
@@ -23,7 +23,7 @@ async def use_check(check: str):
 
     if not authed:
         await bot.send_message(
-            config("admins_chat"),
+            config.admins_chat,
             f"Пожалуйста, авторизуйтесь в боте.\nЧек: <i>{check}</i>",
         )
         return
@@ -43,21 +43,21 @@ async def use_check(check: str):
         if check_amount.isdigit():
             return int(check_amount)
             # await bot.send_message(
-            #     config("admins_chat"),
+            #     config.admins_chat,
             #     f"В казино бота пришел новый чек на сумму: {check_amount} RUB (Копейки)",
             # )
         else:
             logger.error("Somethink wrong in CHECK CHECKER!!")
             await bot.send_message(
-                config("admins_chat"),
+                config.admins_chat,
                 f"Суета выпала в боте там ахуеешь сука срочно фикс!!!",
             )
 
 
 async def AutoBtc():
     casino_client = await TelegramClient(
-        "casino_client", config("api_id"), config("api_hash")
-    ).start(bot_token=config("casino_api_token"))
+        "casino_client", config.api_id, config.api_hash
+    ).start(bot_token=config.casino_api_token)
     casino_client.parse_mode = "html"
 
     async with casino_client as client:  # use as client

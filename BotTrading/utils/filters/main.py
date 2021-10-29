@@ -1,7 +1,7 @@
 from aiogram.dispatcher.filters import BoundFilter
 from loguru import logger
 
-from config import config  # ADMINS_ID
+
 
 
 class IsWorking(BoundFilter):
@@ -13,6 +13,6 @@ class IsWorking(BoundFilter):
         self.is_working = is_working
 
     async def check(self, obj):
-        work = config("trading_work")
+        work = config.trading_work
         logger.debug(f"IsWorking check work: {work}")
         return self.is_working == work

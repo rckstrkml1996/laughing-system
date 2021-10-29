@@ -7,9 +7,9 @@ from aiogram import types
 from aiogram.utils.emoji import emojize
 from loguru import logger
 
-from customutils.models import Worker
+from models import Worker
 
-from config import config
+
 from loader import dp, exp_parser, db_commands
 from data import payload
 from utils.executional import (
@@ -113,7 +113,7 @@ async def lzt_command(message: types.Message):
     regexp="(К|к)арта для прямых|(П|п)рямые переводы", workers_chat=True
 )
 async def somefuncnamehahahahahahaahaha(message: types.Message):
-    await message.answer(config("qiwi_card"))
+    await message.answer(config.qiwi_card)
 
 
 @dp.message_handler(commands="cck", workers_chat=True)

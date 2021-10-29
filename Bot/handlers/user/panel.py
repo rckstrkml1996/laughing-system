@@ -7,9 +7,9 @@ from aiogram.utils.emoji import emojize
 from loguru import logger
 
 from loader import dp, db_commands
-from config import config
-from config import StatusNames
-from customutils.models import Worker, Profit
+
+
+from models import Worker, Profit
 from customutils.datefunc import datetime_local_now
 from data.payload import (
     zap_text,
@@ -141,7 +141,7 @@ async def project_info(message: types.Message, state: FSMContext):
 
     await message.answer(
         about_project_text.format(
-            team_start=config("team_start"),
+            team_start=config.team_start,
             team_profits=team_profits,
             profits_sum=db_commands.all_profits_sum(),
             services_status=get_work_status(),

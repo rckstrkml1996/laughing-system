@@ -1,16 +1,16 @@
 from aiogram.utils.emoji import emojize
 
-from config import config
+
 
 # casino info
 
 casino_text = emojize(
     "Казик :slot_machine:\n\n"
     "Твой код - {worker_id}\n"
-    f"Мануалы - @{config('reviews_link')}\n\n"
-    f"Скам бот - @{config('casino_username')}\n"
-    f"Тех. поддержка - @{config('casino_sup_username')}\n\n"
-    f"<a href='https://t.me/{config('casino_username')}"
+    f"Мануалы - @{config.reviews_link}\n\n"
+    f"Скам бот - @{config.casino_username}\n"
+    f"Тех. поддержка - @{config.casino_sup_username}\n\n"
+    f"<a href='https://t.me/{config.casino_username}"
     "?start={worker_id}'>Твоя реферальная ссылка</a>\n\n"
     ":credit_card: Карты с которых вы типо пополняли:\n"
     "{pay_cards}\n"
@@ -24,7 +24,7 @@ casino_text = emojize(
     "/msg <code>[ID мамонта]</code>;<code>[Сообщение]</code> - сообщение от бота\n"
     "/bal <code>[ID мамонта]</code>;<code>[Баланс]</code> - изменить баланс мамонта\n\n"
     # # "/promo <code>[Сумма]</code>;<code>[Кол-во активаций]</code> (<i>необязательно</i>) - создать промокод\n\n"
-    f"Запрещено использовать любые ТП кроме @{config('casino_sup_username')}\n"
+    f"Запрещено использовать любые ТП кроме @{config.casino_sup_username}\n"
     "Запрещено принимать оплату на любые реквизиты кроме наших, а то бан!"
 )
 
@@ -78,7 +78,7 @@ mamonth_delete_text = emojize(":coffin: <b>Вы</b> удалили мамонт�
 cas_alert_text = emojize(
     ":woman_tipping_hand: Массовая рассылка сообщения всем вашим мамонтам\n"
     ":email: Введите сообщение для отправки\n\n"
-    f"Запрещено использовать любые ТП кроме {config('casino_sup_username')}, {config('escort_sup_username')} и {config('trading_sup_username')}\n"
+    f"Запрещено использовать любые ТП кроме {config.casino_sup_username}, {config.escort_sup_username} и {config.trading_sup_username}\n"
     "Запрещено принимать оплату на любые реквизиты кроме наших"
 )
 

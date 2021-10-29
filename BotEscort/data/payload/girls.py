@@ -1,5 +1,5 @@
 from aiogram.utils.emoji import emojize
-from config import config
+
 
 girls_choice_text = emojize(
     ":green_heart: <b>Анкеты наших девочек</b>\n\n"
@@ -27,7 +27,7 @@ girl_get_text = emojize(
 )
 
 
-support_username = config("escort_sup_username")
+support_username = config.escort_sup_username
 girl_payed_text = emojize(
     ":ok_hand: Вы оплатили девушку!\n"
     # ":money_with_wings: Вы оплатили: <b>{amount} RUB</b>\n"

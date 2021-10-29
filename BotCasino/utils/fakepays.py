@@ -5,7 +5,7 @@ from loguru import logger
 from aiogram import Bot
 from aiogram.utils.emoji import emojize
 
-# from config import LIFE_OUTS
+# 
 LIFE_OUTS = "KRSITAL"
 
 

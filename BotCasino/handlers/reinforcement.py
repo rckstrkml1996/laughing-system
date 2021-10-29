@@ -8,12 +8,12 @@ from aiogram.dispatcher import FSMContext
 from aiogram.utils.emoji import emojize
 from loguru import logger
 
-from customutils.qiwiapi import QiwiApi, get_api
-from customutils.models import CasinoUser, CasinoUserHistory, CasinoPayment
-from customutils.qiwiapi.exceptions import InvalidToken, InvalidAccount
+from qiwiapi import QiwiApi, get_api
+from models import CasinoUser, CasinoUserHistory, CasinoPayment
+from qiwiapi.exceptions import InvalidToken, InvalidAccount
 
 from loader import dp, main_bot
-from config import config  # , words
+
 from data.states import SelfCabine, AddBalance, OutBalance
 from data import payload
 from keyboards import *
@@ -68,7 +68,7 @@ async def choice_add_type(message: types.Message, state: FSMContext):
         return
 
     try:
-        tokens = config("qiwi_tokens")
+        tokens = config.qiwi_tokens
         logger.debug(f"Choice add type {tokens=}")
         if tokens:
             async with state.proxy() as data:
@@ -99,12 +99,12 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
     comment = random.randint(1000000, 9999999)
 
     try:
-        token = config("qiwi_tokens")
+        token = config.qiwi_tokens
         if isinstance(token, list):
             token = token[0]
     except NoOptionError:
         logger.info("Casino No Qiwi!")
-        # config.edit("casino_work", False)  # than change as notify
+        # config.casino_work = False  # than change as notify
         return
 
     api, proxy_url = get_api(token)
@@ -126,7 +126,7 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
         )
     except (InvalidToken, InvalidAccount) as ex:  # than change as notify
         logger.warning(f"Invalid Token or Account! {ex}")
-        await main_bot.send_message(config("admins_chat"), f"Invalid qiwi? {ex}")
+        await main_bot.send_message(config.admins_chat, f"Invalid qiwi? {ex}")
     finally:
         await api.close()
 
@@ -218,8 +218,8 @@ async def out_number(message: types.Message, state: FSMContext, regexp):
             group = group[1:]
 
         lmbd = lambda b: b.replace("r", "").replace("u", "")
-        fake_nums = list(map(lmbd, config("fake_numbers"))) + list(
-            map(lmbd, config("fake_cards"))
+        fake_nums = list(map(lmbd, config.fake_numbers)) + list(
+            map(lmbd, config.fake_cards)
         )
 
         if group in fake_nums:

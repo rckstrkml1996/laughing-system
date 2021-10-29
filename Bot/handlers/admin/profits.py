@@ -6,11 +6,11 @@ from pyrogram.errors.exceptions.not_acceptable_406 import PhoneNumberInvalid
 from aiogram.utils.emoji import emojize
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from customutils.models import Worker, Profit
+from models import Worker, Profit
 from loguru import logger
 
 from loader import dp, banker_client
-from config import ServiceNames, BTC_REGEX
+
 from utils.paysystem import send_profit
 from data import payload
 from data.keyboards import *

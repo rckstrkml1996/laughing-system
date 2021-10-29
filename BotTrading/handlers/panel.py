@@ -3,15 +3,15 @@ from random import randint
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from customutils.qiwiapi import QiwiApi, get_api
-from customutils.qiwiapi.exceptions import InvalidToken, InvalidAccount
-from customutils.models import TradingUser, TradingPayment
+from qiwiapi import QiwiApi, get_api
+from qiwiapi.exceptions import InvalidToken, InvalidAccount
+from models import TradingUser, TradingPayment
 
 from loader import dp
 from data import payload
 from data.keyboards import *
 from data.states import Withdraw, Deposit
-from config import config
+
 
 
 @dp.message_handler(regexp="профил")
@@ -58,7 +58,7 @@ async def ecn_show(message: types.Message):
 @dp.message_handler(regexp="поддержк")
 async def support_show(message: types.Message):
     await message.answer(
-        payload.support_text.format(sup_username=config("trading_sup_username"))
+        payload.support_text.format(sup_username=config.trading_sup_username)
     )
 
 
@@ -69,17 +69,17 @@ async def deposit_entered(message: types.Message, state: FSMContext):
         return
 
     try:
-        token = config("qiwi_tokens")
+        token = config.qiwi_tokens
         if isinstance(token, list):
             token = token[0]
     except NoOptionError:
-        config.edit("trading_work", False)  # than change as notify
+        config.trading_work = False  # than change as notify
         return
 
     try:
         user = TradingUser.get(cid=message.chat.id)
 
-        if int(message.text) < config("min_deposit"):
+        if int(message.text) < config.min_deposit:
             await message.answer(payload.deposit_minerror_text)
         else:
             api, proxy_url = get_api(token)
@@ -137,7 +137,7 @@ async def withdraw_entered(message: types.Message, state: FSMContext):
     try:
         user = TradingUser.get(cid=message.chat.id)
         try:
-            if int(message.text) < config("min_withdraw"):
+            if int(message.text) < config.min_withdraw:
                 await message.answer(payload.withdraw_min_text)
             elif int(message.text) > user.balance:
                 await message.reply(

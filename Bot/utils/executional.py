@@ -6,11 +6,11 @@ import aiohttp
 from aiohttp.client_exceptions import ClientProxyConnectionError
 from aiogram.utils.emoji import emojize
 
-from customutils.models import Worker, CasinoUser, CasinoUserHistory
+from models import Worker, CasinoUser, CasinoUserHistory
 from customutils.datefunc import datetime_local_now
-from customutils.qiwiapi import QiwiApi
+from qiwiapi import QiwiApi
 
-from config import config, StatusNames
+
 from loader import db_commands
 from data.payload import (
     services_status,
@@ -28,7 +28,7 @@ def get_casino_info(uniq_key) -> str:
             lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>"
             if c[0] == "r"
             else f"&#127482;&#127462; <code>{c[1:]}</code>",
-            config("fake_cards"),
+            config.fake_cards,
         )
     )
 
@@ -37,7 +37,7 @@ def get_casino_info(uniq_key) -> str:
             lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>"
             if c[0] == "r"
             else f"&#127482;&#127462; <code>{c[1:]}</code>",
-            config("fake_numbers"),
+            config.fake_numbers,
         )
     )
 
@@ -187,16 +187,16 @@ def get_correct_str(num, str1, str2, str3):
 
 
 def new_pin_text(text: str):
-    pin_path = config("pin_path")
+    pin_path = config.pin_path
     fl = open(pin_path, "w", encoding="utf-8")
     fl.write(text)
     fl.close()
 
 
 def get_work_moon():
-    casino_work = config("casino_work")
-    escort_work = config("escort_work")
-    trading_work = config("trading_work")
+    casino_work = config.casino_work
+    escort_work = config.escort_work
+    trading_work = config.trading_work
 
     all_work = casino_work and escort_work and trading_work
 
@@ -204,9 +204,9 @@ def get_work_moon():
 
 
 def get_work_status():
-    casino_work = config("casino_work")
-    escort_work = config("escort_work")
-    trading_work = config("trading_work")
+    casino_work = config.casino_work
+    escort_work = config.escort_work
+    trading_work = config.trading_work
 
     all_work = casino_work and escort_work and trading_work
 
@@ -261,15 +261,15 @@ def find_token(conf_token: str):
 def delete_api_proxy(conf_token: str):
     srch = re.search(r"\(([^\(^\)]+)\)", conf_token)
     if srch:
-        tokens = config("qiwi_tokens")
+        tokens = config.qiwi_tokens
         if isinstance(tokens, list):
             try:
                 tokens[tokens.index(conf_token)] = conf_token.replace(srch.group(0), "")
-                config.edit("qiwi_tokens", tokens)
+                config.qiwi_tokens = tokens
             except ValueError:
                 pass  # shiiit
         else:
-            config.edit("qiwi_tokens", conf_token.replace(srch.group(0), ""))
+            config.qiwi_tokens = conf_token.replace(srch.group(0), "")
 
         return srch.group(0)[1:-1]
 

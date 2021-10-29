@@ -4,7 +4,7 @@ from aiogram.types import CallbackQuery, Message
 from aiogram.dispatcher.filters import BoundFilter
 from loguru import logger
 
-from customutils.models import Worker
+from models import Worker
 
 
 class IsWorkerFilter(BoundFilter):

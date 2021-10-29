@@ -12,10 +12,10 @@ from aiogram.utils.exceptions import (
     MessageCantBeEdited,
 )
 from customutils.datefunc import datetime_local_now
-from customutils.models import CasinoUser, TradingUser, EscortUser
+from models import CasinoUser, TradingUser, EscortUser
 
 from loader import db_commands
-from config import config
+
 from data.payload import pin_text
 from utils.executional import get_work_status, get_work_moon, rub_usd_btcticker
 
@@ -61,16 +61,16 @@ async def dynapins(bot: Bot):
             f"Argument 'bot' must be an instance of Bot, not '{type(bot).__name__}'"
         )
 
-    workers_chat = config("workers_chat")
-    update_time = config("pin_update_time")
+    workers_chat = config.workers_chat
+    update_time = config.pin_update_time
     text = await format_pin_text(pin_text())
     if text:
         try:
-            message_id = config("pinned_msg_id")
+            message_id = config.pinned_msg_id
         except NoOptionError:
             message = await bot.send_message(workers_chat, text)
             message_id = message.message_id
-            config.edit("pinned_msg_id", message_id)
+            config.pinned_msg_id = message_id
 
         try:
             await bot.pin_chat_message(
@@ -79,7 +79,7 @@ async def dynapins(bot: Bot):
         except MessageToPinNotFound:
             message = await bot.send_message(workers_chat, text)
             message_id = message.message_id
-            config.edit("pinned_msg_id", message_id)
+            config.pinned_msg_id = message_id
             await bot.pin_chat_message(
                 workers_chat, message_id, disable_notification=True
             )
@@ -96,7 +96,7 @@ async def dynapins(bot: Bot):
         except MessageCantBeEdited:
             message = await bot.send_message(workers_chat, text)
             message_id = message.message_id
-            config.edit("pinned_msg_id", message_id)
+            config.pinned_msg_id = message_id
         except MessageNotModified:
             pass
         except MessageTextIsEmpty:

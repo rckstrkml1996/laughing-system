@@ -5,14 +5,14 @@ from loguru import logger
 from loader import dp
 from data.states import Summary
 from data import payload
-from config import config
+
 from data.keyboards import (
     summary_start_keyboard,
     summary_rules_keyboard,
     summary_send_keyboard,
     summary_check_keyboard,
 )
-from customutils.models import Worker
+from models import Worker
 
 
 async def new_request(message: types.Message):
@@ -80,7 +80,7 @@ async def summary_send(query: types.CallbackQuery, state: FSMContext):
             username = f"@{worker.username} " if worker.username else " "
 
             await dp.bot.send_message(  # message to admins chat
-                config("admins_chat"),
+                config.admins_chat,
                 payload.summary_check_text().format(
                     name=query.message.chat.full_name,
                     username=username,

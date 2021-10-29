@@ -2,10 +2,10 @@ from aiogram import types
 from aiogram.dispatcher.filters import RegexpCommandsFilter
 from loguru import logger
 
-from customutils.models import Worker
+from models import Worker
 
 from loader import dp
-from config import StatusNames
+
 from data.keyboards import new_status_keyboard
 from data.payload import worker_defenition, set_new_worker_status, worker_choice_one_plz
 

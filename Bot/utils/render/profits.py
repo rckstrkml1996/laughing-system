@@ -5,7 +5,7 @@ import os
 from PIL import Image, ImageFont, ImageDraw, ImageFilter
 from loguru import logger
 
-from config import config
+
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
 

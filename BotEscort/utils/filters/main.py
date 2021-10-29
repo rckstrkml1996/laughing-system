@@ -4,11 +4,11 @@ from aiogram.dispatcher.filters import BoundFilter
 from aiogram.types import CallbackQuery
 from loguru import logger
 
-from customutils.models import EscortUser
+from models import EscortUser
 
 # from customutils.timefunc import async_check_timing
 
-from config import config  # ADMINS_ID
+
 
 
 class IsWorking(BoundFilter):

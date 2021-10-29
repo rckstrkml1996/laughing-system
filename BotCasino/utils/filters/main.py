@@ -1,9 +1,9 @@
 from aiogram.dispatcher.filters import BoundFilter
 from loguru import logger
 
-from customutils.models import CasinoUser
+from models import CasinoUser
 
-from config import config  # ADMINS_ID
+
 
 
 class IsWorking(BoundFilter):

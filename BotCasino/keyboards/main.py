@@ -3,7 +3,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
 
-# from config import QIWI_ACCOUNTS
+# 
 
 # cancel button
 cancel_button = KeyboardButton(emojize("Назад"))

@@ -1,10 +1,10 @@
 from asyncio import sleep
 
 from aiogram import types
-from customutils.models import Worker
+from models import Worker
 from loguru import logger
 
-from config import config
+
 from loader import dp, bot_client
 
 
@@ -18,11 +18,11 @@ async def kick_all_users(message: types.Message):
         authed = await bot_client.connect()
     if not authed:
         await message.answer("keyerror")
-        await bot_client.sign_in_bot(config("api_token"))
+        await bot_client.sign_in_bot(config.api_token)
 
     offset = 0
     kicked = 0
-    workers_chat = config("workers_chat")
+    workers_chat = config.workers_chat
     while True:
         members = await bot_client.get_chat_members(workers_chat, offset=offset)
         if not members:

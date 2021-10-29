@@ -1,28 +1,24 @@
 from pyrogram import Client
 from pyrogram.session import Session
-
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import ParseMode
-
 from py_expression_eval import Parser
 
 from utils.basefunctional import BaseCommands
-from config import config
+from customutils.config import BotConfig
 
-# Обьявление всех компонентов бота из конфига
-# Обьявление expression eval парсера
-# Обьявление functional models
-# Обьявление banker_client Pyrogram
+"""
+    bot settings:
+        inline mode                         -   on
+        allow groups                        -   on
+        group privacy                       -   off
+        workers and outs and admins chats   -   make bot admin!
+"""
 
-# bot settings:
-# inline mode - on
-# allow groups - on
-# group privacy - off
+config = BotConfig()
 
-# workers and outs and admins chats - make bot admin!
-
-bot = Bot(config("api_token"), parse_mode=ParseMode.HTML)
+bot = Bot(config.api_token, parse_mode=ParseMode.HTML)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
 db_commands = BaseCommands()
@@ -30,12 +26,41 @@ db_commands = BaseCommands()
 exp_parser = Parser()
 
 Session.notice_displayed = True  # fucking notice zaebala
-banker_client = Client("banker_client", config("api_id"), config("api_hash"))
-bot_client = Client("bot_client", config("api_id"), config("api_hash"))
+banker_client = Client("banker_client", config.api_id, config.api_hash)
+bot_client = Client("bot_client", config.api_id, config.api_hash)
 
 # is no webhooks so it can be here)
-casino_bot = Bot(config("casino_api_token"), parse_mode=ParseMode.HTML)
-trading_bot = Bot(config("trading_api_token"), parse_mode=ParseMode.HTML)
-escort_bot = Bot(config("escort_api_token"), parse_mode=ParseMode.HTML)
+casino_bot = Bot(config.casino_api_token, parse_mode=ParseMode.HTML)
+trading_bot = Bot(config.trading_api_token, parse_mode=ParseMode.HTML)
+escort_bot = Bot(config.escort_api_token, parse_mode=ParseMode.HTML)
 
-# casino_client = Client("casino_client", config("api_id"), config("api_hash"))
+
+StatusNames = [
+    "Без статуса",
+    "Заблокирован",
+    "Воркер",
+    "Модер",
+    "Сапорт ТП",
+    "Кодер",
+    "ТС",
+    "Dungeon Master",
+]
+
+ServiceNames = ["Казино", "Эскорт", "Трейдинг", "Прямой перевод"]
+
+alowed_values = [100, 300, 500, 750, 1000, 1500, 3000, 5000, 10000]
+
+MinDepositValues = [config("min_deposit", int)]
+for val in alowed_values:
+    if MinDepositValues[0] < val:
+        MinDepositValues.append(val)
+
+
+# Rates = [  # виды ставок первая - стандартная
+#     (75, 65, 55),
+#     (70, 60, 60),
+#     (80, 70, 50),
+# ]
+
+# useless
+BTC_REGEX = r"BTC_CHANGE_BOT\?start=(c_[a-f0-9]{32})"

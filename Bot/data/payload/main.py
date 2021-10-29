@@ -2,7 +2,7 @@ import os
 
 from aiogram.utils.emoji import emojize
 
-from config import config
+
 
 
 zap_text = emojize(":zap:")
@@ -14,8 +14,8 @@ new_username_text = emojize(
     ":sneezing_face: <a href='tg://user?id={chat_id}'>{name}</a> сменил свой ник с <b>{old_username}</b> на <b>{new_username}</b>"
 )
 
-outs_link = config("outs_link")
-reviews_link = config("reviews_link")
+outs_link = config.outs_link
+reviews_link = config.reviews_link
 
 new_chat_member_text = emojize(
     ":green_heart: Привет, <a href='tg://user?id={chat_id}'>{name}</a>\n"
@@ -42,7 +42,7 @@ updated_startup_text = emojize("Бот <b>запущен и обновился</
 
 standart_pin = emojize("Стандартный закреп, {time} :sparkle:")
 
-pin_path = config("pin_path")
+pin_path = config.pin_path
 
 if not os.path.exists(pin_path):
     fl = open(pin_path, "w", encoding="utf-8")
