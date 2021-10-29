@@ -1,16 +1,13 @@
-import os
-
 from datetime import datetime
 
 import pytz
 
-from .confparse import Config
+from .config import BotConfig
 
-path = os.path.normpath(os.path.join(os.getcwd(), "../config.cfg"))
-config = Config("Settings", path, {"time_zone": "Europe/Moscow"})
+config = BotConfig()
 
 
-local_tz = pytz.timezone(config("time_zone"))
+local_tz = pytz.timezone(config.time_zone)
 
 
 def normalized_local_now():  # use with tzinfo
@@ -20,3 +17,4 @@ def normalized_local_now():  # use with tzinfo
 
 def datetime_local_now():  # usable for peewee datetimefield
     return normalized_local_now().replace(tzinfo=None)  # return datetime instance
+

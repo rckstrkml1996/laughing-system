@@ -1,25 +1,6 @@
 from .types import Payments
 
 
-# class QiwisPaymentChecker:
-#     def __init__(self, qiwiapi_list, loop=None):
-#         self.loop = loop
-#         if loop is None:
-#             self.loop = asyncio.get_event_loop()
-#         self.qiwi_parsers = []
-#         self.qiwis = qiwiapi_list
-
-#     async def start(self):
-#         for qiwi in self.qiwis:
-#             self.qiwi_parsers.append(QiwiPaymentsParser(qiwi))
-
-#         tasks = []
-#         for parser in self.qiwi_parsers:
-#             tasks.append(self.loop.create_task(parser.start()))
-
-#         await asyncio.gather(*tasks)
-
-
 class QiwiPaymentsParser:
     def __init__(self, qiwi_api, notify: callable):
         self.api = qiwi_api

@@ -1,24 +1,18 @@
-import os
-from secrets import token_hex
-
 from peewee import *
 from playhouse.shortcuts import ReconnectMixin
 
-from ..confparse import Config
-from ..datefunc import datetime_local_now
+from customutils import BotConfig, datetime_local_now 
 
-path = os.path.normpath(os.path.join(os.getcwd(), "../config.cfg"))
-config = Config("Settings", path, {"migrate": "0"})
-
+config = BotConfig()
 
 class DB(ReconnectMixin, MySQLDatabase):
     pass
 
 
 base = DB(
-    config("base_name"),
-    user=config("base_user"),
-    password=config("base_password"),
+    config.base_name,
+    user=config.base_user,
+    password=config.base_password,
     host="127.0.0.1",
     port=3306,
     charset="utf8mb4",  # for emoji and symbols)
@@ -43,7 +37,7 @@ class Worker(BaseModel):
     registered = DateTimeField(default=datetime_local_now)
     cock_size = IntegerField(null=True)
     warns = IntegerField(default=0)
-    casino_min = IntegerField(default=config("min_deposit", int))
+    casino_min = IntegerField(default=config.min_deposit)
     send_summary = BooleanField(default=False)
     summary_info = TextField(null=True)
 
@@ -94,7 +88,7 @@ class CasinoUser(BaseModel):
     bonus = IntegerField(default=0)
     username = CharField(null=True)
     fullname = CharField(null=True)
-    min_deposit = IntegerField(default=config("min_deposit", int))
+    min_deposit = IntegerField(default=config.min_deposit)
     stopped = BooleanField(default=False)  # stopwork status for single user
 
     def __str__(self):

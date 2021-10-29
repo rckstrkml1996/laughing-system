@@ -29,12 +29,10 @@ media/
 # Ignore dynaconf secret files
 .secrets.*
 # Ignore cfg files
-*.cfg
 
-# shhhihihihihiyttitithihi
-test.py
+*.json
+*.txt
 
-pin.txt
 *.session
 *.session-journal
 
