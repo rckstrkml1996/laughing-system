@@ -157,17 +157,6 @@ async def get_btcmarket_price():
             return await response.json()
 
 
-async def find_lolz_user(username):
-    headers = {"Authorization": f"Bearer 0", "Cookie": "xf_logged_in=1"}
-    async with aiohttp.ClientSession(
-        headers=headers, timeout=aiohttp.ClientTimeout(5)
-    ) as session:
-        async with session.get(
-            f"https://lolz.guru/api/index.php?users/find&username={username}"
-        ) as response:
-            return await response.json()
-
-
 def get_correct_str(num, str1, str2, str3):
     val = num % 100
 
@@ -181,13 +170,6 @@ def get_correct_str(num, str1, str2, str3):
             return f"{num} {str2}"
         else:
             return f"{num} {str3}"
-
-
-def new_pin_text(text: str):
-    pin_path = config.pin_path
-    fl = open(pin_path, "w", encoding="utf-8")
-    fl.write(text)
-    fl.close()
 
 
 def get_work_moon():
@@ -281,7 +263,5 @@ async def check_proxy(proxy_url: str):
             answer = False
         except ClientProxyConnectionError:
             answer = False  # this is for different log
-        finally:
-            await session.close()
 
         return answer

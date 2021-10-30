@@ -8,12 +8,11 @@ from aiogram.utils.emoji import emojize
 from loguru import logger
 
 from models import Worker
-from loader import dp, exp_parser, db_commands, config
+from loader import dp, db_commands, config
 from data import payload
 from utils.executional import (
     rub_usd_btcticker,
     get_correct_str,
-    find_lolz_user,
     get_info_about_worker,
 )
 
@@ -43,15 +42,16 @@ async def btc_price(message: types.Message):
 @dp.message_handler(commands="clc", workers_chat=True)
 @dp.message_handler(commands="clc", admins_chat=True)
 async def clc_command(message: types.Message):
-    text = message.text.replace("/clc ", "")
-    try:
-        result = exp_parser.parse(text).evaluate({"x": 0.8, "xx": 0.7})
-    except Exception as ex:
-        logger.error(ex)
-        result = "хз"
+    await message.reply("Я временно не работаю!")
+    # text = message.text.replace("/clc ", "")
+    # try:
+    #     result = exp_parser.parse(text).evaluate({"x": 0.8, "xx": 0.7})
+    # except Exception as ex:
+    #     logger.error(ex)
+    #     result = "хз"
 
-    await message.reply(result)
-    logger.debug(f"Chat User - {message.from_user.id}, /clc {text} result: {result}")
+    # await message.reply(result)
+    # logger.debug(f"Chat User - {message.from_user.id}, /clc {text} result: {result}")
 
 
 @dp.message_handler(commands="me", workers_chat=True)
@@ -65,45 +65,6 @@ async def me_command(message: types.Message):
     except Worker.DoesNotExist:
         await message.reply("Ты не Воркер!")
         logger.debug(f"Chat User - {message.from_user.id}, /me and he does not worker")
-
-
-@dp.message_handler(commands="lzt", workers_chat=True)
-async def lzt_command(message: types.Message):
-    try:
-        json = await find_lolz_user(message.text.replace("/lzt ", "", 1))
-        user = json["users"][0]
-
-        reg_date = datetime.fromtimestamp(user["user_register_date"]).strftime(
-            "%d.%m.%Y"
-        )
-        last_seen_date = datetime.fromtimestamp(user["user_last_seen_date"]).strftime(
-            "%d.%m.%Y в %H:%M"
-        )
-
-        messages_count = user["user_message_count"]
-
-        await message.reply(
-            payload.lzt_text.format(
-                permalink=user["links"]["permalink"],
-                username=user["username"],
-                user_title=user["user_title"],
-                reg_date=reg_date,
-                last_seen_date=last_seen_date,
-                message_count=f"{get_correct_str(messages_count, 'сообщение', 'сообщения', 'сообщений')}",
-                like_count=user["user_like_count"],
-            )
-        )
-        logger.debug(f"User - {message.from_user.id}, /lzt get succesfully.")
-    except TimeoutError:
-        await message.reply(payload.lolz_down_text)
-        logger.info(
-            f"User - {message.from_user.id}, /lzt in chat and TimeoutError was raised."
-        )
-    except:
-        await message.reply("Ошибка!")
-        logger.info(
-            f"User - {message.from_user.id}, Some Error in chat by /lzt command"
-        )
 
 
 @dp.message_handler(commands=["card"], workers_chat=True)

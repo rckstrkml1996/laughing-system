@@ -11,7 +11,7 @@ from data.payload import (
 )
 from utils.executional import get_casino_mamonth_info
 from utils.filters import ServiceCommandsFilter
-from utils.types import SERVICE_FIRST_LETTERS
+from utils.consts import SERVICE_FIRST_LETTERS
 
 
 # only info

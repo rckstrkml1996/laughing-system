@@ -37,32 +37,10 @@ startup_text = emojize("Бот <b>запущен</b>! :sparkle:")
 updated_startup_text = emojize("Бот <b>запущен и обновился</b>! :chart:")
 
 
-# dynamic pin
-
-standart_pin = emojize("Стандартный закреп, {time} :sparkle:")
-
-pin_path = config.pin_path
-
-if not os.path.exists(pin_path):
-    fl = open(pin_path, "w", encoding="utf-8")
-    fl.write(standart_pin)
-    fl.close()
-
-
-def pin_text():
-    fl = open(pin_path, "r", encoding="utf-8")
-    pin = fl.read()
-    fl.close()
-    return pin
-
-
 pin_help_text = emojize(
     ":woman_tipping_hand: Сокращения для динамического закрепа:\n\n"
-    "<code>{dyna_moon}</code> - Луна которая зависит от статуса проекта\n"
     "<code>{services_status}</code> - Статусы работы проекта\n"
     "<code>{topd_worker}</code> - Лучший воркер за день\n"
-    "<code>{btc_usd_price}</code> - Цена биткоина в долларах\n"
-    "<code>{btc_rub_price}</code> - Цена биткоина в рублях\n"
     "<code>{in_casino}</code> - Кол-во мамонтов в казино\n"
     "<code>{in_trading}</code> - Кол-во мамонтов в трейдинге\n"
     "<code>{in_escort}</code> - Кол-во мамонтов в эскорте\n"

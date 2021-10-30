@@ -3,13 +3,13 @@ from asyncio import sleep
 from asyncio.exceptions import TimeoutError
 from configparser import NoOptionError
 
-from aiohttp.client_exceptions import ClientProxyConnectionError
 from aiogram.types.input_file import InputFile
 from loguru import logger
 
 from models import QiwiPayment, Profit
 from models import CasinoPayment, EscortPayment, TradingPayment
-from qiwiapi import QiwiPaymentsParser, get_api
+
+# from qiwiapi import QiwiPaymentsParser, get_api
 from qiwiapi.types import Payments, Transaction
 from loader import config, dp, db_commands, ServiceNames
 from data import payload
@@ -205,35 +205,44 @@ async def on_new_payment(payments: Payments):
         logger.exception(ex)
 
 
-async def check_qiwis():
-    logger.debug("QiwiPaymentsParser started.")
-    while True:
-        if config.qiwi_tokens is not None:
-            if isinstance(config.qiwi_tokens, list):
-                new_token = new_token[0] # get last token
+class PayChecker:
+    def __init__(self):
+        self._working = False
 
-            if new_token != token:
-                token = new_token
-                api, _ = get_api(token)
-                parser = QiwiPaymentsParser(api, on_new_payment)
-                logger.info(f"Parsing payments with new qiwi {token}")
+    async def start(self):
+        self._working = True
+        logger.debug("QiwiPaymentsParser started.")
 
-            try:
-                await parser.check()
-                logger.debug(f"Checked qiwi [{parser.api.token}] payments.")
-            except (ClientProxyConnectionError, TimeoutError):
-                delete_api_proxy(token)
-                logger.warning("Deleting Qiwi - Lock [TErr, ClErr]")
-            except Exception as ex:
-                logger.exception(ex)
-                token = new_token
-                api, _ = get_api(token)
-                parser = QiwiPaymentsParser(api, on_new_payment)
-                logger.info(f"Parsing payments with new qiwi {token}")
-            finally:
-                await parser.api.close()
+        while self._working:
+            # if config.qiwi_tokens is not None:
+            #     if isinstance(config.qiwi_tokens, list):
+            #         new_token = new_token[0] # get last token
 
-        await sleep(config.qiwi_check_time, int)
+            #     if new_token != token:
+            #         token = new_token
+            #         api, _ = get_api(token)
+            #         parser = QiwiPaymentsParser(api, on_new_payment)
+            #         logger.info(f"Parsing payments with new qiwi {token}")
+
+            #     try:
+            #         await parser.check()
+            #         logger.debug(f"Checked qiwi [{parser.api.token}] payments.")
+            #     except (ClientProxyConnectionError, TimeoutError):
+            #         delete_api_proxy(token)
+            #         logger.warning("Deleting Qiwi - Lock [TErr, ClErr]")
+            #     except Exception as ex:
+            #         logger.exception(ex)
+            #         token = new_token
+            #         api, _ = get_api(token)
+            #         parser = QiwiPaymentsParser(api, on_new_payment)
+            #         logger.info(f"Parsing payments with new qiwi {token}")
+            #     finally:
+            #         await parser.api.close()
+
+            await sleep(config.qiwi_check_time, int)
+
+    def stop(self):
+        self._working = False
 
 
 async def send_profit(profit: Profit, moll, service: str, payment=None):

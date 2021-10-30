@@ -1,109 +1,127 @@
-import asyncio
-from configparser import NoOptionError
+import os
+from asyncio import sleep
 
 from aiogram import Bot
 from aiogram.utils.emoji import emojize
-from aiogram.utils.exceptions import (
-    MessageNotModified,
-    MessageToEditNotFound,
-    MessageTextIsEmpty,
-    MessageToPinNotFound,
-    ChatNotFound,
-    MessageCantBeEdited,
-)
+from aiogram.utils.exceptions import MessageToEditNotFound
+from loguru import logger
 
+from customutils.config import BotConfig
 from customutils import datetime_local_now
 from models import CasinoUser, TradingUser, EscortUser
-from loader import config, db_commands
-from data.payload import pin_text
-from utils.executional import get_work_status, get_work_moon, rub_usd_btcticker
 
 
-async def format_pin_text(text):
-    localnow = datetime_local_now()
-    timenow = localnow.strftime("%H:%M, %S cек")
+class DynamicPinner:
+    STANDART_TEXT = emojize("Стандартный закреп, {time} :sparkle:")
 
-    try:
-        rub, usd = await rub_usd_btcticker()
-    except AssertionError:
-        rub, usd = "Неизвестно", "Неизвестно"  # if btc api dont work
+    def __init__(self, config: BotConfig, bot: Bot):
+        if not isinstance(config, BotConfig):
+            raise TypeError(
+                f"Argument 'config' must be an instance of BotConfig, not '{type(config).__name__}'"
+            )
 
-    query = db_commands.get_topworkers_day(limit=1)
-    try:
-        worker = query.execute()[0]
-        topd_worker = f"<a href='tg://user?id={worker.cid}'>{worker.name}</a>"
-    except IndexError:
-        topd_worker = "Отсутсвует"
+        if not isinstance(bot, Bot):
+            raise TypeError(
+                f"Argument 'bot' must be an instance of Bot, not '{type(bot).__name__}'"
+            )
 
-    in_casino = CasinoUser.select().count()
-    in_trading = TradingUser.select().count()
-    in_escort = EscortUser.select().count()
+        self.config = config
+        self.bot = bot
 
-    return emojize(
-        text.format(
-            dyna_moon=get_work_moon(),
-            services_status=get_work_status(),
-            btc_usd_price=usd,
-            btc_rub_price=rub,
-            topd_worker=topd_worker,
-            time=timenow,
-            in_casino=in_casino,
-            in_trading=in_trading,
-            in_escort=in_escort,
+        self._working = False
+
+    def get_pin_text(self):
+        if not os.path.exists(self.config.pin_path):
+            with open(self.config.pin_path, "w", encoding="utf-8") as f:
+                f.write(self.STANDART_TEXT)
+                text = self.STANDART_TEXT
+        else:
+            with open(self.config.pin_path, "r", encoding="utf-8") as f:
+                text = f.read()
+
+        return text
+
+    async def pin_message(self, text):
+        msg = await self.bot.send_message(self.config.workers_chat, text)
+        await self.bot.pin_chat_message(
+            self.config.workers_chat, msg.message_id, disable_notification=True
         )
-    )
+        self.config.pinned_msg_id = msg.message_id
+        logger.info(f"Pinned new message with id:{msg.message_id}")
 
+    def get_formatted_pin_text(self, text):
+        localnow = datetime_local_now()
+        timenow = localnow.strftime("%H:%M, %S cек")
 
-async def dynapins(bot: Bot):
-    if not isinstance(bot, Bot):
-        raise TypeError(
-            f"Argument 'bot' must be an instance of Bot, not '{type(bot).__name__}'"
+        topd_worker = "Хз"
+
+        in_casino = CasinoUser.select().count()
+        in_trading = TradingUser.select().count()
+        in_escort = EscortUser.select().count()
+
+        return emojize(
+            text.format(
+                services_status=self.get_work_status(),
+                topd_worker=topd_worker,
+                time=timenow,
+                in_casino=in_casino,
+                in_trading=in_trading,
+                in_escort=in_escort,
+            )
         )
 
-    workers_chat = config.workers_chat
-    update_time = config.pin_update_time
-    text = await format_pin_text(pin_text())
-    if text:
-        try:
-            message_id = config.pinned_msg_id
-        except NoOptionError:
-            message = await bot.send_message(workers_chat, text)
-            message_id = message.message_id
-            config.pinned_msg_id = message_id
+    async def start(self):
+        self._working = True
 
-        try:
-            await bot.pin_chat_message(
-                workers_chat, message_id, disable_notification=True
-            )
-        except MessageToPinNotFound:
-            message = await bot.send_message(workers_chat, text)
-            message_id = message.message_id
-            config.pinned_msg_id = message_id
-            await bot.pin_chat_message(
-                workers_chat, message_id, disable_notification=True
-            )
-        except ChatNotFound:
-            pass
+        while self._working:
+            text = self.get_pin_text()
+            formatted = self.get_formatted_pin_text(text)
 
-    while True:
-        await asyncio.sleep(update_time)
-        text = await format_pin_text(pin_text())
-        try:
-            await bot.edit_message_text(
-                chat_id=workers_chat, message_id=message_id, text=text
+            if self.config.pinned_msg_id is not None:
+                try:
+                    await self.bot.edit_message_text(
+                        formatted, self.config.workers_chat, self.config.pinned_msg_id
+                    )
+                    logger.debug(
+                        f"Edited pinned message id:{self.config.pinned_msg_id}"
+                    )
+                except MessageToEditNotFound:
+                    await self.pin_message(formatted)
+                except Exception as ex:
+                    logger.error(ex)
+
+            await sleep(self.config.pin_update_time)
+
+    def stop(self):
+        self._working = False
+
+    def get_work_status(self):
+        casino_work = self.config.casino_work
+        escort_work = self.config.escort_work
+        trading_work = self.config.trading_work
+
+        all_work = casino_work and escort_work and trading_work
+
+        return emojize(
+            "{casino_status}\n"
+            "{escort_status}\n"
+            "{trading_status}\n"
+            "{team_status}".format(
+                casino_status=f":full_moon: Казино СКАМ"
+                if casino_work
+                else f":new_moon: <del>Казино СКАМ</del>",
+                escort_status=f":full_moon: Эскорт СКАМ"
+                if escort_work
+                else f":new_moon: <del>Эскорт СКАМ</del>",
+                trading_status=f":full_moon: Трейдинг СКАМ"
+                if trading_work
+                else f":new_moon: <del>Трейдинг СКАМ</del>",
+                team_status=":full_moon: Общий статус: Ворк"
+                if all_work
+                else ":new_moon: Общий статус: Не ворк",
             )
-        except MessageCantBeEdited:
-            message = await bot.send_message(workers_chat, text)
-            message_id = message.message_id
-            config.pinned_msg_id = message_id
-        except MessageNotModified:
-            pass
-        except MessageTextIsEmpty:
-            pass
-        except MessageToEditNotFound:
-            message = await bot.send_message(workers_chat, text)
-            await bot.pin_chat_message(
-                workers_chat, message_id, disable_notification=True
-            )
-        except ChatNotFound:
-            pass
+        )
+
+    def save_new_pin_text(self, text):
+        with open(self.config.pin_path, "w", encoding="utf-8") as f:
+            f.write(text)

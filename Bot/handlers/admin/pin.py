@@ -3,12 +3,13 @@ from aiogram.dispatcher import FSMContext
 from aiogram.utils.text_decorations import html_decoration
 from loguru import logger
 
-from loader import dp
+from loader import dp, dynapinner
 from data import payload
 from data.keyboards import *
 from data.states import Pin
-from utils.executional import new_pin_text
-from utils.pinner import format_pin_text
+
+# from utils.executional import new_pin_text
+# from utils.pinner import format_pin_text
 
 
 @dp.message_handler(
@@ -30,18 +31,19 @@ async def change_pin(query: types.CallbackQuery):
 async def new_pin(message: types.Message, state: FSMContext):
     await message.answer(message.text, reply_markup=new_pin_keyboard)
     async with state.proxy() as data:
-        data["pin"] = message.text
+        data["pin_text"] = message.text
     await Pin.new.set()
 
 
 @dp.callback_query_handler(state=Pin.new, text="savepin", admins_chat=True)
 async def save_pin(query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
-        pin = data["pin"]
+        pin_text = data["pin_text"]
         try:
-            msg = await query.message.answer(await format_pin_text(pin))
+            text = dynapinner.get_formatted_pin_text(pin_text)
+            msg = await query.message.answer(text)
             await msg.reply("Новый закреп.")
-            new_pin_text(pin)
+            dynapinner.save_new_pin_text(pin_text)
         except KeyError as e:
             await query.message.answer(
                 f"Вы ввели неправильное сокращения для динамического закрепа - {{{str(e)[1:-1]}}}"

@@ -6,9 +6,10 @@ from pyrogram.session import Session
 from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import ParseMode
-from py_expression_eval import Parser
 
+from utils.pinner import DynamicPinner
 from utils.basefunctional import BaseCommands
+from utils.payments_checker import PayChecker
 from customutils.config import BotConfig
 
 """
@@ -31,8 +32,8 @@ bot = Bot(config.api_token, parse_mode=ParseMode.HTML)
 dp = Dispatcher(bot, loop=loop, storage=MemoryStorage())
 
 db_commands = BaseCommands()
-
-exp_parser = Parser()
+payments_checker = PayChecker(config.qiwi_check_time)
+dynapinner = DynamicPinner(config, bot)
 
 Session.notice_displayed = True  # fucking notice zaebala
 banker_client = Client("banker_client", config.api_id, config.api_hash)
@@ -64,12 +65,6 @@ for val in alowed_values:
     if MinDepositValues[0] < val:
         MinDepositValues.append(val)
 
-
-# Rates = [  # виды ставок первая - стандартная
-#     (75, 65, 55),
-#     (70, 60, 60),
-#     (80, 70, 50),
-# ]
 
 # useless
 BTC_REGEX = r"BTC_CHANGE_BOT\?start=(c_[a-f0-9]{32})"
