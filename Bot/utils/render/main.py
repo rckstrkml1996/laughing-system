@@ -36,7 +36,7 @@ def render_qiwibalance(balance, date):
 
     image_editable = ImageDraw.Draw(image)
 
-    amount_w, amount_h = font_semi.getsize(text_amount)
+    amount_w, _ = font_semi.getsize(text_amount)
 
     # letter spacing -3% (97%)
     width = (image_w - amount_w * 0.97) / 2
@@ -45,7 +45,7 @@ def render_qiwibalance(balance, date):
             (width, 298), letter, (256, 256, 256), font=font_semi  # white color
         )
 
-        w, h = font_semi.getsize(letter)
+        w, _ = font_semi.getsize(letter)
 
         width += w * 0.965
 
@@ -59,7 +59,7 @@ def render_qiwibalance(balance, date):
 @logger.catch
 def render_qiwitransfer(number: str, amount: str, date: str):
     image = Image.open(path.join(package_directory, "editable", "qiwitransfer.jpg"))
-    image_w, image_h = image.size
+    image_w, _ = image.size
 
     text_transfer = f"- {amount} ₽"
     text_amount = f"{amount} ₽"
@@ -84,8 +84,8 @@ def render_qiwitransfer(number: str, amount: str, date: str):
 
     image_editable = ImageDraw.Draw(image)
 
-    transfer_w, transfer_h = image_editable.textsize(text_transfer, font=font_bold)
-    number_w, number_h = image_editable.textsize(number, font=font_regular)
+    transfer_w, _ = image_editable.textsize(text_transfer, font=font_bold)
+    number_w, _ = image_editable.textsize(number, font=font_regular)
 
     width = (image_w - transfer_w) / 2
     image_editable.text((width, 376), text_transfer, (0, 0, 0), font=font_bold)
@@ -105,7 +105,7 @@ def render_qiwitransfer(number: str, amount: str, date: str):
 @logger.catch
 def render_sbertransfer(amount, recipient, date):
     image = Image.open(path.join(package_directory, "editable", "sbertransfer.png"))
-    image_w, image_h = image.size
+    image_w, _ = image.size
 
     text_amount = f"{amount} ₽"
 
@@ -141,8 +141,8 @@ def render_sbertransfer(amount, recipient, date):
 
     image_editable = ImageDraw.Draw(image)
 
-    recipient_w, recipient_h = font_display.getsize(recipient.upper())
-    amount_w, amount_h = font_bold.getsize(text_amount)
+    recipient_w, _ = font_display.getsize(recipient.upper())
+    amount_w, _ = font_bold.getsize(text_amount)
 
     # letter spacing -3.5% (96.5%)
     width = (image_w - amount_w * 0.965) / 2

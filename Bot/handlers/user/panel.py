@@ -6,9 +6,9 @@ from aiogram.types.input_file import InputFile
 from aiogram.utils.emoji import emojize
 from loguru import logger
 
-from loader import dp, db_commands
+from loader import dp, db_commands, config, StatusNames
 from models import Worker, Profit
-from customutils import datetime_local_now
+from customutils.datefunc import datetime_local_now
 from data.payload import (
     zap_text,
     worker_menu_text,

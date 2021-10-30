@@ -2,11 +2,9 @@ import re
 
 from aiogram.types import CallbackQuery, Message
 from aiogram.dispatcher.filters import BoundFilter
-from loguru import logger
 
 from models import Worker
-
-
+from loader import config
 
 
 class SendSummaryFilter(BoundFilter):

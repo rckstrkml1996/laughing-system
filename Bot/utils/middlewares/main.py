@@ -1,10 +1,9 @@
-from aiogram import types
+from aiogram.types import Message 
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from loguru import logger
 
 from models import Worker
-
-
+from loader import config
 from data.payload import new_username_text
 
 
@@ -14,8 +13,7 @@ class NewUsernameMiddleware(BaseMiddleware):
         self.chat = chat
         super(NewUsernameMiddleware, self).__init__()  # resrive in BaseMiddleware
 
-    async def on_process_message(self, message: types.Message, data: dict):
-        # later = time()
+    async def on_process_message(self, message: Message, data: dict):
         try:
             worker = Worker.get(cid=message.from_user.id)
             if worker.username != message.from_user.username:
@@ -38,5 +36,3 @@ class NewUsernameMiddleware(BaseMiddleware):
             logger.debug(
                 f"NewUsernameMiddleware - Worker [{message.from_user.id}] not found in base."
             )
-
-        # logger.debug(f"NewUsernameMiddleware handles: {time() - later}")

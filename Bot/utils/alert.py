@@ -39,7 +39,6 @@ async def alert_users(
             answer["cantparse_count"] += 1
             logger.error(
                 "Notification failed. aiogram couldn't properly parse the following text:\n"
-                f'"{info}"\n'
                 f"Exception: {ex}",
             )
         except ChatNotFound:

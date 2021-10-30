@@ -20,5 +20,5 @@ async def on_startup(dispatcher: Dispatcher):
 
 if __name__ == "__main__":
     executor.start_polling(
-        dp, skip_updates=config("skip_updates", bool), on_startup=on_startup
+        dp, skip_updates=config.skip_updates, on_startup=on_startup
     )

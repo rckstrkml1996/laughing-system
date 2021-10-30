@@ -3,7 +3,6 @@ import json
 from betterconf import field, Config
 from betterconf.config import AbstractProvider
 
-
 class JSONProvider(AbstractProvider):  # from abs class
     def __init__(self, config_path: str):
         self.config_path = config_path
@@ -19,8 +18,8 @@ class JSONProvider(AbstractProvider):  # from abs class
     def get(self, name):
         if name not in self._settings:
             self.edit(name, None) # set None ( Not created )
-
-        return self._settings.get(name)  # if value is - return, else - None. lib trow exception if None.
+        # get() can return None if name not in settings
+        return self._settings.get(name)
 
 
 provider = JSONProvider("../settings.json")
@@ -49,9 +48,11 @@ class BotConfig(Config):
     
     team_name = myfield("team_name", default="Demo Team")
     team_start = myfield("team_start", default="TeamStart 2021")
+    
     admins_chat = myfield("admins_chat", default=-563820238)
-    workers_chat = myfield("workers_chat", default=-577009620)
+    workers_chat = myfield("workers_chat", default=-678866288)
     outs_chat = myfield("outs_chat", default=-1001564888214)
+
     outs_link = myfield("outs_link", default="hideteamout")
     workers_link = myfield(
         "workers_link",

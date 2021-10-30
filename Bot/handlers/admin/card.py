@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 
-from loader import dp
+from loader import config, dp
 from data.payload import going_card_text, outgoing_card_text, oldnew_card_text
 from data.states import Card
 
@@ -15,7 +15,7 @@ async def card(message: types.Message):
 @dp.message_handler(state=Card.main, is_admin=True, admins_chat=True)
 async def new_card(message: types.Message, state: FSMContext):
     try:
-        old_card = config("qiwi_card", str)
+        old_card = config.qiwi_card
         config.qiwi_card = message.text
         if old_card:
             await message.answer(

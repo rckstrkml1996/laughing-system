@@ -1,8 +1,7 @@
 from aiogram.utils.emoji import emojize
 
+from loader import config
 
-
-# trading info
 
 trading_text = emojize(
     ":chart_with_upwards_trend: <b>Трейдинг</b> SCAM\n\n"

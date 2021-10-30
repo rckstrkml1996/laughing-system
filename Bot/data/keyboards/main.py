@@ -2,8 +2,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
-
-
+from loader import config
 
 # worker panel
 menu_keyboard = ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)

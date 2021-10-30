@@ -19,7 +19,7 @@ class IsWorking(BoundFilter):
 
     async def check(self, obj):
         user = self.get_target(obj)
-        casino_work = config("casino_work", bool)
+        casino_work = config.casino_work
 
         try:
             user_work = not CasinoUser.get(cid=user.id).stopped

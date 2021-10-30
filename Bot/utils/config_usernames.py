@@ -1,8 +1,6 @@
-from aiogram import Bot
 from loguru import logger
 
-
-from loader import casino_bot, escort_bot, trading_bot
+from loader import config, casino_bot, escort_bot, trading_bot
 
 
 async def update_bot_usernames():
@@ -23,22 +21,22 @@ async def update_bot_usernames():
         usernames_good = False
         config.casino_username = new_casino_username
         logger.debug(
-            f"Updated old {casino_username=} in config.cfg to {new_casino_username}"
+            f"Updated old {casino_username=} in config to {new_casino_username}"
         )
 
     if escort_username != new_escort_username:
         usernames_good = False
         config.escort_username = new_escort_username
         logger.debug(
-            f"Updated old {escort_username=} in config.cfg to {new_escort_username}"
+            f"Updated old {escort_username=} in config to {new_escort_username}"
         )
 
     if trading_username != new_trading_username:
         usernames_good = False
         config.trading_username = new_trading_username
         logger.debug(
-            f"Updated old {trading_username=} in config.cfg to {new_trading_username}"
+            f"Updated old {trading_username=} in config to {new_trading_username}"
         )
 
     if usernames_good:
-        logger.debug("Casino Escort Trading bots usernames is correct!")
+        logger.debug("Bot: Casino, Escort, Trading - usernames is correct!")

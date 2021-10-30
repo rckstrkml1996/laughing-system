@@ -1,6 +1,6 @@
 from aiogram.utils.emoji import emojize
 
-
+from loader import config
 
 # escort info
 

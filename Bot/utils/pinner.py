@@ -11,11 +11,10 @@ from aiogram.utils.exceptions import (
     ChatNotFound,
     MessageCantBeEdited,
 )
+
 from customutils import datetime_local_now
 from models import CasinoUser, TradingUser, EscortUser
-
-from loader import db_commands
-
+from loader import config, db_commands
 from data.payload import pin_text
 from utils.executional import get_work_status, get_work_moon, rub_usd_btcticker
 

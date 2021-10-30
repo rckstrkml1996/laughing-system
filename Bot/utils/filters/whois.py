@@ -1,8 +1,5 @@
-import re
-
-from aiogram.types import CallbackQuery, Message
+from aiogram.types import CallbackQuery
 from aiogram.dispatcher.filters import BoundFilter
-from loguru import logger
 
 from models import Worker
 
@@ -29,11 +26,6 @@ class IsWorkerFilter(BoundFilter):
                 return not self.is_worker  # not worker
         else:
             return False
-
-        # logger.debug(
-        #     f"IsWorkerFilter called not in private chat and group, type: {chat.type}, id: {chat.id}"
-        # )
-        # return False
 
 
 class IsAdminFilter(BoundFilter):

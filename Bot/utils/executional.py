@@ -6,12 +6,9 @@ import aiohttp
 from aiohttp.client_exceptions import ClientProxyConnectionError
 from aiogram.utils.emoji import emojize
 
-from models import Worker, CasinoUser, CasinoUserHistory
+from models import CasinoUser, CasinoUserHistory
 from customutils import datetime_local_now
-from qiwiapi import QiwiApi
-
-
-from loader import db_commands
+from loader import config, db_commands, StatusNames
 from data.payload import (
     services_status,
     casino_mamonth_info,

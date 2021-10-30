@@ -8,7 +8,7 @@ from aiogram.utils.emoji import emojize
 from loguru import logger
 
 from models import Worker
-from loader import dp, exp_parser, db_commands
+from loader import dp, exp_parser, db_commands, config
 from data import payload
 from utils.executional import (
     rub_usd_btcticker,
@@ -47,7 +47,7 @@ async def clc_command(message: types.Message):
     try:
         result = exp_parser.parse(text).evaluate({"x": 0.8, "xx": 0.7})
     except Exception as ex:
-        loguru.error(ex)
+        logger.error(ex)
         result = "хз"
 
     await message.reply(result)

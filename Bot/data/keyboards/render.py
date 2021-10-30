@@ -1,8 +1,5 @@
-# from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
-
-# 
 
 
 render_main_keyboard = InlineKeyboardMarkup()

@@ -1,8 +1,7 @@
 from aiogram.utils.emoji import emojize
 
+from loader import config
 
-
-# casino info
 
 casino_text = emojize(
     "Казик :slot_machine:\n\n"

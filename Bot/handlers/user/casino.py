@@ -8,7 +8,7 @@ from loguru import logger
 
 from models import CasinoUser, CasinoPayment, Worker
 from customutils import datetime_local_now
-from loader import dp, casino_bot
+from loader import config, dp, casino_bot, MinDepositValues
 from data import payload
 from data.states import CasinoAlert, ChangeMin
 from data.keyboards import *
@@ -41,7 +41,7 @@ async def casino_info(message: types.Message, worker: Worker, state: FSMContext)
 async def change_casino_minimal_dep(message: types.Message):
     await message.answer(
         "Введите новою сумму депозита для всех ваших новых мамонтов.\n"
-        f"От <b>{config('min_deposit', int)} RUB</b>"
+        f"От <b>{config.min_deposit} RUB</b>"
     )
     await ChangeMin.main.set()
 
@@ -51,14 +51,14 @@ async def change_casino_minimal_dep(message: types.Message):
 )
 async def invalid_cas_dep_amount(message: types.Message):
     await message.answer(
-        f"Сумма должна быть числом от <b>{config('min_deposit', int)} RUB</b>! Введи ещё раз:"
+        f"Сумма должна быть числом от <b>{config.min_deposit} RUB</b>! Введи ещё раз:"
     )
 
 
 @dp.message_handler(state=ChangeMin.main, is_worker=True)
 async def cas_dep_amount(message: types.Message, state: FSMContext, worker: Worker):
     amount = int(message.text)
-    if amount >= int(config("min_deposit", int)):
+    if amount >= config.min_deposit:
         worker.casino_min = amount
         worker.save()
 
@@ -68,7 +68,7 @@ async def cas_dep_amount(message: types.Message, state: FSMContext, worker: Work
         await state.finish()
     else:
         await message.answer(
-            f"Сумма слишком маленькая, введи сумму от <b>{config('min_deposit', int)} RUB</b>"
+            f"Сумма слишком маленькая, введи сумму от <b>{config.min_deposit} RUB</b>"
         )
 
 
@@ -121,7 +121,7 @@ async def update_mamonth_info(query: types.CallbackQuery, worker: Worker):
 
     if user.owner != worker:
         logger.warning(
-            f":update_info: Worker [{message.chat.id}] try get different mamonth!"
+            f":update_info: Worker [{query.from_user.id}] try get different mamonth!"
         )
         return
 
@@ -149,7 +149,7 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
 
     if user.owner != worker:
         logger.warning(
-            f":update_info: Worker [{message.chat.id}] try get different mamonth!"
+            f":update_info: Worker [{query.from_user.id}] try get different mamonth!"
         )
         return
 
@@ -182,7 +182,7 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
 
     if user.owner != worker:
         logger.warning(
-            f":update_info: Worker [{message.chat.id}] try get different mamonth!"
+            f":update_info: Worker [{query.from_user.id}] try get different mamonth!"
         )
         return
 
@@ -221,7 +221,7 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
 
     if user.owner != worker:
         logger.warning(
-            f":updatestopped: Worker [{message.chat.id}] try get different mamonth!"
+            f":updatestopped: Worker [{query.from_user.id}] try get different mamonth!"
         )
         return
 
@@ -304,7 +304,7 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
 
 @dp.callback_query_handler(text="all_alerts_cas", state="*", is_worker=True)
 async def cas_mamonths_alert(query: types.CallbackQuery):
-    await query.message.answer_photo(html_style_url, caption=payload.cas_alert_text)
+    await query.message.answer_photo(config.html_style_url, caption=payload.cas_alert_text)
     await CasinoAlert.alert.set()
     await query.answer("Лови.")
 
@@ -367,7 +367,7 @@ async def accept_pay(query: types.CallbackQuery):
     pay_id = query.data.split("_")[1]
     try:
         pay = CasinoPayment.get(id=pay_id)
-        check_time = config("qiwi_check_time", int) * 2  # - 3 just for somethink)
+        check_time = config.qiwi_check_time * 2  # - 3 just for somethink)
         exact_time = (datetime_local_now() - pay.created).seconds
 
         logger.debug(f"{check_time=}, {exact_time=}")

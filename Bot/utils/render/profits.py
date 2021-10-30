@@ -1,10 +1,10 @@
-import re
-from secrets import token_hex
 import os
+from secrets import token_hex
 
 from PIL import Image, ImageFont, ImageDraw, ImageFilter
 from loguru import logger
 
+from loader import config
 
 
 package_directory = os.path.dirname(os.path.abspath(__file__))
@@ -13,10 +13,10 @@ package_directory = os.path.dirname(os.path.abspath(__file__))
 @logger.catch
 def render_profit(
     all_profit: int, profit_sum: int, share_sum: int, service: str, username: str, analog: str
-):
+) -> str:
     image = Image.open(os.path.join(package_directory, "editable", "profit.jpg"))
 
-    profit_color = tuple(config("profit_render_color", int))  # 240,230,100,255
+    profit_color = tuple(config.profit_render_color)  # 240,230,100,255
     profit_light = (112, 191, 78, 255)
 
     general_text = "{:,}".format(all_profit).replace(",", " ") + " RUB"
@@ -39,7 +39,7 @@ def render_profit(
         30,
     )
 
-    w, h = font_general.getsize(general_text)
+    w, _ = font_general.getsize(general_text)
     ligthText(
         image,
         ((image.size[0] - w) / 2, 350),
@@ -50,7 +50,7 @@ def render_profit(
         fillLight=profit_light,
     )
 
-    w, h = font_analog.getsize(analog)
+    w, _ = font_analog.getsize(analog)
     ligthText(
         image,
         ((image.size[0] - w) / 2, 440),
@@ -72,7 +72,7 @@ def render_profit(
 
     profit_text = "{:,}".format(profit_sum).replace(",", " ") + " RUB"
 
-    w, h = font_info.getsize(profit_text)
+    w, _ = font_info.getsize(profit_text)
     ligthText(
         image,
         (1625 - w, 550),
@@ -85,7 +85,7 @@ def render_profit(
 
     share_text = "{:,}".format(share_sum).replace(",", " ") + " RUB"
 
-    w, h = font_info.getsize(share_text)
+    w, _ = font_info.getsize(share_text)
     ligthText(
         image,
         (1625 - w, 680),
@@ -118,6 +118,7 @@ def render_profit(
 
     img_path = f"media/{token_hex(6)}.jpg"
     image.save(img_path)
+
     return img_path
 
 
@@ -137,7 +138,7 @@ def ligthText(
 
 
 @logger.catch
-def textLightEffect(image, pos, text, width, font, fill):
+def textLightEffect(image, pos, text, width, font, fill) -> Image:
     # Create piece of canvas to draw text on and blur
     blurred = Image.new("RGBA", image.size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(blurred)

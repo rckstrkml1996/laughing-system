@@ -54,7 +54,7 @@ withdraw_overprice = emojize(":x: Недостаточно средств. Ва�
 int_error_text = emojize(":x: Сумма должна быть числом!")
 
 withdraw_min_text = emojize(
-    f":x: Минимальная сумма вывода - {config('min_withdraw', str)} RUB!"
+    f":x: Минимальная сумма вывода - {config.min_withdraw} RUB!"
 )
 
 withdraw_done_text = emojize(
@@ -66,12 +66,12 @@ withdraw_req_text = emojize(
 )
 deposit_minerror_text = emojize(
     ":money_bag: Введите сумму пополнения.\n\n"
-    f"Минимальная сумма: {config('min_deposit', str)} RUB"
+    f"Минимальная сумма: {config.min_deposit} RUB"
 )
 
 deposit_count_text = emojize(
     ":dollar: <b>Введите сумму</b> пополнения баланса.\nВаш баланс: {balance} RUB.\n\n"
-    f"Минимальная сумма: {config('min_deposit', str)} RUB."
+    f"Минимальная сумма: {config.min_deposit} RUB."
 )
 
 deposit_form_text = emojize(

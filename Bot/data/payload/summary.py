@@ -1,11 +1,7 @@
 from aiogram.utils.emoji import emojize
 
+from loader import config
 
-
-"""
-    Summary
-
-"""
 
 summary_text = emojize(
     "<b>Неизвестная команда.</b> :man_shrugging:\n"

@@ -7,7 +7,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from loguru import logger
 
-from loader import dp, banker_client
+from loader import dp, banker_client, ServiceNames, BTC_REGEX
 from models import Worker, Profit
 from utils.paysystem import send_profit
 from data import payload

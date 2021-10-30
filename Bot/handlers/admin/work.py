@@ -55,9 +55,9 @@ async def work_command(message: types.Message):
 
 @dp.callback_query_handler(text="toggle_status", admins_chat=True, is_admin=True)
 async def toggle_work_status(query: types.CallbackQuery):
-    casino_work = config("casino_work", bool)  # return bool values
-    escort_work = config("escort_work", bool)
-    trading_work = config("trading_work", bool)
+    casino_work = config.casino_work  # return bool values
+    escort_work = config.escort_work
+    trading_work = config.trading_work
 
     all_work = casino_work and escort_work and trading_work
 
@@ -117,9 +117,9 @@ async def toggle_work_status(query: types.CallbackQuery):
 # toggle_casino_status
 @dp.callback_query_handler(text="toggle_casino_status", admins_chat=True, is_admin=True)
 async def toggle_work_status(query: types.CallbackQuery):
-    casino_work = not config("casino_work", bool)  # return bool values
-    escort_work = config("escort_work", bool)
-    trading_work = config("trading_work", bool)
+    casino_work = not config.casino_work  # return bool values
+    escort_work = config.escort_work
+    trading_work = config.trading_work
 
     config.casino_work = casino_work
 
@@ -166,9 +166,9 @@ async def toggle_work_status(query: types.CallbackQuery):
 # toggle_escort_status
 @dp.callback_query_handler(text="toggle_escort_status", admins_chat=True, is_admin=True)
 async def toggle_work_status(query: types.CallbackQuery):
-    casino_work = config("casino_work", bool)  # return bool values
-    escort_work = not config("escort_work", bool)
-    trading_work = config("trading_work", bool)
+    casino_work = config.casino_work  # return bool values
+    escort_work = not config.escort_work
+    trading_work = config.trading_work
 
     config.escort_work = escort_work
 
@@ -217,9 +217,9 @@ async def toggle_work_status(query: types.CallbackQuery):
     text="toggle_trading_status", admins_chat=True, is_admin=True
 )
 async def toggle_work_status(query: types.CallbackQuery):
-    casino_work = config("casino_work", bool)  # return bool values
-    escort_work = config("escort_work", bool)
-    trading_work = not config("trading_work", bool)
+    casino_work = config.casino_work  # return bool values
+    escort_work = config.escort_work
+    trading_work = not config.trading_work
 
     config.trading_work = trading_work
 

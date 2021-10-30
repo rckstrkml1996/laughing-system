@@ -1,6 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
+from loader import config
 
 
 # on new summary

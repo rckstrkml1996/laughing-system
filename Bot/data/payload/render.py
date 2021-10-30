@@ -1,5 +1,6 @@
 from aiogram.utils.emoji import emojize
 
+
 render_main_text = "Что будем отрисовывать?"
 
 render_qiwi_balance_text = emojize(

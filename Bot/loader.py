@@ -1,3 +1,6 @@
+import sys
+import asyncio
+
 from pyrogram import Client
 from pyrogram.session import Session
 from aiogram import Bot, Dispatcher
@@ -18,8 +21,14 @@ from customutils.config import BotConfig
 
 config = BotConfig()
 
+# for aiohttp connection by proxy, too slow for windows :(
+if sys.platform == "win32":
+    asyncio.set_event_loop(asyncio.SelectorEventLoop())
+
+loop = asyncio.get_event_loop()
+
 bot = Bot(config.api_token, parse_mode=ParseMode.HTML)
-dp = Dispatcher(bot, storage=MemoryStorage())
+dp = Dispatcher(bot, loop=loop, storage=MemoryStorage())
 
 db_commands = BaseCommands()
 
@@ -50,7 +59,7 @@ ServiceNames = ["Казино", "Эскорт", "Трейдинг", "Прямо�
 
 alowed_values = [100, 300, 500, 750, 1000, 1500, 3000, 5000, 10000]
 
-MinDepositValues = [config("min_deposit", int)]
+MinDepositValues = [config.min_deposit]
 for val in alowed_values:
     if MinDepositValues[0] < val:
         MinDepositValues.append(val)

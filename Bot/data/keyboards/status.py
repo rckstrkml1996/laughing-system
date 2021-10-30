@@ -1,11 +1,6 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
-
-
-# buttons = []
-
-# for i, status_name in enumerate(StatusNames):
-# buttons.append(InlineKeyboardButton(status_name, callback_data=None))
+from loader import StatusNames
 
 
 def new_status_keyboard(worker_id, i: int) -> InlineKeyboardMarkup:

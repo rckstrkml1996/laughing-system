@@ -2,8 +2,7 @@ import os
 
 from aiogram.utils.emoji import emojize
 
-
-
+from loader import config
 
 zap_text = emojize(":zap:")
 
@@ -22,7 +21,7 @@ new_chat_member_text = emojize(
     ":gem: <a href='t.me/{bot_username}'>Бот для всего</a>\n"
     f":money_with_wings: <a href='t.me/{outs_link}'>Выплаты</a>\n"
     ":fire: Процент выплат в смотри <b>закрепе</b>\n"
-    f":credit_card: Пополнения от <b>{config('min_deposit', int)} RUB</b>"
+    f":credit_card: Пополнения от <b>{config.min_deposit} RUB</b>"
 )
 
 # multy use

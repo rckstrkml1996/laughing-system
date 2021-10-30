@@ -3,7 +3,7 @@ from asyncio import sleep
 from aiogram import types
 from loguru import logger
 
-from loader import dp, bot_client
+from loader import dp, bot_client, config
 from models import Worker
 
 
