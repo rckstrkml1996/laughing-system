@@ -27,7 +27,7 @@ async def get_profile_photo(chat_id: int) -> InputFile:
     active = False
     if profile_pictures.total_count != 0:
         active = True
-        await profile_pictures.photos[-1][-1].download(photo_path)
+        await profile_pictures.photos[-1][-1].download(destination_file=photo_path)
 
     render_profile(photo_path, active)  # make some shit
     return InputFile(photo_path)

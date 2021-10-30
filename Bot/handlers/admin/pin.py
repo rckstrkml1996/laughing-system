@@ -5,18 +5,15 @@ from loguru import logger
 
 from loader import dp, dynapinner
 from data import payload
-from data.keyboards import *
+from data.keyboards import change_pin_keyboard, new_pin_keyboard
 from data.states import Pin
-
-# from utils.executional import new_pin_text
-# from utils.pinner import format_pin_text
 
 
 @dp.message_handler(
     commands=["pinned", "pin"], admins_chat=True, is_admin=True, state="*"
 )
 async def pinned_command(message: types.Message):
-    text = html_decoration.unparse(payload.pin_text())
+    text = html_decoration.unparse(dynapinner.get_pin_text())
     await message.answer(text)
     await message.reply(payload.pin_help_text, reply_markup=change_pin_keyboard)
 
