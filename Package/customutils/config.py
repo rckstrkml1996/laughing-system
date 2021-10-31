@@ -97,7 +97,7 @@ class BotConfig(Config):
 
     qiwi_card = myfield("qiwi_card", default="Русский")
     qiwi_check_time = myfield("qiwi_check_time", default=75)
-    qiwi_tokens = myfield("qiwi_tokens", default={"token": None, "proxy": None})
+    qiwi_tokens = myfield("qiwi_tokens", default=None) # {"token": None, "proxy": None}
 
     min_deposit = myfield("min_dep", default=300)
 

@@ -9,12 +9,17 @@ class Qiwi(Api):
         self.validate_proxy = False
 
         if validate:
-            if not re.match(r"[a-fA-F\d]{32}", token):
+            if not re.fullmatch(r"[a-fA-F\d]{32}", token):
                 raise ValueError(
-                    "Token must be 32 len, and match [a-fA-F\d] regexp." f"Not {token}"
+                    f"Token must be 32 len, and match [a-fA-F\d] regexp, not '{token}'"
                 )
             if proxy_url is not None:
                 self.validate_proxy = True
+                regexp = r"(http|https):\/\/(.+):(.+)@(\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}):(\d+)"
+                if not re.fullmatch(regexp, proxy_url):
+                    raise ValueError(
+                        f"Proxy must match {regexp}, '{proxy_url}' - does not match!"
+                    )
 
         super().__init__(token, proxy_url, self.validate_proxy)
 

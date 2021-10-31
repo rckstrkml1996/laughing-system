@@ -40,13 +40,15 @@ async def qiwi_add_bot(query: CallbackQuery):
 async def qiwi_new(message: Message, state: FSMContext):
     data = message.text.split("\n")
 
-    token = data[0]
-    proxy_url = None
-    if len(data) >= 2:
-        proxy_url = data[1]
+    try:
+        if len(data) >= 2:
+            qiwi = Qiwi(data[0], data[1])  # token, proxy
+        else:
+            qiwi = Qiwi(data[0])  # only token
 
-    # Qiwi(token, proxy_url)
+        await state.finish()
+    except Exception as ex:
+        print(ex)
+        await message.reply(ex)
 
-    await state.finish()
-
-    await message.answer(invalid_newqiwi_text)
+    # await message.answer(invalid_newqiwi_text)
