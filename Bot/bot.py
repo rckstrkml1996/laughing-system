@@ -36,9 +36,10 @@ async def on_startup(dispatcher: Dispatcher):
 
 async def on_shutdown(dispatcher: Dispatcher):
     exit_event.set()
-    
+
     payments_checker.stop()
     dynapinner.stop()
+
 
 def main():
     c_usage = threading.Thread(target=update_cpu_usage)

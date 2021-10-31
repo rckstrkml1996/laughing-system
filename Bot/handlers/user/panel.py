@@ -6,7 +6,8 @@ from aiogram.types.input_file import InputFile
 from aiogram.utils.emoji import emojize
 from loguru import logger
 
-from loader import dp, db_commands, config, StatusNames
+from loader import dp, config, StatusNames
+from utils import basefunctional
 from models import Worker, Profit
 from customutils.datefunc import datetime_local_now
 from data.payload import (
@@ -23,7 +24,7 @@ from utils.render import render_profile
 
 async def get_profile_photo(chat_id: int) -> InputFile:
     profile_pictures = await dp.bot.get_user_profile_photos(chat_id)
-    photo_path = f"media/{chat_id}.jpg"
+    photo_path = f"../prfmedia/{chat_id}.jpg"
     active = False
     if profile_pictures.total_count != 0:
         active = True
@@ -52,7 +53,7 @@ async def worker_profile_callback(query: types.CallbackQuery, worker: Worker):
     in_team = datetime_local_now() - worker.registered
 
     len_profits = worker.profits.count()
-    all_balance = db_commands.get_profits_sum(worker.id)
+    all_balance = basefunctional.get_profits_sum(worker.id)
     middle_profits = 0
     if len_profits:
         middle_profits = int(all_balance / len_profits)
@@ -92,7 +93,7 @@ async def worker_welcome(message: types.Message):
     in_team = datetime_local_now() - worker.registered
 
     len_profits = worker.profits.count()
-    all_balance = db_commands.get_profits_sum(worker.id)
+    all_balance = basefunctional.get_profits_sum(worker.id)
     middle_profits = 0
     if len_profits:
         middle_profits = int(all_balance / len_profits)
@@ -141,7 +142,7 @@ async def project_info(message: types.Message, state: FSMContext):
         about_project_text.format(
             team_start=config.team_start,
             team_profits=team_profits,
-            profits_sum=db_commands.all_profits_sum(),
+            profits_sum=basefunctional.all_profits_sum(),
             services_status=get_work_status(),
         ),
         reply_markup=about_project_keyboard,
@@ -161,7 +162,7 @@ async def toggle_username(query: types.CallbackQuery):
         )
 
         len_profits = worker.profits.count()
-        all_balance = db_commands.get_profits_sum(worker.id)
+        all_balance = basefunctional.get_profits_sum(worker.id)
 
         middle_profits = 0
         if len_profits:

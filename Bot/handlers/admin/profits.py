@@ -7,21 +7,16 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from loguru import logger
 
-from loader import dp, banker_client, ServiceNames, BTC_REGEX
-from models import Worker, Profit
-from utils.paysystem import send_profit
+from loader import dp, banker_client, BTC_REGEX
+from models import Profit
 from data import payload
 from data.keyboards import *
-from data.states import BtcClient, MakeProfit
+from data.states import BtcClient
 from data.payload import (
     btc_authed_text,
     check_true_text,
 )
 
-
-@dp.message_handler(commands=["btc_logout"], admins_chat=True, is_admin=True)
-async def logout_btc_account(message: types.Message):
-    await message.answer("Пока не сделал)")
 
 @dp.message_handler(regexp=BTC_REGEX, admins_chat=True, is_admin=True)
 async def new_btc_check(message: types.Message, regexp):
@@ -126,9 +121,10 @@ async def made_check(amount):
     await banker_client.send_message("BTC_CHANGE_BOT", amount)
 
     check = await get_check_inst()
-    return check
 
     await banker_client.disconnect()
+
+    return check
 
 
 @dp.callback_query_handler(
@@ -164,7 +160,7 @@ async def truepay_qr_command(query: types.CallbackQuery):
                     profit_link=profit.msg_url,  # save link in base
                     cid=worker.cid,
                     name=worker.username if worker.username else worker.name,
-                    service=ServiceNames[profit.service],
+                    service="CЕРВИС",
                     amount=profit.amount,
                 )
             )
@@ -245,47 +241,3 @@ async def code_request(message: types.Message, state: FSMContext):
     logger.debug("Logged in done.")
     await banker_client.disconnect()
     await state.finish()
-
-
-@dp.message_handler(
-    commands=["mkprft", "make_profit"], state="*", admins_chat=True, is_admin=True
-)
-async def make_profit_command(message: types.Message):
-    await message.answer(
-        payload.admin_make_profit_text,
-        reply_markup=cancel_keyboard,
-        disable_web_page_preview=True,
-    )
-    await MakeProfit.main.set()
-
-
-@dp.message_handler(state=MakeProfit.main, admins_chat=True, is_admin=True)
-async def make_profit_make(message: types.Message, state: FSMContext):
-    textlist = message.text.split()
-    if len(textlist) == 4:
-        msg = await message.answer("Выполняю!")
-        try:
-            worker = Worker.get(cid=textlist[0])
-            if textlist[3] in map(lambda v: str(v), range(len(ServiceNames))):
-                if textlist[2].isdigit():
-                    if int(textlist[2]) <= 100:
-                        moll = int(textlist[2]) / 100
-                        try:
-                            profit = Profit.create(
-                                owner=worker,
-                                amount=int(textlist[1]),
-                                share=int(int(textlist[1]) * moll),
-                                service=int(textlist[3]),
-                            )
-                            await send_profit(
-                                profit, moll, ServiceNames[int(textlist[3])]
-                            )
-                            await msg.edit_text("Выполнено!")
-                            await state.finish()
-                            return
-                        except:
-                            await message.answer("Ошибка в создании модели профита.")
-        except Worker.DoesNotExist:
-            pass
-
-    await message.answer("Неправильно! Еще раз введи.", reply_markup=cancel_keyboard)

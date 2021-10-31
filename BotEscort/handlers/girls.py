@@ -60,7 +60,7 @@ async def girl_newphoto(query: CallbackQuery):
     photo = (
         girl_photo.file_id
         if girl_photo.file_id
-        else InputFile(f"../Bot/{girl_photo.saved_path}")
+        else InputFile(f"../media/{girl_photo.saved_path}")
     )
     logger.info(f"in girl_newphoto func {photo=}")
 

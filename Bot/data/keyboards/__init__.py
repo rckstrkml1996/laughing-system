@@ -3,7 +3,9 @@ from .admin import *
 from .render import *
 from .summary import *
 from .status import *
+from .qiwi import *
 from .escort import *
+
 # from .status import new_status_keyboard
 # from .escort import (
 #     escort_mamonths_keyboard,

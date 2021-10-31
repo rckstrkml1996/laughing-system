@@ -8,7 +8,7 @@ from aiogram.utils.emoji import emojize
 
 from models import CasinoUser, CasinoUserHistory
 from customutils import datetime_local_now
-from loader import config, db_commands, StatusNames
+from loader import config, StatusNames
 from data.payload import (
     services_status,
     casino_mamonth_info,
@@ -17,6 +17,7 @@ from data.payload import (
     casino_text,
 )
 from data.keyboards import cas_info_keyboard, esc_info_keyboard
+from utils import basefunctional
 
 
 def get_casino_info(uniq_key) -> str:
@@ -65,9 +66,9 @@ def get_casino_mamonth_info(user: CasinoUser) -> str:
     games_win = user.history.where(CasinoUserHistory.editor == 2).count()
     adds = user.history.where(CasinoUserHistory.editor == 0)
     adds_count = adds.count()
-    adds_amount = db_commands.casino_history_sum(user.id, editor=2)
-    pays_amount = db_commands.casino_history_sum(user.id)  # editor == 0
-    # pays_amount = db_commands.casino_pays_sum(user.id)  # done == 2
+    adds_amount = basefunctional.casino_history_sum(user.id, editor=2)
+    pays_amount = basefunctional.casino_history_sum(user.id)  # editor == 0
+    # pays_amount = basefunctional.casino_pays_sum(user.id)  # done == 2
     games_lose = user.history.where(CasinoUserHistory.editor == 3).count()
 
     localnow = datetime_local_now()
@@ -211,7 +212,7 @@ def get_info_about_worker(worker):
     in_team = datetime_local_now() - worker.registered
 
     len_profits = worker.profits.count()
-    sum_profits = db_commands.get_profits_sum(worker.id)
+    sum_profits = basefunctional.get_profits_sum(worker.id)
 
     try:
         middle_profits = int(sum_profits / len_profits)

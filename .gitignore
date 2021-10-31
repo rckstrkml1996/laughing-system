@@ -42,3 +42,8 @@ media/
 
 Bot/utils/render/editable/blessprofit.jpg
 Bot/utils/render/editable/hideprofit.jpg
+
+# dont ignore media
+!media
+# ignore all inside media
+media/*

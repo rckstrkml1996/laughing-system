@@ -51,7 +51,7 @@ def render_qiwibalance(balance, date):
 
     image_editable.text((64, 31), date, (0, 0, 0), font=font_medium)
 
-    img_path = f"media/{token_hex(6)}.png"
+    img_path = f"../media/qb{token_hex(6)}.png"
     image.save(img_path)
     return img_path
 
@@ -97,7 +97,7 @@ def render_qiwitransfer(number: str, amount: str, date: str):
 
     image_editable.text((31, 1167), text_amount, (0, 0, 0), font=font_regular)
 
-    img_path = f"media/{token_hex(6)}.jpg"
+    img_path = f"../media/qt{token_hex(6)}.jpg"
     image.save(img_path)
     return img_path
 
@@ -163,6 +163,6 @@ def render_sbertransfer(amount, recipient, date):
 
     image_editable.text((44, 28), date, (255, 255, 255), font=font_medium)
 
-    img_path = f"media/{token_hex(6)}.png"
+    img_path = f"../media/st{token_hex(6)}.png"
     image.save(img_path)
     return img_path

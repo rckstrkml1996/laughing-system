@@ -4,19 +4,21 @@ from secrets import token_hex
 from PIL import Image, ImageFont, ImageDraw, ImageFilter
 from loguru import logger
 
-from loader import config
-
-
 package_directory = os.path.dirname(os.path.abspath(__file__))
 
 
 @logger.catch
 def render_profit(
-    all_profit: int, profit_sum: int, share_sum: int, service: str, username: str, analog: str
+    all_profit: int,
+    profit_sum: int,
+    share_sum: int,
+    service: str,
+    username: str,
+    analog: str,
 ) -> str:
     image = Image.open(os.path.join(package_directory, "editable", "profit.jpg"))
 
-    profit_color = tuple(config.profit_render_color)  # 240,230,100,255
+    profit_color = (255, 255, 255, 255)
     profit_light = (112, 191, 78, 255)
 
     general_text = "{:,}".format(all_profit).replace(",", " ") + " RUB"
@@ -116,7 +118,7 @@ def render_profit(
         fillLight=profit_light,
     )
 
-    img_path = f"media/{token_hex(6)}.jpg"
+    img_path = f"../media/prft{token_hex(6)}.jpg"
     image.save(img_path)
 
     return img_path

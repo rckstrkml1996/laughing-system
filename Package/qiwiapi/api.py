@@ -1,4 +1,3 @@
-import re
 from time import time
 from datetime import datetime
 from typing import Union
@@ -10,29 +9,7 @@ from .exceptions import InvalidToken, InvalidAccount, UnexpectedResponse
 from .types import Accounts, TotalPayments, Payments, PaymentInfo, Profile
 
 
-def get_currency(curr: int):  # currency
-    return (
-        "RUB"
-        if curr == 643
-        else "USD"
-        if curr == 840
-        else "KZT"
-        if curr == 398
-        else "Валюта."
-    )
-
-
-def get_identification_level(level: str):
-    return (
-        "Основной"
-        if level == "SIMPLE" or level == "VERIFIED"
-        else "Профессиональный"
-        if level == "FULL"
-        else "Без верификации"
-    )
-
-
-class QiwiApi:
+class Api:
     """
     Манипуляции напрямую с Qiwi API
     """
@@ -196,16 +173,3 @@ class QiwiApi:
         session = self.session  # bugfix
         if session is not None:
             await session.close()
-
-
-def get_api(conf_token: str):
-    srch = re.search(r"\(([^\(^\)]+)\)", conf_token)
-    proxy_url = None
-    if srch:
-        proxy_url = srch.group(1)
-        return (
-            QiwiApi(token=conf_token.replace(srch.group(0), ""), proxy_url=proxy_url),
-            proxy_url,
-        )
-
-    return QiwiApi(conf_token), proxy_url

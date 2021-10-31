@@ -154,7 +154,7 @@ async def inv_create_form_escort_photo(message: types.Message):
 async def inv_create_form_escort_photo(
     message: types.Message, worker: Worker, state: FSMContext
 ):
-    photo_path = f"media/esc{token_hex(6)}.jpg"
+    photo_path = f"../media/esc{token_hex(6)}.jpg"
     await message.photo[-1].download(destination_file=photo_path)
 
     # await message.answer_photo(InputFile(photo_path))
@@ -193,7 +193,7 @@ async def inv_create_form_escort_photo(message: types.Message, state: FSMContext
 
 @dp.message_handler(state=EscortNewForm.photos, content_types=["photo"])
 async def inv_create_form_escort_photo(message: types.Message, state: FSMContext):
-    photo_path = f"media/esc{token_hex(6)}.jpg"
+    photo_path = f"../media/esc{token_hex(6)}.jpg"
     await message.photo[-1].download(destination_file=photo_path)
 
     async with state.proxy() as data:

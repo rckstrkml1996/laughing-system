@@ -2,7 +2,8 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from loguru import logger
 
-from loader import dp, db_commands
+from loader import dp
+from utils import basefunctional
 from data import payload
 from data.keyboards import summary_start_keyboard, summary_blocked_keyboard
 from models import Worker
@@ -41,7 +42,7 @@ async def welcome(message: types.Message, state: FSMContext):
             await worker_welcome(message)  # workers menu
     except Worker.DoesNotExist:
         logger.debug(f"User - {message.chat.id}, first time start bot")
-        db_commands.create_worker(
+        basefunctional.create_worker(
             chat_id=message.chat.id,
             name=message.chat.full_name,
             username=message.chat.username,

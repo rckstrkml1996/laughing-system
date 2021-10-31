@@ -8,7 +8,8 @@ from aiogram.utils.emoji import emojize
 from loguru import logger
 
 from models import Worker
-from loader import dp, db_commands, config
+from loader import dp, config
+from utils import basefunctional
 from data import payload
 from utils.executional import (
     rub_usd_btcticker,
@@ -117,8 +118,8 @@ async def team_top(message: types.Message):
     await message.delete()
 
     logger.debug(f"User - {message.from_user.id}, wants /top in chat.")
-    query = db_commands.get_topworkers_all(limit=10)  # limit = 15
-    all_profits = db_commands.get_profits_all()
+    query = basefunctional.get_topworkers_all(limit=10)  # limit = 15
+    all_profits = basefunctional.get_profits_all()
 
     if query.count() == 0:
         await message.answer(payload.top_none_text)
@@ -161,8 +162,8 @@ async def team_top_day(message: types.Message):
     await message.delete()
 
     logger.debug(f"User - {message.from_user.id}, wants /topm in chat.")
-    query = db_commands.get_topworkers_month(limit=10)  # limit = 15 autodelta
-    all_profits = db_commands.get_profits_month()
+    query = basefunctional.get_topworkers_month(limit=10)  # limit = 15 autodelta
+    all_profits = basefunctional.get_profits_month()
 
     if query.count() == 0:
         await message.answer(payload.top_none_text)
@@ -206,8 +207,8 @@ async def team_top_day(message: types.Message):
     await message.delete()
 
     logger.debug(f"User - {message.from_user.id}, wants /topd in chat.")
-    query = db_commands.get_topworkers_day(limit=10)  # limit = 15
-    all_profits = db_commands.get_profits_day_amount()
+    query = basefunctional.get_topworkers_day(limit=10)  # limit = 15
+    all_profits = basefunctional.get_profits_day_amount()
 
     if query.count() == 0:
         await message.answer(payload.top_none_text)

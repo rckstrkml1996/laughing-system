@@ -2,43 +2,50 @@ from asyncio import sleep
 
 from loguru import logger
 
+from models import Worker, Profit
+from utils.render import render_profit
+from utils import basefunctional
+
 
 class PayChecker:
+    SERVICE_NAMES = ["Казино", "Эскорт", "Трейдинг", "Прямой перевод"]
+
     def __init__(self, sleep_time: int = 50):
         self._working = False
         self.sleep_time = sleep_time
 
-    async def start(self):
+    def work(self):
         self._working = True
-        logger.debug("QiwiPaymentsParser started.")
-
-        while self._working:
-            # if config.qiwi_tokens is not None:
-            #     if isinstance(config.qiwi_tokens, list):
-            #         new_token = new_token[0] # get last token
-
-            #     if new_token != token:
-            #         token = new_token
-            #         api, _ = get_api(token)
-            #         parser = QiwiPaymentsParser(api, on_new_payment)
-            #         logger.info(f"Parsing payments with new qiwi {token}")
-
-            #     try:
-            #         await parser.check()
-            #         logger.debug(f"Checked qiwi [{parser.api.token}] payments.")
-            #     except (ClientProxyConnectionError, TimeoutError):
-            #         delete_api_proxy(token)
-            #         logger.warning("Deleting Qiwi - Lock [TErr, ClErr]")
-            #     except Exception as ex:
-            #         logger.exception(ex)
-            #         token = new_token
-            #         api, _ = get_api(token)
-            #         parser = QiwiPaymentsParser(api, on_new_payment)
-            #         logger.info(f"Parsing payments with new qiwi {token}")
-            #     finally:
-            #         await parser.api.close()
-
-            await sleep(self.sleep_time, int)
+        logger.debug("PayChecker working.")
 
     def stop(self):
         self._working = False
+
+    async def check_casino(self):
+        pass
+
+    async def start(self):
+        self.work()
+
+        profit = Profit.create(
+            owner=Worker.get(),
+            amount=123,
+            share=100,
+        )
+
+        while self._working:
+            await self.send_profit(profit)
+
+            await sleep(self.sleep_time, int)
+
+    async def send_profit(self, profit: Profit):
+        all_profit = basefunctional.get_profits_sum(profit.owner.id)
+        rendered_profit_path = render_profit(
+            all_profit,
+            profit.amount,
+            profit.share,
+            self.SERVICE_NAMES[profit.service],
+            profit.owner.username,
+            "...",  # analog text
+        )
+        print(rendered_profit_path)
