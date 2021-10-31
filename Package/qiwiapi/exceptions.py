@@ -8,3 +8,9 @@ class InvalidToken(Exception):
 
 class UnexpectedResponse(Exception):
     pass
+
+
+class InvalidProxy(Exception):
+    """raises when proxy check failed"""
+
+    pass

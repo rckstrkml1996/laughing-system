@@ -23,10 +23,8 @@ class Pin(StatesGroup):
     new = State()
 
 
-class Qiwi(StatesGroup):
-    new = State()
-    add_proxy = State()
-    delete = State()
+class NewQiwi(StatesGroup):
+    main = State()
 
 
 class CasinoAlert(StatesGroup):

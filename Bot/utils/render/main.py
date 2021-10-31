@@ -151,7 +151,7 @@ def render_sbertransfer(amount, recipient, date):
             (width, 441), letter, (255, 255, 255), font=font_bold  # white color
         )
 
-        w, h = font_bold.getsize(letter)
+        w, _ = font_bold.getsize(letter)
 
         width += w * 0.965
 

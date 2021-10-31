@@ -13,3 +13,4 @@ psutil
 cryptography
 tgcrypto
 betterconf
+aiohttp_proxy

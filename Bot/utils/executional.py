@@ -1,9 +1,7 @@
 import re
 import random
-from asyncio.exceptions import TimeoutError
 
 import aiohttp
-from aiohttp.client_exceptions import ClientProxyConnectionError
 from aiogram.utils.emoji import emojize
 
 from models import CasinoUser, CasinoUserHistory
@@ -254,15 +252,4 @@ def delete_api_proxy(conf_token: str):
         return srch.group(0)[1:-1]
 
 
-async def check_proxy(proxy_url: str):
-    url = "http://example.com"
-    answer = True
-    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(4)) as session:
-        try:
-            await session.get(url, proxy=proxy_url, ssl=False)
-        except TimeoutError:  # this is for different log
-            answer = False
-        except ClientProxyConnectionError:
-            answer = False  # this is for different log
 
-        return answer

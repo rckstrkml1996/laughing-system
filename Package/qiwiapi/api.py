@@ -1,11 +1,13 @@
 from time import time
 from datetime import datetime
+from asyncio.exceptions import TimeoutError
 from typing import Union
 
 import aiohttp
+from aiohttp.client_exceptions import ClientProxyConnectionError, ClientHttpProxyError
 from pydantic.error_wrappers import ValidationError
 
-from .exceptions import InvalidToken, InvalidAccount, UnexpectedResponse
+from .exceptions import InvalidToken, InvalidAccount, UnexpectedResponse, InvalidProxy
 from .types import Accounts, TotalPayments, Payments, PaymentInfo, Profile
 
 
@@ -14,9 +16,11 @@ class Api:
     Манипуляции напрямую с Qiwi API
     """
 
-    def __init__(self, token: str, proxy_url: str = None):
+    def __init__(self, token: str, proxy_url: str = None, check_proxy: bool = False):
         self.token = token
         self.proxy = proxy_url  # only http or https proxy.
+        # self.proxy_auth = aiohttp.BasicAuth("3n4bvPyg", "B6NCe3Bji")
+        self.validate_proxy = check_proxy
         self.profile = None
         self._session: aiohttp.ClientSession = None
         self.headers = {"authorization": "Bearer " + token}
@@ -29,7 +33,7 @@ class Api:
     async def get_new_profile(self):
         url = "https://edge.qiwi.com/person-profile/v1/profile/current"
 
-        response = await self.session.get(url, proxy=self.proxy)
+        response = await self.session.get(url, proxy=self.proxy, ssl=False)
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -41,6 +45,14 @@ class Api:
 
         self.profile = Profile(**json)
         return self.profile
+
+    def get_new_session(self) -> aiohttp.ClientSession:
+        return aiohttp.ClientSession(
+            connector=aiohttp.TCPConnector(verify_ssl=False),
+            timeout=aiohttp.ClientTimeout(5),
+            trust_env=True,
+            headers=self.headers,
+        )
 
     @property  # <- уже исполниная функция без абьедка
     def session(self) -> aiohttp.ClientSession:
@@ -56,19 +68,15 @@ class Api:
         """
         return str(int(time() * 1000))
 
-    def get_new_session(self) -> aiohttp.ClientSession:
-        return aiohttp.ClientSession(
-            connector=aiohttp.TCPConnector(),
-            headers=self.headers,
-            timeout=aiohttp.ClientTimeout(5),
-            trust_env=True,
-        )
-
     async def get_balance(self):
+        if self.validate_proxy:
+            if not await self.check_proxy():
+                raise InvalidProxy(f"'{self.proxy}' is invalid!")
+
         profile = await self.get_profile()
         url = f"https://edge.qiwi.com/funding-sources/v2/persons/{profile.contractInfo.contractId}/accounts"
 
-        response = await self.session.get(url, proxy=self.proxy)
+        response = await self.session.get(url, proxy=self.proxy, ssl=False)
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -85,7 +93,9 @@ class Api:
         wallet = profile.contractInfo.contractId
         url = f"https://edge.qiwi.com/payment-history/v2/persons/{wallet}/payments"
 
-        response = await self.session.get(url, params={"rows": rows}, proxy=self.proxy)
+        response = await self.session.get(
+            url, params={"rows": rows}, proxy=self.proxy, ssl=False
+        )
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -129,7 +139,9 @@ class Api:
             "operation": operation,
         }
 
-        response = await self.session.get(url, params=params, proxy=self.proxy)
+        response = await self.session.get(
+            url, params=params, proxy=self.proxy, ssl=False
+        )
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -168,6 +180,19 @@ class Api:
             return PaymentInfo(**json)
         except ValidationError:
             return json
+
+    async def check_proxy(self, url: str = "https://qiwi.com"):
+        answer = True
+        try:
+            await self.session.get(url, proxy=self.proxy, ssl=False)
+        except TimeoutError:  # this is for different log
+            answer = False
+        except ClientProxyConnectionError:
+            answer = False  # this is for different log
+        except ClientHttpProxyError:
+            answer = False
+
+        return answer
 
     async def close(self):
         session = self.session  # bugfix
