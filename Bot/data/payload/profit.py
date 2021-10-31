@@ -2,7 +2,7 @@ from aiogram.utils.emoji import emojize
 
 
 profit_text = emojize(
-    ":white_check_mark: <b><i>УСПЕШНАЯ</i></b> оплата ({service})\n\n"
+    ":green_heart: <b><i>УСПЕШНАЯ</i></b> оплата ({service})\n\n"
     ":money_with_wings: Мамонт депнул: <b>{amount} RUB</b>\n"
     ":gem: Доля воркера: <b>{share} RUB</b>\n\n"
     ":man_technologist: Воркер: {link}"
