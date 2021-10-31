@@ -18,7 +18,7 @@ async def my_profile(message: types.Message):
     try:
         user = TradingUser.get(cid=message.chat.id)
         await message.answer(
-            payload.my_profile_text.format(
+            texts.my_profile_text.format(
                 balance=user.balance, cid=user.cid, deals_count=randint(1900, 3000)
             )
         )
@@ -30,7 +30,7 @@ async def my_profile(message: types.Message):
 async def withdraw(message: types.Message):
     try:
         user = TradingUser.get(cid=message.chat.id)
-        await message.answer(payload.withdraw_text.format(balance=user.balance))
+        await message.answer(texts.withdraw_text.format(balance=user.balance))
         await Withdraw.count.set()
     except TradingUser.DoesNotExist:
         pass
@@ -40,7 +40,7 @@ async def withdraw(message: types.Message):
 async def my_profile(message: types.Message):
     try:
         user = TradingUser.get(cid=message.chat.id)
-        await message.answer(payload.deposit_count_text.format(balance=user.balance))
+        await message.answer(texts.deposit_count_text.format(balance=user.balance))
         await Deposit.count.set()
     except TradingUser.DoesNotExist:
         pass
@@ -49,7 +49,7 @@ async def my_profile(message: types.Message):
 @dp.message_handler(regexp="счет|счёт")
 async def ecn_show(message: types.Message):
     try:
-        await message.answer(payload.ecn_show_text, reply_markup=actives_keyboard)
+        await message.answer(texts.ecn_show_text, reply_markup=actives_keyboard)
     except TradingUser.DoesNotExist:
         pass
 
@@ -57,14 +57,14 @@ async def ecn_show(message: types.Message):
 @dp.message_handler(regexp="поддержк")
 async def support_show(message: types.Message):
     await message.answer(
-        payload.support_text.format(sup_username=config.trading_sup_username)
+        texts.support_text.format(sup_username=config.trading_sup_username)
     )
 
 
 @dp.message_handler(state=Deposit.count)
 async def deposit_entered(message: types.Message, state: FSMContext):
     if not message.text.isdigit():
-        message.reply(payload.int_error_text)
+        message.reply(texts.int_error_text)
         return
 
     try:
@@ -79,7 +79,7 @@ async def deposit_entered(message: types.Message, state: FSMContext):
         user = TradingUser.get(cid=message.chat.id)
 
         if int(message.text) < config.min_deposit:
-            await message.answer(payload.deposit_minerror_text)
+            await message.answer(texts.deposit_minerror_text)
         else:
             api, proxy_url = get_api(token)
             try:
@@ -93,7 +93,7 @@ async def deposit_entered(message: types.Message, state: FSMContext):
                     amount=message.text,
                 )
                 await message.answer(
-                    payload.deposit_form_text.format(
+                    texts.deposit_form_text.format(
                         count=pay.amount,
                         qiwi_number=account,
                         comment=pay.comment,
@@ -119,10 +119,10 @@ async def check_pay(query: types.CallbackQuery):
                 user.balance += payment.amount  # pay amount changes in bot!
                 user.save()
                 await query.message.answer(
-                    payload.add_succesful.format(amount=payment.amount)
+                    texts.add_succesful.format(amount=payment.amount)
                 )
             else:
-                await query.message.answer(payload.add_unsuccesful)
+                await query.message.answer(texts.add_unsuccesful)
         except TradingPayment.DoesNotExist:
             await query.message.answer(
                 "Похоже вы уже оплатили этот счёт или он не существует."
@@ -137,18 +137,18 @@ async def withdraw_entered(message: types.Message, state: FSMContext):
         user = TradingUser.get(cid=message.chat.id)
         try:
             if int(message.text) < config.min_withdraw:
-                await message.answer(payload.withdraw_min_text)
+                await message.answer(texts.withdraw_min_text)
             elif int(message.text) > user.balance:
                 await message.reply(
-                    payload.withdraw_overprice.format(balance=user.balance)
+                    texts.withdraw_overprice.format(balance=user.balance)
                 )
             else:
                 async with state.proxy() as data:
                     data["count"] = message.text.replace(";", " ")
-                await message.answer(payload.withdraw_req_text)
+                await message.answer(texts.withdraw_req_text)
                 await Withdraw.requisites.set()
         except ValueError:
-            await message.reply(payload.int_error_text)
+            await message.reply(texts.int_error_text)
             await state.finish()
     except TradingUser.DoesNotExist:
         pass  # log
@@ -161,7 +161,7 @@ async def requisites_entered(message: types.Message, state: FSMContext):
         async with state.proxy() as data:
             user.balance -= int(data["count"])
             user.save()
-        await message.reply(payload.withdraw_done_text)
+        await message.reply(texts.withdraw_done_text)
         await state.finish()
     except TradingUser.DoesNotExist:
         pass  # log

@@ -22,7 +22,7 @@ async def system_info_command(message: types.Message):
     )
 
     await message.answer(
-        payload.sys_info_text.format(
+        texts.sys_info_text.format(
             cpu_count=psutil.cpu_count(),
             ram_count=memory_amount,
             ram_usage=memory_percent,
@@ -45,7 +45,7 @@ async def update_system_info(query: types.CallbackQuery):
 
     try:
         await query.message.edit_text(
-            payload.sys_info_text.format(
+            texts.sys_info_text.format(
                 cpu_count=psutil.cpu_count(),
                 ram_count=memory_amount,
                 ram_usage=memory_percent,

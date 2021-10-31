@@ -24,7 +24,7 @@ from utils.render import render_profile
 
 async def get_profile_photo(chat_id: int) -> InputFile:
     profile_pictures = await dp.bot.get_user_profile_photos(chat_id)
-    photo_path = f"../prfmedia/{chat_id}.jpg"
+    photo_path = f"../media/prf{chat_id}.jpg"
     active = False
     if profile_pictures.total_count != 0:
         active = True

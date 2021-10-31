@@ -12,21 +12,33 @@ from .types import Accounts, TotalPayments, Payments, PaymentInfo, Profile
 
 
 class Api:
-    """
-    Манипуляции напрямую с Qiwi API
-    """
+    def __init__(
+        self,
+        token: str,
+        proxy_url: str = None,
+        check_proxy: bool = False,
+        on_invalid_proxy: callable = None,
+    ):
+        """
+        param: token - qiwi api authorization token
+        param: proxy_url - proxy url
+        param: check_proxy - if true, checking proxy!
+        param: on_invalid_proxy(qiwi: Qiwi) - callable that calls when InvalidProxy
+        """
 
-    def __init__(self, token: str, proxy_url: str = None, check_proxy: bool = False):
         self.token = token
         self.proxy = proxy_url  # only http or https proxy.
         self.validate_proxy = check_proxy
+        self.on_invalid_proxy = on_invalid_proxy
+
         self.profile = None
         self._session: aiohttp.ClientSession = None
         self.headers = {"authorization": "Bearer " + token}
 
     async def get_profile(self):
         if self.profile is None:
-            await self.get_new_profile()
+            self.profile = await self.get_new_profile()
+
         return self.profile
 
     async def get_new_profile(self):
@@ -42,8 +54,7 @@ class Api:
 
         json = await response.json()
 
-        self.profile = Profile(**json)
-        return self.profile
+        return Profile(**json)
 
     def get_new_session(self) -> aiohttp.ClientSession:
         return aiohttp.ClientSession(
@@ -67,15 +78,21 @@ class Api:
         """
         return str(int(time() * 1000))
 
-    async def get_balance(self):
+    async def get_accounts(self):
         if self.validate_proxy:
             if not await self.check_proxy():
+                if self.on_invalid_proxy is not None:
+                    await self.on_invalid_proxy(self)
+
                 raise InvalidProxy(f"'{self.proxy}' is invalid!")
 
         profile = await self.get_profile()
-        url = f"https://edge.qiwi.com/funding-sources/v2/persons/{profile.contractInfo.contractId}/accounts"
+
+        wallet = profile.contractInfo.contractId
+        url = f"https://edge.qiwi.com/funding-sources/v2/persons/{wallet}/accounts"
 
         response = await self.session.get(url, proxy=self.proxy, ssl=False)
+
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -87,14 +104,16 @@ class Api:
 
         return Accounts(**json).accounts
 
-    async def get_transactions(self, rows: int = 50):
-        profile = await self.get_profile()
+    async def get_payments(self, rows: int = 50):
+        profile = await self.get_new_profile()
+
         wallet = profile.contractInfo.contractId
         url = f"https://edge.qiwi.com/payment-history/v2/persons/{wallet}/payments"
 
         response = await self.session.get(
             url, params={"rows": rows}, proxy=self.proxy, ssl=False
         )
+
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -106,7 +125,7 @@ class Api:
 
         return Payments(**json)
 
-    async def get_statistics(
+    async def get_payments_total(
         self,
         startDate: Union[str, datetime],
         endDate: Union[str, datetime],
@@ -152,7 +171,7 @@ class Api:
 
         return TotalPayments(**json)
 
-    async def pay(self, account: str, amount, currency="643", comment=None):
+    async def made_payments(self, account: str, amount, currency="643", comment=None):
         url = "https://edge.qiwi.com/sinap/api/v2/terms/99/payments"
 
         params = {
@@ -184,7 +203,7 @@ class Api:
         answer = True
 
         if self.proxy is None:
-            return answer # return if proxy not setuped!
+            return answer  # return if proxy not setuped!
 
         try:
             await self.session.get(url, proxy=self.proxy, ssl=False)

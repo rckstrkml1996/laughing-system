@@ -26,7 +26,7 @@ async def help_command(message: types.Message, state: FSMContext):
         logger.debug(f"Cancelling state {current_state} in admins chat")
         await state.finish()
 
-    await message.answer(payload.admins_help_text)
+    await message.answer(texts.admins_help_text)
 
 
 # WORKING FILE IDS AND CHANGING PHOTOS

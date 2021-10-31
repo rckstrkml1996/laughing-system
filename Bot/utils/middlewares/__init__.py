@@ -1,7 +1,7 @@
 from aiogram import Dispatcher
 
-from .main import NewUsernameMiddleware
+from .main import AllMiddleware
 
 
 def setup(dp: Dispatcher):
-    dp.middleware.setup(NewUsernameMiddleware())
+    dp.middleware.setup(AllMiddleware())

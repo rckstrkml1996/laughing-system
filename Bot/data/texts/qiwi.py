@@ -1,9 +1,14 @@
 from aiogram.utils.emoji import emojize
 
 
-qiwi_command_text = emojize(
+qiwi_emoji = emojize(":kiwi_fruit:")  # ? qiwi_emoji_text
+
+qiwi_account_text = "<i>+{number}</i>: <b>{amount} {currency}</b>"
+
+qiwi_tokens_info_text = emojize(
     ":kiwi_fruit: Информация по киви кошелькам.\n\n"
-    "Общий баланс: <b>{all_balance} RUB</b>"
+    "{qiwi_account_texts}\n\n"
+    "Общий баланс: <b>{all_amounts} RUB</b>"
 )
 
 no_qiwis_text = emojize("У вас нет привязанных кошельков! :x:")
@@ -13,7 +18,7 @@ qiwi_to_bot_text = "Введите все необходимые данные <b
 
 wanna_add_qiwi_text = "Введем новый киви?"
 
-add_qiwi_text = emojize(
+add_qiwi_text = str(
     "Введите <b>Токен</b>, и <b>По желанию</b> Прокси.\n\n"
     "Пример:\n"
     "<code>f420543a9430065db1264535ff4eb1ae</code>\n"
@@ -29,14 +34,18 @@ invalid_newqiwi_text = emojize(
 
 valid_newqiwi_text = "<b>Киви успешно добавлен!</b>"
 
-# qiwi_info_text = emojize(
-#     "Кошелек: <b>+{number}</b> :kiwi_fruit:\n"
-#     "Баланс: <b>{balance}</b>\n"
-#     "Сумма платежей: <b>+{incoming}</b> <b>-{outgoing}</b>\n"
-#     "Статус: <b>{status}</b>\n"
-#     "Прокси: <i>{proxy_url}</i>\n\n"
-#     "{last_actions}"
-# )
+qiwi_action_text = emojize(
+    "<b>{going} {currency}</b>, <i>{comment}</i>"
+) # going = "+" + amount or "-" + amount //
+
+qiwi_info_text = emojize(
+    "Кошелек: <b><i>+{number}</i></b> :kiwi_fruit:\n"
+    "Баланс: <b>{amount} {currency}</b>\n"
+    "24 Часа платежи: <i>+{incoming} {currency} -{outgoing} {currency}</i>\n"
+    "Статус: <b>{status}</b>\n"
+    "Прокси: <i>{proxy_url:.6f}</i>\n\n"
+    "{qiwi_action_texts}"
+)
 
 # same_qiwi_text = emojize("Похоже вы пытаетесь добавить такой же киви кошелек)")
 

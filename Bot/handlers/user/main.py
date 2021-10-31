@@ -22,10 +22,10 @@ async def welcome(message: types.Message, state: FSMContext):
         worker = Worker.get(cid=message.chat.id)
         if worker.status == 0:  # если он без статуса
             logger.debug(
-                f"User - {message.chat.id}:{worker.status}, in base but dont send summary"
+                f"[{message.chat.id}:{worker.status}], in base but dont send summary"
             )
             if worker.send_summary:
-                await message.answer(payload.summary_reviewing_text)
+                await message.answer(texts.summary_reviewing_text)
             else:
                 await new_request(message)
         elif worker.status == 1:  # если воркер заблокан
@@ -33,7 +33,7 @@ async def welcome(message: types.Message, state: FSMContext):
                 f"Blocked Worker - {message.chat.id}:{worker.status}, made /start to bot"
             )
             await message.answer(
-                payload.summary_blocked_text, reply_markup=summary_blocked_keyboard
+                texts.summary_blocked_text, reply_markup=summary_blocked_keyboard
             )
         else:  # если чел уже воркер
             logger.debug(
@@ -41,7 +41,7 @@ async def welcome(message: types.Message, state: FSMContext):
             )
             await worker_welcome(message)  # workers menu
     except Worker.DoesNotExist:
-        logger.debug(f"User - {message.chat.id}, first time start bot")
+        logger.info(f"[{message.chat.id}], first time start bot")
         basefunctional.create_worker(
             chat_id=message.chat.id,
             name=message.chat.full_name,
@@ -56,7 +56,7 @@ async def new_worker(message: types.Message):
         worker = Worker.get(cid=message.chat.id)
         if worker.status != 1:  # если не заблокирован
             await message.answer(
-                payload.summary_text, reply_markup=summary_start_keyboard
+                texts.summary_text, reply_markup=summary_start_keyboard
             )
     except Worker.DoesNotExist:
         await welcome(message, dp.current_state())  # new user to base

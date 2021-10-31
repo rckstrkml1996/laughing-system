@@ -13,8 +13,8 @@ class Nickname(BaseModel):
 
 
 class IdentificationInfo(BaseModel):
-    bankAlias: str = None # xz
-    identificationLevel: str = None # xz
+    bankAlias: str = None  # xz
+    identificationLevel: str = None  # xz
     passportExpired: bool = None
 
 

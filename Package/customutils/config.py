@@ -61,7 +61,7 @@ class BotConfig(Config):
 
     outs_link = myfield("outs_link", default="hideteamout")
     workers_link = myfield(
-        "workers_link", default="https://t.me/joinchat/6-4rJOpD17s4Y2Ey"
+        "workers_link", default="6-4rJOpD17s4Y2Ey"  # https://t.me/joinchat/
     )
     reviews_link = myfield("reviews_link", default="hidemanuals")
     escotz_link = myfield("escotz_link", default="btrfly_otz")

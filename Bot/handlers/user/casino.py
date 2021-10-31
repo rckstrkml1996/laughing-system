@@ -237,7 +237,7 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
 
 
 def format_mamont(user: CasinoUser) -> str:
-    return payload.cas_mamonth_info_text.format(
+    return texts.cas_mamonth_info_text.format(
         mid=user.id,
         cid=user.cid,
         name=user.fullname,
@@ -264,12 +264,12 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
     localnow = datetime_local_now()
     timenow = localnow.strftime("%H:%M, %S Сек.")
     if mamonths_count == 0:
-        await query.message.edit_text(payload.no_mamonths_text)
+        await query.message.edit_text(texts.no_mamonths_text)
     else:  # format mamonth its a def on 176 line mb not()
         cusers = list(worker.cas_users)[::-1]
         mamonths = cusers[page * row_width - row_width : page * row_width]
         if not mamonths:
-            await query.message.answer(payload.no_mamonths_text)
+            await query.message.answer(texts.no_mamonths_text)
             return  # logg plz
 
         mamonths_text = "\n".join(
@@ -280,7 +280,7 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
         )
 
         data = {
-            "text": payload.all_cas_mamonths_text.format(
+            "text": texts.all_cas_mamonths_text.format(
                 mamonths_plur=get_correct_str(
                     mamonths_count, "Мамонт", "Мамонта", "Мамонтов"
                 ),
@@ -305,7 +305,7 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
 @dp.callback_query_handler(text="all_alerts_cas", state="*", is_worker=True)
 async def cas_mamonths_alert(query: types.CallbackQuery):
     await query.message.answer_photo(
-        config.html_style_url, caption=payload.cas_alert_text
+        config.html_style_url, caption=texts.cas_alert_text
     )
     await CasinoAlert.alert.set()
     await query.answer("Лови.")
@@ -348,7 +348,7 @@ async def cas_alert_true(query: types.CallbackQuery, worker: Worker, state: FSMC
                 localnow = datetime_local_now()
                 timenow = localnow.strftime("%H:%M, %S cек")
                 await query.message.edit_text(
-                    payload.cas_alsend_text.format(
+                    texts.cas_alsend_text.format(
                         text=text,
                         msg_count=answer["msg_count"],
                         msg_len=msg_len,

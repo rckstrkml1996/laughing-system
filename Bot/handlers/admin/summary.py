@@ -20,7 +20,7 @@ async def summary_reject(query: types.CallbackQuery):
         username = f"@{worker.username} " if worker.username else " "
 
         await query.message.edit_text(
-            payload.summary_check_text("Отклонён").format(
+            texts.summary_check_text("Отклонён").format(
                 name=worker.name,
                 username=username,
                 chat_id=worker.cid,
@@ -32,7 +32,7 @@ async def summary_reject(query: types.CallbackQuery):
         await query.answer("Отклонён!")
         await dp.bot.send_message(
             worker.cid,
-            payload.summary_rejected_text,
+            texts.summary_rejected_text,
             reply_markup=summary_start_keyboard,
         )
         logger.info(f"{query.message.chat.id} - summary denied")
@@ -52,7 +52,7 @@ async def summary_accepted(query: types.CallbackQuery):
         username = f"@{worker.username} " if worker.username else " "
 
         await query.message.edit_text(
-            payload.summary_check_text("Принят").format(
+            texts.summary_check_text("Принят").format(
                 name=worker.name,
                 username=username,
                 chat_id=worker.cid,
@@ -70,7 +70,7 @@ async def summary_accepted(query: types.CallbackQuery):
 
         await dp.bot.send_message(
             worker.cid,
-            payload.summary_accepted_text,
+            texts.summary_accepted_text,
             reply_markup=summary_accepted_keyboard,
         )
         await dp.bot.send_message(
@@ -102,7 +102,7 @@ async def summary_accepted(query: types.CallbackQuery):
         username = f"@{worker.username} " if worker.username else " "
 
         await query.message.edit_text(
-            payload.summary_check_text("Заблокирован").format(
+            texts.summary_check_text("Заблокирован").format(
                 name=worker.name,
                 username=username,
                 chat_id=worker.cid,
@@ -114,7 +114,7 @@ async def summary_accepted(query: types.CallbackQuery):
         await query.answer("Заблокирован!")
         await dp.bot.send_message(
             worker.cid,
-            payload.summary_blocked_text,
+            texts.summary_blocked_text,
             reply_markup=summary_blocked_keyboard,
         )
         logger.info(f"{query.message.chat.id} - summary blocked")

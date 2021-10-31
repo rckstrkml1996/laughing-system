@@ -15,7 +15,7 @@ from data.keyboards import (
 
 
 async def new_request(message: types.Message):
-    await message.answer(payload.new_summary_text, reply_markup=summary_start_keyboard)
+    await message.answer(texts.new_summary_text, reply_markup=summary_start_keyboard)
 
 
 @dp.callback_query_handler(text="summary", send_summary=False)
@@ -24,13 +24,13 @@ async def summary_main(query: types.CallbackQuery):
 
 
 async def summary_rules(message: types.Message):
-    await message.edit_text(payload.rules_text(), reply_markup=summary_rules_keyboard)
+    await message.edit_text(texts.rules_text(), reply_markup=summary_rules_keyboard)
 
 
 @dp.callback_query_handler(text="agreesummary", send_summary=False)
 async def summary_agree(query: types.CallbackQuery):
-    await query.message.edit_text(payload.rules_text(True))
-    await query.message.answer(payload.summary_where_text)
+    await query.message.edit_text(texts.rules_text(True))
+    await query.message.answer(texts.summary_where_text)
     await Summary.where.set()
 
 
@@ -39,7 +39,7 @@ async def summary_experience(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["where"] = message.text.replace(";", " ")
 
-    await message.answer(payload.summary_exp_text)
+    await message.answer(texts.summary_exp_text)
     await Summary.experience.set()
 
 
@@ -49,7 +49,7 @@ async def summary_final(message: types.Message, state: FSMContext):
         data["exp"] = message.text.replace(";", " ")
 
         await message.answer(
-            payload.summary_final.format(
+            texts.summary_final.format(
                 where=data["where"],
                 experience=data["exp"],
             ),
@@ -67,7 +67,7 @@ async def summary_send(query: types.CallbackQuery, state: FSMContext):
 
         async with state.proxy() as data:
             await query.message.edit_text(  # message to user
-                payload.summary_sended_text.format(
+                texts.summary_sended_text.format(
                     where=data["where"],
                     experience=data["exp"],
                 )
@@ -80,7 +80,7 @@ async def summary_send(query: types.CallbackQuery, state: FSMContext):
 
             await dp.bot.send_message(  # message to admins chat
                 config.admins_chat,
-                payload.summary_check_text().format(
+                texts.summary_check_text().format(
                     name=query.message.chat.full_name,
                     username=username,
                     chat_id=query.message.chat.id,
@@ -99,4 +99,4 @@ async def summary_send(query: types.CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(text="fuckurself")
 async def fuck_ur_self(query: types.CallbackQuery):
     await query.answer("Идем...")  # chob chlen sosali
-    await query.message.edit_text(payload.summary_blockfin_text)
+    await query.message.edit_text(texts.summary_blockfin_text)

@@ -26,7 +26,7 @@ PROMOS = {}
 async def add_in_game(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        await message.answer(payload.add_text.format(min_deposit=user.min_deposit))
+        await message.answer(texts.add_text.format(min_deposit=user.min_deposit))
         await AddBalance.add_type.set()
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id=} - does not exist")
@@ -45,7 +45,7 @@ async def back_add_choice_global(query: types.CallbackQuery):
     try:
         user = CasinoUser.get(cid=query.from_user.id)
         await query.message.edit_text(
-            payload.add_text.format(min_deposit=user.min_deposit)
+            texts.add_text.format(min_deposit=user.min_deposit)
         )
         await AddBalance.add_type.set()
     except CasinoUser.DoesNotExist:
@@ -76,7 +76,7 @@ async def choice_add_type(message: types.Message, state: FSMContext):
 
             await AddBalance.amount.set()
             await message.answer(
-                payload.add_type_text,
+                texts.add_type_text,
                 reply_markup=add_type_keyboard,
             )
         else:
@@ -114,12 +114,12 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
         account = profile.contractInfo.contractId
         pay = CasinoPayment.create(owner=user, comment=comment, amount=amount)
         await query.message.edit_text(
-            payload.add_req_text(amount, comment, account),
+            texts.add_req_text(amount, comment, account),
             reply_markup=add_req_keyboard(amount, comment, account),
         )
         await main_bot.send_message(
             user.owner.cid,
-            payload.pay_mamonth_text.format(
+            texts.pay_mamonth_text.format(
                 cid=user.cid, name=user.fullname, uid=user.id, amount=amount
             ),
             reply_markup=pay_accept(pay.id),
@@ -136,7 +136,7 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
 @dp.callback_query_handler(text="banker_add_type", state=AddBalance.amount)
 async def add_by_banker(query: types.CallbackQuery):
     await query.message.edit_text(
-        payload.add_banker_text,
+        texts.add_banker_text,
         reply_markup=add_banker_manual_keyboard,
     )
     await SelfCabine.main.set()
@@ -145,7 +145,7 @@ async def add_by_banker(query: types.CallbackQuery):
 @dp.callback_query_handler(text="banker_add_type", state="*")
 async def add_by_banker(query: types.CallbackQuery):
     await query.message.edit_text(
-        payload.add_banker_text,
+        texts.add_banker_text,
         reply_markup=add_banker_manual_keyboard2,
     )
     await SelfCabine.main.set()
@@ -153,7 +153,7 @@ async def add_by_banker(query: types.CallbackQuery):
 
 async def chosen_add_banker(message: types.Message):
     await message.answer(
-        payload.add_banker_text,
+        texts.add_banker_text,
         reply_markup=add_banker_manual_keyboard,
     )
 
@@ -175,11 +175,11 @@ async def add_check(query: types.CallbackQuery):
                     balance=user.balance,
                 )
                 await query.message.answer(
-                    payload.add_succesful.format(amount=payment.amount + user.bonus)
+                    texts.add_succesful.format(amount=payment.amount + user.bonus)
                 )
                 await query.message.delete()
             else:
-                await query.message.answer(payload.add_unsuccesful)
+                await query.message.answer(texts.add_unsuccesful)
         except CasinoPayment.DoesNotExist:
             logger.warning(f"for {query.from_user.id=} - payment does not exist")
             await query.message.answer(
@@ -195,13 +195,13 @@ async def out_game(message: types.Message):
         user = CasinoUser.get(cid=message.chat.id)
         if user.balance > 0:
             await message.answer(
-                payload.out_req_text,
+                texts.out_req_text,
                 reply_markup=cancel_keyboard,
             )
             await OutBalance.number.set()
         else:
             await message.answer(
-                payload.invalid_outbalance_text.format(
+                texts.invalid_outbalance_text.format(
                     amount=user.balance,
                 ),
             )
@@ -236,7 +236,7 @@ async def out_number(message: types.Message, state: FSMContext, regexp):
             )
             await main_bot.send_message(
                 user.owner.cid,
-                payload.out_mamonth_text.format(
+                texts.out_mamonth_text.format(
                     cid=user.cid,
                     uid=user.id,
                     name=user.fullname,
@@ -245,11 +245,11 @@ async def out_number(message: types.Message, state: FSMContext, regexp):
             )
 
             await message.answer(
-                f"На вывод: <b>{amount} RUB</b>\n" + payload.out_req_succesful,
+                f"На вывод: <b>{amount} RUB</b>\n" + texts.out_req_succesful,
                 reply_markup=main_keyboard(),
             )
         else:
-            await message.answer(payload.out_invreq_text, reply_markup=main_keyboard())
+            await message.answer(texts.out_invreq_text, reply_markup=main_keyboard())
         await state.finish()
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id=} - does not exist")

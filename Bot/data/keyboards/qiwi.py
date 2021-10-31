@@ -2,31 +2,28 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
 
-add_qiwi_keyboard = InlineKeyboardMarkup()
 add_qiwi_btn = InlineKeyboardButton(
     emojize("Добавить киви :information_source:"), callback_data="qiwiadd"
 )
-add_qiwi_keyboard.add(add_qiwi_btn)
 
-add_qiwi_sure_keyboard = InlineKeyboardMarkup()
-add_qiwi_sure_keyboard.add(add_qiwi_btn)
 
-def qiwi_keyboard(accounts: list):
+def add_qiwi_keyboard(qiwi_numbers: list = None):
     markup = InlineKeyboardMarkup()
 
-    for i, acc in enumerate(accounts):
-        if i == 0:
-            markup.add(
-                InlineKeyboardButton(
-                    emojize(f"{acc} :sparkle:"), callback_data=f"qiwi_{i}"
-                )
-            )
-        else:
-            markup.add(InlineKeyboardButton(acc, callback_data=f"qiwi_{i}"))
+    if qiwi_numbers is not None:
+        for i, number in enumerate(qiwi_numbers):
+            if i == 0:
+                number = emojize(f":sparkle: {number}")
+
+            markup.add(InlineKeyboardButton(number, callback_data=f"qiwi_{i}"))
 
     markup.add(add_qiwi_btn)
 
     return markup
+
+
+add_qiwi_sure_keyboard = InlineKeyboardMarkup()
+add_qiwi_sure_keyboard.add(add_qiwi_btn)
 
 
 def oneqiwi_keyboard(num):
@@ -50,11 +47,13 @@ def oneqiwi_keyboard(num):
 
 def qiwi_delete_keyboard(num):
     markup = InlineKeyboardMarkup()
-    
-    markup.add(InlineKeyboardButton(
-        emojize("Уверен :wastebasket:"),
-        callback_data=f"suredelete_{num}",
-    ))
+
+    markup.add(
+        InlineKeyboardButton(
+            emojize("Уверен :wastebasket:"),
+            callback_data=f"suredelete_{num}",
+        )
+    )
     markup.add(InlineKeyboardButton("Отмена", callback_data="cancel"))
 
     return markup

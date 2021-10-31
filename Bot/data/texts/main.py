@@ -10,7 +10,7 @@ worker_defenition = "<a href='tg://user?id={chat_id}'>{name}</a>"
 
 
 new_username_text = emojize(
-    ":sneezing_face: <a href='tg://user?id={chat_id}'>{name}</a> сменил свой ник с <b>{old_username}</b> на <b>{new_username}</b>"
+    "<a href='tg://user?id={chat_id}'>{name}</a> сменил свой ник с <b>@{old_username}</b> на <b>@{new_username}</b> :poop:"
 )
 
 outs_link = config.outs_link

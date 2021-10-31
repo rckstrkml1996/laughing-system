@@ -155,7 +155,7 @@ async def truepay_qr_command(query: types.CallbackQuery):
             )
             logger.debug("Payment done.")
             await query.message.edit_text(
-                payload.profit_complete_text.format(
+                texts.profit_complete_text.format(
                     share=profit.share,
                     profit_link=profit.msg_url,  # save link in base
                     cid=worker.cid,

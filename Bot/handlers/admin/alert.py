@@ -18,14 +18,14 @@ from utils.alert import alert_users
 )
 async def alert_command(message: types.Message):
     logger.debug(f"Admin [{message.from_user.id}] called alert command")
-    await message.answer(payload.alert_text, reply_markup=alert_keyboard)
+    await message.answer(texts.alert_text, reply_markup=alert_keyboard)
 
 
 # alert bot
 @dp.callback_query_handler(text="alert_bot", admins_chat=True, is_admin=True)
 async def alert_bot(query: types.CallbackQuery):
     await query.message.edit_text(
-        payload.make_alert_text.format(bot_type="Основного бота")
+        texts.make_alert_text.format(bot_type="Основного бота")
     )
     await Alert.bot.set()
 
@@ -35,7 +35,7 @@ async def text_alert_bot(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["text"] = message.text
     await message.answer(
-        payload.alert_accept_text.format(text=message.text),
+        texts.alert_accept_text.format(text=message.text),
         reply_markup=alert_accept_keyboard,
     )
     await Alert.bot_accept.set()
@@ -44,7 +44,7 @@ async def text_alert_bot(message: types.Message, state: FSMContext):
 @dp.callback_query_handler(text="alert_edit", state=Alert.bot_accept, admins_chat=True)
 async def alert_edit(query: types.CallbackQuery):
     await query.message.edit_text(
-        payload.edit_alert_text.format(bot_type="Основного бота")
+        texts.edit_alert_text.format(bot_type="Основного бота")
     )
     logger.debug("Admin changing alert text")
     await Alert.bot.set()
@@ -76,7 +76,7 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
                 localnow = datetime_local_now()
                 timenow = localnow.strftime("%H:%M, %S cек")
                 await query.message.edit_text(
-                    payload.alert_start_text.format(
+                    texts.alert_start_text.format(
                         text=text,
                         msg_count=answer["msg_count"],
                         blocked_count=answer["block_count"],
@@ -97,9 +97,7 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text="alert_casino", admins_chat=True, is_admin=True)
 async def alert_casino(query: types.CallbackQuery):
-    await query.message.edit_text(
-        payload.make_alert_text.format(bot_type="Казино ботов")
-    )
+    await query.message.edit_text(texts.make_alert_text.format(bot_type="Казино ботов"))
     await Alert.casino.set()
 
 
@@ -108,7 +106,7 @@ async def text_alert_casino(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["text"] = message.text
     await message.answer(
-        payload.alert_accept_text.format(text=message.text),
+        texts.alert_accept_text.format(text=message.text),
         reply_markup=alert_accept_keyboard,
     )
     await Alert.casino_accept.set()
@@ -118,7 +116,7 @@ async def text_alert_casino(message: types.Message, state: FSMContext):
     text="alert_edit", state=Alert.casino_accept, admins_chat=True
 )
 async def alert_edit(query: types.CallbackQuery):
-    await query.message.edit_text(payload.edit_alert_text.format(bot_type="Казиков"))
+    await query.message.edit_text(texts.edit_alert_text.format(bot_type="Казиков"))
     await Alert.casino.set()
 
 
@@ -148,7 +146,7 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
                 localnow = datetime_local_now()
                 timenow = localnow.strftime("%H:%M, %S cек")
                 await query.message.edit_text(
-                    payload.alert_start_text.format(
+                    texts.alert_start_text.format(
                         text=text,
                         msg_count=answer["msg_count"],
                         blocked_count=answer["block_count"],
@@ -167,7 +165,7 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
 # alert escort
 @dp.callback_query_handler(text="alert_escort", admins_chat=True, is_admin=True)
 async def alert_escort(query: types.CallbackQuery):
-    await query.message.edit_text(payload.make_alert_text.format(bot_type="Эскорта"))
+    await query.message.edit_text(texts.make_alert_text.format(bot_type="Эскорта"))
     await Alert.escort.set()
 
 
@@ -176,7 +174,7 @@ async def text_alert_escort(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["text"] = message.text
     await message.answer(
-        payload.alert_accept_text.format(text=message.text),
+        texts.alert_accept_text.format(text=message.text),
         reply_markup=alert_accept_keyboard,
     )
     await Alert.escort_accept.set()
@@ -186,14 +184,14 @@ async def text_alert_escort(message: types.Message, state: FSMContext):
     text="alert_edit", state=Alert.escort_accept, admins_chat=True
 )
 async def alert_edit(query: types.CallbackQuery):
-    await query.message.edit_text(payload.edit_alert_text.format(bot_type="Эскорта"))
+    await query.message.edit_text(texts.edit_alert_text.format(bot_type="Эскорта"))
     await Alert.escort.set()
 
 
 # alert trading
 @dp.callback_query_handler(text="alert_trading", admins_chat=True, is_admin=True)
 async def alert_trading(query: types.CallbackQuery):
-    await query.message.edit_text(payload.make_alert_text.format(bot_type="Трейдинга"))
+    await query.message.edit_text(texts.make_alert_text.format(bot_type="Трейдинга"))
     await Alert.trading.set()
 
 
@@ -202,7 +200,7 @@ async def text_alert_trading(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["text"] = message.text
     await message.answer(
-        payload.alert_accept_text.format(text=message.text),
+        texts.alert_accept_text.format(text=message.text),
         reply_markup=alert_accept_keyboard,
     )
     await Alert.trading_accept.set()
@@ -212,7 +210,7 @@ async def text_alert_trading(message: types.Message, state: FSMContext):
     text="alert_edit", state=Alert.trading_accept, admins_chat=True
 )
 async def alert_edit(query: types.CallbackQuery):
-    await query.message.edit_text(payload.edit_alert_text.format(bot_type="Трейдинга"))
+    await query.message.edit_text(texts.edit_alert_text.format(bot_type="Трейдинга"))
     logger.debug("Admin changing trading alert text")
     await Alert.trading.set()
 
@@ -243,7 +241,7 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
                 localnow = datetime_local_now()
                 timenow = localnow.strftime("%H:%M, %S cек")
                 await query.message.edit_text(
-                    payload.alert_start_text.format(
+                    texts.alert_start_text.format(
                         text=text,
                         msg_count=answer["msg_count"],
                         blocked_count=answer["block_count"],
@@ -271,5 +269,5 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
     admins_chat=True,
 )
 async def alert_reject(query: types.CallbackQuery, state: FSMContext):
-    await query.message.edit_text(payload.alert_reject_text)
+    await query.message.edit_text(texts.alert_reject_text)
     await state.finish()

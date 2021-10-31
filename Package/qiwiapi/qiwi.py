@@ -5,7 +5,21 @@ from .api import Api
 
 
 class Qiwi(Api):
-    def __init__(self, token: str, proxy_url: str = None, validate: bool = True):
+    RUB_CURRENCY = 643
+    USD_CURRENCY = 840
+    KZT_CURRENCY = 398
+
+    LEVEL_NONVERIFS = ["ANONYMOUS"]  # without verif
+    LEVEL_MAINS = ["SIMPLE", "VERIFIED"]  # simple status
+    LEVEL_FULLS = ["FULL"]  # fullverif status
+
+    def __init__(
+        self,
+        token: str,
+        proxy_url: str = None,
+        validate: bool = True,
+        on_invalid_proxy: callable = None,
+    ):
         self.validate_proxy = False
 
         if validate:
@@ -13,7 +27,7 @@ class Qiwi(Api):
             if proxy_url is not None:
                 self.validate_proxy = True
 
-        super().__init__(token, proxy_url, self.validate_proxy)
+        super().__init__(token, proxy_url, self.validate_proxy, on_invalid_proxy)
 
     @classmethod
     def validate(cls, token: str, proxy_url: str = None):
@@ -50,24 +64,26 @@ class Qiwi(Api):
                     self.last_transactions = transactions  # update transactions
                     break
 
-    @classmethod  # get currency as string
+    @classmethod
     def get_currency(cls, currency: int) -> str:
+        """get currency as string"""
         return (
             "RUB"
-            if currency == 643
+            if currency == cls.RUB_CURRENCY
             else "USD"
-            if currency == 840
+            if currency == cls.USD_CURRENCY
             else "KZT"
-            if currency == 398
+            if currency == cls.KZT_CURRENCY
             else "ХЗ"
         )
 
-    @classmethod  # get level as string
+    @classmethod
     def get_identification_level(cls, level: str) -> str:
+        """get level as string"""
         return (
             "Основной"
-            if level == "SIMPLE" or level == "VERIFIED"
+            if level in cls.LEVEL_MAINS
             else "Профессиональный"
-            if level == "FULL"
-            else "Без верификации"
+            if level in cls.LEVEL_FULLS
+            else "Анонимус"
         )

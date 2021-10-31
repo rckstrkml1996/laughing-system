@@ -57,7 +57,7 @@ async def register(message: types.Message, state: FSMContext):
         try:
             Worker.get(uniq_key=mtch.group(0))
             await message.answer(
-                payload.welcome_text.format(name=message.chat.first_name),
+                texts.welcome_text.format(name=message.chat.first_name),
                 reply_markup=keyboards.welcome_keyboard(mtch.group(0)),
             )
             await state.finish()
@@ -89,7 +89,7 @@ async def main_menu(message: types.Message, state: FSMContext):
         try:
             ref_id = message.text.split()[1]
             await message.answer(
-                payload.welcome_text.format(name=message.chat.first_name),
+                texts.welcome_text.format(name=message.chat.first_name),
                 reply_markup=keyboards.welcome_keyboard(ref_id),
             )
             logger.debug(f"{message.chat.id} - doesn't exist")
@@ -122,7 +122,7 @@ async def accept_user(query: types.CallbackQuery):
             )
             await main_bot.send_message(
                 worker.cid,
-                payload.new_mamonth_text.format(
+                texts.new_mamonth_text.format(
                     cid=chat_id,
                     name=fullname,
                     uid=user.id,
@@ -141,8 +141,8 @@ async def accept_user(query: types.CallbackQuery):
 
 @dp.message_handler(Text(startswith="инф", ignore_case=True), state="*")
 async def game_support(message: types.Message):
-    # await message.answer_photo(photo=LICENCE, caption=payload.info_text(), reply_markup=keyboards.main_keyboard())
-    await message.answer(payload.info_text(), reply_markup=keyboards.main_keyboard())
+    # await message.answer_photo(photo=LICENCE, caption=texts.info_text(), reply_markup=keyboards.main_keyboard())
+    await message.answer(texts.info_text(), reply_markup=keyboards.main_keyboard())
 
 
 @dp.message_handler(regexp="назад", state="*")

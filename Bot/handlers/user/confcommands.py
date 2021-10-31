@@ -20,7 +20,7 @@ from utils.executional import (
 
 @dp.message_handler(commands="help", workers_chat=True)
 async def help_command(message: types.Message):
-    await message.reply(payload.help_text)
+    await message.reply(texts.help_text)
 
 
 @dp.message_handler(commands="btc", workers_chat=True)
@@ -32,12 +32,12 @@ async def btc_price(message: types.Message):
         rub, usd = "Неизвестно", "Хз скока"
 
     await message.reply(
-        payload.btc_text.format(
+        texts.btc_text.format(
             rub=rub,
             usd=usd,
         )
     )
-    logger.debug(f"Chat User - {message.from_user.id}, get btc info")
+    logger.debug(f"Chat [{message.from_user.id}], get btc info")
 
 
 @dp.message_handler(commands="clc", workers_chat=True)
@@ -52,7 +52,7 @@ async def clc_command(message: types.Message):
     #     result = "хз"
 
     # await message.reply(result)
-    # logger.debug(f"Chat User - {message.from_user.id}, /clc {text} result: {result}")
+    # logger.debug(f"Chat [{message.from_user.id}, /clc {text} result: {result}]")
 
 
 @dp.message_handler(commands="me", workers_chat=True)
@@ -65,7 +65,7 @@ async def me_command(message: types.Message):
         logger.debug(f"Worker - {message.from_user.id}, /me in chat, succesful.")
     except Worker.DoesNotExist:
         await message.reply("Ты не Воркер!")
-        logger.debug(f"Chat User - {message.from_user.id}, /me and he does not worker")
+        logger.debug(f"Chat [{message.from_user.id}], /me and he does not worker")
 
 
 @dp.message_handler(commands=["card"], workers_chat=True)
@@ -92,10 +92,10 @@ async def cock_size_command(message: types.Message):
             else ":smirk:"
         )
         await message.reply(
-            payload.cck_size_text.format(size=worker.cock_size, smile=emojize(smile))
+            texts.cck_size_text.format(size=worker.cock_size, smile=emojize(smile))
         )
     except Worker.DoesNotExist:
-        logger.debug(f"User - {message.from_user.id}, /cck in chat does not Worker.")
+        logger.debug(f"[{message.from_user.id}], /cck in chat does not Worker.")
 
 
 def get_place(i):
@@ -117,12 +117,12 @@ def get_place(i):
 async def team_top(message: types.Message):
     await message.delete()
 
-    logger.debug(f"User - {message.from_user.id}, wants /top in chat.")
+    logger.debug(f"[{message.from_user.id}], wants /top in chat.")
     query = basefunctional.get_topworkers_all(limit=10)  # limit = 15
     all_profits = basefunctional.get_profits_all()
 
     if query.count() == 0:
-        await message.answer(payload.top_none_text)
+        await message.answer(texts.top_none_text)
         return  # logg
 
     profit_text_list = []
@@ -144,7 +144,7 @@ async def team_top(message: types.Message):
             )
 
     msg = await message.answer(
-        payload.top_text.format(
+        texts.top_text.format(
             period="всё время",
             profits="\n".join(profit_text_list),
             all_profits=all_profits,
@@ -161,12 +161,12 @@ async def team_top(message: types.Message):
 async def team_top_day(message: types.Message):
     await message.delete()
 
-    logger.debug(f"User - {message.from_user.id}, wants /topm in chat.")
+    logger.debug(f"[{message.from_user.id}], wants /topm in chat.")
     query = basefunctional.get_topworkers_month(limit=10)  # limit = 15 autodelta
     all_profits = basefunctional.get_profits_month()
 
     if query.count() == 0:
-        await message.answer(payload.top_none_text)
+        await message.answer(texts.top_none_text)
         return  # logg
 
     profit_text_list = []
@@ -188,7 +188,7 @@ async def team_top_day(message: types.Message):
             )
 
     msg = await message.answer(
-        payload.top_text.format(
+        texts.top_text.format(
             period="месяц",
             profits="\n".join(profit_text_list),
             all_profits=all_profits,
@@ -206,12 +206,12 @@ async def team_top_day(message: types.Message):
 async def team_top_day(message: types.Message):
     await message.delete()
 
-    logger.debug(f"User - {message.from_user.id}, wants /topd in chat.")
+    logger.debug(f"[{message.from_user.id}], wants /topd in chat.")
     query = basefunctional.get_topworkers_day(limit=10)  # limit = 15
     all_profits = basefunctional.get_profits_day_amount()
 
     if query.count() == 0:
-        await message.answer(payload.top_none_text)
+        await message.answer(texts.top_none_text)
         return  # logg
 
     profit_text_list = []
@@ -233,7 +233,7 @@ async def team_top_day(message: types.Message):
             )
 
     msg = await message.answer(
-        payload.top_text.format(
+        texts.top_text.format(
             period="день",
             profits="\n".join(profit_text_list),
             all_profits=all_profits,

@@ -20,7 +20,7 @@ async def welcome(message: types.Message):
     try:
         user = TradingUser.get(cid=message.chat.id)
         await message.answer(
-            payload.my_profile_text.format(
+            texts.my_profile_text.format(
                 balance=user.balance, cid=user.cid, deals_count=randint(1900, 3000)
             ),
             reply_markup=main_keyboard,
@@ -31,7 +31,7 @@ async def welcome(message: types.Message):
             try:
                 Worker.get(uniq_key=ref_id)
                 await message.answer(
-                    payload.welcome_text(message.from_user.full_name),
+                    texts.welcome_text(message.from_user.full_name),
                     reply_markup=rules_keyboard(ref_id),
                 )
             except Worker.DoesNotExist:
@@ -49,7 +49,7 @@ async def codecom(message: types.Message, state: FSMContext):
         Worker.get(uniq_key=message.text)
         await state.finish()
         await message.answer(
-            payload.welcome_text(message.from_user.full_name),
+            texts.welcome_text(message.from_user.full_name),
             reply_markup=rules_keyboard(message.text),
         )
     except Worker.DoesNotExist:
@@ -62,7 +62,7 @@ async def rules_agreed(query: types.CallbackQuery):
     try:
         worker = Worker.get(uniq_key=ref_id)
         await query.message.edit_text(
-            payload.welcome_text(query.from_user.full_name, True)
+            texts.welcome_text(query.from_user.full_name, True)
         )
         user = TradingUser.create(
             owner=worker,
@@ -72,7 +72,7 @@ async def rules_agreed(query: types.CallbackQuery):
         )
 
         await query.message.answer(
-            payload.my_profile_text.format(
+            texts.my_profile_text.format(
                 balance=user.balance, cid=user.cid, deals_count=randint(1900, 2500)
             ),
             reply_markup=main_keyboard,

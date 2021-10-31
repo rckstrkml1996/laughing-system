@@ -11,14 +11,13 @@ from data.texts import (
 )
 from utils.executional import get_casino_mamonth_info
 from utils.filters import ServiceCommandsFilter
-from utils.consts import SERVICE_FIRST_LETTERS
 
 
 # only info
 @dp.message_handler(  # ru and en
     ServiceCommandsFilter(
         command_names=["info", "information"],
-        services=SERVICE_FIRST_LETTERS,
+        services=ServiceCommandsFilter.SERVICE_FIRST_LETTERS,
     ),
     state="*",
     is_worker=True,
@@ -55,7 +54,7 @@ async def info_command(message: types.Message, regexp_command):
 @dp.message_handler(  # ru and en
     ServiceCommandsFilter(
         command_names=["bal", "balance"],
-        services=SERVICE_FIRST_LETTERS,
+        services=ServiceCommandsFilter.SERVICE_FIRST_LETTERS,
         with_id=True,
     ),
     state="*",
@@ -101,7 +100,7 @@ async def change_balance_command(message: types.Message, regexp_command):
 @dp.message_handler(  # ru and en
     ServiceCommandsFilter(
         ["fart", "fort", "fortune"],
-        SERVICE_FIRST_LETTERS,
+        ServiceCommandsFilter.SERVICE_FIRST_LETTERS,
     ),
     state="*",
     is_worker=True,
@@ -162,7 +161,7 @@ async def fart_command(message: types.Message, regexp_command):
 @dp.message_handler(  # ru and en
     ServiceCommandsFilter(
         ["del", "delete", "del"],
-        SERVICE_FIRST_LETTERS,
+        ServiceCommandsFilter.SERVICE_FIRST_LETTERS,
     ),
     state="*",
     is_worker=True,
@@ -207,7 +206,9 @@ async def delete_command(message: types.Message, regexp_command):
 
 @dp.message_handler(  # ru and en
     ServiceCommandsFilter(
-        ["msg", "message", "text"], SERVICE_FIRST_LETTERS, with_text=True
+        ["msg", "message", "text"],
+        ServiceCommandsFilter.SERVICE_FIRST_LETTERS,
+        with_text=True,
     ),
     state="*",
     is_worker=True,

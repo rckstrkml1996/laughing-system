@@ -15,7 +15,7 @@ from data.states import Pin
 async def pinned_command(message: types.Message):
     text = html_decoration.unparse(dynapinner.get_pin_text())
     await message.answer(text)
-    await message.reply(payload.pin_help_text, reply_markup=change_pin_keyboard)
+    await message.reply(texts.pin_help_text, reply_markup=change_pin_keyboard)
 
 
 @dp.callback_query_handler(text="change_pin", admins_chat=True, is_admin=True)

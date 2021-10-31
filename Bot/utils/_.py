@@ -246,7 +246,7 @@
 
 #     name = "Скрыт."
 #     if worker.username_hide:
-#         link = payload.profit_worker_hide
+#         link = texts.profit_worker_hide
 #     else:
 #         link = f"<a href='tg://user?id={worker.cid}'>{worker.name}</a>"
 
@@ -259,7 +259,7 @@
 #     )
 
 #     profit_text = str(
-#         payload.profit_text.format(
+#         texts.profit_text.format(
 #             service=service,
 #             share=profit.share,
 #             amount=profit.amount,
@@ -293,7 +293,7 @@
 #         logger.info("Making Fake Profit!")
 #         await dp.bot.send_message(
 #             worker.cid,
-#             payload.profit_worker_text.format(
+#             texts.profit_worker_text.format(
 #                 service=service,
 #                 share=profit.share,
 #                 amount=profit.amount,
@@ -302,7 +302,7 @@
 #         )
 #         await dp.bot.send_message(
 #             config.admins_chat,
-#             payload.admins_profit_text.format(
+#             texts.admins_profit_text.format(
 #                 profit_link=msg.url,
 #                 cid=worker.cid,
 #                 name=worker.username if worker.username else worker.name,
@@ -319,7 +319,7 @@
 #     else:
 #         await dp.bot.send_message(
 #             worker.cid,
-#             payload.profit_worker_text.format(
+#             texts.profit_worker_text.format(
 #                 service=service,
 #                 share=profit.share,
 #                 amount=profit.amount,
@@ -328,7 +328,7 @@
 #         )
 #         await dp.bot.send_message(
 #             config.admins_chat,
-#             payload.admins_profit_text.format(
+#             texts.admins_profit_text.format(
 #                 profit_link=msg.url,
 #                 cid=worker.cid,
 #                 name=worker.username if worker.username else worker.name,

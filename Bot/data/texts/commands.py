@@ -123,15 +123,19 @@ admin_make_profit_text = emojize(
     "<code>1</code>"
 )
 
-ban_success_text = emojize("Успешно забанил <a href='tg://user?id={cid}'>{name}</a>")
-kick_success_text = emojize("Успешно кикнул <a href='tg://user?id={cid}'>{name}</a>")
+ban_success_text = emojize(
+    "<b>Успешно забанил</b>: <a href='tg://user?id={cid}'>{name}</a>"
+)
+kick_success_text = emojize(
+    "<b>Успешно кикнул</b>: <a href='tg://user?id={cid}'>{name}</a>"
+)
 
 worker_warn_text = emojize(
-    "Для <a href='tg://user?id={cid}'>{name}</a> поставленно предупреждение! ({warns}/3)."
+    "Для <a href='tg://user?id={cid}'>{name}</a> <b>поставленно</b> предупреждение! ({warns}/3)."
 )
 
 worker_unwarn_text = emojize(
-    "Для <a href='tg://user?id={cid}'>{name}</a> снято предупреждение ({warns}/3)."
+    "Для <a href='tg://user?id={cid}'>{name}</a> <b>снято</b> предупреждение ({warns}/3)."
 )
 
 statistic_text = emojize(

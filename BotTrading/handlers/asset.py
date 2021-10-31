@@ -15,42 +15,42 @@ from loader import dp
 @dp.callback_query_handler(text="btc")
 async def btc_choosed(query: types.CallbackQuery):
     await query.message.answer_photo(
-        photos["btc"], payload.bitcoin_info_text, reply_markup=investing_keyboard
+        photos["btc"], texts.bitcoin_info_text, reply_markup=investing_keyboard
     )
 
 
 @dp.callback_query_handler(text="eth")
 async def btc_choosed(query: types.CallbackQuery):
     await query.message.answer_photo(
-        photos["eth"], payload.eth_info_text, reply_markup=investing_keyboard
+        photos["eth"], texts.eth_info_text, reply_markup=investing_keyboard
     )
 
 
 @dp.callback_query_handler(text="trx")
 async def btc_choosed(query: types.CallbackQuery):
     await query.message.answer_photo(
-        photos["trx"], payload.trx_info_text, reply_markup=investing_keyboard
+        photos["trx"], texts.trx_info_text, reply_markup=investing_keyboard
     )
 
 
 @dp.callback_query_handler(text="ltc")
 async def btc_choosed(query: types.CallbackQuery):
     await query.message.answer_photo(
-        photos["ltc"], payload.ltc_info_text, reply_markup=investing_keyboard
+        photos["ltc"], texts.ltc_info_text, reply_markup=investing_keyboard
     )
 
 
 @dp.callback_query_handler(text="xrp")
 async def btc_choosed(query: types.CallbackQuery):
     await query.message.answer_photo(
-        photos["xrp"], payload.xrp_info_text, reply_markup=investing_keyboard
+        photos["xrp"], texts.xrp_info_text, reply_markup=investing_keyboard
     )
 
 
 @dp.callback_query_handler(text="qtm")
 async def btc_choosed(query: types.CallbackQuery):
     await query.message.answer_photo(
-        photos["qtm"], payload.qtum_info_text, reply_markup=investing_keyboard
+        photos["qtm"], texts.qtum_info_text, reply_markup=investing_keyboard
     )
 
 
@@ -58,9 +58,7 @@ async def btc_choosed(query: types.CallbackQuery):
 async def bet_count(query: types.CallbackQuery):
     try:
         user = TradingUser.get(cid=query.message.chat.id)
-        await query.message.answer(
-            payload.ecn_selected_text.format(balance=user.balance)
-        )
+        await query.message.answer(texts.ecn_selected_text.format(balance=user.balance))
         await Asset.count.set()
     except TradingUser.DoesNotExist:
         logger.debug(f"{query.message.chat.id} - doesn't exist")
@@ -76,13 +74,13 @@ async def requisites_entered(message: types.Message, state: FSMContext):
                 async with state.proxy() as data:
                     data["bet_count"] = message.text.replace(" ", ";")
                     await message.answer(
-                        payload.ecn_bet_start.format(bet_timer=config.bet_timer)
+                        texts.ecn_bet_start.format(bet_timer=config.bet_timer)
                     )
                     await asyncio.sleep(config.bet_timer)
                     user.balance += int(data["bet_count"])
                     user.save()
                     await message.answer(
-                        payload.ecn_bet_win.format(
+                        texts.ecn_bet_win.format(
                             win_count=int(data["bet_count"]), balance=user.balance
                         ),
                         reply_markup=investing_keyboard,
@@ -90,12 +88,12 @@ async def requisites_entered(message: types.Message, state: FSMContext):
                     await state.finish()
             else:
                 await message.answer(
-                    payload.not_enough_balance_text.format(balance=user.balance)
+                    texts.not_enough_balance_text.format(balance=user.balance)
                 )
                 logger.debug(f"{message.chat.id} - not enough balance")
                 await state.finish()
         except ValueError:
-            await message.answer(payload.int_error_text)
+            await message.answer(texts.int_error_text)
             logger.debug(f"{message.chat.id} - entered not integer")
             await state.finish()
     except TradingUser.DoesNotExist:
