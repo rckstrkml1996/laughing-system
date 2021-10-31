@@ -8,7 +8,7 @@ from loguru import logger
 from models import Worker, EscortUser
 from customutils import datetime_local_now
 from loader import dp
-from data.payload import (
+from data.texts import (
     escort_text,
     esc_mamonth_info_text,
     no_mamonths_text,

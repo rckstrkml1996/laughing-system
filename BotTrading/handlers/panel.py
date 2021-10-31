@@ -8,10 +8,9 @@ from qiwiapi.exceptions import InvalidToken, InvalidAccount
 from models import TradingUser, TradingPayment
 
 from loader import dp
-from data import payload
+from data import texts
 from data.keyboards import *
 from data.states import Withdraw, Deposit
-
 
 
 @dp.message_handler(regexp="профил")

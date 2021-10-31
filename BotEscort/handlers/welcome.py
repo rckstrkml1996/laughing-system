@@ -5,7 +5,7 @@ from aiogram.dispatcher import FSMContext
 from loader import dp, main_bot
 
 from data.states import Login
-from data.payload import (
+from data.texts import (
     new_user_text,
     new_user_wrong_code_text,
     welcome_text,

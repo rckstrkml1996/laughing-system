@@ -5,7 +5,7 @@ from aiogram import types
 from aiogram.utils.exceptions import MessageNotModified
 
 from loader import dp
-from data import payload
+from data import texts
 from data.keyboards import update_sysinfo_keyboard
 from utils.systeminfo import cpu_usage
 from utils.executional import get_correct_str

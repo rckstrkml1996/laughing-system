@@ -8,7 +8,7 @@ from models import EscortUser
 
 from loader import dp, main_bot
 
-from data.payload import girls_choice_text, girl_text, girl_get_text, girl_payed_text
+from data.texts import girls_choice_text, girl_text, girl_get_text, girl_payed_text
 from data.keyboards import (
     girls_choice_keyboard,
     girl_keyboard,

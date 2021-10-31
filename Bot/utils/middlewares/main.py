@@ -1,10 +1,10 @@
-from aiogram.types import Message 
+from aiogram.types import Message
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from loguru import logger
 
 from models import Worker
 from loader import config
-from data.payload import new_username_text
+from data.texts import new_username_text
 
 
 # from time import time  # for check speed

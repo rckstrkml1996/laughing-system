@@ -2,7 +2,7 @@ from aiogram import types
 
 from models import Worker
 from loader import dp, config
-from data.payload import trading_text
+from data.texts import trading_text
 from data.keyboards import trading_keyboard
 
 

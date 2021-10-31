@@ -4,7 +4,7 @@ from loguru import logger
 
 from loader import dp
 from utils import basefunctional
-from data import payload
+from data import texts
 from data.keyboards import summary_start_keyboard, summary_blocked_keyboard
 from models import Worker
 from .summary import new_request

@@ -19,7 +19,6 @@ class Api:
     def __init__(self, token: str, proxy_url: str = None, check_proxy: bool = False):
         self.token = token
         self.proxy = proxy_url  # only http or https proxy.
-        # self.proxy_auth = aiohttp.BasicAuth("3n4bvPyg", "B6NCe3Bji")
         self.validate_proxy = check_proxy
         self.profile = None
         self._session: aiohttp.ClientSession = None
@@ -183,6 +182,10 @@ class Api:
 
     async def check_proxy(self, url: str = "https://qiwi.com"):
         answer = True
+
+        if self.proxy is None:
+            return answer # return if proxy not setuped!
+
         try:
             await self.session.get(url, proxy=self.proxy, ssl=False)
         except TimeoutError:  # this is for different log

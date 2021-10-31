@@ -3,7 +3,7 @@ from aiogram import types
 from loader import dp
 from utils import basefunctional
 from models import Worker, Profit, CasinoUser, TradingUser, EscortUser
-from data.payload import statistic_text
+from data.texts import statistic_text
 
 
 @dp.message_handler(commands=["stat", "statistic"], admins_chat=True, is_admin=True)

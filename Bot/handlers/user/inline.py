@@ -5,7 +5,7 @@ from loguru import logger
 
 from loader import dp, StatusNames
 from utils import basefunctional
-from data import payload
+from data import texts
 from data.inlineresults import (
     tagbot_article,
     services_status_article,

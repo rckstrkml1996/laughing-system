@@ -3,7 +3,7 @@ from loguru import logger
 
 from loader import dp, casino_bot
 from models import Worker, CasinoUser, CasinoUserHistory, CasinoPayment
-from data.payload import (
+from data.texts import (
     fart_off_text,
     fart_fif_text,
     fart_on_text,

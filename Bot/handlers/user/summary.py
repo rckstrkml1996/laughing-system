@@ -5,7 +5,7 @@ from loguru import logger
 from loader import dp, config
 from models import Worker
 from data.states import Summary
-from data import payload
+from data import texts
 from data.keyboards import (
     summary_start_keyboard,
     summary_rules_keyboard,

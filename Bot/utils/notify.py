@@ -5,7 +5,7 @@ from aiogram import Dispatcher
 from loguru import logger
 
 from loader import config
-from data.payload import startup_text, updated_startup_text
+from data.texts import startup_text, updated_startup_text
 
 
 async def on_startup_notify(dp: Dispatcher):

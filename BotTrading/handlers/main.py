@@ -5,7 +5,7 @@ from aiogram.dispatcher import FSMContext
 from loader import dp
 from data.states import Code
 from data.keyboards import main_keyboard, rules_keyboard
-from data import payload
+from data import texts
 from models import TradingUser, Worker
 from random import randint
 

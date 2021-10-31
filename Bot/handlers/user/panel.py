@@ -10,7 +10,7 @@ from loader import dp, config, StatusNames
 from utils import basefunctional
 from models import Worker, Profit
 from customutils.datefunc import datetime_local_now
-from data.payload import (
+from data.texts import (
     zap_text,
     worker_menu_text,
     referral_system_text,

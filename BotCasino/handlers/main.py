@@ -10,7 +10,7 @@ from loguru import logger
 
 from data.states import SelfCabine, Register
 import keyboards
-from data import payload
+from data import texts
 from loader import dp, main_bot
 from models import Worker, CasinoUser, CasinoUserHistory
 

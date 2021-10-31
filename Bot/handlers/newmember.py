@@ -1,7 +1,7 @@
 from aiogram import types
 
 from loader import dp
-from data.payload import new_chat_member_text
+from data.texts import new_chat_member_text
 
 
 @dp.message_handler(content_types=["new_chat_members"], workers_chat=True)

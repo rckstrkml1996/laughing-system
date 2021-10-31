@@ -6,7 +6,7 @@ from loguru import logger
 
 from loader import dp
 from data.states import Render
-from data.payload import (
+from data.texts import (
     render_main_text,
     render_qiwi_balance_text,
     render_qiwi_trans_text,

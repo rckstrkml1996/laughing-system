@@ -1,7 +1,7 @@
 from aiogram import types
 
 from loader import dp
-from data.payload import dont_working_text
+from data.texts import dont_working_text
 
 
 @dp.message_handler(is_working=False)

@@ -7,7 +7,7 @@
 # from models import QiwiPayment, Profit, CasinoPayment, EscortPayment, TradingPayment
 # from qiwiapi.types import Payments, Transaction
 # from loader import config, dp, ServiceNames
-# from data import payload
+# from data import texts
 # from data.keyboards import profit_pay_keyboard
 # from utils.executional import get_random_analog
 # from

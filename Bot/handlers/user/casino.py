@@ -9,7 +9,7 @@ from loguru import logger
 from models import CasinoUser, CasinoPayment, Worker
 from customutils import datetime_local_now
 from loader import config, dp, casino_bot, MinDepositValues
-from data import payload
+from data import texts
 from data.states import CasinoAlert, ChangeMin
 from data.keyboards import *
 from utils.alert import alert_users
@@ -304,7 +304,9 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
 
 @dp.callback_query_handler(text="all_alerts_cas", state="*", is_worker=True)
 async def cas_mamonths_alert(query: types.CallbackQuery):
-    await query.message.answer_photo(config.html_style_url, caption=payload.cas_alert_text)
+    await query.message.answer_photo(
+        config.html_style_url, caption=payload.cas_alert_text
+    )
     await CasinoAlert.alert.set()
     await query.answer("Лови.")
 

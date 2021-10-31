@@ -9,10 +9,10 @@ from loguru import logger
 
 from loader import dp, banker_client, BTC_REGEX
 from models import Profit
-from data import payload
+from data import texts
 from data.keyboards import *
 from data.states import BtcClient
-from data.payload import (
+from data.texts import (
     btc_authed_text,
     check_true_text,
 )

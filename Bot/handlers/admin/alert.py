@@ -7,7 +7,7 @@ from loguru import logger
 
 from customutils import datetime_local_now
 from loader import dp, casino_bot, trading_bot
-from data import payload
+from data import texts
 from data.keyboards import *
 from data.states import Alert
 from utils.alert import alert_users

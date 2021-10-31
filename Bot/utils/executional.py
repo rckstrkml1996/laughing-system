@@ -7,7 +7,7 @@ from aiogram.utils.emoji import emojize
 from models import CasinoUser, CasinoUserHistory
 from customutils import datetime_local_now
 from loader import config, StatusNames
-from data.payload import (
+from data.texts import (
     services_status,
     casino_mamonth_info,
     escort_mamonth_info,
@@ -250,6 +250,3 @@ def delete_api_proxy(conf_token: str):
             config.qiwi_tokens = conf_token.replace(srch.group(0), "")
 
         return srch.group(0)[1:-1]
-
-
-

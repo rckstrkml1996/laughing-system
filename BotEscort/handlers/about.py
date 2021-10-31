@@ -2,7 +2,7 @@ from aiogram.types import CallbackQuery
 from aiogram.utils.exceptions import MessageNotModified
 
 from loader import dp
-from data.payload import about_us_text, already_in_text
+from data.texts import about_us_text, already_in_text
 from data.keyboards import welcome_keyboard
 
 

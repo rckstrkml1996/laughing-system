@@ -5,10 +5,10 @@ from aiogram import Dispatcher
 from asyncio import sleep
 
 
-from data.payload import startup_text
+from data.texts import startup_text
 
 
-async def on_startup_notify(dp: Dispatcher, sleep_time = 0.2):
+async def on_startup_notify(dp: Dispatcher, sleep_time=0.2):
     logger.info("Notifying admins...")
     for admin_id in config.admins_id:
         try:

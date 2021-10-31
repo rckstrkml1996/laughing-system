@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 from loader import config, dp
-from data.payload import going_card_text, outgoing_card_text, oldnew_card_text
+from data.texts import going_card_text, outgoing_card_text, oldnew_card_text
 from data.states import Card
 
 

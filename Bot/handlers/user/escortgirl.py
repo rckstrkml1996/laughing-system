@@ -7,7 +7,7 @@ from aiogram.utils.markdown import quote_html
 
 from models import Worker, EscortGirl, EscortGirlPhoto
 from loader import dp
-from data.payload import (
+from data.texts import (
     zap_text,
     esc_create_name_text,
     esc_create_about_text,

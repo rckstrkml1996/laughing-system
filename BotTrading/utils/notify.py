@@ -4,8 +4,7 @@ from loguru import logger
 from aiogram import Dispatcher
 from asyncio import sleep
 
-from data.payload import startup_text
-
+from data.texts import startup_text
 
 
 async def on_startup_notify(dp: Dispatcher):

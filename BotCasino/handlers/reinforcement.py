@@ -15,7 +15,7 @@ from qiwiapi.exceptions import InvalidToken, InvalidAccount
 from loader import dp, main_bot
 
 from data.states import SelfCabine, AddBalance, OutBalance
-from data import payload
+from data import texts
 from keyboards import *
 
 

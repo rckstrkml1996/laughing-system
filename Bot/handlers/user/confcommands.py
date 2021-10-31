@@ -10,7 +10,7 @@ from loguru import logger
 from models import Worker
 from loader import dp, config
 from utils import basefunctional
-from data import payload
+from data import texts
 from utils.executional import (
     rub_usd_btcticker,
     get_correct_str,

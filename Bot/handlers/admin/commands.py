@@ -4,7 +4,7 @@ from loguru import logger
 
 from models import Worker
 from loader import dp
-from data import payload
+from data import texts
 from data.keyboards import *
 
 

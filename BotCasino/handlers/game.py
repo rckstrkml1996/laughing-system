@@ -8,7 +8,7 @@ from aiogram.dispatcher import FSMContext
 from loguru import logger
 
 from keyboards import *
-from data.payload import *
+from data.texts import *
 from data.states import Game
 from loader import dp
 from models import CasinoUser, CasinoUserHistory

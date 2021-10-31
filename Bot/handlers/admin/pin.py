@@ -4,7 +4,7 @@ from aiogram.utils.text_decorations import html_decoration
 from loguru import logger
 
 from loader import dp, dynapinner
-from data import payload
+from data import texts
 from data.keyboards import change_pin_keyboard, new_pin_keyboard
 from data.states import Pin
 
