@@ -1,6 +1,6 @@
 from aiogram import types
 
-from loader import dp
+from loader import dp, config
 from data.texts import new_chat_member_text
 
 
@@ -9,8 +9,10 @@ async def new_chat_member(message: types.Message):
     bot_user = await dp.bot.get_me()
     await message.reply(
         new_chat_member_text.format(
+            outs_link=config.outs_link,
             chat_id=message.from_user.id,
             name=message.from_user.full_name,
             bot_username=bot_user.username,
+            min_deposit=config.min_deposit,
         )
     )

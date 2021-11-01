@@ -35,8 +35,8 @@ casino_bot = Bot(config.casino_api_token, parse_mode=ParseMode.HTML)
 trading_bot = Bot(config.trading_api_token, parse_mode=ParseMode.HTML)
 escort_bot = Bot(config.escort_api_token, parse_mode=ParseMode.HTML)
 
-payments_checker = PayChecker(config.qiwi_check_time)
-dynapinner = DynamicPinner(config, bot)
+payments_checker = PayChecker(bot, config)
+dynapinner = DynamicPinner(bot, config)
 
 Session.notice_displayed = True  # fucking notice zaebala
 banker_client = Client("banker_client", config.api_id, config.api_hash)

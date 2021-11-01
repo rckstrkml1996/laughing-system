@@ -1,8 +1,5 @@
-import os
-
 from aiogram.utils.emoji import emojize
 
-from loader import config
 
 zap_text = emojize(":zap:")
 
@@ -13,15 +10,12 @@ new_username_text = emojize(
     "<a href='tg://user?id={chat_id}'>{name}</a> сменил свой ник с <b>@{old_username}</b> на <b>@{new_username}</b> :poop:"
 )
 
-outs_link = config.outs_link
-reviews_link = config.reviews_link
-
 new_chat_member_text = emojize(
     ":green_heart: Привет, <a href='tg://user?id={chat_id}'>{name}</a>\n"
     ":gem: <a href='t.me/{bot_username}'>Бот для всего</a>\n"
-    f":money_with_wings: <a href='t.me/{outs_link}'>Выплаты</a>\n"
+    ":money_with_wings: <a href='t.me/{outs_link}'>Выплаты</a>\n"
     ":fire: Процент выплат в смотри <b>закрепе</b>\n"
-    f":credit_card: Пополнения от <b>{config.min_deposit} RUB</b>"
+    ":credit_card: Пополнения от <b>{min_deposit} RUB</b>"
 )
 
 # multy use

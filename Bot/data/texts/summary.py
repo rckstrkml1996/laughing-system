@@ -1,7 +1,5 @@
 from aiogram.utils.emoji import emojize
 
-from loader import config
-
 
 summary_text = emojize(
     "<b>Неизвестная команда.</b> :man_shrugging:\n"
@@ -9,7 +7,7 @@ summary_text = emojize(
 )
 
 new_summary_text = emojize(
-    f"Привет, это бот <b>{config.team_name.upper()}</b> :snake:\n"
+    "Привет, это бот <b>{team_name}</b> :snake:\n"
     "Чтобы начать работу у нас, подай заявку :cold_face:"
 )
 

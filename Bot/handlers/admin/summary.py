@@ -84,7 +84,7 @@ async def summary_accepted(query: types.CallbackQuery):
             reply_markup=menu_keyboard,
         )
 
-        logger.info(f"{query.message.chat.id} - summary accepted")
+        logger.info(f"[{query.message.chat.id}] - summary accepted")
 
     except Worker.DoesNotExist:
         logger.warning(f"{query.message.chat.id} - doen't exist")

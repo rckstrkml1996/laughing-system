@@ -15,7 +15,9 @@ from data.keyboards import (
 
 
 async def new_request(message: types.Message):
-    await message.answer(texts.new_summary_text, reply_markup=summary_start_keyboard)
+    await message.answer(texts.new_summary_text.format(
+        team_name=config.team_name.upper()
+    ), reply_markup=summary_start_keyboard)
 
 
 @dp.callback_query_handler(text="summary", send_summary=False)

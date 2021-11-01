@@ -141,6 +141,7 @@ async def project_info(message: types.Message, state: FSMContext):
     await message.answer(
         about_project_text.format(
             team_start=config.team_start,
+            team_name=config.team_name,
             team_profits=team_profits,
             profits_sum=basefunctional.all_profits_sum(),
             services_status=get_work_status(),

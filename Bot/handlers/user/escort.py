@@ -7,7 +7,7 @@ from loguru import logger
 
 from models import Worker, EscortUser
 from customutils import datetime_local_now
-from loader import dp
+from loader import dp, config
 from data.texts import (
     escort_text,
     esc_mamonth_info_text,
@@ -27,6 +27,8 @@ async def escort_info(message: types.Message, worker: Worker):
 
     await message.answer(
         escort_text.format(
+            escort_username=config.escort_username,
+            escort_sup_username=config.escort_sup_username,
             worker_id=worker.uniq_key,
         ),
         reply_markup=escort_keyboard(girl_created),

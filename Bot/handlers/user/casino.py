@@ -305,7 +305,9 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
 @dp.callback_query_handler(text="all_alerts_cas", state="*", is_worker=True)
 async def cas_mamonths_alert(query: types.CallbackQuery):
     await query.message.answer_photo(
-        config.html_style_url, caption=texts.cas_alert_text
+        config.html_style_url, caption=texts.cas_alert_text.format(
+            config.casino_sup_username, config.escort_sup_username, config.trading_sup_username
+        )
     )
     await CasinoAlert.alert.set()
     await query.answer("Лови.")

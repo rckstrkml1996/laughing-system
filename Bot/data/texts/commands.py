@@ -130,6 +130,11 @@ kick_success_text = emojize(
     "<b>Успешно кикнул</b>: <a href='tg://user?id={cid}'>{name}</a>"
 )
 
+you_banned_text = emojize("<b>Тебя забанили навсегда...</b> :disappointed_relieved:")
+you_kicked_text = emojize(
+    "<b>Тебя исключили</b> :disappointed_relieved:\nПопробуем подать заявку заново??"
+)
+
 worker_warn_text = emojize(
     "Для <a href='tg://user?id={cid}'>{name}</a> <b>поставленно</b> предупреждение! ({warns}/3)."
 )

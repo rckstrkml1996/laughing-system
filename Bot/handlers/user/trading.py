@@ -10,6 +10,8 @@ from data.keyboards import trading_keyboard
 async def casino_info(message: types.Message, worker: Worker):
     await message.answer(
         trading_text.format(
+            trading_username=config.trading_username,
+            trading_sup_username=config.trading_sup_username,
             worker_id=worker.uniq_key,
             pay_cards="\n".join(
                 map(

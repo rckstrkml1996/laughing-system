@@ -9,6 +9,8 @@ from data.texts import (
     kick_success_text,
     worker_warn_text,
     worker_unwarn_text,
+    you_kicked_text,
+    you_banned_text,
 )
 from data.keyboards import summary_start_keyboard
 
@@ -37,7 +39,7 @@ async def ban(chat_id: int, user_id: int):  # tg ids
                 name=worker.name,
             ),
         )
-        await bot.send_message(user_id, "Тебя забанили навсегда ...")
+        await bot.send_message(user_id, you_banned_text)
     except Worker.DoesNotExist:
         await bot.send_message(
             chat_id,
@@ -81,7 +83,7 @@ async def kick(chat_id: int, user_id: int):
             ),
         )
         await bot.send_message(
-            user_id, "Тебя исключили :(", reply_markup=summary_start_keyboard
+            user_id, you_kicked_text, reply_markup=summary_start_keyboard
         )
     except Worker.DoesNotExist:
         await bot.send_message(

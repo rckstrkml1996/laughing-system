@@ -14,19 +14,19 @@ from models import CasinoUser, TradingUser, EscortUser
 class DynamicPinner:
     STANDART_TEXT = emojize("Стандартный закреп, {time} :sparkle:")
 
-    def __init__(self, config: BotConfig, bot: Bot):
-        if not isinstance(config, BotConfig):
-            raise TypeError(
-                f"Argument 'config' must be an instance of BotConfig, not '{type(config).__name__}'"
-            )
-
+    def __init__(self, bot: Bot, config: BotConfig):
         if not isinstance(bot, Bot):
             raise TypeError(
                 f"Argument 'bot' must be an instance of Bot, not '{type(bot).__name__}'"
             )
 
-        self.config = config
+        if not isinstance(config, BotConfig):
+            raise TypeError(
+                f"Argument 'config' must be an instance of BotConfig, not '{type(config).__name__}'"
+            )
+
         self.bot = bot
+        self.config = config
 
         self._working = False
 
