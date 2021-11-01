@@ -9,7 +9,7 @@ from aiogram.types import ParseMode
 
 from utils.pinner import DynamicPinner
 from utils.payments_checker import PayChecker
-from customutils.config import BotConfig
+from customutils.config import BotsConfig
 
 """
     bot settings:
@@ -19,11 +19,11 @@ from customutils.config import BotConfig
         workers and outs and admins chats   -   make bot admin!
 """
 
-config = BotConfig()
+config = BotsConfig()
 
 # for aiohttp connection by proxy, too slow for windows :(
 if sys.platform == "win32":
-    asyncio.set_event_loop(asyncio.SelectorEventLoop())
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 loop = asyncio.get_event_loop()
 

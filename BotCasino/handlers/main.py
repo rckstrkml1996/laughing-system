@@ -9,39 +9,39 @@ from aiogram.utils.emoji import emojize
 from loguru import logger
 
 from data.states import SelfCabine, Register
-import keyboards
-from data import texts
-from loader import dp, main_bot
+from data import texts, keyboards
+from loader import dp, config, main_bot
 from models import Worker, CasinoUser, CasinoUserHistory
+from utils import executional
 
 
 @dp.message_handler(state="*", is_working=False)
-async def on_dont_work_status(message: types.Message):
+async def on_dont_work_status(message: types.Message):  # then make as MiddleWare
     await message.answer("Ожидайте завершения тех. работ, бот временно не работает!")
 
 
-async def self_cabine(chat_id: int):
-    user = CasinoUser.get(cid=chat_id)
+async def get_cabine(user: CasinoUser):
     games = user.history.where(
         (CasinoUserHistory.editor == 2) | (CasinoUserHistory.editor == 3)
     ).count()
     games_win = user.history.where(CasinoUserHistory.editor == 2).count()
     games_lose = user.history.where(CasinoUserHistory.editor == 3).count()
 
-    # Сообщения для личного кабинета, не вынес в payload тк. нужен доступ к базе данных
-    return emojize(
-        ":pushpin: Личный кабинет\n\n"
-        f":dollar: Баланс: <b>{user.balance} RUB</b>\n\n"
-        f":high_brightness: Игр сыграно: <b>{games}</b>\n"
-        f":four_leaf_clover: Игр выиграно: <b>{games_win}</b>\n"
-        f":black_heart: Игр проиграно: <b>{games_lose}</b>\n\n"
-        f"<a href='{await get_start_link(user.id)}'>Ваша реферальная ссылка</a>"
+    start_link = await get_start_link(user.id)
+
+    return texts.self_cabine.format(
+        balance=user.balance,
+        games=games,
+        games_win=games_win,
+        games_lose=games_lose,
+        start_link=start_link,
     )
 
 
 @dp.message_handler(Text(startswith="личн", ignore_case=True), state="*")
 async def cabine(message: types.Message):
-    await message.answer(await self_cabine(message.chat.id))  # main
+    user = CasinoUser(message.from_user.id)
+    await message.answer(await get_cabine(user))  # main
     await SelfCabine.main.set()  # пустышка для перевода стейта
 
 
@@ -103,11 +103,11 @@ async def accept_user(query: types.CallbackQuery):
     chat_id = query.message.chat.id
     refer = query.data.split("_")[1]
     if refer == "0":
-        await ref_code(message)
+        await ref_code(query.message)
         return
 
     try:
-        CasinoUser.get(cid=chat_id)
+        user = CasinoUser.get(cid=chat_id)
     except CasinoUser.DoesNotExist:
         try:
             worker = Worker.get(uniq_key=refer)
@@ -123,8 +123,10 @@ async def accept_user(query: types.CallbackQuery):
             await main_bot.send_message(
                 worker.cid,
                 texts.new_mamonth_text.format(
-                    cid=chat_id,
-                    name=fullname,
+                    mention=texts.mention_text(
+                        cid=chat_id,
+                        name=fullname,
+                    ),
                     uid=user.id,
                 ),
             )
@@ -134,15 +136,21 @@ async def accept_user(query: types.CallbackQuery):
             return
     finally:
         await query.message.answer(
-            await self_cabine(chat_id), reply_markup=keyboards.main_keyboard()
+            await get_cabine(user), reply_markup=keyboards.main_keyboard()
         )
         await query.message.delete()
 
 
-@dp.message_handler(Text(startswith="инф", ignore_case=True), state="*")
+@dp.message_handler(Text(startswith="информ", ignore_case=True), state="*")
 async def game_support(message: types.Message):
-    # await message.answer_photo(photo=LICENCE, caption=texts.info_text(), reply_markup=keyboards.main_keyboard())
-    await message.answer(texts.info_text(), reply_markup=keyboards.main_keyboard())
+    await message.answer(
+        texts.info_text.format(
+            online_now=executional.generate_online_now(),
+            last_out=executional.generate_last_out(),
+            support_username=config.casino_sup_username,
+        ),
+        reply_markup=keyboards.main_keyboard(),
+    )
 
 
 @dp.message_handler(regexp="назад", state="*")

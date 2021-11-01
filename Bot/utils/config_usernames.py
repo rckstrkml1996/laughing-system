@@ -10,10 +10,13 @@ async def update_bot_usernames():
 
     casino_user = await casino_bot.get_me()
     new_casino_username = casino_user.username
+    await casino_bot.session.close()
     escort_user = await escort_bot.get_me()
     new_escort_username = escort_user.username
+    await escort_bot.session.close()
     trading_user = await trading_bot.get_me()
     new_trading_username = trading_user.username
+    await trading_bot.session.close()
 
     usernames_good = True
 

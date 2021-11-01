@@ -11,7 +11,6 @@ from .btc_auth import *
 from .card import *
 from .escort_create_girl import *
 from .qiwi import *
-from .other import *
 
 # from .profit import (
 #     profit_text,

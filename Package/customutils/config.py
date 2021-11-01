@@ -1,15 +1,18 @@
 import json
 
 from betterconf import field, Config
-from betterconf.config import AbstractProvider
+from betterconf.config import AbstractProvider, Field
 
 
 class JSONProvider(AbstractProvider):  # from abs class
     def __init__(self, config_path: str):
         self.config_path = config_path
 
+        self.update_settings()
+
+    def update_settings(self):
         with open(self.config_path, "r") as f:
-            self._settings = json.load(f)  # open and read
+            self._settings = json.load(f)
 
     def edit(self, name, value):
         self._settings.update({name: value})  # add value to dict
@@ -19,6 +22,7 @@ class JSONProvider(AbstractProvider):  # from abs class
     def get(self, name):
         if name not in self._settings:
             self.edit(name, None)  # set None ( Not created )
+
         # get() can return None if name not in settings
         return self._settings.get(name)
 
@@ -30,7 +34,7 @@ def myfield(name: str, default=None):
     return field(name, default=default, provider=provider)
 
 
-class BotConfig(Config):
+class BotsConfig(Config):
     api_token = myfield("api_token")
     casino_api_token = myfield("casino_api_token")
     trading_api_token = myfield("trading_api_token")
@@ -108,9 +112,22 @@ class BotConfig(Config):
     notify = myfield("notify", default=False)
     skip_updates = myfield("skip_updates", default=True)
 
+    def __getattribute__(self, name: str):
+        field = getattr(BotsConfig, name, None)
+        if isinstance(field, Field):
+            
+            last_value = provider.get(field.name)
+            provider.update_settings()
+            new_value = provider.get(field.name)
+
+            if last_value != new_value:
+                setattr(self, field.name, provider.get(name))
+
+        return super().__getattribute__(name)
+
     def __setattr__(self, name: str, value):
-        field = getattr(BotConfig, name, None)
-        if field is not None:
+        field = getattr(BotsConfig, name, None)
+        if isinstance(field, Field):
             json_value = provider.get(field.name)
             if json_value != value:
                 provider.edit(field.name, value)

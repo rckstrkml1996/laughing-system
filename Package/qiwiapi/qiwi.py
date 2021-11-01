@@ -1,10 +1,14 @@
 import re
 
-from .types import Payments
 from .api import Api
 
 
 class Qiwi(Api):
+    ALL = "ALL"
+    OUT = "OUT"
+    IN = "IN"
+    QIWI_CARD = "QIWI_CARD"
+
     RUB_CURRENCY = 643
     USD_CURRENCY = 840
     KZT_CURRENCY = 398
@@ -21,6 +25,7 @@ class Qiwi(Api):
         on_invalid_proxy: callable = None,
     ):
         self.validate_proxy = False
+        self.last_payments = None  # []
 
         if validate:
             self.validate(token, proxy_url)
@@ -44,25 +49,22 @@ class Qiwi(Api):
                     f"Proxy must match {regexp}, '{proxy_url}' - does not match!"
                 )
 
-    async def check(self, on_payments: callable):
+    async def check_payments(self, on_transaction: callable, rows: int = 15, operation: str = "ALL"):
         """Check if new payments"""
-        if self.last_transactions is None:
-            self.last_transactions = await self.get_transactions(rows=15)
+        payments = await self.get_payments(rows=rows, operation=operation)
 
-        if self.last_transactions.data:
-            transactions = await self.get_transactions(rows=15)
-            for i, transaction in enumerate(transactions.data):
-                if transaction.txnId == self.last_transactions.data[0].txnId and i != 0:
-                    # new transactions
-                    await on_payments(
-                        Payments(
-                            data=transactions.data[:i],
-                            nextTxnId=transactions.nextTxnId,
-                            nextTxnDate=transactions.nextTxnDate,
-                        ),
-                    )
-                    self.last_transactions = transactions  # update transactions
-                    break
+        if self.last_payments is None:
+            self.last_payments = payments
+            return
+
+        if payments.nextTxnId != self.last_payments.nextTxnId:
+            last_txn_id = self.last_payments.data[0].txnId
+            for transaction in list(
+                filter(lambda t: t.txnId > last_txn_id, payments.data)
+            ):
+                await on_transaction(transaction)
+
+        self.last_payments = payments
 
     @classmethod
     def get_currency(cls, currency: int) -> str:

@@ -30,6 +30,7 @@ async def escort_info(message: types.Message, worker: Worker):
             escort_username=config.escort_username,
             escort_sup_username=config.escort_sup_username,
             worker_id=worker.uniq_key,
+            reviews_link=config.reviews_link,
         ),
         reply_markup=escort_keyboard(girl_created),
         disable_web_page_preview=True,

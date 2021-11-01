@@ -1,4 +1,5 @@
 from aiogram.utils.emoji import emojize
+import emoji
 
 
 qiwi_emoji = emojize(":kiwi_fruit:")  # ? qiwi_emoji_text
@@ -12,7 +13,6 @@ qiwi_tokens_info_text = emojize(
 )
 
 no_qiwis_text = emojize("У вас нет привязанных кошельков! :x:")
-
 
 qiwi_to_bot_text = "Введите все необходимые данные <b>мне</b> в лс!"
 
@@ -36,16 +36,20 @@ valid_newqiwi_text = "<b>Киви успешно добавлен!</b>"
 
 qiwi_action_text = emojize(
     "<b>{going} {currency}</b>, <i>{comment}</i>"
-) # going = "+" + amount or "-" + amount //
+)  # going = "+" + amount or "-" + amount //
 
 qiwi_info_text = emojize(
     "Кошелек: <b><i>+{number}</i></b> :kiwi_fruit:\n"
     "Баланс: <b>{amount} {currency}</b>\n"
     "24 Часа платежи: <i>+{incoming} {currency} -{outgoing} {currency}</i>\n"
     "Статус: <b>{status}</b>\n"
-    "Прокси: <i>{proxy_url:.6f}</i>\n\n"
+    "Прокси: <i>{proxy_url}</i>\n\n"
     "{qiwi_action_texts}"
-)
+)  # proxy_url censored
+
+invalid_proxy_text = emojize(
+    "Что-то не так с прокси! Удаляю из кошелька с токеном\n<code>{token}</code>"
+)  # token censored
 
 # same_qiwi_text = emojize("Похоже вы пытаетесь добавить такой же киви кошелек)")
 

@@ -22,12 +22,13 @@ async def worker_new_status(message: types.Message, worker: Worker, regexp_comma
     worker_id = int(regexp_command.group(1))
 
     try:
-        diff_worker = Worker.get(id=worker_id)
-    except Worker.DoesNotExist:
         diff_worker = Worker.get(cid=worker_id)
     except Worker.DoesNotExist:
-        await message.answer("Такого воркера нету!")
-        return
+        try:
+            diff_worker = Worker.get(id=worker_id)
+        except Worker.DoesNotExist:
+            await message.answer("Такого воркера нету!")
+            return
 
     if diff_worker.id == worker.id:
         await message.answer("Ты дурак? Себе самому статус менять??")

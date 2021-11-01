@@ -1,5 +1,6 @@
 from aiogram.types import Message, CallbackQuery
 from aiogram.dispatcher.storage import FSMContext
+from aiohttp.helpers import ProxyInfo
 from loguru import logger
 
 from qiwiapi import Qiwi, InvalidProxy
@@ -42,32 +43,30 @@ async def qiwi_tokens_info(chat_id: int):
 
         for qiwi_obj in config.qiwi_tokens:  # {"token": ..., "proxy_url": ...}
             qiwi = Qiwi(**qiwi_obj, on_invalid_proxy=proxy_invalid)
+
             try:
                 accounts = await qiwi.get_accounts()
                 profile = await qiwi.get_profile()
-                currency = accounts[0].balance.currency
-
-                amount = accounts[0].balance.amount
-                number = profile.authInfo.personId
-
-                if currency == qiwi.RUB_CURRENCY:
-                    all_amounts += amount
-
-                account_texts.append(
-                    qiwi_account_text.format(
-                        amount=amount,
-                        number=number,
-                        currency=qiwi.get_currency(currency),
-                    )
-                )
-                qiwi_numbers.append(number)
-
-                logger.debug(f"{number=}, {amount=}")
             except InvalidProxy:
-                await qiwi.close()
-                return  # close session and return
-            finally:
-                await qiwi.close()  # just close session and go ..
+                return  # some logic
+
+            currency = accounts[0].balance.currency
+            amount = accounts[0].balance.amount
+            number = profile.authInfo.personId
+
+            if currency == qiwi.RUB_CURRENCY:
+                all_amounts += amount
+
+            account_texts.append(
+                qiwi_account_text.format(
+                    amount=amount,
+                    number=number,
+                    currency=qiwi.get_currency(currency),
+                )
+            )
+            qiwi_numbers.append(number)
+
+            logger.debug(f"{number=}, {amount=}")
 
         await dp.bot.send_message(
             chat_id,
@@ -95,15 +94,13 @@ async def qiwi_information(query: CallbackQuery):
     try:
         accounts = await qiwi.get_accounts()
         profile = await qiwi.get_profile()
-        currency = accounts[0].balance.currency
-
-        amount = accounts[0].balance.amount
-        number = profile.authInfo.personId
     except InvalidProxy:
-        await qiwi.close()
-        return  # close session and return
-    finally:
-        await qiwi.close()  # just close session and go ..
+        return  # some logic
+
+    currency = accounts[0].balance.currency
+    amount = accounts[0].balance.amount
+    number = profile.authInfo.personId
+    level = profile.contractInfo.identificationInfo
 
     await query.message.edit_text(
         qiwi_info_text.format(
@@ -113,8 +110,8 @@ async def qiwi_information(query: CallbackQuery):
             incoming=0,
             outgoing=0,
             status=qiwi.get_identification_level(level),
-            proxy_url=qiwi_tokens["proxy_url"],
-            qiwi_action_texts="work.."
+            proxy_url=qiwi_tokens["proxy_url"][:16],
+            qiwi_action_texts="work..",
         )
     )
 
@@ -149,7 +146,7 @@ async def qiwi_new(message: Message, state: FSMContext):
         else:
             qiwi_tokens = [payload]
 
-        logger.info(f"Setting up {qiwi_tokens=} in BotConfig")
+        logger.info(f"Setting up {qiwi_tokens=} in BotsConfig")
         config.qiwi_tokens = qiwi_tokens
 
         await message.answer(valid_newqiwi_text)

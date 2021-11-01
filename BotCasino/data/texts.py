@@ -1,15 +1,17 @@
-from random import randint
-
 from aiogram.utils.emoji import emojize
 
+startup_text = emojize(":slot_machine: <b><i>Бот запущен!</i></b>")
 
-
-LIFE_OUTS = "LINKTRUW"
-SUP = config.casino_sup_username
-
+self_cabine = emojize(
+    ":pushpin: Личный кабинет\n\n"
+    ":dollar: Баланс: <b>{balance} RUB</b>\n\n"
+    ":high_brightness: Игр сыграно: <b>{games}</b>\n"
+    ":four_leaf_clover: Игр выиграно: <b>{games_win}</b>\n"
+    ":black_heart: Игр проиграно: <b>{games_lose}</b>\n\n"
+    "<a href='{start_link}'>Ваша реферальная ссылка</a>"
+)
 
 graph_text = emojize("Значение графика: <b>X{value:.2f}</b> :chart:")
-
 
 graph_win_text = emojize(
     "<b>Победа</b>! :smile_cat:\n" "Вы получили: <b>+{amount:.2f} RUB</b>"
@@ -21,9 +23,9 @@ graph_lose_text = emojize(
 graph_stopped_text = emojize("<b>График</b> остановлен! :skull_and_crossbones:")
 
 welcome_text = emojize(
-    ":tada: Привет, <b>{name}</b>!\n\n"
-    "Политика и условия пользования данным ботом.\n"
-    "1. Играя у нас, вы берёте все риски за свои средства на себя.\n"
+    ":tada: Привет, <b>{name}</b>!\n"
+    "<b>Политика</b> и <b>условия пользования</b> данным ботом :point_down:\n\n"
+    "<code>1. Играя у нас, вы берёте все риски за свои средства на себя.\n"
     "2. Принимая правила, Вы подтверждаете своё совершеннолетие!\n"
     "3. Ваш аккаунт может быть забанен в подозрении на мошенничество/обман нашей системы!\n"
     "4. Мультиаккаунты запрещены!\n"
@@ -32,22 +34,23 @@ welcome_text = emojize(
     "Ваш аккаунт будет заморожен до выяснения обстоятельств!\n"
     "7. В случае необходимости администрация имеет право запросить у Вас документы, "
     "подтверждающие Вашу личность и Ваше совершеннолетие.\n"
-    "8. Вы играете на виртуальные монеты, покупая их за настоящие деньги. Любое пополнение бота является пожертвованием!\n\n"
-    "Спасибо за понимание и <b>удачи в игре</b> :sparkle:!"
+    "8. Вы играете на виртуальные монеты, покупая их за настоящие деньги. "
+    "Любое пополнение бота является пожертвованием!</code>\n\n"
+    ":sparkle: <b>Спасибо за понимание и удачи в игре!</b>"
 )
-
 
 # ПОПОЛНЕНИЕ
 add_text = emojize(
     ":gem: Введите сумму пополнения от <b>{min_deposit} до 10000 RUB</b>:"
 )
 
-
-def add_req_text(amount, comment, number):
-    return emojize(
-        f"Переведите <b>{amount} RUB</b> на QIWI\n\n{':heavy_minus_sign:' * 8} \
-	\nНомер: <b>+{number}</b>\nКомментарий: <b>{comment}</b>\n{':heavy_minus_sign:' * 8}"
-    )
+add_req_text = emojize(
+    "Переведите <b>{amount} RUB</b> на <i>QIWI</i>\n\n"
+    "Номер: <b>+{account}</b>\n"
+    "Комментарий: <b>{comment}</b>\n\n"
+    "<i>Обязательно пишите комментарий к платежу!</i>\n"
+    "<b><i>Если вы не укажите комментарий, деньги не поступят на счёт!</i></b>"
+)
 
 
 add_succesful = emojize(
@@ -60,7 +63,7 @@ add_unsuccesful = emojize(
     "<b>проверьте оплату ещё раз</b> через <b>60</b> секунд!"
 )
 
-# ВЫВОД
+# out
 out_req_text = emojize(
     "<b>Введите реквизиты для вывода :moneybag:\n\n"
     ":credit_card: Вывод возможен только на те реквизиты, с которых пополнялся ваш баланс!</b>"
@@ -75,59 +78,50 @@ out_req_succesful = emojize(
 )
 
 out_invreq_text = emojize(
-    ":hammer_and_wrench: <b>Вывод возможен только на те QIWI кошельки или карты, "
+    ":hammer_and_wrench: Вывод возможен только на те QIWI кошельки или карты, "
     "с которых пополнялся ваш баланс!\n"
-    f":warning: Обратитесь в тех-поддержку. {SUP}</b>"
+    ":warning: Обратитесь в Тех. Поддержку: <b>@{support_username}</b>"
 )
-# ИГРА
+# game
 game_any = emojize(
-    ":robot: Отправьте любое сообщение, чтобы подтвердить, что Вы не робот"
+    ":robot: Отправьте любое сообщение, чтобы подтвердить, что <b>Вы не робот</b>"
 )
 
-
-game_amount = emojize("Введите сумму ставки :fire:\n" "Ваш баланс: <b>{amount} RUB</b>")
-
+game_amount = emojize(
+    "<b>Введите сумму ставки</b> :fire:\nВаш баланс: <b>{amount} RUB</b>"
+)
 
 game_bet = emojize(
     "Сейчас выпадет рандомное число от 1 до 99\n\n"
     "Выберите исход события :star:\n\n"
-    "&lt;50 - x2\n =50 - x10\n &gt;50 - x2"
+    "<b>&lt;50 - x2\n =50 - x10\n &gt;50 - x2</b>"
+)
+
+info_text = emojize(
+    ":earth_africa: Текущий онлайн: <b>{online_now}</b>\n"
+    ":money_with_wings: Последний вывод: <b>{last_out} RUB</b>\n\n"
+    ":technologist: Тех. Поддержка: @{support_username}\n"
+    ":warning: Пишите только по <b>делу</b>!\n\n"
+    "<a href='https://telegra.ph/Polzovatelskoe-soglashenie-10-07-2'>Пользовательское соглашение.</a>"
 )
 
 
-def generate():
-    nose = randint(0, 1)
-    last_out = randint(100, 12000)
-    sxll = last_out % 100 if nose else 0
-    last_out -= sxll
-    return last_out
-
-
-def info_text():
-    return emojize(
-        f":earth_africa: Текущий онлайн: <b>{randint(490, 539)}</b>\n"
-        f":money_with_wings: Последний вывод: <b>{generate()} RUB</b>\n\n"
-        f":technologist: Тех. Поддержка: {SUP}\n"
-        ":warning: Пишите только по <b>делу</b>!\n\n"
-        "<a href='https://telegra.ph/Polzovatelskoe-soglashenie-10-07-2'>"
-        "Пользовательское соглашение."
-        "</a>"
-    )  # add as in config.cfg
-
+mention_text = "<a href='tg://user?id={cid}'>{name}</a>"
 
 new_mamonth_text = emojize(
-    ":elephant: <a href='tg://user?id={cid}'>{name}</a> (/c{uid}) - твой новый мамонт (Казино)"
+    ":elephant: {mention} (/c{uid}) - твой новый мамонт (Казино)"
 )
 
 pay_mamonth_text = emojize(
-    "<a href='tg://user?id={cid}'>{name}</a> создал заявку на пополнение\n\n"
+    "{mention} создал заявку на пополнение\n\n"
     "Telegram ID: {cid}\n"
     "ID мамонта: /c{uid}\n"
     "Сумма: {amount} ₽"
 )
 
 out_mamonth_text = emojize(
-    "<a href='tg://user?id={cid}'>{name}</a> создал заявку на вывод.\n\n"
+    "{mention} создал заявку на вывод.\n\n"
+    "Telegram ID: {cid}\n"
     "ID мамонта: /c{uid}\n"
     "Сумма вывода: <b>{amount} RUB</b>"
 )

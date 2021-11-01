@@ -7,7 +7,7 @@ from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
 from loguru import logger
 
-from keyboards import *
+from data import keyboards
 from data.texts import *
 from data.states import Game
 from loader import dp
@@ -32,7 +32,7 @@ async def play_game(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
         await message.answer(
-            "Выберите интересующую Вас игру", reply_markup=games_keyboard
+            "Выберите интересующую Вас игру", reply_markup=keyboards.games_keyboard
         )
         await Game.chose_game.set()
     except CasinoUser.DoesNotExist:
@@ -46,7 +46,7 @@ async def dice_game(message: types.Message):
     """
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        await message.answer(game_any, reply_markup=play_keyboard)
+        await message.answer(game_any, reply_markup=keyboards.play_keyboard)
         await Game.dice_anymes.set()
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id} - does not exist")
@@ -60,7 +60,8 @@ async def dice_any(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
         await message.answer(
-            game_amount.format(amount=user.balance), reply_markup=play_keyboard
+            game_amount.format(amount=user.balance),
+            reply_markup=keyboards.play_keyboard,
         )
         await Game.dice_stake.set()
     except CasinoUser.DoesNotExist:
@@ -71,7 +72,9 @@ async def dice_any(message: types.Message):
     lambda mes: not mes.text.isdigit() or mes.text == "0", state=Game.dice_stake
 )
 async def dice_stake_invalid(message: types.Message):
-    await message.reply("Некорректное значение ставки!", reply_markup=play_keyboard)
+    await message.reply(
+        "Некорректное значение ставки!", reply_markup=keyboards.play_keyboard
+    )
     logger.debug(f"{message.chat.id} - wrong bet value")
 
 
@@ -123,7 +126,7 @@ async def dice_stake(message: types.Message, state: FSMContext):
             await dice_any(message)
         else:
             await message.answer(
-                "Недостачно средств для ставки!", reply_markup=play_keyboard
+                "Недостачно средств для ставки!", reply_markup=keyboards.play_keyboard
             )
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id} - not enough money")
@@ -136,7 +139,7 @@ async def casino_game(message: types.Message):
     """
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        await message.answer(game_any, reply_markup=play_keyboard)
+        await message.answer(game_any, reply_markup=keyboards.play_keyboard)
         await Game.casino_anymes.set()
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id} - does not exist")
@@ -150,7 +153,8 @@ async def casino_any(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
         await message.answer(
-            game_amount.format(amount=user.balance), reply_markup=play_keyboard
+            game_amount.format(amount=user.balance),
+            reply_markup=keyboards.play_keyboard,
         )
         await Game.casino_stake.set()
     except CasinoUser.DoesNotExist:
@@ -161,7 +165,9 @@ async def casino_any(message: types.Message):
     lambda mes: not mes.text.isdigit() or mes.text == "0", state=Game.casino_stake
 )
 async def casino_stake_invalid(message: types.Message):
-    await message.reply("Некорректное значение ставки!", reply_markup=play_keyboard)
+    await message.reply(
+        "Некорректное значение ставки!", reply_markup=keyboards.play_keyboard
+    )
     logger.debug(f"{message.chat.id} - wrong bet value")
 
 
@@ -175,11 +181,11 @@ async def casino_stake(message: types.Message, state: FSMContext):
         if user.balance >= int(message.text):
             async with state.proxy() as data:
                 data["stake"] = int(message.text)
-            await message.answer(game_bet, reply_markup=bet_keyboard)
+            await message.answer(game_bet, reply_markup=keyboards.bet_keyboard)
             await Game.casino_bet.set()
         else:
             await message.answer(
-                "Недостачно средств для ставки!", reply_markup=play_keyboard
+                "Недостачно средств для ставки!", reply_markup=keyboards.play_keyboard
             )
             logger.debug(f"{message.chat.id} - not enough money")
     except CasinoUser.DoesNotExist:
@@ -273,7 +279,7 @@ async def graph_game(message: types.Message):
     """
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        await message.answer(game_any, reply_markup=play_keyboard)
+        await message.answer(game_any, reply_markup=keyboards.play_keyboard)
         await Game.graph_anymes.set()
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id} - does not exist")
@@ -287,7 +293,8 @@ async def graph_any(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
         await message.answer(
-            game_amount.format(amount=user.balance), reply_markup=play_keyboard
+            game_amount.format(amount=user.balance),
+            reply_markup=keyboards.play_keyboard,
         )
         await Game.graph_stake.set()
     except CasinoUser.DoesNotExist:
@@ -298,7 +305,9 @@ async def graph_any(message: types.Message):
     lambda mes: not mes.text.isdigit() or mes.text == "0", state=Game.graph_stake
 )
 async def graph_stake_invalid(message: types.Message):
-    await message.reply("Некорректное значение ставки!", reply_markup=play_keyboard)
+    await message.reply(
+        "Некорректное значение ставки!", reply_markup=keyboards.play_keyboard
+    )
     logger.debug(f"{message.chat.id} - wrong bet value")
 
 
@@ -318,7 +327,7 @@ async def graph_stake(message: types.Message, state: FSMContext):
                 emojize(
                     ":ok_hand: <b>Ставка засчитана</b>, следите за коэффициентом и заберите деньги вовремя!"
                 ),
-                reply_markup=stop_graph_keyboard,
+                reply_markup=keyboards.stop_graph_keyboard,
             )
             working = True
             value = 0.1
@@ -411,12 +420,12 @@ async def graph_stake(message: types.Message, state: FSMContext):
                 )
         else:
             await message.answer(
-                "Недостачно средств для ставки!", reply_markup=play_keyboard
+                "Недостачно средств для ставки!", reply_markup=keyboards.play_keyboard
             )
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id} - not enough money")
 
 
 @dp.message_handler(regexp="остан", state=Game.graph_set_stop)
-async def graph_stop(message: types.Message, state: FSMContext):
+async def graph_stop(_: types.Message):
     await Game.graph_stop.set()  # just set it stopped;

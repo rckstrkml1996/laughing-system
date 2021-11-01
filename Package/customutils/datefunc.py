@@ -2,9 +2,9 @@ from datetime import datetime
 
 import pytz
 
-from .config import BotConfig
+from .config import BotsConfig
 
-config = BotConfig()
+config = BotsConfig()
 
 
 local_tz = pytz.timezone(config.time_zone)
@@ -17,4 +17,3 @@ def normalized_local_now():  # use with tzinfo
 
 def datetime_local_now():  # usable for peewee datetimefield
     return normalized_local_now().replace(tzinfo=None)  # return datetime instance
-

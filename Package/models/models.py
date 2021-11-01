@@ -1,9 +1,10 @@
 from peewee import *
 from playhouse.shortcuts import ReconnectMixin
 
-from customutils import BotConfig, datetime_local_now 
+from customutils import BotsConfig, datetime_local_now
 
-config = BotConfig()
+config = BotsConfig()
+
 
 class DB(ReconnectMixin, MySQLDatabase):
     pass
@@ -144,6 +145,7 @@ class EscortPayment(BaseModel):
 
     def __str__(self):
         return f"#{self.id} amount={self.amount} done={self.done}"
+
 
 class EscortGirl(BaseModel):
     owner = ForeignKeyField(Worker, related_name="escort_girls", null=True)

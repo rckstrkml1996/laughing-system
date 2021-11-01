@@ -1,6 +1,10 @@
 from aiogram.utils.emoji import emojize
 
 
+startup_text = emojize("<b>Бот <i>запущен</i>!</b> :sparkle:")
+updated_startup_text = emojize("<b>Бот <i>запущен и обновился</i>!</b> :chart:")
+
+
 zap_text = emojize(":zap:")
 
 worker_defenition = "<a href='tg://user?id={chat_id}'>{name}</a>"
@@ -27,10 +31,6 @@ services_status = (
 # inline use
 about_worker_text = "{status}\n{profits} на сумму {profits_sum} р"
 
-startup_text = emojize("Бот <b>запущен</b>! :sparkle:")
-updated_startup_text = emojize("Бот <b>запущен и обновился</b>! :chart:")
-
-
 pin_help_text = emojize(
     ":woman_tipping_hand: Сокращения для динамического закрепа:\n\n"
     "<code>{services_status}</code> - Статусы работы проекта\n"
@@ -48,3 +48,12 @@ top_text = emojize(
     "{profits}\n\n"
     ":money_with_wings: Общий профит - <b>{all_profits}</b> RUB"
 )
+
+
+worker_choice_one_plz = emojize(
+    ":weary: Выбери один из <b>{status_len}</b> предложенных статусов!"
+)
+
+set_new_worker_status = emojize(
+    ":see_no_evil: Установил новый статус <b>{status_name}</b> для {worker_link}"
+)  # {worker_defenition.format(chat_id=diff_worker.cid, name=diff_worker.name)}

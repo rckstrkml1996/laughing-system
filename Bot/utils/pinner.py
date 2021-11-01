@@ -6,7 +6,7 @@ from aiogram.utils.emoji import emojize
 from aiogram.utils.exceptions import MessageToEditNotFound
 from loguru import logger
 
-from customutils.config import BotConfig
+from customutils.config import BotsConfig
 from customutils import datetime_local_now
 from models import CasinoUser, TradingUser, EscortUser
 
@@ -14,15 +14,15 @@ from models import CasinoUser, TradingUser, EscortUser
 class DynamicPinner:
     STANDART_TEXT = emojize("Стандартный закреп, {time} :sparkle:")
 
-    def __init__(self, bot: Bot, config: BotConfig):
+    def __init__(self, bot: Bot, config: BotsConfig):
         if not isinstance(bot, Bot):
             raise TypeError(
                 f"Argument 'bot' must be an instance of Bot, not '{type(bot).__name__}'"
             )
 
-        if not isinstance(config, BotConfig):
+        if not isinstance(config, BotsConfig):
             raise TypeError(
-                f"Argument 'config' must be an instance of BotConfig, not '{type(config).__name__}'"
+                f"Argument 'config' must be an instance of BotsConfig, not '{type(config).__name__}'"
             )
 
         self.bot = bot
@@ -91,6 +91,8 @@ class DynamicPinner:
                     logger.error(ex)
 
             await sleep(self.config.pin_update_time)
+
+        # await self.bot.session.close() # if outside executor
 
     def stop(self):
         self._working = False

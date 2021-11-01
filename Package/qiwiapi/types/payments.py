@@ -26,7 +26,7 @@ class Transaction(BaseModel):
     statusText: str
     trmTxnld: str = None
     account: str
-    transactionSum: SumData = Field(alias='sum')
+    sum: SumData
     commision: SumData = None
     total: SumData
     provider: TransactionInfo = None

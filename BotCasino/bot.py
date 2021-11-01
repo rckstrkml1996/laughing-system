@@ -1,21 +1,15 @@
-import asyncio
-import sys
-
-from aiogram import Dispatcher
+from aiogram import Dispatcher, executor
 from loguru import logger
 
 from loader import dp
-
+from utils.filters import setup_filters
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 
 
 async def on_startup(dispatcher: Dispatcher):
-    """
-    Настройка всех компонентов для работы бота,
-    Запуск бота
-    """
     setup_logger(level="DEBUG")
+    setup_filters(dispatcher)
     logger.info("Setuping handlers...")
     import handlers
 
@@ -24,47 +18,5 @@ async def on_startup(dispatcher: Dispatcher):
     logger.info(f"Bot started succesfully!")
 
 
-async def shutdown(dispatcher: Dispatcher):
-    dispatcher.stop_polling()
-
-    await dispatcher.storage.close()
-    await dispatcher.storage.wait_closed()
-    await dispatcher.bot.session.close()
-
-    # await dispatcher.wait_closed()
-
-
-async def start_bot(dispatcher: Dispatcher):
-    from utils import filters
-
-    filters.setup(dispatcher)
-
-    await on_startup(dispatcher)
-
-    await dispatcher.skip_updates()
-    logger.info(f"Bot started.")
-    await dispatcher.start_polling(timeout=5)  # change if internet slow)
-
-
 if __name__ == "__main__":
-    if sys.platform == "win32":  # working even for win64!
-        asyncio.set_event_loop(asyncio.SelectorEventLoop())
-
-    loop = asyncio.get_event_loop()
-    started_task = loop.create_task(start_bot(dp))
-
-    try:
-        loop.run_until_complete(started_task)
-    except (KeyboardInterrupt, SystemExit):
-        pass
-    finally:
-        loop.run_until_complete(shutdown(dp))
-
-    # if sys.platform == "linux" or sys.platform == "linux2":
-    #     pass
-    # else:
-    #     print("windows")
-
-    # executor.start_polling(
-    #     dp, skip_updates=SKIP_UPDATES, on_startup=on_startup
-    # )  # , on_shutdown=on_shutdown)
+    executor.start_polling(dp, on_startup=on_startup)

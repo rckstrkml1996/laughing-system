@@ -1,3 +1,4 @@
+import weakref
 from time import time
 from datetime import datetime
 from asyncio.exceptions import TimeoutError
@@ -5,6 +6,7 @@ from typing import Union
 
 import aiohttp
 from aiohttp.client_exceptions import ClientProxyConnectionError, ClientHttpProxyError
+
 from pydantic.error_wrappers import ValidationError
 
 from .exceptions import InvalidToken, InvalidAccount, UnexpectedResponse, InvalidProxy
@@ -53,18 +55,18 @@ class Api:
             raise UnexpectedResponse
 
         json = await response.json()
+        await self.close()
 
         return Profile(**json)
 
     def get_new_session(self) -> aiohttp.ClientSession:
         return aiohttp.ClientSession(
-            connector=aiohttp.TCPConnector(verify_ssl=False),
             timeout=aiohttp.ClientTimeout(5),
             trust_env=True,
             headers=self.headers,
         )
 
-    @property  # <- уже исполниная функция без абьедка
+    @property  # WARN DEPRECATED
     def session(self) -> aiohttp.ClientSession:
         if self._session is None or self._session.closed:
             self._session = self.get_new_session()
@@ -92,7 +94,6 @@ class Api:
         url = f"https://edge.qiwi.com/funding-sources/v2/persons/{wallet}/accounts"
 
         response = await self.session.get(url, proxy=self.proxy, ssl=False)
-
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -101,19 +102,22 @@ class Api:
             raise UnexpectedResponse
 
         json = await response.json()
+        await self.close()
 
         return Accounts(**json).accounts
 
-    async def get_payments(self, rows: int = 50):
+    async def get_payments(self, rows: int = 50, operation: str = "ALL"):
         profile = await self.get_new_profile()
 
         wallet = profile.contractInfo.contractId
         url = f"https://edge.qiwi.com/payment-history/v2/persons/{wallet}/payments"
 
         response = await self.session.get(
-            url, params={"rows": rows}, proxy=self.proxy, ssl=False
+            url,
+            params={"rows": rows, "operation": operation},
+            proxy=self.proxy,
+            ssl=False,
         )
-
         if response.status == 401:
             raise InvalidToken
         elif response.status == 403:
@@ -122,6 +126,7 @@ class Api:
             raise UnexpectedResponse
 
         json = await response.json()
+        await self.close()
 
         return Payments(**json)
 
@@ -168,6 +173,7 @@ class Api:
             raise UnexpectedResponse
 
         json = await response.json()
+        await self.close()
 
         return TotalPayments(**json)
 
@@ -193,19 +199,20 @@ class Api:
             raise UnexpectedResponse
 
         json = await response.json()
+        await self.close()
 
         try:
             return PaymentInfo(**json)
         except ValidationError:
             return json
 
-    async def check_proxy(self, url: str = "https://qiwi.com"):
+    async def check_proxy(self, url: str = "https://example.com"):
         answer = True
 
         if self.proxy is None:
             return answer  # return if proxy not setuped!
 
-        try:
+        try:  # maybe implement async with ??
             await self.session.get(url, proxy=self.proxy, ssl=False)
         except TimeoutError:  # this is for different log
             answer = False
@@ -213,10 +220,12 @@ class Api:
             answer = False  # this is for different log
         except ClientHttpProxyError:
             answer = False
+        # finally:
+        # await self.session.close()
 
         return answer
 
-    async def close(self):
-        session = self.session  # bugfix
-        if session is not None:
+    async def close(self):  # WARN DEPRECATED
+        session = self.session
+        if session is not None and not session.closed:
             await session.close()

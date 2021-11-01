@@ -19,25 +19,50 @@ async def on_startup_notify(dp: Dispatcher):
     for admin_id in config.admins_id:
         try:
             await dp.bot.send_message(admin_id, text, disable_notification=True)
-            logger.debug(f"Notify message send to admin: [{admin_id}]")
+            logger.opt(colors=True).info(
+                f"Notify message send to admin: [<green>{admin_id}</green>]"
+            )
         except ChatNotFound:
             logger.warning("Chat with admin not found.")
         except BotBlocked:
             logger.warning("Admin blocked bot.")
         except CantInitiateConversation:
-            logger.warning(f"Cant initiate conversation with user: [{admin_id}]")
+            logger.warning(f"Cant initiate conversation with admin: [{admin_id}]")
+        except Exception as ex:
+            logger.error(f"Admins notify exception: {ex}")
+
+        await sleep(0.2)
+
+        try:
+            await dp.bot.send_message(
+                config.admins_chat, text, disable_notification=True
+            )
+            logger.opt(colors=True).info(
+                f"Notify message send to admins_chat [<green>{config.admins_chat}</green>]"
+            )
+        except ChatNotFound:
+            logger.warning("Chat with admin not found.")
+        except BotBlocked:
+            logger.warning("Admin blocked bot.")
+        except CantInitiateConversation:
+            logger.warning(f"Cant initiate conversation with admin: [{admin_id}]")
         except:
             logger.error(f"Admins notify exception")
 
         await sleep(0.2)
 
-    try:
-        admins_chat = config.admins_chat
-        await dp.bot.send_message(admins_chat, text, disable_notification=True)
-        logger.debug(f"Notify message send to Admins Chat {admins_chat}")
-        await sleep(0.2)
-        workers_chat = config.workers_chat
-        await dp.bot.send_message(workers_chat, text, disable_notification=True)
-        logger.debug(f"Notify message send to Admins Chat {admins_chat}")
-    except:
-        logger.warning("Chats notify exception")
+        try:
+            await dp.bot.send_message(
+                config.workers_chat, text, disable_notification=True
+            )
+            logger.opt(colors=True).info(
+                f"Notify message send to workers_chat [<green>{config.workers_chat}</green>]"
+            )
+        except ChatNotFound:
+            logger.warning("Chat with admin not found.")
+        except BotBlocked:
+            logger.warning("Admin blocked bot.")
+        except CantInitiateConversation:
+            logger.warning(f"Cant initiate conversation with admin: [{admin_id}]")
+        except Exception as ex:
+            logger.error(f"Admins notify exception: {ex}")
