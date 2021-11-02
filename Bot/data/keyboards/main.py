@@ -9,10 +9,10 @@ menu_keyboard = ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=Tru
 profile_btn = KeyboardButton(emojize("Профиль :cold_face:"))
 casino_btn = KeyboardButton(emojize("Казик :slot_machine:"))
 traiding_btn = KeyboardButton(emojize("Трейдинг :chart_with_upwards_trend:"))
-escort_btn = KeyboardButton(emojize("Эскорт :green_heart:"))
+# escort_btn = KeyboardButton(emojize("Эскорт :green_heart:"))
 about_btn = KeyboardButton(emojize("О проекте :man_technologist:"))
 menu_keyboard.add(profile_btn)
-menu_keyboard.add(casino_btn, escort_btn)  # , traiding_btn, escort_btn)
+menu_keyboard.add(casino_btn)  # , traiding_btn, escort_btn)
 menu_keyboard.add(about_btn)
 
 
@@ -42,14 +42,14 @@ rules_btn = InlineKeyboardButton(
     emojize("Правила :scroll: "), callback_data="showrules"
 )
 out_btn = InlineKeyboardButton(
-    emojize("Выплаты :money_with_wings:"), url=f't.me/{config.outs_link}'
+    emojize("Выплаты :money_with_wings:"), url=f"t.me/{config.outs_link}"
 )
 info_btn = InlineKeyboardButton(
-    emojize("Инфоканал :wastebasket:"), url=f't.me/{config.reviews_link}'
+    emojize("Инфоканал :wastebasket:"), url=f"t.me/{config.reviews_link}"
 )
 chat_btn = InlineKeyboardButton(
     emojize("Чат воркеров :hot_face:"),
-    url=f'https://t.me/joinchat/{config.workers_link}',
+    url=f"https://t.me/joinchat/{config.workers_link}",
 )
 about_project_keyboard.add(ref_btn, rules_btn)
 about_project_keyboard.add(info_btn, out_btn)

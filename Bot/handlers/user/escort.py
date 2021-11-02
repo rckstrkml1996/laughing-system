@@ -14,10 +14,7 @@ from data.texts import (
     no_mamonths_text,
     all_esc_mamonths_text,
 )
-from data.keyboards import (
-    escort_keyboard,
-    escort_mamonths_keyboard,
-)
+from data.keyboards import escort_keyboard, escort_mamonths_keyboard, menu_keyboard
 from utils.executional import get_correct_str, get_escort_mamonth_info
 
 
@@ -25,6 +22,7 @@ from utils.executional import get_correct_str, get_escort_mamonth_info
 async def escort_info(message: types.Message, worker: Worker):
     girl_created = worker.escort_girls.count() >= 1
 
+    await message.answer("ок)", reply_markup=menu_keyboard)
     await message.answer(
         escort_text.format(
             escort_username=config.escort_username,
