@@ -102,7 +102,7 @@ class PayChecker:
                         service_name=f"Казино Х{pay_count}",
                         payment=qiwi_payment,
                         amount=transaction.sum.amount,
-                        share=share,  # then as int in base!
+                        share=int(share),  # then as int in base!
                     ),
                     payment,
                 )

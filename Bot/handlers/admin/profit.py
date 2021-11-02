@@ -44,8 +44,8 @@ async def make_profit_main(message: Message, state: FSMContext):
                 profit = Profit.create(
                     owner=worker,
                     amount=amount,
-                    share=amount * moll / 100,
-                    service_name=service,
+                    share=int(amount * moll / 100),
+                    service_name=service[:1].upper() + service[1:],
                     service_id=service_names[0],
                 )
                 await payments_checker.send_profit(profit)
