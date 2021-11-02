@@ -89,6 +89,8 @@ class DynamicPinner:
                     await self.pin_message(formatted)
                 except Exception as ex:
                     logger.error(ex)
+            else:
+                await self.pin_message(formatted)
 
             await sleep(self.config.pin_update_time)
 

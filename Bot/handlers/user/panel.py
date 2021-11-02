@@ -146,7 +146,9 @@ async def project_info(message: types.Message, state: FSMContext):
             profits_sum=basefunctional.all_profits_sum(),
             services_status=get_work_status(),
         ),
-        reply_markup=about_project_keyboard,
+        reply_markup=about_project_keyboard(
+            config.outs_link, config.reviews_link, config.workers_link
+        ),
     )
     logger.debug(f"Worker - {message.chat.id}, get project info")
 

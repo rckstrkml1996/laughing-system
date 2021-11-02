@@ -118,10 +118,10 @@ update_sysinfo_keyboard.add(code_restart_btn, sys_restart_btn)
 
 
 # on new profit
-def profit_pay_keyboard(prft_id: int) -> InlineKeyboardMarkup:
+def profit_pay_keyboard(profit_id: int) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     pay_btn = InlineKeyboardButton(
-        emojize("Выплатить :white_check_mark:"), callback_data=f"truepay_{prft_id}"
+        emojize("Выплатить :white_check_mark:"), callback_data=f"truepay_{profit_id}"
     )
     dontpay_btn = InlineKeyboardButton(
         emojize("Заморозка! :cold_face:"), callback_data="freeze"

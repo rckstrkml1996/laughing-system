@@ -240,7 +240,10 @@ async def out_number(message: types.Message, state: FSMContext, regexp):
             )
         else:
             await message.answer(
-                texts.out_invreq_text, reply_markup=keyboards.main_keyboard()
+                texts.out_invreq_text.format(
+                    support_username=config.casino_sup_username
+                ),
+                reply_markup=keyboards.main_keyboard(),
             )
         await state.finish()
     except CasinoUser.DoesNotExist:

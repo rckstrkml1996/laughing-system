@@ -8,10 +8,13 @@ btc_text = emojize(
 
 
 help_text = emojize(
-    ":woman_tipping_hand: <b>Команды</b> конфы\n\n"
+    ":snake: <b>Команды</b> чата\n\n"
+    "/top - Топ за всё время\n"
+    "/topm - Топ за месяц\n"
+    "/topd - Топ за день\n\n"
     "/clc <code>[выражение]</code> - Посчитать на калькуляторе\n"
-    "/lzt <code>[ник на LZT]</code> - Найти профить лолза\n"
-    "/hash <code>[хэш]</code> - Инфо о BTC хэше\n"
+    # "/lzt <code>[ник на LZT]</code> - Найти профить лолза\n"
+    # "/hash <code>[хэш]</code> - Инфо о BTC хэше\n"
     "/btc <code>[адрес]</code> - Инфо о BTC адресе\n"
     "/help - Показать список команд\n"
     "/me - Показать инфо о себе\n"
@@ -94,7 +97,7 @@ sys_info_text = emojize(
 )
 
 admins_help_text = emojize(
-    ":woman_tipping_hand: <b>Команды</b> конфы\n"
+    ":snake: <b>Команды</b> чата\n\n"
     "/sysinfo - Информация о сервере.\n"
     "/pin или /pinned - Действия с закрепленным сообщением.\n"
     "/qiwi - Работа с киви кошельками.\n"
@@ -102,26 +105,15 @@ admins_help_text = emojize(
     "/work - Действия с статусом работы проекта.\n"
     "/btc_auth - Проверка Авторизации в аккаунте банкира.\n"
     "/btc_logout - Выйти из аккаунта банкира.\n"
-    "/mkprft - Создать профит\n"
+    "/prft, /profit - Создать профит\n"
     "/prftstick - Стикер к профиту\n"
     "/stat - Статистика проекта\n"
     "/card - Изменить карту для прямиков\n"
-    "/nstatus <code>[ID Воркера]</code> - Изменить статус воркера\n"
-    # "/card - Изменить карту для прямиков\n"
-    "/new_dsgn - Бета хуета ещо нету)\n"
+    "/nstatus <code>[TgID Воркера]</code> - Изменить статус воркера\n"
+    "/card - Изменить карту для прямиков\n"
+    # "/new_dsgn - Бета хуета ещо нету)\n"
 )
 
-admin_make_profit_text = emojize(
-    "Заполни данные таким образом :point_up_2:\n\n"
-    "<a href='t.me/userinfobot'>Telegram ID</a>\n"
-    "Сумма и доля в %\n"
-    "<b>0</b>, <b>1</b>, <b>2</b>, <b>3</b> - <i>Казино, Эскорт, Трейдинг, Прямик</i>\n"
-    "Пример:\n\n"
-    "<code>1404657362</code>\n"
-    "<code>1000</code>\n"
-    "<code>70</code>\n"
-    "<code>1</code>"
-)
 
 ban_success_text = emojize(
     "<b>Успешно забанил</b>: <a href='tg://user?id={cid}'>{name}</a>"

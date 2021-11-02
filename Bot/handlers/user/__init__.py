@@ -2,7 +2,7 @@ from .main import dp
 from .summary import dp
 from .panel import dp
 from .render import dp
-from .confcommands import dp  # need to modules!!
+from .commands import dp  # need to modules!!
 from .inline import dp
 
 from .services import dp  # .services must be under scam services

@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from loguru import logger
 
-from loader import dp
+from loader import dp, config
 from data import texts
 from data.states import SetProfitStick
 from data.keyboards import *

@@ -24,6 +24,7 @@ from data.texts import (
     invalid_proxy_text,
     unmatched_payment_text,
 )
+from data.keyboards import profit_pay_keyboard
 from utils.render import render_profit
 from utils import basefunctional
 
@@ -93,13 +94,14 @@ class PayChecker:
                     CasinoPayment, payment.owner
                 )
 
+                share = transaction.sum.amount * 0.8 if pay_count == 1 else 0.7
                 await self.send_profit(
                     Profit.create(
                         owner=payment.owner.owner,
                         service=0,  # casino
                         payment=qiwi_payment,
                         amount=transaction.sum.amount,
-                        share=0.8 if pay_count == 1 else 0.7,
+                        share=share,
                     ),
                     payment,
                 )
@@ -216,5 +218,6 @@ class PayChecker:
                 create_date=create_date,
                 pay_date=pay_date,
             ),
+            reply_markup=profit_pay_keyboard(profit.id),
             disable_notification=False,
         )

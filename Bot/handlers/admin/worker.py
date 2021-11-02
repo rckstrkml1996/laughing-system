@@ -38,7 +38,7 @@ async def worker_new_status(message: types.Message, worker: Worker, regexp_comma
 
     await message.answer(
         worker_choice_one_plz.format(status_len=worker.status),
-        reply_markup=new_status_keyboard(diff_worker.id, worker.status),
+        reply_markup=new_status_keyboard(StatusNames, diff_worker.id, worker.status),
     )
 
 

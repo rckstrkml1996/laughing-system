@@ -115,131 +115,126 @@ def get_place(i):
 @dp.message_handler(commands="top", workers_chat=True)
 @dp.message_handler(commands="top", admins_chat=True)
 async def team_top(message: types.Message):
-    await message.delete()
-
     logger.debug(f"[{message.from_user.id}], wants /top in chat.")
     query = basefunctional.get_topworkers_all(limit=10)  # limit = 15
     all_profits = basefunctional.get_profits_all()
 
     if query.count() == 0:
-        await message.answer(texts.top_none_text)
-        return  # logg
+        msg = await message.reply(texts.top_none_text)
+    else:
+        profit_text_list = []
 
-    profit_text_list = []
+        for i, worker in enumerate(query):
+            if worker.profits_count:
+                username = (
+                    "Скрыт"
+                    if worker.username_hide
+                    else f"@{worker.username}"
+                    if worker.username
+                    else "Без юзернейма"
+                )
+                count_text = get_correct_str(
+                    worker.profits_count, "профит", "профита", "профитов"
+                )
+                profit_text_list.append(
+                    f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
+                )
 
-    for i, worker in enumerate(query):
-        if worker.profits_count:
-            username = (
-                "Скрыт"
-                if worker.username_hide
-                else f"@{worker.username}"
-                if worker.username
-                else "Без юзернейма"
-            )
-            count_text = get_correct_str(
-                worker.profits_count, "профит", "профита", "профитов"
-            )
-            profit_text_list.append(
-                f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
-            )
-
-    msg = await message.answer(
-        texts.top_text.format(
-            period="всё время",
-            profits="\n".join(profit_text_list),
-            all_profits=all_profits,
-        ),
-        disable_notification=True,
-    )
-    logger.debug(f"User {message.from_user.id} /top in chat succesfully.")
+        msg = await message.reply(
+            texts.top_text.format(
+                period="всё время",
+                profits="\n".join(profit_text_list),
+                all_profits=all_profits,
+            ),
+            disable_notification=True,
+        )
+        logger.debug(f"User {message.from_user.id} /top in chat succesfully.")
 
     await sleep(22)
+    await message.delete()
     await msg.delete()
 
 
 @dp.message_handler(commands="topm", workers_chat=True)
 async def team_top_day(message: types.Message):
-    await message.delete()
-
     logger.debug(f"[{message.from_user.id}], wants /topm in chat.")
     query = basefunctional.get_topworkers_month(limit=10)  # limit = 15 autodelta
     all_profits = basefunctional.get_profits_month()
 
     if query.count() == 0:
-        await message.answer(texts.top_none_text)
-        return  # logg
+        msg = await message.reply(texts.top_none_text)
+    else:
+        profit_text_list = []
 
-    profit_text_list = []
+        for i, worker in enumerate(query):
+            if worker.profits_count:
+                username = (
+                    "Скрыт"
+                    if worker.username_hide
+                    else f"@{worker.username}"
+                    if worker.username
+                    else "Без юзернейма"
+                )
+                count_text = get_correct_str(
+                    worker.profits_count, "профит", "профита", "профитов"
+                )
+                profit_text_list.append(
+                    f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
+                )
 
-    for i, worker in enumerate(query):
-        if worker.profits_count:
-            username = (
-                "Скрыт"
-                if worker.username_hide
-                else f"@{worker.username}"
-                if worker.username
-                else "Без юзернейма"
-            )
-            count_text = get_correct_str(
-                worker.profits_count, "профит", "профита", "профитов"
-            )
-            profit_text_list.append(
-                f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
-            )
-
-    msg = await message.answer(
-        texts.top_text.format(
-            period="месяц",
-            profits="\n".join(profit_text_list),
-            all_profits=all_profits,
-        ),
-        disable_notification=True,
-    )
-    logger.debug(f"User {message.from_user.id} /topm in chat succesfully.")
+        msg = await message.reply(
+            texts.top_text.format(
+                period="месяц",
+                profits="\n".join(profit_text_list),
+                all_profits=all_profits,
+            ),
+            disable_notification=True,
+        )
+        logger.debug(f"User {message.from_user.id} /topm in chat succesfully.")
 
     await sleep(22)
+    await message.delete()
     await msg.delete()
 
 
 @dp.message_handler(commands="topd", workers_chat=True)
 @dp.message_handler(commands="topd", admins_chat=True)
 async def team_top_day(message: types.Message):
-    await message.delete()
-
     logger.debug(f"[{message.from_user.id}], wants /topd in chat.")
     query = basefunctional.get_topworkers_day(limit=10)  # limit = 15
     all_profits = basefunctional.get_profits_day_amount()
 
     if query.count() == 0:
-        await message.answer(texts.top_none_text)
-        return  # logg
+        msg = await message.reply(texts.top_none_text)
+    else:
+        profit_text_list = []
 
-    profit_text_list = []
+        for i, worker in enumerate(query):
+            if worker.profits_count:
+                username = (
+                    "Скрыт"
+                    if worker.username_hide
+                    else f"@{worker.username}"
+                    if worker.username
+                    else "Без юзернейма"
+                )
+                count_text = get_correct_str(
+                    worker.profits_count, "профит", "профита", "профитов"
+                )
+                profit_text_list.append(
+                    f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
+                )
 
-    for i, worker in enumerate(query):
-        if worker.profits_count:
-            username = (
-                "Скрыт"
-                if worker.username_hide
-                else f"@{worker.username}"
-                if worker.username
-                else "Без юзернейма"
-            )
-            count_text = get_correct_str(
-                worker.profits_count, "профит", "профита", "профитов"
-            )
-            profit_text_list.append(
-                f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
-            )
+        msg = await message.reply(
+            texts.top_text.format(
+                period="день",
+                profits="\n".join(profit_text_list),
+                all_profits=all_profits,
+            ),
+            disable_notification=True,
+        )
+        logger.debug(f"User {message.from_user.id} /topd in chat succesfully.")
 
-    msg = await message.answer(
-        texts.top_text.format(
-            period="день",
-            profits="\n".join(profit_text_list),
-            all_profits=all_profits,
-        ),
-        disable_notification=True,
-    )
-    logger.debug(f"User {message.from_user.id} /topd in chat succesfully.")
     await sleep(22)
+    await message.delete()
     await msg.delete()

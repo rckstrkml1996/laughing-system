@@ -3,7 +3,7 @@ from aiogram.utils.emoji import emojize
 from aiogram.utils.exceptions import MessageNotModified
 from loguru import logger
 
-from loader import dp
+from loader import dp, config
 from data.texts import (
     adm_work_command,
     services_status,

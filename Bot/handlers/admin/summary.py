@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.utils.emoji import emojize
 from loguru import logger
 
-from loader import dp
+from loader import dp, config
 from data import texts
 from data.keyboards import *
 from models import Worker
@@ -71,7 +71,11 @@ async def summary_accepted(query: types.CallbackQuery):
         await dp.bot.send_message(
             worker.cid,
             texts.summary_accepted_text,
-            reply_markup=summary_accepted_keyboard,
+            reply_markup=summary_accepted_keyboard(
+                config.outs_link,
+                config.workers_link,
+                config.reviews_link,
+            ),
         )
         await dp.bot.send_message(
             worker.cid,

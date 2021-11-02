@@ -2,8 +2,6 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
-from loader import config
-
 # worker panel
 menu_keyboard = ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)
 profile_btn = KeyboardButton(emojize("Профиль :cold_face:"))
@@ -34,26 +32,31 @@ def panel_keyboard(namehide) -> InlineKeyboardMarkup:
     return markup
 
 
-about_project_keyboard = InlineKeyboardMarkup()
-ref_btn = InlineKeyboardButton(
-    emojize("Реф. система :handshake: "), callback_data="refsystem"
-)
-rules_btn = InlineKeyboardButton(
-    emojize("Правила :scroll: "), callback_data="showrules"
-)
-out_btn = InlineKeyboardButton(
-    emojize("Выплаты :money_with_wings:"), url=f"t.me/{config.outs_link}"
-)
-info_btn = InlineKeyboardButton(
-    emojize("Инфоканал :wastebasket:"), url=f"t.me/{config.reviews_link}"
-)
-chat_btn = InlineKeyboardButton(
-    emojize("Чат воркеров :hot_face:"),
-    url=f"https://t.me/joinchat/{config.workers_link}",
-)
-about_project_keyboard.add(ref_btn, rules_btn)
-about_project_keyboard.add(info_btn, out_btn)
-about_project_keyboard.add(chat_btn)
+def about_project_keyboard(
+    outs_link: str,
+    reviews_link: str,
+    workers_link: str,
+) -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup()
+    ref_btn = InlineKeyboardButton(
+        emojize("Реф. система :handshake: "), callback_data="refsystem"
+    )
+    rules_btn = InlineKeyboardButton(
+        emojize("Правила :scroll: "), callback_data="showrules"
+    )
+    out_btn = InlineKeyboardButton(
+        emojize("Выплаты :money_with_wings:"), url=f"t.me/{outs_link}"
+    )
+    info_btn = InlineKeyboardButton(
+        emojize("Инфоканал :wastebasket:"), url=f"t.me/{reviews_link}"
+    )
+    chat_btn = InlineKeyboardButton(
+        emojize("Чат воркеров :hot_face:"),
+        url=f"https://t.me/joinchat/{workers_link}",
+    )
+    markup.add(ref_btn, rules_btn)
+    markup.add(info_btn, out_btn)
+    markup.add(chat_btn)
 
 
 cas_mamoths_btn = InlineKeyboardButton(

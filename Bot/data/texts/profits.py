@@ -8,7 +8,7 @@ chat_profit_text = emojize(
 )
 
 outs_profit_text = emojize(
-    ":green_heart: <b><i>УСПЕШНАЯ</i></b> оплата ({service})\n\n"
+    ":green_heart: <b><i>Успешная</i></b> оплата ({service})\n\n"
     ":money_with_wings: Мамонт депнул: <b>{amount} RUB</b>\n"
     ":gem: Доля воркера: <b>{share} RUB</b>\n\n"
     ":man_technologist: Воркер: {mention}"
@@ -29,6 +29,14 @@ unmatched_payment_text = emojize(
     "Сумма: <b>{amount} {currency}</b>\n"
 )
 
+make_profit_text = emojize(
+    "Заполни данные:\n"
+    "<code>1444022512</code> - <i>Telegram ID Воркера</i>\n"
+    "<code>1000</code> - <i>Сумма залета</i>\n"
+    "<code>70</code> - <i>Процент залета</i>\n"
+    "<code>Казино</code> - <i>Название сервиса</i>\n"
+)
+
 # profit_complete_text = emojize(
 #     "Успешно выплачено {share} RUB - <a href='{profit_link}'>профит</a> у "
 #     "<a href='tg://user?id={cid}'>{name}</a>\n\n"
@@ -43,5 +51,3 @@ unmatched_payment_text = emojize(
 #     "ID Мамонта: /c{mid}\n\n"
 #     "Cпасибо за ворк! :green_heart:"
 # )
-
-# profit_worker_hide = emojize("Скрылся :green_heart:")
