@@ -14,3 +14,4 @@ cryptography
 tgcrypto
 betterconf
 aiohttp_proxy
+GitPython
