@@ -51,3 +51,5 @@ def summary_accepted_keyboard(
     markup.add(outs_btn)
     markup.add(workers_btn)
     markup.add(reviews_btn)
+
+    return markup

@@ -58,6 +58,7 @@ def about_project_keyboard(
     markup.add(info_btn, out_btn)
     markup.add(chat_btn)
 
+    return markup
 
 cas_mamoths_btn = InlineKeyboardButton(
     emojize("Мои мамонтята :elephant:"),
