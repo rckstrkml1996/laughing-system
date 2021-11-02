@@ -1,5 +1,7 @@
 from aiogram.types import Message
+from aiogram.dispatcher.storage import FSMContext
 
+from models import Profit, Worker
 from loader import dp, payments_checker
 from data.texts import make_profit_text
 from data.states import MakeProfit
@@ -17,7 +19,7 @@ async def make_profit_command(message: Message):
 
 
 @dp.message_handler(state=MakeProfit.main, admins_chat=True, is_admin=True)
-async def make_profit_main(message: Message):
+async def make_profit_main(message: Message, state: FSMContext):
     data = message.text.split("\n")  # id, amount, share, service
 
     if len(data) >= 4:
@@ -37,13 +39,20 @@ async def make_profit_main(message: Message):
             moll = int(data[2])  # 80
             service = data[3]  # just wrap
 
-            print(
-                telegram_id,
-                amount,
-                moll,
-                service
-            )
+            try:
+                worker = Worker.get(cid=telegram_id)
+                profit = Profit.create(
+                    owner=worker,
+                    amount=amount,
+                    share=amount * moll / 100,
+                    service_name=service,
+                    service_id=service_names[0],
+                )
+                await payments_checker.send_profit(profit)
+                await state.finish()
+                return
+            except Exception as ex:
+                await message.answer(ex)
 
-            return
-
-    await message.answer("Неправильно заполнил данные")
+    await message.reply("Неправильно заполнил данные!")
+    await message.answer(make_profit_text)

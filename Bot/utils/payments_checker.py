@@ -98,10 +98,11 @@ class PayChecker:
                 await self.send_profit(
                     Profit.create(
                         owner=payment.owner.owner,
-                        service=0,  # casino
+                        service_id=0,  # casino,
+                        service_name=f"Казино Х{pay_count}",
                         payment=qiwi_payment,
                         amount=transaction.sum.amount,
-                        share=share,
+                        share=share,  # then as int in base!
                     ),
                     payment,
                 )
@@ -155,9 +156,9 @@ class PayChecker:
             all_profit,
             profit.amount,
             profit.share,
-            self.SERVICE_NAMES[profit.service],  # refactor
+            profit.service_name,
             worker.username,
-            "...",  # analog text
+            "... work ...",  # analog text
         )
 
         mention = (  # get mention
@@ -173,7 +174,7 @@ class PayChecker:
             self.config.outs_chat,
             InputFile(rendered_profit_path),
             caption=outs_profit_text.format(
-                service=self.SERVICE_NAMES[profit.service],  # refactor
+                service=profit.service_name,  # refactor
                 amount=profit.amount,
                 share=profit.share,
                 mention=mention,
@@ -190,7 +191,7 @@ class PayChecker:
             self.config.workers_chat,
             chat_profit_text.format(
                 profit_link=profit.msg_url,
-                service=self.SERVICE_NAMES[profit.service],  # refactor
+                service=profit.service_name,  # refactor
                 amount=profit.amount,
                 share=profit.share,
                 mention=mention,
@@ -210,11 +211,11 @@ class PayChecker:
             self.config.admins_chat,
             admins_profit_text.format(
                 profit_link=profit.msg_url,
-                service=self.SERVICE_NAMES[profit.service],  # refactor
+                service=profit.service_name,  # refactor
                 amount=profit.amount,
                 share=profit.share,
-                mention=mention,
                 moll=int(profit.share / profit.amount),
+                mention=mention,
                 create_date=create_date,
                 pay_date=pay_date,
             ),
