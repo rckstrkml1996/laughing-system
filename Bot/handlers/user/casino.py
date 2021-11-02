@@ -35,9 +35,7 @@ async def casino_info(message: types.Message, worker: Worker, state: FSMContext)
     logger.debug(f"Worker [{message.chat.id}] get casino info succesfully")
 
 
-@dp.message_handler(
-    commands=["cas_change_min", "chng_min_cas"], state="*", is_worker=True
-)
+@dp.message_handler(commands=["casino_min"], state="*", is_worker=True)
 async def change_casino_minimal_dep(message: types.Message):
     await message.answer(
         "Введите новою сумму депозита для всех ваших новых мамонтов.\n"
@@ -305,9 +303,12 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
 @dp.callback_query_handler(text="all_alerts_cas", state="*", is_worker=True)
 async def cas_mamonths_alert(query: types.CallbackQuery):
     await query.message.answer_photo(
-        config.html_style_url, caption=texts.cas_alert_text.format(
-            config.casino_sup_username, config.escort_sup_username, config.trading_sup_username
-        )
+        config.html_style_url,
+        caption=texts.cas_alert_text.format(
+            config.casino_sup_username,
+            config.escort_sup_username,
+            config.trading_sup_username,
+        ),
     )
     await CasinoAlert.alert.set()
     await query.answer("Лови.")
@@ -374,7 +375,7 @@ async def accept_pay(query: types.CallbackQuery):
         check_time = config.qiwi_check_time * 2  # - 3 just for somethink)
         exact_time = (datetime_local_now() - pay.created).seconds
 
-        logger.debug(f"{check_time=}, {exact_time=}")
+        logger.debug(f"{check_time=} (qiwi_check_time * 2), {exact_time=}")
 
         if pay.done == 1:
             await query.message.edit_text("Мамонт уже оплатил заявку!")

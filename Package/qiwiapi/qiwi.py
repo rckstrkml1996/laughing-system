@@ -1,4 +1,5 @@
 import re
+from asyncio import sleep
 
 from .api import Api
 
@@ -49,20 +50,27 @@ class Qiwi(Api):
                     f"Proxy must match {regexp}, '{proxy_url}' - does not match!"
                 )
 
-    async def check_payments(self, on_transaction: callable, rows: int = 15, operation: str = "ALL"):
+    async def check_payments(
+        self, on_transaction: callable, rows: int = 15, operation: str = "ALL"
+    ):
         """Check if new payments"""
         payments = await self.get_payments(rows=rows, operation=operation)
-
         if self.last_payments is None:
             self.last_payments = payments
-            return
 
-        if payments.nextTxnId != self.last_payments.nextTxnId:
-            last_txn_id = self.last_payments.data[0].txnId
-            for transaction in list(
-                filter(lambda t: t.txnId > last_txn_id, payments.data)
-            ):
+        # print(
+        #     len(payments.data),
+        #     len(self.last_payments.data),
+        #     payments.data[0].txnId,
+        #     self.last_payments.data[0].txnId,
+        # )  # debugging
+
+        last_txnid = self.last_payments.data[0].txnId
+
+        if payments.data[0].txnId != last_txnid:
+            for transaction in filter(lambda p: p.txnId > last_txnid, payments.data):
                 await on_transaction(transaction)
+                await sleep(0.05)
 
         self.last_payments = payments
 

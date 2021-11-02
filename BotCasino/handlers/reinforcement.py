@@ -85,38 +85,40 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
         return
 
     if config.qiwi_tokens is None:
+        logger.error(f"{config.qiwi_tokens=}")
         return  # no tokens!
 
     qiwi = Qiwi(**config.qiwi_tokens[0])
 
     try:
         profile = await qiwi.get_profile()
-        account = profile.contractInfo.contractId
+    except InvalidProxy as ex:
+        logger.warning(f"InvalidProxy: {ex}")
 
-        comment = random.randint(1000000, 9999999)
-        pay = CasinoPayment.create(owner=user, comment=comment, amount=amount)
+    account = profile.contractInfo.contractId
+    comment = random.randint(1000000, 9999999)
+    pay = CasinoPayment.create(owner=user, comment=comment, amount=amount)
 
-        await query.message.edit_text(
-            texts.add_req_text.format(
-                amount=amount,
-                account=account,
-                comment=comment,
-            ),
-            reply_markup=keyboards.add_req_keyboard(amount, comment, account),
-        )
-        await main_bot.send_message(
-            user.owner.cid,
-            texts.pay_mamonth_text.format(
-                mention=texts.mention_text.format(cid=user.cid, name=user.fullname),
-                cid=user.cid,
-                uid=user.id,
-                amount=amount,
-            ),
-            reply_markup=keyboards.pay_accept(pay.id),
-        )
-        await SelfCabine.main.set()
-    except InvalidProxy:
-        return  # some logic
+    await query.message.edit_text(
+        texts.add_req_text.format(
+            amount=amount,
+            account=account,
+            comment=comment,
+        ),
+        reply_markup=keyboards.add_req_keyboard(amount, comment, account),
+    )
+    await main_bot.send_message(
+        user.owner.cid,
+        texts.pay_mamonth_text.format(
+            mention=texts.mention_text.format(cid=user.cid, name=user.fullname),
+            cid=user.cid,
+            uid=user.id,
+            amount=amount,
+        ),
+        reply_markup=keyboards.pay_accept(pay.id),
+    )
+    await SelfCabine.main.set()
+
 
 
 @dp.callback_query_handler(text="banker_add_type", state=AddBalance.amount)

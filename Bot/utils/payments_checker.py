@@ -22,12 +22,17 @@ from data.texts import (
     outs_profit_text,
     admins_profit_text,
     invalid_proxy_text,
+    unmatched_payment_text,
 )
 from utils.render import render_profit
 from utils import basefunctional
 
 
 class PayChecker:
+    """
+    Qiwi Payments Checker, by tg: @ukhide :)
+    """
+
     SERVICE_NAMES = ["Казино", "Эскорт", "Трейдинг", "Прямой перевод"]
 
     def __init__(self, bot: Bot, config: BotsConfig):
@@ -44,42 +49,86 @@ class PayChecker:
 
     def work(self):
         self._working = True
-        logger.debug("PayChecker working.")
+        logger.debug("PayChecker start working!")
 
     def stop(self):
         self._working = False
+        logger.debug("PayChecker stop working!")
 
-    async def check_casino(self, transaction: Transaction) -> Optional[CasinoPayment]:
+    async def filter_casino(self, transaction: Transaction) -> Optional[CasinoPayment]:
         if transaction.sum.currency == Qiwi.RUB_CURRENCY:
             try:
-                return CasinoPayment.get(
+                payment = CasinoPayment.get(
                     comment=transaction.comment
                 )  # maybe implement created > -14 days?
+                if transaction.sum.amount >= payment.amount:
+                    return payment
             except CasinoPayment.DoesNotExist:
                 pass
 
-    async def check_transaction(self, transaction: Transaction):
-        casino = self.check_casino(transaction)
-        if casino:
-            print(f"its {casino}")
-            return  # return send_profit(profit)
+    async def on_new_transaction(self, transaction: Transaction):
+        logger.info(
+            f"New Qiwi transaction: #{transaction.txnId}, "
+            f"{transaction.sum.amount} ({transaction.sum.currency}), "
+            f"{transaction.comment}"
+        )
 
-        # escort = self.check_escort(transaction)
-        # if escort:
-        #     print(f"its {escort}")
-        #     return
+        qiwi_payment = QiwiPayment.create(
+            person_id=transaction.personId,
+            account=transaction.account,
+            amount=transaction.sum.amount,
+            payment_type=transaction.trnsType,
+            currency=transaction.sum.currency,
+            comment=transaction.comment,
+            date=transaction.date,
+        )
+
+        if transaction.trnsType == Qiwi.IN:
+            payment = await self.filter_casino(transaction)
+            if payment is not None:
+                payment.done = 1
+                payment.save()
+
+                pay_count = basefunctional.get_payments_count(
+                    CasinoPayment, payment.owner
+                )
+
+                await self.send_profit(
+                    Profit.create(
+                        owner=payment.owner.owner,
+                        service=0,  # casino
+                        payment=qiwi_payment,
+                        amount=transaction.sum.amount,
+                        share=0.8 if pay_count == 1 else 0.7,
+                    ),
+                    payment,
+                )
+        else:
+            self.bot.send_message(
+                self.config.admins_chat,
+                unmatched_payment_text.format(
+                    qiwi_id=dict(
+                        filter(
+                            lambda q: q["token"] == self._qiwi.token,
+                            self.config.qiwi_tokens,
+                        )
+                    ).get(self._qiwi.token),
+                    amount=transaction.sum.amount,
+                    currency=Qiwi.get_currency(transaction.sum.currency),
+                ),
+            )
 
     async def start(self):
         self.work()
 
         while self._working:
-            logger.debug(f"PayChecker check {self._qiwi}")
+            logger.debug(f"PayChecker check qiwi={self._qiwi}")
             if self._qiwi is None and isinstance(self.config.qiwi_tokens, list):
                 self._qiwi = Qiwi(**self.config.qiwi_tokens[0])
 
             try:
                 await self._qiwi.check_payments(
-                    self.check_transaction, rows=15, operation=self._qiwi.IN
+                    self.on_new_transaction, rows=15, operation=Qiwi.ALL
                 )
             except InvalidProxy:
                 await self.bot.send_message(
@@ -87,7 +136,7 @@ class PayChecker:
                     invalid_proxy_text.format(token=self._qiwi.token),
                 )
 
-            await sleep(self.config.qiwi_check_time, int)
+            await sleep(self.config.qiwi_check_time)
 
         # await self.bot.session.close() # if using outside executor
 

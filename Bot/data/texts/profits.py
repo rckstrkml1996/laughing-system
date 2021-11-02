@@ -23,6 +23,12 @@ admins_profit_text = emojize(
     "Дата оплаты пополнения: {pay_date}"
 )
 
+unmatched_payment_text = emojize(
+    "Qiwi - <b>id{qiwi_id}</b>\n"
+    "Неизвестная транзакция.\n"
+    "Сумма: <b>{amount} {currency}</b>\n"
+)
+
 # profit_complete_text = emojize(
 #     "Успешно выплачено {share} RUB - <a href='{profit_link}'>профит</a> у "
 #     "<a href='tg://user?id={cid}'>{name}</a>\n\n"

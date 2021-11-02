@@ -6,7 +6,7 @@ from .summary import *
 from .casino import *
 from .trading import *
 from .escort import *
-from .profit import *
+from .profits import *
 from .btc_auth import *
 from .card import *
 from .escort_create_girl import *

@@ -1,9 +1,11 @@
+from datetime import datetime
+
 from aiogram.types import Message, CallbackQuery
 from aiogram.dispatcher.storage import FSMContext
-from aiohttp.helpers import ProxyInfo
 from loguru import logger
 
 from qiwiapi import Qiwi, InvalidProxy
+from customutils.datefunc import normalized_local_now
 from loader import dp, config
 from data.texts import (
     qiwi_emoji,
@@ -16,8 +18,9 @@ from data.texts import (
     qiwi_tokens_info_text,
     qiwi_info_text,
     qiwi_account_text,
+    qiwi_action_text,
 )
-from data.keyboards import add_qiwi_keyboard, add_qiwi_sure_keyboard
+from data.keyboards import qiwi_keyboard, add_qiwi_keyboard, add_qiwi_sure_keyboard
 from data.states import NewQiwi
 
 
@@ -31,7 +34,10 @@ async def proxy_invalid(qiwi: Qiwi):
 
 
 async def qiwi_tokens_info(chat_id: int):
-    """without message to call it in another handler"""
+    """
+    info about qiwi tokens.
+    without message to call it by another handler ANYWHERE.
+    """
     if not config.qiwi_tokens:
         await dp.bot.send_message(
             chat_id, no_qiwis_text, reply_markup=add_qiwi_keyboard()
@@ -48,6 +54,7 @@ async def qiwi_tokens_info(chat_id: int):
                 accounts = await qiwi.get_accounts()
                 profile = await qiwi.get_profile()
             except InvalidProxy:
+                await dp.bot.send_message(chat_id, "ИнвалидПрокси")
                 return  # some logic
 
             currency = accounts[0].balance.currency
@@ -66,7 +73,7 @@ async def qiwi_tokens_info(chat_id: int):
             )
             qiwi_numbers.append(number)
 
-            logger.debug(f"{number=}, {amount=}")
+            logger.debug(f"Get info about qiwi: {number=}, {amount=}")
 
         await dp.bot.send_message(
             chat_id,
@@ -75,6 +82,12 @@ async def qiwi_tokens_info(chat_id: int):
             ),
             reply_markup=add_qiwi_keyboard(qiwi_numbers),  # can be None or []
         )
+
+
+@dp.callback_query_handler(text="backqiwi", admins_chat=True, is_admin=True)
+async def qiwi_back_command(query: CallbackQuery):
+    await query.message.delete()
+    await qiwi_tokens_info(query.message.chat.id)
 
 
 @dp.message_handler(commands=["qiwi", "qiwis"], admins_chat=True, is_admin=True)
@@ -94,7 +107,16 @@ async def qiwi_information(query: CallbackQuery):
     try:
         accounts = await qiwi.get_accounts()
         profile = await qiwi.get_profile()
+        payments = await qiwi.get_payments(rows=10, operation=Qiwi.IN)
+
+        datenow = normalized_local_now()
+
+        total_payments = await qiwi.get_payments_total(
+            datetime(datenow.year, datenow.month, datenow.day),
+            datetime(datenow.year, datenow.month, datenow.day + 1),
+        )
     except InvalidProxy:
+        await query.message.answer("Прокси Инвалиды!! кодер сука")
         return  # some logic
 
     currency = accounts[0].balance.currency
@@ -102,17 +124,43 @@ async def qiwi_information(query: CallbackQuery):
     number = profile.authInfo.personId
     level = profile.contractInfo.identificationInfo
 
+    # payments daily incoming
+    incoming = ""
+    if total_payments.incomingTotal:
+        incoming = (
+            f"+{total_payments.incomingTotal[0].amount} "
+            f"{Qiwi.get_currency(total_payments.incomingTotal[0].currency)}"
+        )
+    # payments daily outgoing
+    outgoing = ""
+    if total_payments.outgoingTotal:
+        outgoing = (
+            f"-{total_payments.outgoingTotal[0].amount} "
+            f"{Qiwi.get_currency(total_payments.outgoingTotal[0].currency)}"
+        )
+
+    qiwi_action_texts = []
+    for transaction in payments.data:
+        qiwi_action_texts.append(
+            qiwi_action_text.format(
+                going=f"+{transaction.sum.amount}",
+                currency=Qiwi.get_currency(transaction.sum.currency),
+                comment=transaction.comment if transaction.comment else "Без коммента",
+            )
+        )
+
     await query.message.edit_text(
         qiwi_info_text.format(
             number=number,
             amount=amount,
             currency=qiwi.get_currency(currency),
-            incoming=0,
-            outgoing=0,
+            incoming=incoming,
+            outgoing=outgoing,
             status=qiwi.get_identification_level(level),
-            proxy_url=qiwi_tokens["proxy_url"][:16],
-            qiwi_action_texts="work..",
-        )
+            proxy="Есть" if qiwi_tokens["proxy_url"] else "Нету",
+            qiwi_action_texts="\n".join(qiwi_action_texts),
+        ),
+        reply_markup=qiwi_keyboard(config_id),
     )
 
 

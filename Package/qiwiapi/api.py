@@ -1,4 +1,3 @@
-import weakref
 from time import time
 from datetime import datetime
 from asyncio.exceptions import TimeoutError
@@ -6,7 +5,6 @@ from typing import Union
 
 import aiohttp
 from aiohttp.client_exceptions import ClientProxyConnectionError, ClientHttpProxyError
-
 from pydantic.error_wrappers import ValidationError
 
 from .exceptions import InvalidToken, InvalidAccount, UnexpectedResponse, InvalidProxy
@@ -43,7 +41,7 @@ class Api:
 
         return self.profile
 
-    async def get_new_profile(self):
+    async def get_new_profile(self) -> Profile:
         url = "https://edge.qiwi.com/person-profile/v1/profile/current"
 
         response = await self.session.get(url, proxy=self.proxy, ssl=False)
@@ -80,7 +78,7 @@ class Api:
         """
         return str(int(time() * 1000))
 
-    async def get_accounts(self):
+    async def get_accounts(self) -> Accounts:
         if self.validate_proxy:
             if not await self.check_proxy():
                 if self.on_invalid_proxy is not None:
@@ -106,7 +104,7 @@ class Api:
 
         return Accounts(**json).accounts
 
-    async def get_payments(self, rows: int = 50, operation: str = "ALL"):
+    async def get_payments(self, rows: int = 50, operation: str = "ALL") -> Payments:
         profile = await self.get_new_profile()
 
         wallet = profile.contractInfo.contractId
@@ -135,16 +133,18 @@ class Api:
         startDate: Union[str, datetime],
         endDate: Union[str, datetime],
         operation: str = "ALL",
-    ):
+        time_zone: str = "+03:00",
+    ) -> TotalPayments:
+        """datetime with tzinfo!!!"""
         if isinstance(startDate, datetime):
-            start_date = startDate.strftime("%Y-%m-%dT%H:%M:%S%z")
+            start_date = startDate.strftime("%Y-%m-%dT%H:%M:%S") + str(time_zone)
             if startDate.tzinfo:
                 start_date = start_date[:-2] + ":" + start_date[-2:]
         else:
             start_date = startDate
 
         if isinstance(endDate, datetime):
-            end_date = endDate.strftime("%Y-%m-%dT%H:%M:%S%z")
+            end_date = endDate.strftime("%Y-%m-%dT%H:%M:%S") + str(time_zone)
             if endDate.tzinfo:
                 end_date = end_date[:-2] + ":" + end_date[-2:]
         else:
@@ -177,7 +177,9 @@ class Api:
 
         return TotalPayments(**json)
 
-    async def made_payments(self, account: str, amount, currency="643", comment=None):
+    async def made_payments(
+        self, account: str, amount, currency="643", comment=None
+    ) -> PaymentInfo:
         url = "https://edge.qiwi.com/sinap/api/v2/terms/99/payments"
 
         params = {
@@ -206,7 +208,7 @@ class Api:
         except ValidationError:
             return json
 
-    async def check_proxy(self, url: str = "https://example.com"):
+    async def check_proxy(self, url: str = "https://example.com") -> bool:
         answer = True
 
         if self.proxy is None:

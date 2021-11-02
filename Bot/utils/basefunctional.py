@@ -31,7 +31,7 @@ def delete_old_payments(
 
 
 def get_payments_count(
-    payment_type: Union[CasinoPayment, EscortPayment, TradingPayment],
+    payment_type,
     pay_owner: Union[CasinoUser, EscortUser, TradingUser],
 ) -> int:
     return (

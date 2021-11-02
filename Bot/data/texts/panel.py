@@ -18,7 +18,7 @@ about_project_text = emojize(
     ":woman_tipping_hand: <b>Информация о проекте {team_name}</b>\n\n"
     ":fire: Мы открылись: {team_start}\n"
     "&#127468;&#127463; Количество профитов: {team_profits}\n"
-    ":moneybag: Общая сумма профитов: {profits_sum} ₽\n"
+    ":moneybag: Общая сумма профитов: {profits_sum} RUB\n\n"
     "<b>Выплаты</b> проекта:\n"
     "— Оплата - <b>80%</b>\n"
     "— Возврат - <b>70%</b>\n\n"

@@ -41,36 +41,12 @@ qiwi_action_text = emojize(
 qiwi_info_text = emojize(
     "Кошелек: <b><i>+{number}</i></b> :kiwi_fruit:\n"
     "Баланс: <b>{amount} {currency}</b>\n"
-    "24 Часа платежи: <i>+{incoming} {currency} -{outgoing} {currency}</i>\n"
+    "Сегодня: <i>{incoming} {outgoing}</i>\n"
     "Статус: <b>{status}</b>\n"
-    "Прокси: <i>{proxy_url}</i>\n\n"
+    "Прокси: <i>{proxy}</i>\n\n"
     "{qiwi_action_texts}"
 )  # proxy_url censored
 
 invalid_proxy_text = emojize(
     "Что-то не так с прокси! Удаляю из кошелька с токеном\n<code>{token}</code>"
 )  # token censored
-
-# same_qiwi_text = emojize("Похоже вы пытаетесь добавить такой же киви кошелек)")
-
-# qiwi_delete_text = emojize(
-#     ":wastebasket: Удаляю кошелек с токеном:\n" "<code>{token}</code>"
-# )
-
-# qiwi_selfdelete_text = emojize("Вы уверенны чо хатите удалить этат киви сука? :angry:")
-
-# qiwi_add_proxy_text = emojize(
-#     "Введите <b>HTTP</b> прокси, пример:\n"
-#     "<code>http://user:pass@100.255.3.52:6666</code>"
-# )
-
-# new_proxy_success_text = emojize(
-#     "Прокси добавленны для этого кошелька :white_check_mark:"
-# )
-
-# qiwi_proxy_delete = emojize(
-#     "Удаляю прокси: <i>{proxy}</i>\n"
-#     "Для кошелька c этим токеном: <code>{token}</code>"
-# )
-
-# proxy_error_text = "Что-то с удалением прокси <b>зови кодера нахуй</b>!!"

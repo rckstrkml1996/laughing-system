@@ -22,8 +22,8 @@ from customutils.config import BotsConfig
 config = BotsConfig()
 
 # for aiohttp connection by proxy, too slow for windows :(
-if sys.platform == "win32":
-    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+# if sys.platform == "win32":
+# asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 loop = asyncio.get_event_loop()
 
@@ -39,8 +39,8 @@ payments_checker = PayChecker(bot, config)
 dynapinner = DynamicPinner(bot, config)
 
 Session.notice_displayed = True  # fucking notice zaebala
-banker_client = Client("banker_client", config.api_id, config.api_hash)
-bot_client = Client("bot_client", config.api_id, config.api_hash)
+banker_client = Client("clbanker_client", config.api_id, config.api_hash)
+bot_client = Client("clbot_client", config.api_id, config.api_hash)
 
 StatusNames = [
     "Без статуса",

@@ -118,9 +118,9 @@ class DynamicPinner:
                 trading_status=f":full_moon: Трейдинг СКАМ"
                 if trading_work
                 else f":new_moon: <del>Трейдинг СКАМ</del>",
-                team_status=":full_moon: Общий статус: Ворк"
+                team_status=":full_moon: Общий статус: <b>Ворк</b>"
                 if all_work
-                else ":new_moon: Общий статус: Не ворк",
+                else ":new_moon: Общий статус: <b>Не ворк</b>",
             )
         )
 
