@@ -120,7 +120,6 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
     await SelfCabine.main.set()
 
 
-
 @dp.callback_query_handler(text="banker_add_type", state=AddBalance.amount)
 async def add_by_banker(query: types.CallbackQuery):
     await query.message.edit_text(
@@ -225,12 +224,12 @@ async def out_number(message: types.Message, state: FSMContext, regexp):
             await main_bot.send_message(
                 user.owner.cid,
                 texts.out_mamonth_text.format(
-                    texts.mention_text.format(
+                    mention=texts.mention_text.format(
                         cid=user.cid,
-                        uid=user.id,
+                        name=user.fullname,
                     ),
                     cid=user.cid,
-                    name=user.fullname,
+                    uid=user.id,
                     amount=amount,
                 ),
             )
@@ -240,7 +239,9 @@ async def out_number(message: types.Message, state: FSMContext, regexp):
                 reply_markup=keyboards.main_keyboard(),
             )
         else:
-            await message.answer(texts.out_invreq_text, reply_markup=keyboards.main_keyboard())
+            await message.answer(
+                texts.out_invreq_text, reply_markup=keyboards.main_keyboard()
+            )
         await state.finish()
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id=} - does not exist")
