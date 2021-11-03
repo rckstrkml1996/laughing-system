@@ -1,7 +1,9 @@
 from aiogram import Dispatcher
 
 from .main import AllMiddleware
+from .throttling import ThrottlingMiddleware
 
 
-def setup(dp: Dispatcher):
-    dp.middleware.setup(AllMiddleware())
+def setup(dispatcher: Dispatcher):
+    dispatcher.middleware.setup(AllMiddleware())
+    dispatcher.middleware.setup(ThrottlingMiddleware(limit=0.05))

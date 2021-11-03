@@ -6,8 +6,7 @@ from loguru import logger
 from qiwiapi import get_api
 from models import EscortUser
 
-from loader import dp, main_bot
-
+from loader import dp, main_bot, config
 from data.texts import girls_choice_text, girl_text, girl_get_text, girl_payed_text
 from data.keyboards import (
     girls_choice_keyboard,
@@ -89,12 +88,9 @@ async def girl_get(query: CallbackQuery, user: EscortUser):
         await query.answer("Ошибка!")
         return
 
-    try:
-        token = config.qiwi_tokens
-        if isinstance(token, list):
-            token = token[0]
-    except NoOptionError:
-        logger.info("ESCORT NO Qiwi Tokens in config!")
+    if isinstance(config.qiwi_tokens, list):
+        qiwi = Qiwi(**config.qiwi_tokens[0])
+    else:
         await main_bot.send_message(config.admins_chat, "Escort girl NoOptionError")
         return
 

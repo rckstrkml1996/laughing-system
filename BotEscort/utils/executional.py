@@ -1,5 +1,4 @@
-from peewee import fn
-
+from loguru import logger
 from models import (
     Worker,
     EscortUser,

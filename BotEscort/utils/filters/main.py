@@ -2,10 +2,7 @@ from aiogram.dispatcher.filters import BoundFilter
 from aiogram.types import CallbackQuery
 
 from models import EscortUser
-
-# from customutils.timefunc import async_check_timing
-
-
+from loader import config
 
 
 class IsWorking(BoundFilter):

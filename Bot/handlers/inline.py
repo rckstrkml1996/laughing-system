@@ -25,7 +25,7 @@ async def inline_echo(inline_query: InlineQuery):
         results = [
             about_worker_article(
                 art_id=token_hex(6),
-                title=worker.username,
+                title=worker.username,  # @molodoitatar
                 description=texts.about_worker_text.format(
                     status=status_names.get_value(worker.status),
                     profits=get_correct_str(
