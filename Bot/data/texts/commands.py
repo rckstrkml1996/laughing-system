@@ -22,11 +22,11 @@ help_text = emojize(
 )
 
 me_text = emojize(
-    ":woman_tipping_hand: {status} <a href='tg://user?id={cid}'>{username}</a>\n"
+    "{status} - {mention}\n"
     "Telegram ID: {cid}\n\n"
-    "{profits} на сумму {sum_profits} ₽\n"
-    "Средний профит ~ {middle_profits} ₽\n\n"
-    "В команде {in_team}, {warns}"
+    "<b>{profits}</b> на сумму: <b>{sum_profits} RUB</b>\n"
+    "Средний профит: <b>{middle_profits} RUB</b>\n\n"
+    "В команде: <b>{in_team}</b>, {warns}"
 )
 
 lzt_text = emojize(
@@ -39,7 +39,7 @@ lzt_text = emojize(
 
 lolz_down_text = "Задержка запроса, скорей всего <b>Лолзтим</b> упал :("
 
-cck_size_text = "Мой размер чилена - {size}см {smile}"
+cck_size_text = "Размер органа: <b>{size}см</b> {smile}"
 
 
 # admins commands

@@ -6,7 +6,7 @@ from aiogram.types.input_file import InputFile
 from aiogram.utils.emoji import emojize
 from loguru import logger
 
-from loader import dp, config, StatusNames
+from loader import dp, config, status_names
 from utils import basefunctional
 from models import Worker, Profit
 from customutils.datefunc import datetime_local_now
@@ -75,7 +75,7 @@ async def worker_profile_callback(query: types.CallbackQuery, worker: Worker):
         worker_menu_text.format(
             chat_id=query.from_user.id,
             uniq_key=worker.uniq_key,
-            status=StatusNames[worker.status],
+            status=status_names.get_value(worker.status),
             all_balance=all_balance,
             ref_balance=worker.ref_balance,
             middle_profits=middle_profits,
@@ -121,7 +121,7 @@ async def worker_welcome(message: types.Message):
         caption=worker_menu_text.format(
             chat_id=message.chat.id,
             uniq_key=worker.uniq_key,
-            status=StatusNames[worker.status],
+            status=status_names.get_value(worker.status),
             all_balance=all_balance,
             ref_balance=worker.ref_balance,
             middle_profits=middle_profits,
@@ -192,7 +192,7 @@ async def toggle_username(query: types.CallbackQuery):
             worker_menu_text.format(
                 chat_id=query.message.chat.id,
                 uniq_key=worker.uniq_key,
-                status=StatusNames[worker.status],
+                status=status_names.get_value(worker.status),
                 all_balance=all_balance,
                 ref_balance=worker.ref_balance,
                 middle_profits=middle_profits,

@@ -6,6 +6,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.types import ParseMode
 
+from utils.status import StatusNames
 from utils.pinner import DynamicPinner
 from utils.payments_checker import PayChecker
 from customutils.config import BotsConfig
@@ -20,6 +21,8 @@ from customutils.config import BotsConfig
 
 config = BotsConfig()
 
+
+status_names = StatusNames()
 # for aiohttp connection by proxy, too slow for windows :(
 # if sys.platform == "win32":
 # asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -40,17 +43,6 @@ dynapinner = DynamicPinner(bot, config)
 Session.notice_displayed = True  # fucking notice zaebala
 banker_client = Client("clbanker_client", config.api_id, config.api_hash)
 bot_client = Client("clbot_client", config.api_id, config.api_hash)
-
-StatusNames = [
-    "Без статуса",
-    "Заблокирован",
-    "Воркер",
-    "Модер",
-    "Сапорт ТП",
-    "Кодер",
-    "ТС",
-    "Dungeon Master",
-]
 
 alowed_values = [100, 300, 500, 750, 1000, 1500, 3000, 5000, 10000]
 

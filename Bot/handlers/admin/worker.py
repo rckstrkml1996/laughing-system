@@ -3,7 +3,7 @@ from aiogram.dispatcher.filters import RegexpCommandsFilter
 from loguru import logger
 
 from models import Worker
-from loader import dp, StatusNames
+from loader import dp, status_names
 from data.keyboards import new_status_keyboard
 from data.texts import mention_text, set_new_worker_status, worker_choice_one_plz
 
@@ -24,11 +24,8 @@ async def worker_new_status(message: types.Message, worker: Worker, regexp_comma
     try:
         diff_worker = Worker.get(cid=worker_id)
     except Worker.DoesNotExist:
-        try:
-            diff_worker = Worker.get(id=worker_id)
-        except Worker.DoesNotExist:
-            await message.answer("Такого воркера нету!")
-            return
+        await message.answer("Такого воркера нету!")
+        return
 
     if diff_worker.id == worker.id:
         await message.answer("Ты дурак? Себе самому статус менять??")
@@ -38,7 +35,7 @@ async def worker_new_status(message: types.Message, worker: Worker, regexp_comma
 
     await message.answer(
         worker_choice_one_plz.format(status_len=worker.status),
-        reply_markup=new_status_keyboard(StatusNames, diff_worker.id, worker.status),
+        reply_markup=new_status_keyboard(status_names, diff_worker.id, worker.status),
     )
 
 
@@ -50,7 +47,7 @@ async def worker_set_status(query: types.CallbackQuery, worker: Worker, regexp):
     try:
         diff_worker = Worker.get(id=diff_worker_id)
 
-        status_name = StatusNames[status_id]  # status name by id
+        status_name = status_names.get_value(status_id)  # status name by id
 
         logger.debug(f"{diff_worker.status=} {status_name=}")
         diff_worker.status = status_id
@@ -60,8 +57,7 @@ async def worker_set_status(query: types.CallbackQuery, worker: Worker, regexp):
             set_new_worker_status.format(
                 status_name=status_name,
                 mention=mention_text.format(
-                    user_id=diff_worker.cid,
-                    text=diff_worker.name
+                    user_id=diff_worker.cid, text=diff_worker.name
                 ),
             )
         )

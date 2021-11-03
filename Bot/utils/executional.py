@@ -6,13 +6,14 @@ from aiogram.utils.emoji import emojize
 
 from models import CasinoUser, CasinoUserHistory
 from customutils import datetime_local_now
-from loader import config, StatusNames
+from loader import config, status_names
 from data.texts import (
     services_status,
     casino_mamonth_info,
     escort_mamonth_info,
     me_text,
     casino_text,
+    mention_text,
 )
 from data.keyboards import cas_info_keyboard, esc_info_keyboard
 from utils import basefunctional
@@ -221,9 +222,9 @@ def get_info_about_worker(worker):
         middle_profits = 0
 
     return me_text.format(
+        mention=mention_text.format(user_id=worker.cid, text=worker.name),
         cid=worker.cid,
-        status=StatusNames[worker.status],
-        username=worker.username,
+        status=status_names.get_value(worker.status),
         profits=get_correct_str(len_profits, "профит", "профита", "профитов"),
         sum_profits=sum_profits,
         middle_profits=middle_profits,

@@ -8,7 +8,7 @@ worker_menu_text = emojize(
     ":money_with_wings: У тебя {profits} на сумму <b>{all_balance} RUB</b>\n"
     "Средний профит <b>{middle_profits} RUB</b>\n\n"
     ":gem: Приглашено: <b>0 воркеров</b>\n"
-    ":sunglasses: Статус: <b>{status}</b>\n"
+    "Статус: <b>{status}</b>\n"
     ":warning: Предупреждений: <b>[{warns}/3]</b>\n"
     ":hourglass_flowing_sand: <i>В команде:</i> {in_team}\n\n"
     "{team_status}"

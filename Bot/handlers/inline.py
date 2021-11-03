@@ -3,7 +3,7 @@ from secrets import token_hex
 from aiogram.types import InlineQuery
 from loguru import logger
 
-from loader import dp, StatusNames
+from loader import dp, status_names
 from utils import basefunctional
 from data import texts
 from data.inlineresults import (
@@ -27,7 +27,7 @@ async def inline_echo(inline_query: InlineQuery):
                 art_id=token_hex(6),
                 title=worker.username,
                 description=texts.about_worker_text.format(
-                    status=StatusNames[worker.status],
+                    status=status_names.get_value(worker.status),
                     profits=get_correct_str(
                         worker.profits.count(), "профит", "профита", "профитов"
                     ),
