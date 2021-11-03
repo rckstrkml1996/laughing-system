@@ -7,8 +7,6 @@ updated_startup_text = emojize("<b>Бот <i>запущен и обновилс�
 
 zap_text = emojize(":zap:")
 
-worker_defenition = "<a href='tg://user?id={chat_id}'>{name}</a>"
-
 
 new_username_text = emojize(
     "<a href='tg://user?id={chat_id}'>{name}</a> сменил свой ник с <b>@{old_username}</b> на <b>@{new_username}</b> :poop:"
@@ -29,7 +27,7 @@ services_status = (
 
 
 # inline use
-about_worker_text = "{status}\n{profits} на сумму {profits_sum} р"
+about_worker_text = "{status}\n{profits} на сумму {profits_sum} RUB"
 
 pin_help_text = emojize(
     ":woman_tipping_hand: Сокращения для динамического закрепа:\n\n"
@@ -55,5 +53,5 @@ worker_choice_one_plz = emojize(
 )
 
 set_new_worker_status = emojize(
-    ":see_no_evil: Установил новый статус <b>{status_name}</b> для {worker_link}"
+    ":see_no_evil: Установил новый статус <b>{status_name}</b> для {mention}"
 )  # {worker_defenition.format(chat_id=diff_worker.cid, name=diff_worker.name)}

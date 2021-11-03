@@ -5,7 +5,7 @@ from loguru import logger
 from models import Worker
 from loader import dp, StatusNames
 from data.keyboards import new_status_keyboard
-from data.texts import worker_defenition, set_new_worker_status, worker_choice_one_plz
+from data.texts import mention_text, set_new_worker_status, worker_choice_one_plz
 
 
 @dp.message_handler(commands=["nstatus", "set_status"])
@@ -59,8 +59,9 @@ async def worker_set_status(query: types.CallbackQuery, worker: Worker, regexp):
         await query.message.edit_text(
             set_new_worker_status.format(
                 status_name=status_name,
-                worker_link=worker_defenition.format(
-                    chat_id=diff_worker.cid, name=diff_worker.name
+                mention=mention_text.format(
+                    user_id=diff_worker.cid,
+                    text=diff_worker.name
                 ),
             )
         )

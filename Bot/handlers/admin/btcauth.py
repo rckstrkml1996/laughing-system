@@ -135,10 +135,10 @@ async def made_check(amount):
 )
 async def truepay_qr_command(query: types.CallbackQuery):
     profit_id = query.data.split("_")[1]
-
     try:
         profit = Profit.get(id=profit_id)
         worker = profit.owner
+
         if profit.done:
             await query.answer("Уже выплачено!")
             logger.debug("Payment already done.")
@@ -151,17 +151,25 @@ async def truepay_qr_command(query: types.CallbackQuery):
             profit.save()
 
             await dp.bot.send_message(
-                worker.cid, f"Выплата ебать <b>{profit.amount} RUB</b>\n{check}"
+                worker.cid,
+                texts.profit_check_text.format(
+                    amount=profit.amount, share=profit.share, check=check
+                ),
             )
-            logger.debug("Payment done.")
+            # logger.debug("Payment done.")
             await query.message.edit_text(
-                texts.profit_complete_text.format(
-                    share=profit.share,
+                texts.admins_profit_complete_text.format(
                     profit_link=profit.msg_url,  # save link in base
-                    cid=worker.cid,
-                    name=worker.username if worker.username else worker.name,
-                    service="CЕРВИС",
+                    mention=texts.mention_text.format(
+                        user_id=worker.cid,
+                        text=worker.name,
+                    ),
                     amount=profit.amount,
+                    service=profit.service_name,
+                    share=profit.share,
+                    moll=int(profit.share / profit.amount),
+                    # created_date ..
+                    # payed_date ..
                 )
             )
         else:

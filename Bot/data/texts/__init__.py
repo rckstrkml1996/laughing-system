@@ -12,6 +12,8 @@ from .card import *
 from .escort_create_girl import *
 from .qiwi import *
 
+mention_text = "<a href='tg://user?id={user_id}'>{text}</a>"
+
 # from .profit import (
 #     profit_text,
 #     admins_profit_text,

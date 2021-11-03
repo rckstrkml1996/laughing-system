@@ -23,6 +23,13 @@ admins_profit_text = emojize(
     "Дата оплаты пополнения: {pay_date}"
 )
 
+admins_profit_complete_text = emojize(
+    ":call_me_hand: Выплачен <a href='{profit_link}'>профит</a> у {mention}\n\n"
+    "Сервис: <b>{service}</b>\n"
+    "Сумма: <b>{amount} RUB</b>\n"
+    "Будет выплачено: <b>{share} RUB</b> (<i>{moll}%</i>)\n\n"
+)
+
 unmatched_payment_text = emojize(
     "Qiwi - <b>id{qiwi_id}</b>\n"
     "Неизвестная транзакция.\n"
@@ -37,12 +44,12 @@ make_profit_text = emojize(
     "<code>Казино</code> - <i>Название сервиса</i>\n"
 )
 
-# profit_complete_text = emojize(
-#     "Успешно выплачено {share} RUB - <a href='{profit_link}'>профит</a> у "
-#     "<a href='tg://user?id={cid}'>{name}</a>\n\n"
-#     "Сервис: <b>{service}</b>\n"
-#     "Сумма: <b>{amount}</b>"
-# )
+profit_check_text = emojize(
+    ":green_heart: Твоя выплата, <b>спасибо за ворк</b>!\n\n"
+    "Сумма залета: <b>{amount} RUB</b>\n"
+    "Сумма чека: <b>{share} RUB</b>\n\n<b><i>{check}</i></b>"
+)
+
 
 # profit_worker_text = emojize(
 #     ":white_check_mark: У тебя новый профит! (<i>{service}</i>)\n\n"
