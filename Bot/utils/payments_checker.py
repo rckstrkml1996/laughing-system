@@ -34,7 +34,7 @@ class PayChecker:
     Qiwi Payments Checker, by tg: @ukhide :)
     """
 
-    SERVICE_NAMES = ["Казино", "Эскорт", "Трейдинг", "Прямой перевод"]
+    SERVICE_NAMES = ["Казино", "Эскорт", "Трейдинг", "Прямой"]
 
     def __init__(self, bot: Bot, config: BotsConfig):
         if not isinstance(bot, Bot):

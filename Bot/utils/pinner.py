@@ -6,8 +6,10 @@ from aiogram.utils.emoji import emojize
 from aiogram.utils.exceptions import MessageToEditNotFound
 from loguru import logger
 
+from data.texts import mention_text
 from customutils.config import BotsConfig
 from customutils import datetime_local_now
+from utils import basefunctional
 from models import CasinoUser, TradingUser, EscortUser
 
 
@@ -53,16 +55,23 @@ class DynamicPinner:
         localnow = datetime_local_now()
         timenow = localnow.strftime("%H:%M, %S cек")
 
-        topd_worker = "Хз"
+        topday_worker = basefunctional.get_topworker_today()
+        topday_worker_text = "Нету"
+        if topday_worker is not None:
+            topday_worker_text = mention_text.format(
+                user_id=topday_worker.cid, text=topday_worker.name
+            )
 
         in_casino = CasinoUser.select().count()
         in_trading = TradingUser.select().count()
         in_escort = EscortUser.select().count()
+        all_work = in_casino and in_trading and in_escort
 
         return emojize(
             text.format(
                 services_status=self.get_work_status(),
-                topd_worker=topd_worker,
+                dynamic_moon=":full_moon:" if all_work else ":new_moon:",
+                topd_worker=topday_worker_text,
                 time=timenow,
                 in_casino=in_casino,
                 in_trading=in_trading,

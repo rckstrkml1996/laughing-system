@@ -1,5 +1,5 @@
 from random import randint
-from typing import Union
+from typing import Union, Optional
 from datetime import timedelta
 
 from aiogram.utils.markdown import quote_html
@@ -18,6 +18,27 @@ from models import (
     CasinoUserHistory,
 )
 from customutils import datetime_local_now
+
+
+def get_topworker_today() -> Optional[Worker]:
+    date = datetime_local_now()
+    return (
+        Worker.select(
+            Worker,
+            fn.SUM(Profit.amount).alias("profits_sum"),
+            fn.COUNT(Profit.id).alias("profits_count"),
+        )
+        .join(Profit, JOIN.LEFT_OUTER)
+        .where(
+            Profit.created.day == date.day,
+            Profit.created.month == date.month,
+            Profit.created.year == date.year,
+        )
+        .group_by(Worker.id)
+        .order_by(SQL("profits_sum").desc())
+        .limit(1)
+        .get()
+    )
 
 
 def delete_old_payments(

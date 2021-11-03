@@ -21,28 +21,17 @@ new_chat_member_text = emojize(
 )
 
 # multy use
-services_status = (
-    "{casino_status}\n" "{escort_status}\n" "{trading_status}\n" "{team_status}"
-)
+services_status = "{casino_status}\n{escort_status}\n{trading_status}\n{team_status}"
 
 
 # inline use
 about_worker_text = "{status}\n{profits} на сумму {profits_sum} RUB"
 
-pin_help_text = emojize(
-    ":woman_tipping_hand: Сокращения для динамического закрепа:\n\n"
-    "<code>{services_status}</code> - Статусы работы проекта\n"
-    "<code>{topd_worker}</code> - Лучший воркер за день\n"
-    "<code>{in_casino}</code> - Кол-во мамонтов в казино\n"
-    "<code>{in_trading}</code> - Кол-во мамонтов в трейдинге\n"
-    "<code>{in_escort}</code> - Кол-во мамонтов в эскорте\n"
-    "<code>{time}</code> - Время Час:Минута, Секунда"
-)
 
 top_none_text = emojize(":coffin: <b>Топ пустой.</b>")
 
 top_text = emojize(
-    ":woman_raising_hand: Топ воркеров за {period}:\n\n"
+    ":man_technologist: Топ воркеров за {period}:\n\n"
     "{profits}\n\n"
     ":money_with_wings: Общий профит - <b>{all_profits}</b> RUB"
 )

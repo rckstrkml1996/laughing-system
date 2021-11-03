@@ -11,6 +11,7 @@ from .btc_auth import *
 from .card import *
 from .escort_create_girl import *
 from .qiwi import *
+from .pin import *
 
 mention_text = "<a href='tg://user?id={user_id}'>{text}</a>"
 

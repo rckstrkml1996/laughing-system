@@ -1,5 +1,4 @@
 from aiogram.utils.emoji import emojize
-import emoji
 
 
 qiwi_emoji = emojize(":kiwi_fruit:")  # ? qiwi_emoji_text

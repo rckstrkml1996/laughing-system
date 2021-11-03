@@ -43,7 +43,7 @@ cck_size_text = "Мой размер чилена - {size}см {smile}"
 
 
 # admins commands
-adm_work_command = emojize("<b>Состояние</b> сервисов:\n" "{services_status}")
+adm_work_command = emojize("<b>Состояние</b> сервисов:\n{services_status}")
 
 # work command
 setwork_text = emojize("<b>Поставлен</b> ворк :white_check_mark:")
