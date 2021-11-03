@@ -1,4 +1,4 @@
-import secrets
+from secrets import token_hex
 
 from aiogram.types import InlineQuery
 from loguru import logger
@@ -24,7 +24,7 @@ async def inline_echo(inline_query: InlineQuery):
 
         results = [
             about_worker_article(
-                art_id=secrets.token_hex(6),
+                art_id=token_hex(6),
                 title=worker.username,
                 description=texts.about_worker_text.format(
                     status=StatusNames[worker.status],
@@ -42,10 +42,8 @@ async def inline_echo(inline_query: InlineQuery):
     else:
         bot_user = await dp.bot.get_me()
         standart_items = [
-            tagbot_article(
-                secrets.token_hex(6), f"Подавай заявку в @{bot_user.username}"
-            ),
-            services_status_article(secrets.token_hex(6), get_work_status()),
+            tagbot_article(token_hex(6), f"Подавай заявку в @{bot_user.username}"),
+            services_status_article(token_hex(6), get_work_status()),
         ]
 
         await inline_query.answer(results=standart_items)

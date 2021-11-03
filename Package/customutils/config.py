@@ -35,6 +35,12 @@ def myfield(name: str, default=None):
 
 
 class BotsConfig(Config):
+    def __init__(self, config_path: str = None):
+        if config_path is not None:
+            provider.config_path = config_path
+
+        super().__init__()
+
     api_token = myfield("api_token")
     casino_api_token = myfield("casino_api_token")
     trading_api_token = myfield("trading_api_token")
@@ -115,7 +121,7 @@ class BotsConfig(Config):
     def __getattribute__(self, name: str):
         field = getattr(BotsConfig, name, None)
         if isinstance(field, Field):
-            
+
             last_value = provider.get(field.name)
             provider.update_settings()
             new_value = provider.get(field.name)

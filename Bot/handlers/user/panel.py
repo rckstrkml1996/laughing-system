@@ -64,6 +64,11 @@ async def worker_profile_callback(query: types.CallbackQuery, worker: Worker):
 
     profile_photo = await get_profile_photo(query.from_user.id)
 
+    if config.casino_work:
+        work_status = emojize(":full_moon: <b>Всё работает</b>, воркаем!")
+    else:
+        work_status = emojize(":new_moon: <b>Временно стопворк!</b>")
+
     await query.message.delete()
     await query.message.answer_photo(
         profile_photo,
@@ -76,8 +81,8 @@ async def worker_profile_callback(query: types.CallbackQuery, worker: Worker):
             middle_profits=middle_profits,
             profits=get_correct_str(len_profits, "профит", "профита", "профитов"),
             in_team=get_correct_str(in_team.days, "день", "дня", "дней"),
-            warns=0,
-            team_status=emojize(":full_moon: <b>Всё работает</b>, воркаем!"),
+            warns=worker.warns,
+            team_status=work_status,
         ),
         reply_markup=panel_keyboard(worker.username_hide),
     )
@@ -106,6 +111,11 @@ async def worker_welcome(message: types.Message):
 
     profile_photo = await get_profile_photo(message.chat.id)
 
+    if config.casino_work:
+        work_status = emojize(":full_moon: <b>Всё работает</b>, воркаем!")
+    else:
+        work_status = emojize(":new_moon: <b>Временно стопворк!</b>")
+
     await message.answer_photo(
         profile_photo,
         caption=worker_menu_text.format(
@@ -117,8 +127,8 @@ async def worker_welcome(message: types.Message):
             middle_profits=middle_profits,
             profits=get_correct_str(len_profits, "профит", "профита", "профитов"),
             in_team=get_correct_str(in_team.days, "день", "дня", "дней"),
-            warns=0,
-            team_status=emojize(":full_moon: <b>Всё работает</b>, воркаем!"),
+            warns=worker.warns,
+            team_status=work_status,
         ),
         reply_markup=panel_keyboard(worker.username_hide),
     )
@@ -173,6 +183,11 @@ async def toggle_username(query: types.CallbackQuery):
 
         status = "Скрыли" if worker.username_hide else "Открыли"
 
+        if config.casino_work:
+            work_status = emojize(":full_moon: <b>Всё работает</b>, воркаем!")
+        else:
+            work_status = emojize(":new_moon: <b>Временно стопворк!</b>")
+
         await query.message.edit_caption(
             worker_menu_text.format(
                 chat_id=query.message.chat.id,
@@ -183,8 +198,8 @@ async def toggle_username(query: types.CallbackQuery):
                 middle_profits=middle_profits,
                 profits=get_correct_str(len_profits, "профит", "профита", "профитов"),
                 in_team=get_correct_str(in_team.days, "день", "дня", "дней"),
-                warns=0,
-                team_status=emojize(":full_moon: <b>Всё работает</b>, воркаем!"),
+                warns=worker.warns,
+                team_status=work_status,
             ),
             reply_markup=panel_keyboard(worker.username_hide),
         )

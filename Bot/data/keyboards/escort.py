@@ -46,11 +46,46 @@ esc_delete_btn = InlineKeyboardButton(
 )
 esc_delete_girl_keyboard.add(esc_delete_btn)
 
+
 def esc_info_keyboard(uid) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup()
     esc_update_btn = InlineKeyboardButton(
         emojize(":arrows_counterclockwise:"), callback_data=f"escupdateinfo_{uid}"
     )
     markup.add(esc_update_btn)
+
+    return markup
+
+
+esc_mamoths_btn = InlineKeyboardButton(
+    emojize("Мои мамонтята :elephant:"), callback_data="escupdatemamonths_0"
+)
+esc_msg_spam_btn = InlineKeyboardButton(
+    emojize("Массовая рассылка :diamond_shape_with_a_dot_inside:"),
+    callback_data="all_alerts_esc",
+)
+
+esc_create_form_btn = InlineKeyboardButton(
+    emojize("Создать анкету :envelope:"), callback_data="create_form_esc"
+)
+esc_form_btn = InlineKeyboardButton(
+    emojize("Анкета :lipstick:"), callback_data="form_esc"
+)
+
+esc_delete_all_btn = InlineKeyboardButton(
+    emojize("Удалить всех :warning:"), callback_data="delete_all_esc"
+)
+
+
+def escort_keyboard(girl_created: bool) -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup()
+
+    markup.add(esc_mamoths_btn)
+
+    girl_button = esc_form_btn if girl_created else esc_create_form_btn
+    markup.add(girl_button)
+
+    markup.add(esc_msg_spam_btn)
+    markup.add(esc_delete_all_btn)
 
     return markup

@@ -3,6 +3,7 @@ import threading
 from aiogram import Dispatcher, executor
 from loguru import logger
 
+from models import connect, disconnect
 from loader import config, dp, dynapinner, payments_checker
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
@@ -12,6 +13,7 @@ from utils.config_usernames import update_bot_usernames
 
 
 async def on_startup(dispatcher: Dispatcher):
+    connect()
     setup_logger(level="DEBUG")
 
     from utils import filters, middlewares
@@ -35,6 +37,7 @@ async def on_startup(dispatcher: Dispatcher):
 
 
 async def on_shutdown(_: Dispatcher):
+    disconnect()
     exit_event.set()
 
     payments_checker.stop()

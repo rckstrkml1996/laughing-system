@@ -1,7 +1,5 @@
 from random import randint
 from asyncio import sleep
-from asyncio.exceptions import TimeoutError
-from datetime import datetime
 
 from aiogram import types
 from aiogram.utils.emoji import emojize

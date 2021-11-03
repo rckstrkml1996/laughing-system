@@ -191,20 +191,24 @@ class TradingPayment(BaseModel):
     created = DateTimeField(default=datetime_local_now)
 
 
-base.connect()
-base.create_tables(
-    [
-        Worker,
-        Profit,
-        QiwiPayment,
-        CasinoUser,
-        CasinoUserHistory,
-        CasinoPayment,
-        TradingUser,
-        TradingPayment,
-        EscortUser,
-        EscortGirl,
-        EscortGirlPhoto,
-        EscortPayment,
-    ]
-)
+def connect():
+    base.connect()
+    base.create_tables(
+        [
+            Worker,
+            Profit,
+            QiwiPayment,
+            CasinoUser,
+            CasinoUserHistory,
+            CasinoPayment,
+            TradingUser,
+            TradingPayment,
+            EscortUser,
+            EscortGirl,
+            EscortGirlPhoto,
+            EscortPayment,
+        ]
+    )
+
+def disconnect():
+    base.close()
