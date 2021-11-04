@@ -3,9 +3,9 @@ from random import randint, choice
 from aiogram.types import CallbackQuery, InputFile
 from loguru import logger
 
-from qiwiapi import get_api
+from qiwiapi import Qiwi
+from qiwiapi.exceptions import InvalidProxy
 from models import EscortUser
-
 from loader import dp, main_bot, config
 from data.texts import girls_choice_text, girl_text, girl_get_text, girl_payed_text
 from data.keyboards import (
@@ -91,19 +91,17 @@ async def girl_get(query: CallbackQuery, user: EscortUser):
     if isinstance(config.qiwi_tokens, list):
         qiwi = Qiwi(**config.qiwi_tokens[0])
     else:
-        await main_bot.send_message(config.admins_chat, "Escort girl NoOptionError")
+        await main_bot.send_message(
+            config.admins_chat, "Escort girl qiwi_tokens is not list"
+        )
         return
 
-    api, proxy_url = get_api(token)
-
     try:  # getting qiwi account
-        profile = await api.get_profile()
+        profile = await qiwi.get_profile()
         account = profile.contractInfo.contractId
-    except (InvalidToken, InvalidAccount) as ex:  # than change as notify
-        logger.warning(f"Invalid Token or Account! {ex}")
-        await main_bot.send_message(config.admins_chat, f"Invalid qiwi? {ex}")
-    finally:
-        await api.close()
+    except InvalidProxy as ex:  # than change as notify
+        logger.warning(f"Invalid Proxy! {ex}")
+        await main_bot.send_message(config.admins_chat, f"Invalid proxy? {ex}")
 
     comment = randint(11111111, 99999999)
 
@@ -125,7 +123,7 @@ async def girl_get(query: CallbackQuery, user: EscortUser):
 
 
 @dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "check")
-async def girl_check(query: CallbackQuery, user: EscortUser):
+async def girl_check(query: CallbackQuery):
     pay_id = query.data.split("_")[1]
 
     payment = get_payment(pay_id)
@@ -147,7 +145,7 @@ async def girl_check(query: CallbackQuery, user: EscortUser):
 
     await query.message.edit_caption(
         girl_payed_text.format(
-            time=time_delta,
+            time=time_delta, support_username=config.escort_sup_username
         ),
         reply_markup=pay_done_keyboard,
     )

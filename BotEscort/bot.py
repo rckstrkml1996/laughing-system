@@ -3,14 +3,15 @@ from aiogram import Dispatcher, executor
 from loguru import logger
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
-from utils.filters import setup
+from utils import filters, middlewares
 
 from loader import dp, config
 
 
 async def on_startup(dispatcher: Dispatcher):
     setup_logger(level="DEBUG")
-    setup(dispatcher)  # setup filters than create handlers
+    filters.setup(dispatcher)  # setup filters than create handlers
+    middlewares.setup(dispatcher) # setup dont working middleware
 
     import handlers # setup it
 

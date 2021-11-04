@@ -1,9 +1,8 @@
 from asyncio import sleep
 
 from aiogram import types
-from aiogram.utils.emoji import emojize
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters import RegexpCommandsFilter
+from aiogram.dispatcher.filters import Text, RegexpCommandsFilter
 from loguru import logger
 
 from models import CasinoUser, CasinoPayment, Worker
@@ -16,7 +15,9 @@ from utils.alert import alert_users
 from utils.executional import get_correct_str, get_casino_mamonth_info, get_casino_info
 
 
-@dp.message_handler(text=emojize("Казик :slot_machine:"), state="*", is_worker=True)
+@dp.message_handler(
+    Text(startswith="казик", ignore_case=True), state="*", is_worker=True
+)
 async def casino_info(message: types.Message, worker: Worker, state: FSMContext):
     current_state = await state.get_state()
     if current_state is not None:

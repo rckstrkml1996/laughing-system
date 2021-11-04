@@ -7,4 +7,8 @@ dont_working_text = emojize(
     "<b>Ожидайте завершения технических работ!</b> :skull_and_crossbones:"
 )
 
+dont_working_alert = emojize(
+    ":cold_face: Ожидайте завершения технических работ!"
+)
+
 already_in_text = "Вы уже тут!"

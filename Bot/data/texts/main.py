@@ -1,6 +1,8 @@
 from aiogram.utils.emoji import emojize
 
 
+new_ref_text = emojize("Твой <b>новый реферал</b> - {mention}")
+
 startup_text = emojize("<b>Бот <i>запущен</i>!</b> :sparkle:")
 updated_startup_text = emojize("<b>Бот <i>запущен и обновился</i>!</b> :chart:")
 

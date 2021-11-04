@@ -2,8 +2,10 @@ from time import time
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters import Text
 from aiogram.types.input_file import InputFile
 from aiogram.utils.emoji import emojize
+from aiogram.utils.deep_linking import get_start_link
 from loguru import logger
 
 from loader import dp, config, status_names
@@ -34,7 +36,9 @@ async def get_profile_photo(chat_id: int) -> InputFile:
     return InputFile(photo_path)
 
 
-@dp.message_handler(text=emojize("Профиль :cold_face:"), is_worker=True, state="*")
+@dp.message_handler(
+    Text(startswith="профиль", ignore_case=True), is_worker=True, state="*"
+)
 async def worker_profile(message: types.Message, state: FSMContext):
     current_state = await state.get_state()
     if current_state is not None:
@@ -138,7 +142,7 @@ async def worker_welcome(message: types.Message):
 
 
 @dp.message_handler(
-    text=emojize("О проекте :man_technologist:"), is_worker=True, state="*"
+    Text(startswith="о проект", ignore_case=True), is_worker=True, state="*"
 )
 async def project_info(message: types.Message, state: FSMContext):
     current_state = await state.get_state()
@@ -165,7 +169,7 @@ async def project_info(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(text="toggleusername", is_worker=True)
 async def toggle_username(query: types.CallbackQuery):
-    try:
+    try:  # @nastyasladost иди в хайд тим пожалуйста)
         worker = Worker.get(cid=query.message.chat.id)
         worker.username_hide = not worker.username_hide
         in_team = datetime_local_now() - worker.registered
@@ -215,6 +219,7 @@ async def show_rules(query: types.CallbackQuery):
 
 @dp.callback_query_handler(text="refsystem", is_worker=True)
 async def ref_system(query: types.CallbackQuery):
+    link = await get_start_link(query.from_user.id)
     await query.message.answer(
-        referral_system_text.format(user_id=query.message.chat.id)
+        referral_system_text.format(user_id=query.message.chat.id, start_link=link)
     )

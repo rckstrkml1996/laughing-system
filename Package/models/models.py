@@ -26,6 +26,7 @@ class BaseModel(Model):
 
 
 class Worker(BaseModel):
+    owner = ForeignKeyField("self", null=True, related_name="referals")
     cid = IntegerField(unique=True)
     uniq_key = IntegerField(unique=True)
     username = CharField(null=True)
@@ -209,6 +210,7 @@ def connect():
             EscortPayment,
         ]
     )
+
 
 def disconnect():
     base.close()

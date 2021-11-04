@@ -99,14 +99,12 @@ async def cock_size_command(message: types.Message):
 def get_place(i):
     return emojize(
         ":1st_place_medal:"
-        if i == 1
+        if i == 0
         else ":2nd_place_medal:"
-        if i == 2
+        if i == 1
         else ":3rd_place_medal:"
-        if i == 3
-        else f"  {i}"
-        if i < 10
-        else f"{i}"
+        if i == 2
+        else ":hankey:"
     )
 
 
@@ -135,7 +133,7 @@ async def team_top(message: types.Message):
                     worker.profits_count, "профит", "профита", "профитов"
                 )
                 profit_text_list.append(
-                    f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
+                    f"{get_place(i)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
                 )
 
         msg = await message.reply(

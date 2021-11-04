@@ -4,7 +4,7 @@ from loguru import logger
 from aiogram import Dispatcher
 from asyncio import sleep
 
-
+from loader import config
 from data.texts import startup_text
 
 

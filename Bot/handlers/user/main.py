@@ -42,11 +42,30 @@ async def welcome(message: types.Message, state: FSMContext):
             await worker_welcome(message)  # workers menu
     except Worker.DoesNotExist:
         logger.info(f"[{message.chat.id}], first time start bot")
-        basefunctional.create_worker(
+        data = message.text.split(" ")
+        if len(data) >= 2:
+            try:
+                referal = Worker.get(cid=data[1])
+            except Worker.DoesNotExist:
+                referal = None
+
+        worker = basefunctional.create_worker(
             chat_id=message.chat.id,
             name=message.chat.full_name,
             username=message.chat.username,
+            referal=referal,
         )
+
+        if referal:
+            await dp.bot.send_message(
+                referal.cid,
+                texts.new_ref_text.format(
+                    mention=texts.mention_text.format(
+                        user_id=worker.cid, text=worker.name
+                    )
+                ),
+            )
+
         await new_request(message)
 
 

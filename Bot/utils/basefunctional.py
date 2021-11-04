@@ -22,23 +22,26 @@ from customutils import datetime_local_now
 
 def get_topworker_today() -> Optional[Worker]:
     date = datetime_local_now()
-    return (
-        Worker.select(
-            Worker,
-            fn.SUM(Profit.amount).alias("profits_sum"),
-            fn.COUNT(Profit.id).alias("profits_count"),
+    try:
+        return (
+            Worker.select(
+                Worker,
+                fn.SUM(Profit.amount).alias("profits_sum"),
+                fn.COUNT(Profit.id).alias("profits_count"),
+            )
+            .join(Profit, JOIN.LEFT_OUTER)
+            .where(
+                Profit.created.day == date.day,
+                Profit.created.month == date.month,
+                Profit.created.year == date.year,
+            )
+            .group_by(Worker.id)
+            .order_by(SQL("profits_sum").desc())
+            .limit(1)
+            .get()
         )
-        .join(Profit, JOIN.LEFT_OUTER)
-        .where(
-            Profit.created.day == date.day,
-            Profit.created.month == date.month,
-            Profit.created.year == date.year,
-        )
-        .group_by(Worker.id)
-        .order_by(SQL("profits_sum").desc())
-        .limit(1)
-        .get()
-    )
+    except Worker.DoesNotExist:
+        return
 
 
 def delete_old_payments(
@@ -268,8 +271,9 @@ def get_uniq_key() -> int:
     return key
 
 
-def create_worker(chat_id, name, username=None) -> Worker:
+def create_worker(chat_id, name, username=None, referal: Worker = None) -> Worker:
     return Worker.create(
+        owner=referal,
         cid=chat_id,
         uniq_key=get_uniq_key(),
         name=quote_html(name),

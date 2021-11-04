@@ -1,28 +1,16 @@
 from peewee import *
 from playhouse.shortcuts import ReconnectMixin
 from playhouse.migrate import *
-
-
-class DB(ReconnectMixin, MySQLDatabase):
-    pass
-
-
-base = DB(
-    "bot",
-    user="belicoff",
-    password="belicoffdev",
-    host="127.0.0.1",
-    port=3306,
-    charset="utf8mb4",  # for emoji and symbols)
-)
+from models import Worker, base
 
 
 migrator = MySQLMigrator(base)
 
-service_id = IntegerField(default=0)
-service_name = CharField(default="ХЗ Сервис")
+owner = ForeignKeyField(
+    model=Worker, field=Worker.id, null=True, related_name="referals"
+)
 
 migrate(
-    migrator.rename_column("profit", "service", "service_id"),
-    migrator.add_column("profit", "service_name", service_name),
+    # migrator.drop_column("worker", "owner_id", owner),
+    migrator.add_column("worker", "owner_id", owner)
 )

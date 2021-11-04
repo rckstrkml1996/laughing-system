@@ -2,7 +2,7 @@ from asyncio import sleep
 
 from aiogram import types
 from aiogram.utils.emoji import emojize
-from aiogram.dispatcher.filters import RegexpCommandsFilter
+from aiogram.dispatcher.filters import Text, RegexpCommandsFilter
 from loguru import logger
 
 from models import Worker, EscortUser
@@ -18,7 +18,9 @@ from data.keyboards import escort_keyboard, escort_mamonths_keyboard, menu_keybo
 from utils.executional import get_correct_str, get_escort_mamonth_info
 
 
-@dp.message_handler(text=emojize("Эскорт :green_heart:"), is_worker=True, state="*")
+@dp.message_handler(
+    Text(startswith="эскорт", ignore_case=True), is_worker=True, state="*"
+)
 async def escort_info(message: types.Message, worker: Worker):
     girl_created = worker.escort_girls.count() >= 1
 

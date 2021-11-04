@@ -3,7 +3,6 @@ from aiogram.utils.markdown import quote_html
 from aiogram.dispatcher import FSMContext
 
 from loader import dp, main_bot, config
-
 from data.states import Login
 from data.texts import (
     new_user_text,
