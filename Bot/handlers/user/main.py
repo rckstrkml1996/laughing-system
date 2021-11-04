@@ -41,7 +41,7 @@ async def welcome(message: types.Message, state: FSMContext):
             )
             await worker_welcome(message)  # workers menu
     except Worker.DoesNotExist:
-        logger.info(f"[{message.chat.id}], first time start bot")
+        logger.info(f"[{message.chat.id}], first time /start bot")
         data = message.text.split(" ")
         if len(data) >= 2:
             try:

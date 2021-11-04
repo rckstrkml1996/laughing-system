@@ -27,7 +27,7 @@ async def get_cabine(user: CasinoUser):
     games_win = user.history.where(CasinoUserHistory.editor == 2).count()
     games_lose = user.history.where(CasinoUserHistory.editor == 3).count()
 
-    start_link = await get_start_link(user.id)
+    start_link = await get_start_link(user.cid)
 
     return texts.self_cabine.format(
         balance=user.balance,
@@ -40,7 +40,7 @@ async def get_cabine(user: CasinoUser):
 
 @dp.message_handler(Text(startswith="личн", ignore_case=True), state="*")
 async def cabine(message: types.Message):
-    user = CasinoUser(message.from_user.id)
+    user = CasinoUser.get(cid=message.from_user.id)
     await message.answer(await get_cabine(user))  # main
     await SelfCabine.main.set()  # пустышка для перевода стейта
 
