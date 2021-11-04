@@ -164,12 +164,9 @@ class PayChecker:
         mention = (  # get mention
             "Скрылся"
             if worker.username_hide
-            else (
-                f"@{worker.username}"
-                if worker.username is not None
-                else f"<a ref='tg://user?id={worker.cid}'>{worker.name}</a>"
-            )
+            else f"<a href='tg://user?id={worker.cid}'>{worker.name}</a>"
         )
+        workers_mention = f"@{worker.username}" if worker.username else mention
         outs_msg = await self.bot.send_photo(
             self.config.outs_chat,
             InputFile(rendered_profit_path),
@@ -194,7 +191,7 @@ class PayChecker:
                 service=profit.service_name,  # refactor
                 amount=profit.amount,
                 share=profit.share,
-                mention=mention,
+                mention=workers_mention,
             ),
             disable_notification=False,
         )

@@ -1,3 +1,4 @@
+import re
 from random import randint
 from typing import Union, Optional
 from datetime import timedelta
@@ -141,6 +142,8 @@ def get_share_sum(worker_id) -> int:
 
 
 def workers_by_username(username: str):
+    username = re.sub(r"[^a-z0-9]", "", username)  # .lower() - replace by fn.Lower
+
     return Worker.select().where(
         fn.Lower(Worker.username.contains(username)), Worker.username_hide == False
     )
