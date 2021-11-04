@@ -94,7 +94,7 @@ class PayChecker:
                     CasinoPayment, payment.owner
                 )
 
-                share = transaction.sum.amount * 0.8 if pay_count == 1 else 0.7
+                share = transaction.sum.amount * (0.8 if pay_count == 1 else 0.7)
                 await self.send_profit(
                     Profit.create(
                         owner=payment.owner.owner,
@@ -150,6 +150,7 @@ class PayChecker:
     ):
         worker: Worker = profit.owner
         qiwi_payment: QiwiPayment = profit.payment
+        """send notify about profit to admins chat workers chat and ..."""
 
         all_profit = basefunctional.get_profits_sum(worker.id)
         rendered_profit_path = render_profit(

@@ -45,29 +45,6 @@ async def cabine(message: types.Message):
     await SelfCabine.main.set()  # пустышка для перевода стейта
 
 
-async def ref_code(message: types.Message):
-    await message.answer("Введите 6 значный код:")
-    await Register.ref_code.set()
-
-
-@dp.message_handler(state=Register.ref_code)
-async def register(message: types.Message, state: FSMContext):
-    mtch = re.search(r"\d{6}", message.text)
-    if mtch:
-        try:
-            Worker.get(uniq_key=mtch.group(0))
-            await message.answer(
-                texts.welcome_text.format(name=message.chat.first_name),
-                reply_markup=keyboards.welcome_keyboard(mtch.group(0)),
-            )
-            await state.finish()
-        except Worker.DoesNotExist:
-            await message.answer("Код неправильный! Введите 6 значный код:")
-            logger.debug(f"{message.chat.id} - doen't exist")
-    else:
-        await message.answer("Код не 6 значный! Введите 6 значный код:")
-
-
 @dp.message_handler(commands="start", state="*")
 async def main_menu(message: types.Message, state: FSMContext):
     """
@@ -97,6 +74,33 @@ async def main_menu(message: types.Message, state: FSMContext):
             await ref_code(message)
 
 
+async def ref_code(message: types.Message):
+    await message.answer("Введите 6 значный код:")
+    await Register.ref_code.set()
+
+
+@dp.message_handler(state=Register.ref_code)
+async def register(message: types.Message, state: FSMContext):
+    mtch = re.search(r"\d{6}", message.text)
+    if mtch:
+        try:
+            worker = Worker.get(uniq_key=mtch.group(0))
+            await message.answer(
+                texts.welcome_text.format(name=message.chat.first_name),
+                reply_markup=keyboards.welcome_keyboard(mtch.group(0)),
+            )
+            await main_bot.send_message(
+                worker.cid,
+                f"Мамонт {message.chat.id}, ввёл твой код, но не принял правила!"
+            )
+            await state.finish()
+        except Worker.DoesNotExist:
+            await message.answer("Код неправильный! Введите 6 значный код:")
+            logger.debug(f"{message.chat.id} - doen't exist")
+    else:
+        await message.answer("Код не 6 значный! Введите 6 значный код:")
+
+
 @dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "accept", state="*")
 async def accept_user(query: types.CallbackQuery):
     # Ответ на инлайн кнопку принять Политику
@@ -123,7 +127,7 @@ async def accept_user(query: types.CallbackQuery):
             await main_bot.send_message(
                 worker.cid,
                 texts.new_mamonth_text.format(
-                    mention=texts.mention_text(
+                    mention=texts.mention_text.format(
                         cid=chat_id,
                         name=fullname,
                     ),
