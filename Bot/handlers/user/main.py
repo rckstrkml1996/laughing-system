@@ -43,11 +43,12 @@ async def welcome(message: types.Message, state: FSMContext):
     except Worker.DoesNotExist:
         logger.info(f"[{message.chat.id}], first time /start bot")
         data = message.text.split(" ")
+        referal = None
         if len(data) >= 2:
             try:
                 referal = Worker.get(cid=data[1])
             except Worker.DoesNotExist:
-                referal = None
+                pass
 
         worker = basefunctional.create_worker(
             chat_id=message.chat.id,
