@@ -8,9 +8,9 @@ escort_text = emojize(
     "Тех. поддержка - @{escort_sup_username}\n\n"
     "<a href='t.me/{escort_username}?start={worker_id}'>Реферальная ссылка</a>\n\n"
     "Мануалы - @{reviews_link}\n\n"
-    "/info <code>[ID мамонта]</code> - инфо о мамонте\n"
-    "/del <code>[ID мамонта]</code> - удалить мамонта\n"
-    "/msg <code>[ID мамонта]</code>;<code>[Сообщение]</code> - сообщение от бота\n"
+    "/info [<code>ID мамонта]</code> - инфо о мамонте\n"
+    "/del [<code>ID мамонта]</code> - удалить мамонта\n"
+    "/msg [<code>ID мамонта]</code>;[<code>Сообщение]</code> - сообщение от бота\n"
 )
 
 all_esc_mamonths_text = emojize(

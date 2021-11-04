@@ -42,7 +42,7 @@ all_cas_mamonths_text = emojize(
 
 casino_mamonth_info = emojize(
     "{smile} Мамонт с ID <b>c{uid}</b>\n\n"
-    "Telegram ID: <code>[{chat_id}]</code>\n"
+    "Telegram ID: [<code>{chat_id}]</code>\n"
     "ID мамонта: <b>c{uid}</b>\n"
     "Имя: <a href='tg://user?id={chat_id}'>{name}</a>\n\n"
     "Баланс: <b>{balance}</b> ₽\n"
