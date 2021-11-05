@@ -1,5 +1,4 @@
 from aiogram.dispatcher.filters import BoundFilter
-from loguru import logger
 
 from loader import config
 from models import CasinoUser

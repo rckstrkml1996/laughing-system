@@ -8,9 +8,7 @@ from loguru import logger
 from qiwiapi import Qiwi
 from qiwiapi.exceptions import InvalidProxy
 from models import CasinoUser, CasinoUserHistory, CasinoPayment
-
 from loader import config, dp, main_bot
-
 from data.states import SelfCabine, AddBalance, OutBalance
 from data import texts, keyboards
 

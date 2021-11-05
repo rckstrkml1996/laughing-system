@@ -106,7 +106,7 @@ async def accept_user(query: types.CallbackQuery):
     # Ответ на инлайн кнопку принять Политику
     chat_id = query.message.chat.id
     refer = query.data.split("_")[1]
-    if refer == "0":
+    if not refer.isdigit():
         await ref_code(query.message)
         return
 

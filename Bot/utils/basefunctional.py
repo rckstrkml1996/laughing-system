@@ -40,7 +40,7 @@ def get_topworker_today() -> Optional[Worker]:
             .order_by(SQL("profits_sum").desc())
             .limit(1)
             .get()
-        )
+        )  # @Slavs027 - какашка?
     except Worker.DoesNotExist:
         return
 
