@@ -7,8 +7,7 @@ from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
 from loguru import logger
 
-from data import keyboards
-from data.texts import *
+from data import keyboards, texts
 from data.states import Game
 from loader import dp
 from models import CasinoUser, CasinoUserHistory
@@ -31,7 +30,7 @@ async def play_game(message: types.Message):
     """
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        await message.answer(
+        await message.answer(  ####
             "Выберите интересующую Вас игру", reply_markup=keyboards.games_keyboard
         )
         await Game.chose_game.set()
@@ -46,7 +45,7 @@ async def dice_game(message: types.Message):
     """
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        await message.answer(game_any, reply_markup=keyboards.play_keyboard)
+        await message.answer(texts.game_any, reply_markup=keyboards.play_keyboard)
         await Game.dice_anymes.set()
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id} - does not exist")
@@ -60,7 +59,7 @@ async def dice_any(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
         await message.answer(
-            game_amount.format(amount=user.balance),
+            texts.game_amount.format(amount=user.balance),
             reply_markup=keyboards.play_keyboard,
         )
         await Game.dice_stake.set()
@@ -73,7 +72,7 @@ async def dice_any(message: types.Message):
 )
 async def dice_stake_invalid(message: types.Message):
     await message.reply(
-        "Некорректное значение ставки!", reply_markup=keyboards.play_keyboard
+        "Некорректное значение ставки!", reply_markup=keyboards.play_keyboard  #####
     )
     logger.debug(f"{message.chat.id} - wrong bet value")
 
@@ -93,7 +92,7 @@ async def dice_stake(message: types.Message, state: FSMContext):
                 await message.answer(
                     emojize(
                         f":green_heart: Вы победили! \
-					\nВаше число - {user_dice.dice.value}, число бота - {bot_dice.dice.value}"
+					\nВаше число - {user_dice.dice.value}, число бота - {bot_dice.dice.value}"  ###
                     )
                 )
                 user.balance += amount
@@ -104,7 +103,7 @@ async def dice_stake(message: types.Message, state: FSMContext):
                 logger.debug(f"{message.chat.id} - won")
             elif bot_dice.dice.value > user_dice.dice.value:
                 await message.answer(
-                    emojize(
+                    emojize(  ####
                         f":broken_heart: Вы проиграли! \
 					\nВаше число - {user_dice.dice.value}, число бота - {bot_dice.dice.value}"
                     )
@@ -139,7 +138,7 @@ async def casino_game(message: types.Message):
     """
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        await message.answer(game_any, reply_markup=keyboards.play_keyboard)
+        await message.answer(texts.game_any, reply_markup=keyboards.play_keyboard)
         await Game.casino_anymes.set()
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id} - does not exist")
@@ -153,7 +152,7 @@ async def casino_any(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
         await message.answer(
-            game_amount.format(amount=user.balance),
+            texts.game_amount.format(amount=user.balance),
             reply_markup=keyboards.play_keyboard,
         )
         await Game.casino_stake.set()
@@ -181,11 +180,12 @@ async def casino_stake(message: types.Message, state: FSMContext):
         if user.balance >= int(message.text):
             async with state.proxy() as data:
                 data["stake"] = int(message.text)
-            await message.answer(game_bet, reply_markup=keyboards.bet_keyboard)
+            await message.answer(texts.game_bet, reply_markup=keyboards.bet_keyboard)
             await Game.casino_bet.set()
         else:
             await message.answer(
-                "Недостачно средств для ставки!", reply_markup=keyboards.play_keyboard
+                "Недостачно средств для ставки!",
+                reply_markup=keyboards.play_keyboard,  ####
             )
             logger.debug(f"{message.chat.id} - not enough money")
     except CasinoUser.DoesNotExist:
@@ -279,7 +279,7 @@ async def graph_game(message: types.Message):
     """
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        await message.answer(game_any, reply_markup=keyboards.play_keyboard)
+        await message.answer(texts.game_any, reply_markup=keyboards.play_keyboard)
         await Game.graph_anymes.set()
     except CasinoUser.DoesNotExist:
         logger.debug(f"{message.chat.id} - does not exist")
@@ -293,7 +293,7 @@ async def graph_any(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
         await message.answer(
-            game_amount.format(amount=user.balance),
+            texts.game_amount.format(amount=user.balance),
             reply_markup=keyboards.play_keyboard,
         )
         await Game.graph_stake.set()
@@ -331,7 +331,7 @@ async def graph_stake(message: types.Message, state: FSMContext):
             )
             working = True
             value = 0.1
-            msg = await message.answer(graph_text.format(value=value))
+            msg = await message.answer(texts.graph.format(value=value))
             await Game.graph_set_stop.set()
             while working:
                 await sleep(0.4)
@@ -343,7 +343,7 @@ async def graph_stake(message: types.Message, state: FSMContext):
                 value += 0.07
                 value *= 1.03
                 try:
-                    await msg.edit_text(graph_text.format(value=value))
+                    await msg.edit_text(texts.graph.format(value=value))
                 except Exception as ex:
                     logger.error(ex)
 
@@ -355,7 +355,7 @@ async def graph_stake(message: types.Message, state: FSMContext):
                         CasinoUserHistory.create(
                             owner=user, amount=amount, balance=user.balance, editor=2
                         )
-                        await message.answer(graph_win_text.format(amount=amount))
+                        await message.answer(texts.graph_win.format(amount=amount))
                         await graph_any(message)
                     elif user.fort_chance >= randint(1, 99):  # if 1 of 100
                         amount *= value
@@ -364,7 +364,7 @@ async def graph_stake(message: types.Message, state: FSMContext):
                         CasinoUserHistory.create(
                             owner=user, amount=amount, balance=user.balance, editor=2
                         )
-                        await message.answer(graph_win_text.format(amount=amount))
+                        await message.answer(texts.graph_win.format(amount=amount))
                         await graph_any(message)
                     else:
                         amount *= value
@@ -375,7 +375,7 @@ async def graph_stake(message: types.Message, state: FSMContext):
                         CasinoUserHistory.create(
                             owner=user, amount=amount, balance=user.balance, editor=3
                         )  # как проигрыш
-                        await message.answer(graph_lose_text.format(amount=amount))
+                        await message.answer(texts.graph_lose.format(amount=amount))
                         await graph_any(message)
                     return
 
@@ -389,7 +389,7 @@ async def graph_stake(message: types.Message, state: FSMContext):
                     CasinoUserHistory.create(
                         owner=user, amount=amount, balance=user.balance, editor=2
                     )
-                    await message.answer(graph_win_text.format(amount=amount))
+                    await message.answer(texts.graph_win.format(amount=amount))
                     await graph_any(message)
                 elif user.fort_chance >= randint(1, 99):  # if 1 of 100
                     amount *= value  # shit code
@@ -398,7 +398,7 @@ async def graph_stake(message: types.Message, state: FSMContext):
                     CasinoUserHistory.create(
                         owner=user, amount=amount, balance=user.balance, editor=2
                     )
-                    await message.answer(graph_win_text.format(amount=amount))
+                    await message.answer(texts.graph_win.format(amount=amount))
                     await graph_any(message)
                 else:
                     amount *= value
@@ -409,7 +409,7 @@ async def graph_stake(message: types.Message, state: FSMContext):
                     CasinoUserHistory.create(
                         owner=user, amount=amount, balance=user.balance, editor=3
                     )  # как проигрыш
-                    await message.answer(graph_lose_text.format(amount=amount))
+                    await message.answer(texts.graph_lose.format(amount=amount))
                     await graph_any(message)
             else:
                 CasinoUserHistory.create(

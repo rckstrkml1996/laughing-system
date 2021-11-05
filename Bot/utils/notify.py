@@ -31,7 +31,7 @@ async def on_startup_notify(dp: Dispatcher):
         except Exception as ex:
             logger.error(f"Admins notify exception: {ex}")
 
-        await sleep(0.2)
+        await sleep(0.1)
 
         try:
             await dp.bot.send_message(
@@ -49,7 +49,7 @@ async def on_startup_notify(dp: Dispatcher):
         except:
             logger.error(f"Admins notify exception")
 
-        await sleep(0.2)
+        await sleep(0.1)
 
         try:
             await dp.bot.send_message(

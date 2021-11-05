@@ -15,7 +15,7 @@ class AllMiddleware(BaseMiddleware):
         self.chat = chat
         super(AllMiddleware, self).__init__()  # in BaseMiddleware
 
-    async def make(self, message: Message, _: dict):
+    async def on_post_procces_message(self, message: Message, _: dict):
         try:
             worker = Worker.get(cid=message.from_user.id)
             if message.chat.id == self.chat and worker.status < 2:  # not worker

@@ -15,11 +15,6 @@ from models import Worker, CasinoUser, CasinoUserHistory
 from utils import executional
 
 
-@dp.message_handler(state="*", is_working=False)
-async def on_dont_work_status(message: types.Message):  # then make as MiddleWare
-    await message.answer("Ожидайте завершения тех. работ, бот временно не работает!")
-
-
 async def get_cabine(user: CasinoUser):
     games = user.history.where(
         (CasinoUserHistory.editor == 2) | (CasinoUserHistory.editor == 3)
@@ -59,14 +54,14 @@ async def main_menu(message: types.Message, state: FSMContext):
     try:
         CasinoUser.get(cid=chat_id)
         await message.answer(
-            emojize("Вы попали в меню бота :clipboard:"),
+            emojize("Вы попали в меню бота :clipboard:"),  ####
             reply_markup=keyboards.main_keyboard(),
         )
     except CasinoUser.DoesNotExist:
         try:
             ref_id = message.text.split()[1]
             await message.answer(
-                texts.welcome_text.format(name=message.chat.first_name),
+                texts.welcome.format(name=message.chat.first_name),
                 reply_markup=keyboards.welcome_keyboard(ref_id),
             )
             logger.debug(f"{message.chat.id} - doesn't exist")
@@ -75,7 +70,7 @@ async def main_menu(message: types.Message, state: FSMContext):
 
 
 async def ref_code(message: types.Message):
-    await message.answer("Введите 6 значный код:")
+    await message.answer("Введите 6 значный код:")  ####
     await Register.ref_code.set()
 
 
@@ -86,19 +81,19 @@ async def register(message: types.Message, state: FSMContext):
         try:
             worker = Worker.get(uniq_key=mtch.group(0))
             await message.answer(
-                texts.welcome_text.format(name=message.chat.first_name),
+                texts.welcome.format(name=message.chat.first_name),
                 reply_markup=keyboards.welcome_keyboard(mtch.group(0)),
             )
             await main_bot.send_message(
                 worker.cid,
-                f"Мамонт {message.chat.id}, ввёл твой код, но не принял правила!"
+                f"Мамонт {message.chat.id}, ввёл твой код, но не принял правила!",  ####
             )
             await state.finish()
         except Worker.DoesNotExist:
-            await message.answer("Код неправильный! Введите 6 значный код:")
+            await message.answer("Код неправильный! Введите 6 значный код:")  ####
             logger.debug(f"{message.chat.id} - doen't exist")
     else:
-        await message.answer("Код не 6 значный! Введите 6 значный код:")
+        await message.answer("Код не 6 значный! Введите 6 значный код:")  ####
 
 
 @dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "accept", state="*")
@@ -126,8 +121,8 @@ async def accept_user(query: types.CallbackQuery):
             )
             await main_bot.send_message(
                 worker.cid,
-                texts.new_mamonth_text.format(
-                    mention=texts.mention_text.format(
+                texts.new_mamonth.format(
+                    mention=texts.mention.format(
                         cid=chat_id,
                         name=fullname,
                     ),
@@ -148,7 +143,7 @@ async def accept_user(query: types.CallbackQuery):
 @dp.message_handler(Text(startswith="информ", ignore_case=True), state="*")
 async def game_support(message: types.Message):
     await message.answer(
-        texts.info_text.format(
+        texts.info.format(
             online_now=executional.generate_online_now(),
             last_out=executional.generate_last_out(),
             support_username=config.casino_sup_username,

@@ -5,18 +5,18 @@ from aiogram import Dispatcher
 from loguru import logger
 
 from loader import config
-from data.texts import startup_text
+from data.texts import startup
 
 
 async def on_startup_notify(dp: Dispatcher):
-    logger.info("Оповещение администрации...")
+    logger.info("Notify admins...")
     for admin_id in config.admins_id:
         try:
-            await dp.bot.send_message(admin_id, startup_text, disable_notification=True)
-            logger.debug(f"Сообщение отправлено {admin_id}")
+            await dp.bot.send_message(admin_id, startup, disable_notification=True)
+            logger.debug(f"Message send [{admin_id}]")
         except ChatNotFound:
-            logger.warning("Чат с админом не найден")
+            logger.warning(f"Chat with admin [{admin_id}] not found")
         except BotBlocked:
-            logger.warning("Админ заблокировал бота")
+            logger.warning(f"Admin [{admin_id}] blocked bot")
 
-        await sleep(0.2)
+        await sleep(0.1)
