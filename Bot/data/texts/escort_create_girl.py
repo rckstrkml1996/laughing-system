@@ -3,7 +3,6 @@ from aiogram.utils.emoji import emojize
 
 preformated = emojize("{text}\n\nПример :point_down:\n<code>{example}</code>")
 
-
 esc_create_name_text = preformated.format(
     text=emojize(":sunglasses: Отправь мне <b>имя</b> для твоей девочки"),
     example="Настя",

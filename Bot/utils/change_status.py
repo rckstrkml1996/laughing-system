@@ -1,5 +1,4 @@
-from aiogram.types import Message
-from aiogram.utils.exceptions import ChatAdminRequired
+from aiogram.utils.exceptions import ChatAdminRequired, BadRequest
 from loguru import logger
 
 from models import Worker
@@ -99,6 +98,8 @@ async def kick(chat_id: int, user_id: int):
         except ChatAdminRequired:
             logger.warning("Bot with no admin status in workers chat!")
             await bot.send_message(chat_id, "У бота нет прав администратора.")
+        except BadRequest:
+            logger.error("Worker might not in chat!")
 
 
 async def warn(chat_id: int, user_id: int):

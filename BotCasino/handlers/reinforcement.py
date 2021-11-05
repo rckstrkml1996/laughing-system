@@ -37,7 +37,7 @@ async def add_reqiz_invalid(message: types.Message):
 async def back_add_choice_global(query: types.CallbackQuery):
     try:
         user = CasinoUser.get(cid=query.from_user.id)
-        await query.message.edit(texts.add.format(min_deposit=user.min_deposit))
+        await query.message.edit_text(texts.add.format(min_deposit=user.min_deposit))
         await AddBalance.add_type.set()
     except CasinoUser.DoesNotExist:
         logger.debug(f"{query.from_user.id=} - DoesNotExist")
@@ -97,7 +97,7 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
     comment = random.randint(1000000, 9999999)
     pay = CasinoPayment.create(owner=user, comment=comment, amount=amount)
 
-    await query.message.edit(
+    await query.message.edit_text(
         texts.add_req.format(
             amount=amount,
             account=account,
@@ -120,7 +120,7 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(text="banker_add_type", state=AddBalance.amount)
 async def add_by_banker(query: types.CallbackQuery):
-    await query.message.edit(
+    await query.message.edit_text(
         texts.add_banker,
         reply_markup=keyboards.add_banker_manual_keyboard,
     )
@@ -129,7 +129,7 @@ async def add_by_banker(query: types.CallbackQuery):
 
 @dp.callback_query_handler(text="banker_add_type", state="*")
 async def add_by_banker(query: types.CallbackQuery):
-    await query.message.edit(
+    await query.message.edit_text(
         texts.add_banker,
         reply_markup=keyboards.add_banker_manual_keyboard2,
     )
