@@ -1,7 +1,7 @@
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
-from utils.executional import (
+from utils.basefunctional import (
     get_escort_girls_text_id,
 )  # get_escort_girls_text, get_girl_ids
 

@@ -12,7 +12,7 @@ from data.texts import (
     newref_code_text,
 )
 from data.keyboards import welcome_keyboard
-from utils.executional import get_worker_by_code, create_user
+from utils import basefunctional
 
 
 def decode_link(text: str) -> str:
@@ -27,9 +27,9 @@ async def welcome_new_user(message: types.Message, state: FSMContext):
         await message.answer(new_user_text.format(name=message.chat.full_name))
         await Login.code.set()
     else:
-        worker = get_worker_by_code(ref_id)
+        worker = basefunctional.get_worker_by_code(ref_id)
         if worker:
-            created = create_user(
+            created = basefunctional.create_user(
                 worker,
                 message.chat.id,
                 message.chat.username,
@@ -53,10 +53,10 @@ async def welcome_new_user(message: types.Message, state: FSMContext):
 
 @dp.message_handler(state=Login.code, is_user=False)
 async def welcome_code(message: types.Message, state: FSMContext):
-    worker = get_worker_by_code(message.text)
+    worker = basefunctional.get_worker_by_code(message.text)
 
     if worker:
-        created = create_user(
+        created = basefunctional.create_user(
             worker,
             message.chat.id,
             message.chat.username,

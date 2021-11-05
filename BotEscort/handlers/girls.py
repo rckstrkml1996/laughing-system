@@ -5,7 +5,7 @@ from loguru import logger
 
 from qiwiapi import Qiwi
 from qiwiapi.exceptions import InvalidProxy
-from models import EscortUser
+from models import EscortUser, Worker
 from loader import dp, main_bot, config
 from data.texts import girls_choice_text, girl_text, girl_get_text, girl_payed_text
 from data.keyboards import (
@@ -14,19 +14,14 @@ from data.keyboards import (
     get_girl_keyboard,
     pay_done_keyboard,
 )
-from utils.executional import (
-    get_escort_girl_count,
-    get_girl,
-    create_payment,
-    get_payment,
-)
+from utils import basefunctional
 
 
 @dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "about")
 async def girl_about(query: CallbackQuery):
     girl_id = query.data.split("_")[1]
 
-    girl = get_girl(girl_id)
+    girl = basefunctional.get_girl(girl_id)
     if girl is None:
         await query.answer("Ошибка!")
         return
@@ -38,7 +33,7 @@ async def girl_about(query: CallbackQuery):
 async def girl_services(query: CallbackQuery):
     girl_id = query.data.split("_")[1]
 
-    girl = get_girl(girl_id)
+    girl = basefunctional.get_girl(girl_id)
     if girl is None:
         await query.answer("Ошибка!")
         return
@@ -50,18 +45,22 @@ async def girl_services(query: CallbackQuery):
 async def girl_newphoto(query: CallbackQuery):
     girl_id = query.data.split("_")[1]
 
-    girl = get_girl(girl_id)
+    girl = basefunctional.get_girl(girl_id)
     if girl is None:
         await query.answer("Ошибка!")
         return
 
     girl_photo = choice(girl.photos)
+    if girl.photos.count() <= 1:
+        await query.answer("Только 1 фотография") ###
+        return
+
     photo = (
         girl_photo.file_id
         if girl_photo.file_id
         else InputFile(f"../media/{girl_photo.saved_path}")
     )
-    logger.info(f"in girl_newphoto func {photo=}")
+    logger.debug(f"in girl_newphoto func {photo=}")
 
     await query.message.delete()
     msg = await query.message.answer_photo(
@@ -83,7 +82,7 @@ async def girl_newphoto(query: CallbackQuery):
 async def girl_get(query: CallbackQuery, user: EscortUser):
     girl_id = query.data.split("_")[1]
 
-    girl = get_girl(girl_id)
+    girl = basefunctional.get_girl(girl_id)
     if girl is None:
         await query.answer("Ошибка!")
         return
@@ -105,7 +104,7 @@ async def girl_get(query: CallbackQuery, user: EscortUser):
 
     comment = randint(11111111, 99999999)
 
-    payment = create_payment(user, girl.price, comment)
+    payment = basefunctional.create_payment(user, girl.price, comment)
 
     await query.message.edit_caption(
         girl_get_text.format(
@@ -126,7 +125,7 @@ async def girl_get(query: CallbackQuery, user: EscortUser):
 async def girl_check(query: CallbackQuery):
     pay_id = query.data.split("_")[1]
 
-    payment = get_payment(pay_id)
+    payment = basefunctional.get_payment(pay_id)
     if payment is None:
         await query.answer("Платежа нету в базе!", show_alert=True)
         return
@@ -153,18 +152,26 @@ async def girl_check(query: CallbackQuery):
 
 @dp.callback_query_handler(text="girls")
 async def girls_choice(query: CallbackQuery):
-    await query.message.delete()
-    await query.message.answer(
-        girls_choice_text.format(girls_count=get_escort_girl_count(0)),
-        reply_markup=girls_choice_keyboard(0),
-    )
+    worker = Worker.get(cid=query.from_user.id)
+    payload = {
+        "text": girls_choice_text.format(
+            girls_count=basefunctional.get_escort_girl_count(worker.id)
+        ),
+        "reply_markup": girls_choice_keyboard(worker.id),
+    }
+
+    if query.message.photo: # without photo
+        await query.message.delete()
+        await query.message.answer(**payload)
+    else:
+        await query.message.edit_text(**payload)
 
 
 @dp.callback_query_handler(lambda cb: cb.data.split("_")[0] == "girl")
 async def girl_info(query: CallbackQuery):
     girl_id = query.data.split("_")[1]
 
-    girl = get_girl(girl_id)
+    girl = basefunctional.get_girl(girl_id)
     if girl is None:
         await query.answer("Ошибка!")
         return
