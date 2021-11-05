@@ -177,7 +177,7 @@ async def girl_info(query: CallbackQuery):
         return
 
     girl_photo = girl.photos[0]
-    photo = InputFile(f"../{girl_photo.saved_path}")
+    photo = InputFile(girl_photo.saved_path)
 
     await query.message.delete()  # !!!
     msg = await query.message.answer_photo(

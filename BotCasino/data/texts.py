@@ -103,7 +103,7 @@ game_bet = emojize(
 info = emojize(
     ":earth_africa: Текущий онлайн: <b>{online_now}</b>\n"
     ":money_with_wings: Последний вывод: <b>{last_out} RUB</b>\n\n"
-    ":technologist: Тех. Поддержка: @{support_username}\n"
+    "<a href='t.me/{support_username}'>:technologist: Тех. Поддержка\n</a>"
     ":warning: Пишите только по <b>делу</b>!\n\n"
     "<a href='https://telegra.ph/Polzovatelskoe-soglashenie-10-07-2'>Пользовательское соглашение.</a>"
 )

@@ -12,20 +12,17 @@ class IsWorkerFilter(BoundFilter):
 
     def get_target(self, obj):
         if isinstance(obj, CallbackQuery):
-            return obj.message.chat  # if query
-        return obj.chat  # if message
+            return obj.from_user.id  # if query
+        return obj.chat.id  # if message
 
     async def check(self, obj):
-        chat = self.get_target(obj)
-        if chat.type == "private":
-            try:
-                worker = Worker.get(cid=chat.id)
-                if self.is_worker == (worker.status >= 2):
-                    return {"worker": worker}
-            except Worker.DoesNotExist:
-                return not self.is_worker  # not worker
-        else:
-            return False
+        user_id = self.get_target(obj)
+        try:
+            worker = Worker.get(cid=user_id)
+            if self.is_worker == (worker.status >= 2):
+                return {"worker": worker}
+        except Worker.DoesNotExist:
+            return not self.is_worker  # not worker
 
 
 class IsAdminFilter(BoundFilter):

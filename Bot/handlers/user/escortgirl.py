@@ -49,25 +49,26 @@ async def send_girl_anket(girl: EscortGirl, message: types.Message):
 @dp.callback_query_handler(text="form_esc", state="*", is_worker=True)
 async def form_escort(query: types.CallbackQuery, worker: Worker):
     try:
-        girl = worker.escort_girls.get()
+        girl = EscortGirl.get(owner=worker)
     except EscortGirl.DoesNotExist:
-        await query.answer("НЕИЗВЕСТНАЯ ОШИБКА ПИШИ КОДЕРУ!")
         return
 
-    await send_girl_anket(girl, query.message)
-    await query.answer("Вот твоя анкета!")
+    if girl:
+        await send_girl_anket(girl, query.message)
+        await query.answer("Вот твоя анкета!")
+    else:
+        await query.answer("НЕИЗВЕСТНАЯ ОШИБКА ПИШИ КОДЕРУ @ukhide!")
 
 
 @dp.callback_query_handler(text="delete_form_esc", state="*", is_worker=True)
 async def delete_form_escort(query: types.CallbackQuery, worker: Worker):
-    await query.answer("Удаляю..")
-
     try:
-        girl = worker.escort_girls.get()
+        girl = EscortGirl.get(owner=worker)
     except EscortGirl.DoesNotExist:
         await query.answer("НЕИЗВЕСТНАЯ ОШИБКА ПИШИ КОДЕРУ!")
         return
 
+    await query.answer("Удаляю..")
     EscortGirlPhoto.delete().where(EscortGirlPhoto.owner == girl).execute()
     girl.delete_instance()
 

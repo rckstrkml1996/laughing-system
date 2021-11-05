@@ -4,9 +4,9 @@ from aiogram.utils.emoji import emojize
 casino_text = emojize(
     "Казик :slot_machine:\n\n"
     "Твой код: <code>{worker_id}</code>\n"
-    "Бот для работы: @{casino_username}\n"
-    "Мануалы: @{reviews_link}\n"
-    "Тех. поддержка: @{casino_sup_username}\n\n"
+    "<a href='t.me/{casino_username}'>Бот для работы\n</a>"
+    "<a href='t.me/{reviews_link}'>Мануалы\n</a>"
+    "<a href='t.me/{casino_sup_username}'>Тех. поддержка\n\n</a>"
     "<a href='https://t.me/{casino_username}?start={worker_id}'>Твоя реферальная ссылка</a>\n\n"
     ":credit_card: Карты фейк пополнения:\n"
     "{pay_cards}\n\n"

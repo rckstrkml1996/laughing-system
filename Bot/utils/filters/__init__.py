@@ -10,10 +10,8 @@ from .whois import (
     IsWorkerFilter,
     IsSupportFilter,
     IsAdminFilter,
-) 
-from .services import (
-    ServiceCommandsFilter,
 )
+from .services import ServiceCommandsFilter
 
 
 def setup(dp: Dispatcher):
@@ -29,4 +27,14 @@ def setup(dp: Dispatcher):
     dp.filters_factory.bind(SendSummaryFilter, event_handlers=event_handlers)
     dp.filters_factory.bind(AdminsChatFilter, event_handlers=event_handlers)
     dp.filters_factory.bind(WorkersChatFilter, event_handlers=event_handlers)
-    dp.filters_factory.bind(FullRegexpCommandsFilter, event_handlers=[dp.message_handlers])
+    dp.filters_factory.bind(
+        FullRegexpCommandsFilter, event_handlers=[dp.message_handlers]
+    )
+
+__all__ = (
+    "SendSummaryFilter",
+    "AdminsChatFilter",
+    "WorkersChatFilter",
+    "FullRegexpCommandsFilter",
+    "ServiceCommandsFilter",
+)
