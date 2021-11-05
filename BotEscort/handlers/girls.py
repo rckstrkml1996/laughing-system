@@ -52,7 +52,7 @@ async def girl_newphoto(query: CallbackQuery):
 
     girl_photo = choice(girl.photos)
     if girl.photos.count() <= 1:
-        await query.answer("Только 1 фотография") ###
+        await query.answer("Только 1 фотография")  ###
         return
 
     photo = (
@@ -160,7 +160,7 @@ async def girls_choice(query: CallbackQuery):
         "reply_markup": girls_choice_keyboard(worker.id),
     }
 
-    if query.message.photo: # without photo
+    if query.message.photo:  # without photo
         await query.message.delete()
         await query.message.answer(**payload)
     else:
@@ -177,7 +177,7 @@ async def girl_info(query: CallbackQuery):
         return
 
     girl_photo = girl.photos[0]
-    photo = InputFile(f"../Bot/{girl_photo.saved_path}")
+    photo = InputFile(f"../{girl_photo.saved_path}")
 
     await query.message.delete()  # !!!
     msg = await query.message.answer_photo(
