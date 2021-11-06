@@ -167,7 +167,7 @@ class PayChecker:
             if worker.username_hide
             else f"<a href='tg://user?id={worker.cid}'>{worker.name}</a>"
         )
-        workers_mention = f"@{worker.username}" if worker.username else mention
+        workers_mention = f"@{worker.username}" if (worker.username and not worker.username_hide) else mention
         outs_msg = await self.bot.send_photo(
             self.config.outs_chat,
             InputFile(rendered_profit_path),
