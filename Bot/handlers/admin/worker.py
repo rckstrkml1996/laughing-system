@@ -16,27 +16,29 @@ from data.texts import mention_text, set_new_worker_status, worker_choice_one_pl
 )
 async def worker_new_status(message: types.Message, worker: Worker, regexp_command):
     worker_naming = regexp_command.group(1)
-
     payload = {}
 
     if worker_naming.isdigit():
         if len(worker_naming) <= 6:
-            payload['id'] = int(worker_naming) # worker id
+            payload["id"] = int(worker_naming)  # worker id
         else:
-            payload['cid'] = int(worker_naming)
+            payload["cid"] = int(worker_naming)
     else:
-        payload['username'] = worker_naming.replace("@", "")
-    
+        payload["username"] = worker_naming.replace("@", "")
+
     try:
         diff_worker = Worker.get(**payload)
     except Worker.DoesNotExist:
         await message.answer("Такого воркера не существует!")
+        return
 
     if diff_worker == worker:
         await message.answer("Ты дурак? Себе самому статус менять??")
         return
 
-    logger.debug(f"Change Status: {message.text=} {diff_worker.id=} {diff_worker.status=}")
+    logger.debug(
+        f"Change Status: {message.text=} {diff_worker.id=} {diff_worker.status=}"
+    )
 
     await message.answer(
         worker_choice_one_plz.format(status_len=worker.status),
