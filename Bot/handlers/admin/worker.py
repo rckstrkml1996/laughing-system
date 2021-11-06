@@ -41,7 +41,10 @@ async def worker_new_status(message: types.Message, worker: Worker, regexp_comma
     )
 
     await message.answer(
-        worker_choice_one_plz.format(status_len=worker.status),
+        worker_choice_one_plz.format(
+            mention=mention_text.format(user_id=diff_worker.cid, text=diff_worker.name),
+            status_len=worker.status,
+        ),
         reply_markup=new_status_keyboard(status_names, diff_worker.id, worker.status),
     )
 
@@ -51,7 +54,7 @@ async def inv_worker_new_status(message: types.Message):
     await message.reply("/nstatus 123")
 
 
-@dp.callback_query_handler(regexp="w([0-9])+_([0-9])+", admins_chat=True, is_admin=True)
+@dp.callback_query_handler(regexp="w([0-9]+)_([0-9]+)", admins_chat=True, is_admin=True)
 async def worker_set_status(query: types.CallbackQuery, worker: Worker, regexp):
     diff_worker_id = int(regexp.group(1))  # worket that edit
     status_id = int(regexp.group(2))  # status id

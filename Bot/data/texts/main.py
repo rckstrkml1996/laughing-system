@@ -40,7 +40,7 @@ top_text = emojize(
 
 
 worker_choice_one_plz = emojize(
-    ":weary: Выбери один из <b>{status_len}</b> предложенных статусов!"
+    ":weary: Для {mention}, Выбери один из <b>{status_len}</b> предложенных статусов!"
 )
 
 set_new_worker_status = emojize(
