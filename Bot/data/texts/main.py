@@ -6,12 +6,14 @@ new_ref_text = emojize("Твой <b>новый реферал</b> - {mention}")
 startup_text = emojize("<b>Бот <i>запущен</i>!</b> :sparkle:")
 updated_startup_text = emojize("<b>Бот <i>запущен и обновился</i>!</b> :chart:")
 
-
 zap_text = emojize(":zap:")
 
-
 new_username_text = emojize(
-    "<a href='tg://user?id={chat_id}'>{name}</a> сменил свой ник с <b>@{old_username}</b> на <b>@{new_username}</b> :poop:"
+    "<a href='tg://user?id={user_id}'>{name}</a> сменил свой ник с <b>@{old_username}</b> на <b>@{new_username}</b> :poop:"
+)
+
+new_fullname_text = emojize(
+    "<a href='tg://user?id={user_id}'>{new_name}</a> сменил своё имя с <b>{old_name}</b> на <b>{new_name}</b> :poop:"
 )
 
 new_chat_member_text = emojize(

@@ -68,7 +68,6 @@ def casino_mamonths_keyboard(
         emojize(":arrows_counterclockwise:"), callback_data=f"casupdatemamonths_{page}"
     )
 
-    # 51 rows - 3 pages
     if rows_count > row_width:
         max_pages_count = int((rows_count + rows_count % row_width) / row_width)
         assert max_pages_count >= page and page > 0  # assertation epta
