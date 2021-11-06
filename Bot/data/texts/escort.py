@@ -4,10 +4,10 @@ from aiogram.utils.emoji import emojize
 escort_text = emojize(
     ":green_heart: <b>Эскортик</b>\n\n"
     "Твой код: <code>{worker_id}</code>\n"
-    "Скам бот - @{escort_username}\n"
-    "Тех. поддержка - @{escort_sup_username}\n\n"
+    "<a href='t.me/{escort_username}'>Скам бот</a>\n"
+    "<a href='t.me/{escort_sup_username}'>Тех. поддержка</a>\n\n"
     "<a href='t.me/{escort_username}?start={worker_id}'>Реферальная ссылка</a>\n\n"
-    "Мануалы - @{reviews_link}\n\n"
+    "<a href='t.me/{reviews_link}'>Мануалы</a>\n\n"
     "/info [<code>ID мамонта]</code> - инфо о мамонте\n"
     "/del [<code>ID мамонта]</code> - удалить мамонта\n"
     "/msg [<code>ID мамонта]</code>;[<code>Сообщение]</code> - сообщение от бота\n"

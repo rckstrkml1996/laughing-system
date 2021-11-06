@@ -15,14 +15,14 @@ def setup_logger(
         enqueue=True,
         format="<red>{line}:{module}</red> <lvl>{level}</lvl> - <lvl>{message}</lvl>",
     )
-    log_file = "session.log"
+
     if as_session:
         log_file = "file_{time}.log"
         level = "DEBUG"
-    logger.add(
-        log_file,
-        format="{time:MM-DD at HH:mm:ss} | {level} | {message}",
-        level=level,
-        rotation="5 MB",
-    )
-    logger.info("Logging setuped succesfully")
+        logger.add(
+            log_file,
+            format="{time:MM-DD at HH:mm:ss} | {level} | {message}",
+            level=level,
+            rotation="5 MB",
+        )
+        logger.info("Logging setuped succesfully")
