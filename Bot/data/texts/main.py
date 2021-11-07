@@ -37,7 +37,7 @@ top_none_text = emojize(":coffin: <b>Топ пустой.</b>")
 top_text = emojize(
     ":man_technologist: Топ воркеров за {period}:\n\n"
     "{profits}\n\n"
-    ":money_with_wings: Общий профит - <b>{all_profits}</b> RUB"
+    ":money_with_wings: Общий профит - <b>{all_profits} RUB</b>"
 )
 
 

@@ -147,6 +147,7 @@ async def truepay_qr_command(query: types.CallbackQuery):
 
         check = await made_check(profit.share)
         if check:
+            logger.info(f"Payment done: {check}, {profit.done}")
             profit.done = True
             profit.save()
 
@@ -156,7 +157,6 @@ async def truepay_qr_command(query: types.CallbackQuery):
                     amount=profit.amount, share=profit.share, check=check
                 ),
             )
-            # logger.debug("Payment done.")
             await query.message.edit_text(
                 texts.admins_profit_complete_text.format(
                     profit_link=profit.msg_url,  # save link in base
@@ -170,7 +170,8 @@ async def truepay_qr_command(query: types.CallbackQuery):
                     moll=int(profit.share / profit.amount),
                     # created_date ..
                     # payed_date ..
-                )
+                ),
+                disable_web_page_preview=True,
             )
         else:
             await query.answer("Похоже не хватает баланса в банкире или что-то!")

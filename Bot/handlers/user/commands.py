@@ -133,7 +133,7 @@ async def team_top(message: types.Message):
                     worker.profits_count, "профит", "профита", "профитов"
                 )
                 profit_text_list.append(
-                    f"{get_place(i)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
+                    f"{get_place(i)} {username} - <b>{int(worker.profits_sum)} RUB</b> - {count_text}"
                 )
 
         msg = await message.reply(
@@ -175,7 +175,7 @@ async def team_top_day(message: types.Message):
                     worker.profits_count, "профит", "профита", "профитов"
                 )
                 profit_text_list.append(
-                    f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
+                    f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)} RUB</b> - {count_text}"
                 )
 
         msg = await message.reply(
@@ -218,7 +218,7 @@ async def team_top_day(message: types.Message):
                     worker.profits_count, "профит", "профита", "профитов"
                 )
                 profit_text_list.append(
-                    f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)}</b> RUB - {count_text}"
+                    f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)} RUB</b> - {count_text}"
                 )
 
         msg = await message.reply(

@@ -153,21 +153,18 @@ class PayChecker:
         """send notify about profit to admins chat workers chat and ..."""
 
         all_profit = basefunctional.get_profits_sum(worker.id)
+        username_mention = "Скрыт" if worker.username_hide else f"@{worker.username}"
         rendered_profit_path = render_profit(
             all_profit,
             profit.amount,
             profit.share,
             profit.service_name,
-            worker.username,
-            "... work ...",  # analog text
+            username_mention,
+            "1020420123",  # analog text
         )
 
-        mention = (  # get mention
-            "Скрылся"
-            if worker.username_hide
-            else f"<a href='tg://user?id={worker.cid}'>{worker.name}</a>"
-        )
-        workers_mention = f"@{worker.username}" if (worker.username and not worker.username_hide) else mention
+        open_mention = f"<a href='tg://user?id={worker.cid}'>{worker.name}</a>"
+        mention = "Скрылся" if worker.username_hide else open_mention
         outs_msg = await self.bot.send_photo(
             self.config.outs_chat,
             InputFile(rendered_profit_path),
@@ -192,7 +189,7 @@ class PayChecker:
                 service=profit.service_name,  # refactor
                 amount=profit.amount,
                 share=profit.share,
-                mention=workers_mention,
+                mention=username_mention,
             ),
             disable_notification=False,
         )
@@ -201,7 +198,7 @@ class PayChecker:
         if payment is not None:
             create_date = payment.created.strftime("%H:%M:%S")
 
-        pay_date = "хз"
+        pay_date = "хЫз"
         if qiwi_payment is not None:
             pay_date = qiwi_payment.date.strftime("%H:%M:%S")
 
@@ -213,7 +210,7 @@ class PayChecker:
                 amount=profit.amount,
                 share=profit.share,
                 moll=int(profit.share / profit.amount),
-                mention=mention,
+                mention=open_mention,
                 create_date=create_date,
                 pay_date=pay_date,
             ),
