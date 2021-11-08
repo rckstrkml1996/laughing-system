@@ -153,7 +153,7 @@ class PayChecker:
         """send notify about profit to admins chat workers chat and ..."""
 
         all_profit = basefunctional.get_profits_sum(worker.id)
-        username_mention = "Скрыт" if worker.username_hide else f"@{worker.username}"
+        username_mention = "Скрыт" if worker.username_hide else f"@{worker.username}" if worker.username else worker.name
         rendered_profit_path = render_profit(
             all_profit,
             profit.amount,
