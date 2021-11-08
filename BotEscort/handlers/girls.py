@@ -6,6 +6,7 @@ from loguru import logger
 from qiwiapi import Qiwi
 from qiwiapi.exceptions import InvalidProxy
 from models import EscortUser, Worker
+from Package.build.lib.models.models import TradingUser
 from loader import dp, main_bot, config
 from data.texts import girls_choice_text, girl_text, girl_get_text, girl_payed_text
 from data.keyboards import (
@@ -152,7 +153,8 @@ async def girl_check(query: CallbackQuery):
 
 @dp.callback_query_handler(text="girls")
 async def girls_choice(query: CallbackQuery):
-    worker = Worker.get(cid=query.from_user.id)
+    worker = EscortUser.get(cid=query.from_user.id).owner
+
     payload = {
         "text": girls_choice_text.format(
             girls_count=basefunctional.get_escort_girl_count(worker.id)
