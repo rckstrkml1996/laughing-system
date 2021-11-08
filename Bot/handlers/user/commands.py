@@ -152,6 +152,7 @@ async def team_top(message: types.Message):
 
 
 @dp.message_handler(commands="topm", workers_chat=True)
+@dp.message_handler(commands="topm", admins_chat=True)
 async def team_top_day(message: types.Message):
     logger.debug(f"[{message.from_user.id}], wants /topm in chat.")
     query = basefunctional.get_topworkers_month(limit=10)  # limit = 15 autodelta
