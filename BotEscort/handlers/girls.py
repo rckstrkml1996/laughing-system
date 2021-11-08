@@ -5,8 +5,7 @@ from loguru import logger
 
 from qiwiapi import Qiwi
 from qiwiapi.exceptions import InvalidProxy
-from models import EscortUser, Worker
-from Package.build.lib.models.models import TradingUser
+from models import EscortUser
 from loader import dp, main_bot, config
 from data.texts import girls_choice_text, girl_text, girl_get_text, girl_payed_text
 from data.keyboards import (
