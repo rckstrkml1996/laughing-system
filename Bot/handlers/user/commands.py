@@ -194,6 +194,49 @@ async def team_top_day(message: types.Message):
     await msg.delete()
 
 
+@dp.message_handler(commands="topn", workers_chat=True)
+@dp.message_handler(commands="topn", admins_chat=True)
+async def team_top_day(message: types.Message):
+    logger.debug(f"[{message.from_user.id}], wants /topm in chat.")
+    query = basefunctional.get_topworkers_week(limit=10)  # limit = 15 autodelta
+    all_profits = basefunctional.get_profits_week()
+
+    if query.count() == 0:
+        msg = await message.reply(texts.top_none_text)
+    else:
+        profit_text_list = []
+
+        for i, worker in enumerate(query):
+            if worker.profits_count:
+                username = (
+                    "Скрыт"
+                    if worker.username_hide
+                    else f"@{worker.username}"
+                    if worker.username
+                    else "Без юзернейма"
+                )
+                count_text = get_correct_str(
+                    worker.profits_count, "профит", "профита", "профитов"
+                )
+                profit_text_list.append(
+                    f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)} RUB</b> - {count_text}"
+                )
+
+        msg = await message.reply(
+            texts.top_text.format(
+                period="неделю",
+                profits="\n".join(profit_text_list),
+                all_profits=all_profits,
+            ),
+            disable_notification=True,
+        )
+        logger.debug(f"User {message.from_user.id} /topm in chat succesfully.")
+
+    await sleep(22)
+    await message.delete()
+    await msg.delete()
+
+
 @dp.message_handler(commands="topd", workers_chat=True)
 @dp.message_handler(commands="topd", admins_chat=True)
 async def team_top_day(message: types.Message):

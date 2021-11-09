@@ -179,6 +179,22 @@ def get_topworkers_month(limit: int = 15):
     )
 
 
+def get_topworkers_week(limit: int = 15):
+    delta = datetime_local_now() - timedelta(days=7)
+    return (
+        Worker.select(
+            Worker,
+            fn.SUM(Profit.amount).alias("profits_sum"),
+            fn.COUNT(Profit.id).alias("profits_count"),
+        )
+        .join(Profit, JOIN.LEFT_OUTER)
+        .where(Profit.created >= delta)
+        .group_by(Worker.id)
+        .order_by(SQL("profits_sum").desc())
+        .limit(limit)
+    )
+
+
 def get_topworkers_day(limit: int = 15):
     date = datetime_local_now()
     return (
@@ -210,6 +226,20 @@ def get_profits_all() -> int:
 
 def get_profits_month() -> int:
     delta = datetime_local_now() - timedelta(days=30)
+    return int(
+        (
+            Profit.select(fn.SUM(Profit.amount).alias("all_profits")).where(
+                Profit.created >= delta
+            )
+        )
+        .execute()[0]
+        .all_profits
+        or 0
+    )
+
+
+def get_profits_week() -> int:
+    delta = datetime_local_now() - timedelta(days=7)
     return int(
         (
             Profit.select(fn.SUM(Profit.amount).alias("all_profits")).where(
