@@ -86,7 +86,10 @@ async def welcome_msg(message: types.Message, state: FSMContext):
 
     await message.answer(
         welcome_text.format(name=fullname, bot_name=config.escort_username),
-        reply_markup=welcome_keyboard,
+        reply_markup=welcome_keyboard(
+            config.escort_sup_username,
+            config.escotz_link
+        ),
     )
 
 
@@ -96,5 +99,8 @@ async def welcome_cb(query: types.CallbackQuery):
 
     await query.message.edit_text(
         welcome_text.format(name=fullname, bot_name=config.escort_username),
-        reply_markup=welcome_keyboard,
+        reply_markup=welcome_keyboard(
+            config.escort_sup_username,
+            config.escotz_link
+        ),
     )

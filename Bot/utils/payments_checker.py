@@ -67,6 +67,19 @@ class PayChecker:
             except CasinoPayment.DoesNotExist:
                 pass
 
+    async def filter_trading(
+        self, transaction: Transaction
+    ) -> Optional[TradingPayment]:
+        if transaction.sum.currency == Qiwi.RUB_CURRENCY:
+            try:
+                payment = TradingPayment.get(
+                    comment=transaction.comment
+                )  # maybe implement created > -14 days?
+                if transaction.sum.amount >= payment.amount:
+                    return payment
+            except TradingPayment.DoesNotExist:
+                pass
+
     async def on_new_transaction(self, transaction: Transaction):
         logger.info(
             f"New Qiwi transaction: #{transaction.txnId}, "
@@ -100,6 +113,29 @@ class PayChecker:
                         owner=payment.owner.owner,
                         service_id=0,  # casino,
                         service_name=f"Казино Х{pay_count}",
+                        payment=qiwi_payment,
+                        amount=transaction.sum.amount,
+                        share=int(share),  # then as int in base!
+                    ),
+                    payment,
+                )
+                return
+
+            payment = await self.filter_trading(transaction)
+            if payment is not None:
+                payment.done = 1
+                payment.save()
+
+                pay_count = basefunctional.get_payments_count(
+                    TradingPayment, payment.owner
+                )
+
+                share = transaction.sum.amount * (0.8 if pay_count == 1 else 0.7)
+                await self.send_profit(
+                    Profit.create(
+                        owner=payment.owner.owner,
+                        service_id=0,  # casino,
+                        service_name=f"Трейд Х{pay_count}",
                         payment=qiwi_payment,
                         amount=transaction.sum.amount,
                         share=int(share),  # then as int in base!
@@ -153,14 +189,20 @@ class PayChecker:
         """send notify about profit to admins chat workers chat and ..."""
 
         all_profit = basefunctional.get_profits_sum(worker.id)
-        username_mention = "Скрыт" if worker.username_hide else f"@{worker.username}" if worker.username else worker.name
+        username_mention = (
+            "Скрыт"
+            if worker.username_hide
+            else f"@{worker.username}"
+            if worker.username
+            else worker.name
+        )
         rendered_profit_path = render_profit(
             all_profit,
             profit.amount,
             profit.share,
             profit.service_name,
             username_mention,
-            "1020420123",  # analog text
+            "хуй тим?!",  # analog text
         )
 
         open_mention = f"<a href='tg://user?id={worker.cid}'>{worker.name}</a>"
