@@ -140,9 +140,8 @@ async def truepay_qr_command(query: types.CallbackQuery):
         worker = profit.owner
 
         if profit.done:
-            await query.answer("Уже выплачено!")
-            logger.debug("Payment already done.")
-            await query.message.delete()
+            await query.answer("Уже выплачено, зови кодера!")
+            logger.error("Payment already done.")
             return
 
         check = await made_check(profit.share)

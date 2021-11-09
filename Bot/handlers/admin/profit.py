@@ -54,5 +54,5 @@ async def make_profit_main(message: Message, state: FSMContext):
             except Exception as ex:
                 await message.answer(ex)
 
-    await message.reply("Неправильно заполнил данные!")
+    await message.reply("Неправильно заполнил данные! еще раз!")
     await message.answer(make_profit_text)

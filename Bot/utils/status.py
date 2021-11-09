@@ -10,7 +10,7 @@ class StatusNames(list):
         "Сапорт ТП",
         "Кодер",
         "ТС",
-        "Dungeon Master",
+        "Fucking Coder!",
     ]
 
     def __init__(self):

@@ -5,7 +5,7 @@ from .pin import dp
 from .alert import dp
 from .sysinfo import dp
 from .summary import dp
-from .btcauth import dp
+from .bankerpays import dp
 from .profit import dp
 from .statistic import dp
 from .command import dp
