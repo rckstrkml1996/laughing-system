@@ -427,5 +427,5 @@ async def graph_stake(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(regexp="остан", state=Game.graph_set_stop)
-async def graph_stop(_: types.Message):
+async def graph_stop():
     await Game.graph_stop.set()  # just set it stopped;

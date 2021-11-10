@@ -8,11 +8,14 @@ cancel_button = KeyboardButton(emojize("Назад"))
 cancel_keyboard.add(cancel_button)
 
 
-def pay_accept(pid):
+def pay_accept(pay_id: int) -> InlineKeyboardMarkup:
+    """pay_id - id of CasinoPayment in base"""
     markup = InlineKeyboardMarkup()
+
     markup.add(
         InlineKeyboardButton(
-            emojize("Принять :sparkle:"), callback_data=f"payaccept_{pid}"
+            emojize(":white_check_mark: Оплатить"), callback_data=f"casadd_{pay_id}"
         )
     )
+
     return markup

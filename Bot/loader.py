@@ -52,5 +52,5 @@ for val in alowed_values:
         MinDepositValues.append(val)
 
 
-# useless
+# using in handlers/bankerpays.py
 BTC_REGEX = r"BTC_CHANGE_BOT\?start=(c_[a-f0-9]{32})"

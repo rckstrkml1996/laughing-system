@@ -7,6 +7,7 @@ from betterconf.config import AbstractProvider, Field
 class JSONProvider(AbstractProvider):  # from abs class
     def __init__(self, config_path: str):
         self.config_path = config_path
+        self._settings = None
 
         self.update_settings()
 
@@ -117,6 +118,9 @@ class BotsConfig(Config):
     last_commit = myfield("last_commit")
     notify = myfield("notify", default=False)
     skip_updates = myfield("skip_updates", default=True)
+
+    casino_min_out = myfield("cas_min_out", default=1000)
+    trading_min_out = myfield("tdg_min_out", default=1000)
 
     def __getattribute__(self, name: str):
         field = getattr(BotsConfig, name, None)

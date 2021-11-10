@@ -30,7 +30,7 @@ media/
 .secrets.*
 # Ignore cfg files
 
-*.json
+settings.json
 *.txt
 
 *.session

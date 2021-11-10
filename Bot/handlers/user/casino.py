@@ -366,7 +366,7 @@ async def cas_alert_true(query: types.CallbackQuery, worker: Worker, state: FSMC
 
 
 @dp.callback_query_handler(
-    lambda cb: cb.data.split("_")[0] == "payaccept", is_worker=True, state="*"
+    lambda cb: cb.data.split("_")[0] == "casadd", is_worker=True, state="*"
 )
 async def accept_pay(query: types.CallbackQuery):
     pay_id = query.data.split("_")[1]

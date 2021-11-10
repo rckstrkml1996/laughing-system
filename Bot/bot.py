@@ -30,13 +30,13 @@ async def on_startup(dispatcher: Dispatcher):
     if config.notify:
         await on_startup_notify(dispatcher)
 
-    dispatcher.loop.create_task(
-        payments_checker.start()
-    )  # or may be from loader import loop??
-    dispatcher.loop.create_task(dynapinner.start())
+    # dispatcher.loop.create_task(
+    # payments_checker.start()
+    # )  # or may be from loader import loop??
+    # dispatcher.loop.create_task(dynapinner.start())
 
 
-async def on_shutdown(_: Dispatcher):
+async def on_shutdown(_):
     disconnect()
     exit_event.set()
 

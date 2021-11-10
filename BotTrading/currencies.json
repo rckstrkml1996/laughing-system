@@ -1,0 +1,75 @@
+{
+    "convertion": 71,
+    "currencies": [
+        {
+            "keyboard_name": "Bitcoin",
+            "name": "Bitcoin/USD",
+            "symbol": "BTC",
+            "description": "Some info about bitcoin currency",
+            "photo_path": null,
+            "file_path": null,
+            "price_usd": 64547.11,
+            "price": 4582844.97
+        },
+        {
+            "keyboard_name": "Ripple",
+            "name": "Ripple/USD",
+            "symbol": "XRP",
+            "description": "Some info about bitcoin currency",
+            "photo_path": null,
+            "file_path": null,
+            "price_usd": 1.19,
+            "price": 84.83
+        },
+        {
+            "keyboard_name": "DogeCoin",
+            "name": "Doge/USD",
+            "symbol": "Doge",
+            "description": "Some info about bitcoin currency",
+            "photo_path": null,
+            "file_path": null,
+            "price_usd": 0.25,
+            "price": 17.73
+        },
+        {
+            "keyboard_name": "Ethereum",
+            "name": "Ethereum/USD",
+            "symbol": "ETH",
+            "description": "Some info about bitcoin currency",
+            "photo_path": null,
+            "file_path": null,
+            "price_usd": 4586.77,
+            "price": 325660.76
+        },
+        {
+            "keyboard_name": "Binance Coin",
+            "name": "BinanceCoin/USD",
+            "symbol": "BNB",
+            "description": "Some info about bitcoin currency",
+            "photo_path": null,
+            "file_path": null,
+            "price_usd": 600.52,
+            "price": 42636.79
+        },
+        {
+            "keyboard_name": "Litecoin",
+            "name": "Litecoin/USD",
+            "symbol": "LTC",
+            "description": "Some info about bitcoin currency",
+            "photo_path": null,
+            "file_path": null,
+            "price_usd": 261.61,
+            "price": 18574.1
+        },
+        {
+            "keyboard_name": "Euro",
+            "name": "Euro/USD",
+            "symbol": "EUR",
+            "description": "Some info about bitcoin currency",
+            "photo_path": null,
+            "file_path": null,
+            "price_usd": 1.15,
+            "price": 81.49
+        }
+    ]
+}

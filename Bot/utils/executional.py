@@ -13,10 +13,40 @@ from data.texts import (
     escort_mamonth_info,
     me_text,
     casino_text,
+    trading_text,
     mention_text,
 )
 from data.keyboards import cas_info_keyboard, esc_info_keyboard
 from utils import basefunctional
+
+
+def get_trading_info(uniq_key) -> str:
+    pay_cards = "\n".join(
+        map(
+            lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>"
+            if c[0] == "r"
+            else f"&#127482;&#127462; <code>{c[1:]}</code>",
+            config.fake_cards,
+        )
+    )
+
+    pay_qiwis = "\n".join(
+        map(
+            lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>"
+            if c[0] == "r"
+            else f"&#127482;&#127462; <code>{c[1:]}</code>",
+            config.fake_numbers,
+        )
+    )
+
+    return trading_text.format(
+        reviews_link=config.reviews_link,
+        trading_username=config.casino_username,
+        trading_sup_username=config.casino_sup_username,
+        worker_id=uniq_key,
+        pay_cards=pay_cards,
+        pay_qiwis=pay_qiwis,
+    )
 
 
 def get_casino_info(uniq_key) -> str:
@@ -123,7 +153,7 @@ analogs = [
     "sudo systemctl restart mainbot",
     "Ацуруалафла-ляля",
     "Хайду 4 годика.",
-    "Tourlife - лох)",
+    "турик - лох)",
     "BTS - Top",
     "Матросс одобряет!",
     "Настя биз ещё жива?",

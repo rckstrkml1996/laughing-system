@@ -9,11 +9,11 @@ updated_startup_text = emojize("<b>Бот <i>запущен и обновилс�
 zap_text = emojize(":zap:")
 
 new_username_text = emojize(
-    "<a href='tg://user?id={user_id}'>{name}</a> сменил свой ник с <b>@{old_username}</b> на <b>@{new_username}</b> :poop:"
+    "<a href='tg://user?id={user_id}'>{name}</a> сменил свой ник с <b>@{old_username}</b> на <b>@{new_username}</b>"
 )
 
 new_fullname_text = emojize(
-    "<a href='tg://user?id={user_id}'>{new_name}</a> сменил своё имя с <b>{old_name}</b> на <b>{new_name}</b> :poop:"
+    "<a href='tg://user?id={user_id}'>{new_name}</a> сменил своё имя с <b>{old_name}</b> на <b>{new_name}</b>"
 )
 
 new_chat_member_text = emojize(

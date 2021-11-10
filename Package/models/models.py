@@ -40,6 +40,7 @@ class Worker(BaseModel):
     cock_size = IntegerField(null=True)
     warns = IntegerField(default=0)
     casino_min = IntegerField(default=config.min_deposit)
+    # trading_min = IntegerField(default=config.min_deposit)
     send_summary = BooleanField(default=False)
     summary_info = TextField(null=True)
 
@@ -180,8 +181,11 @@ class TradingUser(BaseModel):
     owner = ForeignKeyField(Worker, related_name="tdg_users")
     cid = IntegerField(unique=True)
     balance = IntegerField(default=0)
-    fullname = CharField(default="Без имени")
-    username = CharField(default="Юзернейм скрыт")
+    fullname = CharField()
+    username = CharField(null=True)
+    blocked = BooleanField(default=False)
+    fort_chance = IntegerField(default=100)
+    min_dep = IntegerField(default=config.min_deposit)
 
 
 class TradingPayment(BaseModel):
