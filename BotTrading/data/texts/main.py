@@ -74,7 +74,8 @@ rules = emojize(
 
 out_insert = emojize(
     ":white_check_mark: Минимальная сумма для вывода: <b>{min_amount} RUB</b>\n"
-    ":money_with_wings: Ваш баланс: <b>{amount} RUB</b>"
+    ":money_with_wings: Ваш баланс: <b>{amount} RUB</b>\n\n"
+    ":credit_card: Введите реквизиты для вывода"
 )
 
 out_insert_invalid = emojize(

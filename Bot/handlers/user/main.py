@@ -17,7 +17,6 @@ async def welcome(message: types.Message, state: FSMContext):
     if current_state is not None:
         logger.debug(f"Cancelling state {current_state} in bot start")
         await state.finish()
-
     try:
         worker = Worker.get(cid=message.chat.id)
         if worker.status == 0:  # если он без статуса
@@ -49,14 +48,12 @@ async def welcome(message: types.Message, state: FSMContext):
                 referal = Worker.get(cid=data[1])
             except Worker.DoesNotExist:
                 pass
-
         worker = basefunctional.create_worker(
             chat_id=message.chat.id,
             name=message.chat.full_name,
             username=message.chat.username,
             referal=referal,
         )
-
         if referal:
             await dp.bot.send_message(
                 referal.cid,
@@ -66,11 +63,10 @@ async def welcome(message: types.Message, state: FSMContext):
                     )
                 ),
             )
-
         await new_request(message)
 
 
-@dp.message_handler(is_worker=False)
+@dp.message_handler(is_worker=False, send_summary=False)
 async def new_worker(message: types.Message):
     try:
         worker = Worker.get(cid=message.chat.id)
@@ -78,5 +74,15 @@ async def new_worker(message: types.Message):
             await message.answer(
                 texts.summary_text, reply_markup=summary_start_keyboard
             )
+    except Worker.DoesNotExist:
+        await welcome(message, dp.current_state())  # new user to base
+
+
+@dp.message_handler(is_worker=False, send_summary=True)
+async def sended_summary_any(message: types.Message):
+    try:
+        worker = Worker.get(cid=message.chat.id)
+        if worker.status != 1:  # если не заблокирован
+            await message.answer(texts.summary_reviewing_text)
     except Worker.DoesNotExist:
         await welcome(message, dp.current_state())  # new user to base

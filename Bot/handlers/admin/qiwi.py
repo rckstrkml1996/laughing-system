@@ -27,9 +27,7 @@ from data.states import NewQiwi
 async def proxy_invalid(qiwi: Qiwi):
     tokens = list(config.qiwi_tokens)
     tokens.remove({"token": qiwi.token, "proxy_url": qiwi.proxy})
-
     config.qiwi_tokens = tokens  # .edit(name, value)
-
     await dp.bot.send_message(config.admins_chat, qiwi.token[:16])
 
 
@@ -46,24 +44,19 @@ async def qiwi_tokens_info(chat_id: int):
         all_amounts = 0
         account_texts = []
         qiwi_numbers = []
-
         for qiwi_obj in config.qiwi_tokens:  # {"token": ..., "proxy_url": ...}
             qiwi = Qiwi(**qiwi_obj, on_invalid_proxy=proxy_invalid)
-
             try:
                 accounts = await qiwi.get_accounts()
                 profile = await qiwi.get_profile()
             except InvalidProxy:
                 await dp.bot.send_message(chat_id, "ИнвалидПрокси")
                 return  # some logic
-
             currency = accounts[0].balance.currency
             amount = accounts[0].balance.amount
             number = profile.authInfo.personId
-
             if currency == qiwi.RUB_CURRENCY:
                 all_amounts += amount
-
             account_texts.append(
                 qiwi_account_text.format(
                     amount=amount,
@@ -72,9 +65,7 @@ async def qiwi_tokens_info(chat_id: int):
                 )
             )
             qiwi_numbers.append(number)
-
             logger.debug(f"Get info about qiwi: {number=}, {amount=}")
-
         await dp.bot.send_message(
             chat_id,
             qiwi_tokens_info_text.format(
@@ -103,14 +94,11 @@ async def qiwi_information(query: CallbackQuery):
     config_id = int(query.data.split("_")[1])
     qiwi_tokens = config.qiwi_tokens[config_id]
     qiwi = Qiwi(**qiwi_tokens)
-
     try:
         accounts = await qiwi.get_accounts()
         profile = await qiwi.get_profile()
         payments = await qiwi.get_payments(rows=10, operation=Qiwi.IN)
-
         datenow = normalized_local_now()
-
         total_payments = await qiwi.get_payments_total(
             datetime(datenow.year, datenow.month, datenow.day),
             datetime(datenow.year, datenow.month, datenow.day + 1),
@@ -118,12 +106,10 @@ async def qiwi_information(query: CallbackQuery):
     except InvalidProxy:
         await query.message.answer("Прокси Инвалиды!! кодер сука")
         return  # some logic
-
     currency = accounts[0].balance.currency
     amount = accounts[0].balance.amount
     number = profile.authInfo.personId
     level = profile.contractInfo.identificationInfo
-
     # payments daily incoming
     incoming = ""
     if total_payments.incomingTotal:
@@ -138,7 +124,6 @@ async def qiwi_information(query: CallbackQuery):
             f"-{total_payments.outgoingTotal[0].amount} "
             f"{Qiwi.get_currency(total_payments.outgoingTotal[0].currency)}"
         )
-
     qiwi_action_texts = []
     for transaction in payments.data:
         qiwi_action_texts.append(
@@ -148,7 +133,6 @@ async def qiwi_information(query: CallbackQuery):
                 comment=transaction.comment if transaction.comment else "Без коммента",
             )
         )
-
     await query.message.edit_text(
         qiwi_info_text.format(
             number=number,
@@ -186,20 +170,15 @@ async def qiwi_new(message: Message, state: FSMContext):
             payload = {"token": data[0], "proxy_url": data[1]}
         else:  # only token
             payload = {"token": data[0], "proxy_url": None}
-
         Qiwi.validate(**payload)
-
         if isinstance(config.qiwi_tokens, list):
             qiwi_tokens = [*config.qiwi_tokens, payload]
         else:
             qiwi_tokens = [payload]
-
         logger.info(f"Setting up {qiwi_tokens=} in BotsConfig")
         config.qiwi_tokens = qiwi_tokens
-
         await message.answer(valid_newqiwi_text)
         await qiwi_tokens_info(config.admins_chat)
-
         await state.finish()
     except ValueError:
         await message.answer(invalid_newqiwi_text)

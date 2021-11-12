@@ -62,5 +62,4 @@ async def alert_users(
         except Exception as ex:
             answer["internal_count"] += 1
             logger.exception(ex)
-
         yield answer

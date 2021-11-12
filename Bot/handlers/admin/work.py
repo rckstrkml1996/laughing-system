@@ -24,9 +24,7 @@ async def work_command(message: types.Message):
     casino_work = config.casino_work
     escort_work = config.escort_work
     trading_work = config.trading_work
-
     all_work = casino_work and escort_work and trading_work
-
     await message.answer(
         adm_work_command.format(
             services_status=emojize(
@@ -58,9 +56,7 @@ async def toggle_work_status(query: types.CallbackQuery):
     casino_work = config.casino_work  # return bool values
     escort_work = config.escort_work
     trading_work = config.trading_work
-
     all_work = casino_work and escort_work and trading_work
-
     if all_work:
         casino_work = False
         escort_work = False
@@ -71,11 +67,9 @@ async def toggle_work_status(query: types.CallbackQuery):
         escort_work = True
         trading_work = True
         all_work = True
-
     config.casino_work = casino_work
     config.escort_work = escort_work
     config.trading_work = trading_work
-
     text = adm_work_command.format(
         services_status=emojize(
             services_status.format(
@@ -94,7 +88,6 @@ async def toggle_work_status(query: types.CallbackQuery):
             )
         )
     )
-
     try:
         await query.message.edit_text(
             text,
@@ -120,11 +113,8 @@ async def toggle_work_status(query: types.CallbackQuery):
     casino_work = not config.casino_work  # return bool values
     escort_work = config.escort_work
     trading_work = config.trading_work
-
     config.casino_work = casino_work
-
     all_work = casino_work and escort_work and trading_work
-
     text = adm_work_command.format(
         services_status=emojize(
             services_status.format(
@@ -143,7 +133,6 @@ async def toggle_work_status(query: types.CallbackQuery):
             )
         )
     )
-
     try:
         await query.message.edit_text(
             text,

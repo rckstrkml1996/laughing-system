@@ -21,7 +21,6 @@ async def inline_echo(inline_query: InlineQuery):
     )
     if inline_query.query:
         finded = basefunctional.workers_by_username(inline_query.query)
-
         results = [
             about_worker_article(
                 art_id=token_hex(6),
@@ -37,7 +36,6 @@ async def inline_echo(inline_query: InlineQuery):
             )
             for worker in finded
         ]
-
         await inline_query.answer(results=results)
     else:
         bot_user = await dp.bot.get_me()
@@ -45,6 +43,5 @@ async def inline_echo(inline_query: InlineQuery):
             tagbot_article(token_hex(6), f"Подавай заявку в @{bot_user.username}"),
             services_status_article(token_hex(6), get_work_status()),
         ]
-
         await inline_query.answer(results=standart_items)
         # don't forget to set cache_time=1 for testing (default is 300s or 5m)

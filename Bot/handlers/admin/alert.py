@@ -59,7 +59,6 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
         text = data["text"]
     await state.finish()
-
     async for answer in alert_users(text, map(lambda usr: usr.cid, workers), dp.bot):
         await sleep(0.5)  # delay
         if answer["network_count"] > 0:
@@ -87,7 +86,6 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
                 )
             except Exception as ex:
                 logger.exception(ex)
-
     await query.message.reply("Рассылка завершилась.")
     logger.info("Admin alert workers finished")
 
@@ -129,7 +127,6 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
         text = data["text"]
     await state.finish()
-
     async for answer in alert_users(text, map(lambda usr: usr.cid, users), casino_bot):
         await sleep(0.3)  # delay
         if answer["network_count"] > 0:
@@ -157,7 +154,6 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
                 )
             except Exception as ex:
                 logger.exception(ex)
-
     await query.message.reply("Рассылка завершилась.")
     logger.info("Admin alert casino finished")
 
@@ -224,7 +220,6 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
     async with state.proxy() as data:
         text = data["text"]
     await state.finish()
-
     async for answer in alert_users(text, map(lambda usr: usr.cid, users), trading_bot):
         await sleep(0.3)  # delay
         if answer["network_count"] > 0:
@@ -252,7 +247,6 @@ async def alert_accepted(query: types.CallbackQuery, state: FSMContext):
                 )
             except Exception as ex:
                 logger.exception(ex)
-
     await query.message.reply("Рассылка завершилась.")
     logger.info("Admin alert trading finished")
 

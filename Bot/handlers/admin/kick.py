@@ -18,7 +18,6 @@ async def kick_all_users(message: types.Message):
     if not authed:
         await message.answer("keyerror")
         await bot_client.sign_in_bot(config.api_token)
-
     offset = 0
     kicked = 0
     workers_chat = config.workers_chat
@@ -26,7 +25,6 @@ async def kick_all_users(message: types.Message):
         members = await bot_client.get_chat_members(workers_chat, offset=offset)
         if not members:
             break
-
         for member in members:
             try:
                 if member.status == "member":
@@ -44,13 +42,10 @@ async def kick_all_users(message: types.Message):
                         )
                         if iffsa:
                             kicked += 1
-
                     await msg.edit_text(f"Исключил: {kicked}")
                     await sleep(0.6)
             except Exception as ex:
                 logger.exception(ex)
-
         offset += 1
         await sleep(0.1)
-
     await msg.reply("Закончил емае!")

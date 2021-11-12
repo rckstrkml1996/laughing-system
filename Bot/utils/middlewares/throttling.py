@@ -40,9 +40,7 @@ class ThrottlingMiddleware(BaseMiddleware):
         :param message:
         """
         handler = current_handler.get()
-
         dispatcher = Dispatcher.get_current()  # singletone
-
         if handler:
             limit = getattr(handler, "throttling_rate_limit", self.rate_limit)
             key = getattr(
@@ -51,12 +49,10 @@ class ThrottlingMiddleware(BaseMiddleware):
         else:
             limit = self.rate_limit
             key = f"{self.prefix}_message"
-
         try:
             await dispatcher.throttle(key, rate=limit)
         except Throttled as t:
             await self.message_throttled(message, t)
-
             raise CancelHandler()
 
     async def message_throttled(self, message: types.Message, throttled: Throttled):
@@ -73,18 +69,13 @@ class ThrottlingMiddleware(BaseMiddleware):
             )
         else:
             key = f"{self.prefix}_message"
-
         # Calculate how many time is left till the block ends
         delta = throttled.rate - throttled.delta
-
         # Prevent flooding
         if throttled.exceeded_count <= 3:
             await message.reply("<b>Пожалуйста не спамь!</b>")
-
         await asyncio.sleep(delta + 2)
-
         thr = await dispatcher.check_key(key)
-
         # If current message is not last with current key - do not send message
         # if thr.exceeded_count == throttled.exceeded_count:
         # await message.reply("<b>Разлокал.</b>")

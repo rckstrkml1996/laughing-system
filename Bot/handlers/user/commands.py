@@ -28,7 +28,6 @@ async def btc_price(message: types.Message):
         rub, usd = await rub_usd_btcticker()
     except AssertionError:
         rub, usd = "Неизвестно", "Хз скока"
-
     await message.reply(
         texts.btc_text.format(
             rub=rub,
@@ -48,7 +47,6 @@ async def clc_command(message: types.Message):
     # except Exception as ex:
     #     logger.error(ex)
     #     result = "хз"
-
     # await message.reply(result)
     # logger.debug(f"Chat [{message.from_user.id}, /clc {text} result: {result}]")
 
@@ -65,12 +63,11 @@ async def me_command(message: types.Message):
         await message.reply("Ты не Воркер!")
         logger.debug(f"Chat [{message.from_user.id}], /me and he does not worker")
 
-
 @dp.message_handler(commands=["card"], workers_chat=True)
 @dp.message_handler(
     regexp="(К|к)арта для прямых|(П|п)рямые переводы", workers_chat=True
 )
-async def somefuncnamehahahahahahaahaha(message: types.Message):
+async def qiwi_card_command(message: types.Message):
     await message.answer(config.qiwi_card)
 
 
@@ -114,12 +111,10 @@ async def team_top(message: types.Message):
     logger.debug(f"[{message.from_user.id}], wants /top in chat.")
     query = basefunctional.get_topworkers_all(limit=10)  # limit = 15
     all_profits = basefunctional.get_profits_all()
-
     if query.count() == 0:
         msg = await message.reply(texts.top_none_text)
     else:
         profit_text_list = []
-
         for i, worker in enumerate(query):
             if worker.profits_count:
                 username = (
@@ -135,7 +130,6 @@ async def team_top(message: types.Message):
                 profit_text_list.append(
                     f"{get_place(i)} {username} - <b>{int(worker.profits_sum)} RUB</b> - {count_text}"
                 )
-
         msg = await message.reply(
             texts.top_text.format(
                 period="всё время",
@@ -145,7 +139,6 @@ async def team_top(message: types.Message):
             disable_notification=True,
         )
         logger.debug(f"User {message.from_user.id} /top in chat succesfully.")
-
     await sleep(22)
     await message.delete()
     await msg.delete()
@@ -157,12 +150,10 @@ async def team_top_day(message: types.Message):
     logger.debug(f"[{message.from_user.id}], wants /topm in chat.")
     query = basefunctional.get_topworkers_month(limit=10)  # limit = 15 autodelta
     all_profits = basefunctional.get_profits_month()
-
     if query.count() == 0:
         msg = await message.reply(texts.top_none_text)
     else:
         profit_text_list = []
-
         for i, worker in enumerate(query):
             if worker.profits_count:
                 username = (
@@ -178,7 +169,6 @@ async def team_top_day(message: types.Message):
                 profit_text_list.append(
                     f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)} RUB</b> - {count_text}"
                 )
-
         msg = await message.reply(
             texts.top_text.format(
                 period="месяц",
@@ -188,7 +178,6 @@ async def team_top_day(message: types.Message):
             disable_notification=True,
         )
         logger.debug(f"User {message.from_user.id} /topm in chat succesfully.")
-
     await sleep(22)
     await message.delete()
     await msg.delete()
@@ -200,12 +189,10 @@ async def team_top_day(message: types.Message):
     logger.debug(f"[{message.from_user.id}], wants /topm in chat.")
     query = basefunctional.get_topworkers_week(limit=10)  # limit = 15 autodelta
     all_profits = basefunctional.get_profits_week()
-
     if query.count() == 0:
         msg = await message.reply(texts.top_none_text)
     else:
         profit_text_list = []
-
         for i, worker in enumerate(query):
             if worker.profits_count:
                 username = (
@@ -221,7 +208,6 @@ async def team_top_day(message: types.Message):
                 profit_text_list.append(
                     f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)} RUB</b> - {count_text}"
                 )
-
         msg = await message.reply(
             texts.top_text.format(
                 period="неделю",
@@ -231,7 +217,6 @@ async def team_top_day(message: types.Message):
             disable_notification=True,
         )
         logger.debug(f"User {message.from_user.id} /topm in chat succesfully.")
-
     await sleep(22)
     await message.delete()
     await msg.delete()
@@ -243,12 +228,10 @@ async def team_top_day(message: types.Message):
     logger.debug(f"[{message.from_user.id}], wants /topd in chat.")
     query = basefunctional.get_topworkers_day(limit=10)  # limit = 15
     all_profits = basefunctional.get_profits_day_amount()
-
     if query.count() == 0:
         msg = await message.reply(texts.top_none_text)
     else:
         profit_text_list = []
-
         for i, worker in enumerate(query):
             if worker.profits_count:
                 username = (
@@ -264,7 +247,6 @@ async def team_top_day(message: types.Message):
                 profit_text_list.append(
                     f"{get_place(i + 1)} {username} - <b>{int(worker.profits_sum)} RUB</b> - {count_text}"
                 )
-
         msg = await message.reply(
             texts.top_text.format(
                 period="день",
@@ -274,7 +256,6 @@ async def team_top_day(message: types.Message):
             disable_notification=True,
         )
         logger.debug(f"User {message.from_user.id} /topd in chat succesfully.")
-
     await sleep(22)
     await message.delete()
     await msg.delete()

@@ -23,15 +23,12 @@ async def casino_info(message: types.Message, worker: Worker, state: FSMContext)
     if current_state is not None:
         logger.debug(f"Cancelling state {current_state} in bot start")
         await state.finish()
-
     logger.debug(f"Worker [{message.chat.id}] want get casino info")
-
     await message.answer(
         get_casino_info(worker.uniq_key),
         reply_markup=casino_keyboard(worker.casino_min),
         disable_web_page_preview=True,
     )
-
     # await CasinoAlert.commands.set() # old deleted from states.py
     logger.debug(f"Worker [{message.chat.id}] get casino info succesfully")
 
@@ -60,7 +57,6 @@ async def cas_dep_amount(message: types.Message, state: FSMContext, worker: Work
     if amount >= config.min_deposit:
         worker.casino_min = amount
         worker.save()
-
         await message.answer(
             f"Теперь для всех твоих новых мамонтов сумма пополнения от <b>{amount} RUB</b>"
         )
@@ -86,7 +82,6 @@ async def casino_command(message: types.Message, worker: Worker, regexp_command)
             f"Mamonth [{mb_id}] that worker [{message.chat.id}] want see does not exist."
         )
         return
-
     if user.owner == worker:
         logger.debug(f"/c Worker [{message.chat.id}] get mamonth info.")
     elif user.status >= 4:  # if user support and upper
@@ -96,9 +91,7 @@ async def casino_command(message: types.Message, worker: Worker, regexp_command)
     else:
         logger.warning(f"/c Worker [{message.chat.id}] try get different mamonth!")
         return
-
     text, markup = get_casino_mamonth_info(user)
-
     await message.answer(
         text,
         reply_markup=markup,
@@ -117,15 +110,12 @@ async def update_mamonth_info(query: types.CallbackQuery, worker: Worker):
             f":update_info: Mamonth [{mb_id}] that worker [{query.from_user.id}] want see does not exist."
         )
         return
-
     if user.owner != worker:
         logger.warning(
             f":update_info: Worker [{query.from_user.id}] try get different mamonth!"
         )
         return
-
     text, markup = get_casino_mamonth_info(user)
-
     await query.message.edit_text(
         text,
         reply_markup=markup,
@@ -145,20 +135,16 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
         logger.debug(
             f"Mamonth [{mb_id}] that worker [{query.from_user.id}] want update fart does not exist."
         )
-
     if user.owner != worker:
         logger.warning(
             f":update_info: Worker [{query.from_user.id}] try get different mamonth!"
         )
         return
-
     user.fort_chance = int(  # update fort chance
         100 if user.fort_chance == 0 else 50 if user.fort_chance == 100 else 0
     )
     user.save()
-
     text, markup = get_casino_mamonth_info(user)
-
     await query.message.edit_text(
         text,
         reply_markup=markup,
@@ -178,26 +164,20 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
         logger.debug(
             f"Mamonth [{mb_id}] that worker [{query.from_user.id}] want update fart does not exist."
         )
-
     if user.owner != worker:
         logger.warning(
             f":update_info: Worker [{query.from_user.id}] try get different mamonth!"
         )
         return
-
     try:
         index = MinDepositValues.index(user.min_deposit) + 1
     except ValueError:
         index = 0
-
     if index > len(MinDepositValues) - 1:
         index = 0
-
     user.min_deposit = MinDepositValues[index]
     user.save()
-
     text, markup = get_casino_mamonth_info(user)
-
     await query.message.edit_text(
         text,
         reply_markup=markup,
@@ -217,18 +197,14 @@ async def update_mamonth_fart(query: types.CallbackQuery, worker: Worker):
         logger.debug(
             f"Mamonth [{mb_id}] that worker [{query.from_user.id}] want updatestopped does not exist."
         )
-
     if user.owner != worker:
         logger.warning(
             f":updatestopped: Worker [{query.from_user.id}] try get different mamonth!"
         )
         return
-
     user.stopped = not user.stopped
     user.save()
-
     text, markup = get_casino_mamonth_info(user)
-
     await query.message.edit_text(
         text,
         reply_markup=markup,
@@ -255,9 +231,7 @@ def format_mamont(user: CasinoUser) -> str:
 async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
     q_page = int(query.data.split("_")[1])  # raise if shit
     page = q_page if q_page != 0 else 1
-
     row_width = 20
-
     # worker = Worker.get(cid=query.from_user.id)
     mamonths_count = worker.cas_users.count()
     localnow = datetime_local_now()
@@ -270,14 +244,12 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
         if not mamonths:
             await query.message.answer(texts.no_mamonths_text)
             return  # logg plz
-
         mamonths_text = "\n".join(
             map(
                 format_mamont,
                 mamonths,
             )
         )
-
         data = {
             "text": texts.all_cas_mamonths_text.format(
                 mamonths_plur=get_correct_str(
@@ -290,14 +262,12 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
                 mamonths_count, page=page, row_width=row_width
             ),
         }
-
         if q_page == 0:
             await query.message.answer(**data)
             await sleep(0.25)
             await query.answer("Лови!")
         else:
             await query.message.edit_text(**data)
-
         logger.debug("Got mamonths list.")
 
 
@@ -331,7 +301,6 @@ async def cas_alert_true(query: types.CallbackQuery, worker: Worker, state: FSMC
     async with state.proxy() as data:
         text = data["text"]
     await state.finish()
-
     msg_len = worker.cas_users.count()
     async for answer in alert_users(
         text, map(lambda usr: usr.cid, worker.cas_users), casino_bot
@@ -360,7 +329,6 @@ async def cas_alert_true(query: types.CallbackQuery, worker: Worker, state: FSMC
                 )
             except Exception as ex:
                 logger.exception(ex)
-
     await query.message.reply("Рассылка завершилась.")
     logger.debug("Alert done.")
 
@@ -374,9 +342,7 @@ async def accept_pay(query: types.CallbackQuery):
         pay = CasinoPayment.get(id=pay_id)
         check_time = config.qiwi_check_time * 2  # - 3 just for somethink)
         exact_time = (datetime_local_now() - pay.created).seconds
-
         logger.debug(f"{check_time=} (qiwi_check_time * 2), {exact_time=}")
-
         if pay.done == 1:
             await query.message.edit_text("Мамонт уже оплатил заявку!")
             return
@@ -389,7 +355,6 @@ async def accept_pay(query: types.CallbackQuery):
         else:
             await query.answer(f"Зови кодера)")
             return
-
         await query.message.edit_text(
             query.message.parse_entities() + "\n\nВы приняли заявку"
         )
@@ -405,18 +370,14 @@ async def minimal_deposit_casino(query: types.CallbackQuery, worker: Worker):
         index = MinDepositValues.index(worker.casino_min) + 1
     except ValueError:
         index = 0
-
     if index > len(MinDepositValues) - 1:
         index = 0
-
     worker.casino_min = MinDepositValues[index]
     worker.save()
-
     await query.message.edit_text(
         get_casino_info(worker.uniq_key),
         reply_markup=casino_keyboard(worker.casino_min),
         disable_web_page_preview=True,
     )
     logger.debug(f"Worker [{worker.cid}] update min casino deposit succesfully")
-
     await query.answer("Изменил!")

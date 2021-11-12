@@ -52,7 +52,6 @@ class UpdateWorkerMiddleware(BaseMiddleware):
                         )
                     )
                 worker.name = message.from_user.full_name
-
             if message.from_user.username != worker.username:
                 if message.chat.id == self.workers_chat:
                     await message.reply(
@@ -64,7 +63,6 @@ class UpdateWorkerMiddleware(BaseMiddleware):
                         )
                     )
                 worker.username = message.from_user.username
-
             worker.save()
         except Worker.DoesNotExist:
             pass

@@ -14,7 +14,6 @@ async def cancel(query: types.CallbackQuery, state: FSMContext):
     current_state = await state.get_state()
     if current_state is None:
         return
-
     logger.debug(f"Cancelling state {current_state} in admins chat")
     await state.finish()
 
@@ -25,7 +24,6 @@ async def help_command(message: types.Message, state: FSMContext):
     if current_state is not None:
         logger.debug(f"Cancelling state {current_state} in admins chat")
         await state.finish()
-
     await message.answer(texts.admins_help_text)
 
 

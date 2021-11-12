@@ -25,5 +25,4 @@ async def new_card(message: types.Message, state: FSMContext):
             await message.answer(outgoing_card_text.format(card=message.text))
     except Exception as ex:
         await message.answer(str(ex))
-
     await state.finish()

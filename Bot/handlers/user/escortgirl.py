@@ -38,7 +38,6 @@ async def send_girl_anket(girl: EscortGirl, message: types.Message):
         about=girl.about,
         services=girl.services,
     )
-
     await message.answer_photo(
         InputFile(girl.photos[0].saved_path),
         caption=caption,
@@ -52,7 +51,6 @@ async def form_escort(query: types.CallbackQuery, worker: Worker):
         girl = EscortGirl.get(owner=worker)
     except EscortGirl.DoesNotExist:
         return
-
     if girl:
         await send_girl_anket(girl, query.message)
         await query.answer("Вот твоя анкета!")
@@ -67,11 +65,9 @@ async def delete_form_escort(query: types.CallbackQuery, worker: Worker):
     except EscortGirl.DoesNotExist:
         await query.answer("НЕИЗВЕСТНАЯ ОШИБКА ПИШИ КОДЕРУ!")
         return
-
     await query.answer("Удаляю..")
     EscortGirlPhoto.delete().where(EscortGirlPhoto.owner == girl).execute()
     girl.delete_instance()
-
     await query.message.edit_caption(query.message.caption, reply_markup=None)
 
 
@@ -82,20 +78,10 @@ async def admin_create_escort_form(message: types.Message, worker: Worker):
         await EscortNewForm.name.set()
 
 
-@dp.callback_query_handler(text="create_form_esc", state="*", is_worker=True)
-async def create_form_escort(query: types.CallbackQuery, worker: Worker):
-    if worker.escort_girls.count() == 0:
-        await query.message.answer(esc_create_name_text)
-        await EscortNewForm.name.set()
-    else:
-        await query.answer("Кодеру напиши пж!")
-
-
 @dp.message_handler(state=EscortNewForm.name)
 async def create_form_escort_name(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["name"] = quote_html(message.text)
-
     await EscortNewForm.next()
     await message.reply(esc_create_about_text)
 
@@ -104,7 +90,6 @@ async def create_form_escort_name(message: types.Message, state: FSMContext):
 async def create_form_escort_about(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["about"] = quote_html(message.text)
-
     await EscortNewForm.next()
     await message.reply(esc_create_services_text)
 
@@ -113,7 +98,6 @@ async def create_form_escort_about(message: types.Message, state: FSMContext):
 async def create_form_escort_services(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["services"] = quote_html(message.text)
-
     await EscortNewForm.next()
     await message.reply(esc_create_age_text)
 
@@ -127,7 +111,6 @@ async def inv_create_form_escort_age(message: types.Message):
 async def create_form_escort_age(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["age"] = int(message.text)
-
     await EscortNewForm.next()
     await message.reply(esc_create_price_text)
 
@@ -141,7 +124,6 @@ async def inv_create_form_escort_price(message: types.Message):
 async def create_form_escort_price(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["price"] = int(message.text)
-
     await EscortNewForm.next()
     await message.reply(esc_create_photo_text)
 
@@ -157,9 +139,7 @@ async def inv_create_form_escort_photo(
 ):
     photo_path = f"../media/esc{token_hex(6)}.jpg"
     await message.photo[-1].download(destination_file=photo_path)
-
     # await message.answer_photo(InputFile(photo_path))
-
     async with state.proxy() as data:
         girl = EscortGirl.create(  # ADD owner!!
             owner=worker,
@@ -171,9 +151,7 @@ async def inv_create_form_escort_photo(
             for_all=worker.status == 7,  # DungeonMaster
         )
         data["girl_id"] = girl.id
-
         EscortGirlPhoto.create(owner=girl, saved_path=photo_path, file_id=None)
-
     await EscortNewForm.next()
     await message.reply(esc_create_photos_text, reply_markup=esc_create_girl_keyboard)
 
@@ -181,14 +159,12 @@ async def inv_create_form_escort_photo(
 @dp.message_handler(state=EscortNewForm.photos)
 async def inv_create_form_escort_photo(message: types.Message, state: FSMContext):
     await message.reply(zap_text, reply_markup=menu_keyboard)
-
     async with state.proxy() as data:
         try:
             girl = EscortGirl.get(id=data["girl_id"])
             await send_girl_anket(girl, message)
         except EscortGirl.DoesNotExist:
             await message.answer("НЕИЗВЕСТНАЯ ОШИБКА ПИШИ КОДЕРУ!")
-
     await state.finish()
 
 
@@ -196,12 +172,9 @@ async def inv_create_form_escort_photo(message: types.Message, state: FSMContext
 async def inv_create_form_escort_photo(message: types.Message, state: FSMContext):
     photo_path = f"../media/esc{token_hex(6)}.jpg"
     await message.photo[-1].download(destination_file=photo_path)
-
     async with state.proxy() as data:
         girl = EscortGirl.get(id=data["girl_id"])
-
     EscortGirlPhoto.create(owner=girl, saved_path=photo_path, file_id=None)
-
     await message.reply(esc_create_photos_text, reply_markup=esc_create_girl_keyboard)
 
 

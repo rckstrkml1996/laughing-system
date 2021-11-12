@@ -11,3 +11,8 @@ class Add(StatesGroup):
 
 class Out(StatesGroup):
     main = State()
+
+
+class Bet(StatesGroup):
+    amount = State()
+    time = State()

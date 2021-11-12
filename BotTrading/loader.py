@@ -10,7 +10,7 @@ from utils.currencies.main import CurrencyWorker
 
 config = BotsConfig()
 
-currency_worker = CurrencyWorker()
+currency_worker = CurrencyWorker("791fdf77-aeae-4a9c-a270-b6f5f29c7b88")
 
 loop = asyncio.get_event_loop()
 

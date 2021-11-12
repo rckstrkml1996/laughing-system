@@ -15,6 +15,7 @@ class Api:
     def __init__(
         self,
         token: str,
+        wallet: str = None,
         proxy_url: str = None,
         check_proxy: bool = False,
         on_invalid_proxy: callable = None,
@@ -27,6 +28,7 @@ class Api:
         """
 
         self.token = token
+        self.wallet = wallet
         self.proxy = proxy_url  # only http or https proxy.
         self.validate_proxy = check_proxy
         self.on_invalid_proxy = on_invalid_proxy
@@ -86,10 +88,11 @@ class Api:
 
                 raise InvalidProxy(f"'{self.proxy}' is invalid!")
 
-        profile = await self.get_profile()
+        if self.wallet is None:
+            profile = await self.get_profile()
+            self.wallet = profile.contractInfo.contractId
 
-        wallet = profile.contractInfo.contractId
-        url = f"https://edge.qiwi.com/funding-sources/v2/persons/{wallet}/accounts"
+        url = f"https://edge.qiwi.com/funding-sources/v2/persons/{self.wallet}/accounts"
 
         response = await self.session.get(url, proxy=self.proxy, ssl=False)
         if response.status == 401:
@@ -105,10 +108,11 @@ class Api:
         return Accounts(**json).accounts
 
     async def get_payments(self, rows: int = 50, operation: str = "ALL") -> Payments:
-        profile = await self.get_new_profile()
+        if self.wallet is None:
+            profile = await self.get_profile()
+            self.wallet = profile.contractInfo.contractId
 
-        wallet = profile.contractInfo.contractId
-        url = f"https://edge.qiwi.com/payment-history/v2/persons/{wallet}/payments"
+        url = f"https://edge.qiwi.com/payment-history/v2/persons/{self.wallet}/payments"
 
         response = await self.session.get(
             url,
@@ -150,11 +154,10 @@ class Api:
         else:
             end_date = endDate
 
-        profile = await self.get_profile()
-        wallet = profile.contractInfo.contractId
-        url = (
-            f"https://edge.qiwi.com/payment-history/v2/persons/{wallet}/payments/total"
-        )
+        if self.wallet is None:
+            profile = await self.get_profile()
+            self.wallet = profile.contractInfo.contractId
+        url = f"https://edge.qiwi.com/payment-history/v2/persons/{self.wallet}/payments/total"
 
         params = {
             "startDate": start_date,

@@ -44,7 +44,6 @@ class AdminsChatFilter(BoundFilter):
     async def check(self, obj):
         if self.admins_chat == "*":
             return True
-
         chat = self.get_target(obj)
         if chat.id == config.admins_chat:
             return self.admins_chat
@@ -67,7 +66,6 @@ class WorkersChatFilter(BoundFilter):
     async def check(self, obj):
         if self.workers_chat == "*":
             return True
-
         chat = self.get_target(obj)
         if chat.id == config.workers_chat:
             return self.workers_chat
@@ -86,10 +84,8 @@ class FullRegexpCommandsFilter(BoundFilter):
     async def check(self, message: Message):
         if not message.is_command():
             return False
-
         for command in self.regexp_commands:
             match = command.match(message.text[1:])
             if match:
                 return {"full_regexp": match}
-
         return False

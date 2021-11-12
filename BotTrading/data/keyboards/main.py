@@ -83,3 +83,26 @@ def invest_keyboard(currency_names: list) -> InlineKeyboardMarkup:
         markup.add(InlineKeyboardButton(name, callback_data=f"curr_{c_id}"))
 
     return markup
+
+
+def bet_keyboard(currency_id: int) -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup(row_width=1)
+
+    bet_up_btn = InlineKeyboardButton(
+        emojize("Повышение :arrow_up_small:"), callback_data=f"bet_{currency_id}_up"
+    )
+    bet_down_btn = InlineKeyboardButton(
+        emojize("Понижение :arrow_down_small:"), callback_data=f"bet_{currency_id}_down"
+    )
+
+    markup.add(bet_up_btn, bet_down_btn)
+
+    return markup
+
+
+choice_fix_keyboard = InlineKeyboardMarkup(row_width=1)
+half_min_btn = InlineKeyboardButton("30 Секунд", callback_data="tchoice_30")
+min_btn = InlineKeyboardButton("1 Минута", callback_data="tchoice_60")
+two_min_btn = InlineKeyboardButton("2 Минуты", callback_data="tchoice_120")
+three_min_btn = InlineKeyboardButton("3 Минуты", callback_data="tchoice_180")
+choice_fix_keyboard.add(half_min_btn, min_btn, two_min_btn, three_min_btn)

@@ -13,7 +13,6 @@ from utils.executional import get_casino_mamonth_info
 from utils.filters import ServiceCommandsFilter
 
 
-# only info
 @dp.message_handler(  # ru and en
     ServiceCommandsFilter(
         command_names=["info", "information"],
@@ -27,7 +26,6 @@ async def info_command(message: types.Message, regexp_command):
         worker = Worker.get(cid=message.chat.id)
     except Worker.DoesNotExist:
         return
-
     id_info = regexp_command.group(1)
     if id_info.isdigit():
         pass  # than telegram id
@@ -40,7 +38,6 @@ async def info_command(message: types.Message, regexp_command):
                         f"/info Worker: {message.chat.id} try get different mamonth!"
                     )
                     return
-
                 text, markup = get_casino_mamonth_info(user)
                 await message.answer(text, reply_markup=markup)
             except CasinoUser.DoesNotExist:
@@ -66,13 +63,11 @@ async def change_balance_command(message: types.Message, regexp_command):
     except Worker.DoesNotExist:
         await message.answer("Мамонт не найден.")
         return
-
     amount = regexp_command.group(2)
     if not amount.isdigit():
         await message.answer("Значение для баланса должно быть числом.")
         return  # logg
     # amount = int(amount) # for peewee does not matter str or int
-
     id_info = regexp_command.group(1)
     if id_info.isdigit():
         pass  # than telegram id
@@ -85,7 +80,6 @@ async def change_balance_command(message: types.Message, regexp_command):
                         f"/bal Worker: {message.chat.id} try get different mamonth!"
                     )
                     return
-
                 user.balance = amount
                 user.save()
                 await message.answer(
@@ -111,7 +105,6 @@ async def fart_command(message: types.Message, regexp_command):
     except Worker.DoesNotExist:
         await message.answer("Мамонт не найден.")
         return
-
     id_info = regexp_command.group(1)
     if id_info.isdigit():
         pass  # than telegram id
@@ -124,7 +117,6 @@ async def fart_command(message: types.Message, regexp_command):
                         f"/bal Worker: {message.chat.id} try get different mamonth!"
                     )
                     return
-
                 user.fort_chance = (
                     100
                     if user.fort_chance == 0
@@ -133,7 +125,6 @@ async def fart_command(message: types.Message, regexp_command):
                     else 0
                 )
                 user.save()
-
                 if user.fort_chance == 0:
                     await message.answer(
                         fart_off_text.format(
@@ -172,7 +163,6 @@ async def delete_command(message: types.Message, regexp_command):
     except Worker.DoesNotExist:
         await message.answer("Мамонт не найден.")
         return
-
     id_info = regexp_command.group(1)
     if id_info.isdigit():
         pass  # than telegram id
@@ -185,7 +175,6 @@ async def delete_command(message: types.Message, regexp_command):
                         f"/bal Worker: {message.chat.id} try get different mamonth!"
                     )
                     return
-
                 logger.debug(f"Deleting Casino UserId {user.id} CasinoHistory")
                 CasinoUserHistory.delete().where(
                     CasinoUserHistory.owner == user
@@ -219,7 +208,6 @@ async def message_command(message: types.Message, regexp_command):
     except Worker.DoesNotExist:
         await message.answer("Мамонт не найден.")
         return
-
     id_info = regexp_command.group(1)
     text = regexp_command.group(2)
     if id_info.isdigit():
@@ -233,7 +221,6 @@ async def message_command(message: types.Message, regexp_command):
                         f"/msg Worker: {message.chat.id} try get different mamonth!"
                     )
                     return
-
                 try:
                     await casino_bot.send_message(user.cid, text)
                     await message.answer(

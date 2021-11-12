@@ -1,7 +1,3 @@
-from .profile import dp  # portfile
-from .invest import dp
-from .reinforcement import dp  # under .main
-from .registration import dp
-from .any import dp
+from .register import register_handlers
 
-__all__ = ("dp",)
+__all__ = ("register_handlers",)

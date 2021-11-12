@@ -26,7 +26,6 @@ class ServiceCommandsFilter(RegexpCommandsFilter):
             cm_services += "[\;\:](\d+)"
         elif with_text:
             cm_services += "[\;\:](.+)"
-
         super().__init__(
             regexp_commands=list(map(lambda cn: f"{cn} {cm_services}", command_names))
         )

@@ -9,16 +9,17 @@ from models import Worker
 
 
 @dp.callback_query_handler(
-    lambda cb: cb.data.split("_")[0] == "reject", admins_chat=True, state="*"
+    lambda cb: cb.data.split("_")[0] == "reject",
+    admins_chat=True,
+    state="*",
+    is_support=True,
 )
 async def summary_reject(query: types.CallbackQuery):
     try:
         worker = Worker.get(cid=query.data.split("_")[1])
         worker.send_summary = False  # can send new summary
         worker.save()
-
         username = f"@{worker.username} " if worker.username else " "
-
         await query.message.edit_text(
             texts.summary_check_text("Отклонён").format(
                 name=worker.name,
@@ -28,7 +29,6 @@ async def summary_reject(query: types.CallbackQuery):
                 experience=worker.summary_info.split(";")[1],
             )
         )
-
         await query.answer("Отклонён!")
         await dp.bot.send_message(
             worker.cid,
@@ -41,16 +41,18 @@ async def summary_reject(query: types.CallbackQuery):
 
 
 @dp.callback_query_handler(
-    lambda cb: cb.data.split("_")[0] == "accept", admins_chat=True, state="*"
+    lambda cb: cb.data.split("_")[0] == "accept",
+    admins_chat=True,
+    state="*",
+    is_support=True,
 )
 async def summary_accepted(query: types.CallbackQuery):
     try:
         worker = Worker.get(cid=query.data.split("_")[1])
         worker.status = 2  # status - worker
+        worker.warns = 0
         worker.save()
-
         username = f"@{worker.username} " if worker.username else " "
-
         await query.message.edit_text(
             texts.summary_check_text("Принят").format(
                 name=worker.name,
@@ -60,14 +62,11 @@ async def summary_accepted(query: types.CallbackQuery):
                 experience=worker.summary_info.split(";")[1],
             )
         )
-
         await query.answer("Принят!")
-
         try:
             await dp.bot.unban_chat_member(config.workers_chat, worker.cid)
         except Exception as ex:
             logger.warning(ex)
-
         await dp.bot.send_message(
             worker.cid,
             texts.summary_accepted_text,
@@ -87,24 +86,23 @@ async def summary_accepted(query: types.CallbackQuery):
             "Можешь воспользоваться клавиатурой!",
             reply_markup=menu_keyboard,
         )
-
         logger.info(f"[{query.message.chat.id}] - summary accepted")
-
     except Worker.DoesNotExist:
         logger.warning(f"{query.message.chat.id} - doen't exist")
 
 
 @dp.callback_query_handler(
-    lambda cb: cb.data.split("_")[0] == "block", admins_chat=True, state="*"
+    lambda cb: cb.data.split("_")[0] == "block",
+    admins_chat=True,
+    state="*",
+    is_admin=True,
 )
 async def summary_accepted(query: types.CallbackQuery):
     try:
         worker = Worker.get(cid=query.data.split("_")[1])
         worker.status = 1  # status - blocked
         worker.save()
-
         username = f"@{worker.username} " if worker.username else " "
-
         await query.message.edit_text(
             texts.summary_check_text("Заблокирован").format(
                 name=worker.name,
@@ -114,7 +112,6 @@ async def summary_accepted(query: types.CallbackQuery):
                 experience=worker.summary_info.split(";")[1],
             )
         )
-
         await query.answer("Заблокирован!")
         await dp.bot.send_message(
             worker.cid,

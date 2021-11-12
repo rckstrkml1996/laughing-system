@@ -5,11 +5,11 @@
             "keyboard_name": "Bitcoin",
             "name": "Bitcoin/USD",
             "symbol": "BTC",
-            "description": "Some info about bitcoin currency",
+            "description": "\u0420\u2018\u0420\u0451\u0421\u201a\u0420\u0454\u0420\u0455\u0420\u0451\u0420\u0405 \u0420\u0455\u0420\u00b1\u0420\u00bb\u0420\u00b0\u0420\u0491\u0420\u00b0\u0420\u00b5\u0421\u201a \u0420\u0406\u0421\u2039\u0421\u0403\u0420\u0455\u0420\u0454\u0420\u0455\u0420\u2116 \u0420\u0406\u0420\u0455\u0420\u00bb\u0420\u00b0\u0421\u201a\u0420\u0451\u0420\u00bb\u0421\u040a\u0420\u0405\u0420\u0455\u0421\u0403\u0421\u201a\u0421\u040a\u0421\u040b \u0420\u0451\u0420\u00b7\u0420\u0458\u0420\u00b5\u0420\u0405\u0420\u00b5\u0420\u0405\u0420\u0451\u0421\u040f \u0420\u0454\u0421\u0453\u0421\u0402\u0421\u0403\u0420\u00b0 \u0420\u0457\u0420\u0455 \u0420\u0455\u0421\u201a\u0420\u0405\u0420\u0455\u0421\u20ac\u0420\u00b5\u0420\u0405\u0420\u0451\u0421\u040b \u0420\u0454 \u0420\u0491\u0420\u0455\u0420\u00bb\u0420\u00bb\u0420\u00b0\u0421\u0402\u0421\u0453 \u0420\u040e\u0420\u0401\u0420\u0452 \u0420\u0451 \u0420\u0491\u0421\u0402\u0421\u0453\u0420\u0456\u0420\u0451\u0420\u0458 \u0420\u0406\u0420\u00b0\u0420\u00bb\u0421\u040b\u0421\u201a\u0420\u00b0\u0420\u0458.",
             "photo_path": null,
             "file_path": null,
-            "price_usd": 64547.11,
-            "price": 4582844.97
+            "price_usd": 64772,
+            "price": 4598812
         },
         {
             "keyboard_name": "Ripple",
@@ -18,8 +18,8 @@
             "description": "Some info about bitcoin currency",
             "photo_path": null,
             "file_path": null,
-            "price_usd": 1.19,
-            "price": 84.83
+            "price_usd": 1.21,
+            "price": 85.7
         },
         {
             "keyboard_name": "DogeCoin",
@@ -28,8 +28,8 @@
             "description": "Some info about bitcoin currency",
             "photo_path": null,
             "file_path": null,
-            "price_usd": 0.25,
-            "price": 17.73
+            "price_usd": 0.26,
+            "price": 18.67
         },
         {
             "keyboard_name": "Ethereum",
@@ -38,8 +38,8 @@
             "description": "Some info about bitcoin currency",
             "photo_path": null,
             "file_path": null,
-            "price_usd": 4586.77,
-            "price": 325660.76
+            "price_usd": 4753.0,
+            "price": 337462.9
         },
         {
             "keyboard_name": "Binance Coin",
@@ -48,8 +48,8 @@
             "description": "Some info about bitcoin currency",
             "photo_path": null,
             "file_path": null,
-            "price_usd": 600.52,
-            "price": 42636.79
+            "price_usd": 627.4,
+            "price": 44545.56
         },
         {
             "keyboard_name": "Litecoin",
@@ -58,8 +58,8 @@
             "description": "Some info about bitcoin currency",
             "photo_path": null,
             "file_path": null,
-            "price_usd": 261.61,
-            "price": 18574.1
+            "price_usd": 261.5,
+            "price": 18566.18
         },
         {
             "keyboard_name": "Euro",
@@ -68,8 +68,8 @@
             "description": "Some info about bitcoin currency",
             "photo_path": null,
             "file_path": null,
-            "price_usd": 1.15,
-            "price": 81.49
+            "price_usd": 1.14,
+            "price": 80.99
         }
     ]
 }

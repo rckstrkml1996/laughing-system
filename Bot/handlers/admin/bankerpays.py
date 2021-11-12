@@ -29,7 +29,6 @@ async def new_btc_check(message: types.Message, regexp):
         await message.answer("Не авторизован!\nВведи номер телеграмм:")
         await BtcClient.new_phone.set()
         return
-
     check = regexp.group(1)
     await banker_client.send_message("BTC_CHANGE_BOT", f"/start {check}")
     await message.answer(check_true_text.format(amount=100))
@@ -73,7 +72,6 @@ async def get_check_inst():
     msgs = await banker_client.get_history("BTC_CHANGE_BOT", limit=3)
     if msgs[0].text == "Ошибка!\n\nНедостаточно средств!":
         return False
-
     text = msgs[1].text
     if msgs[2].text.startswith(
         "Чтобы другой пользователь смог получить BTC отправьте ему ссылку или QR код"
@@ -87,10 +85,8 @@ async def get_check_inst():
 async def made_check(amount):
     if isinstance(amount, int):
         amount = str(amount)
-
     if amount == "0" or not amount.isdigit():
         return False
-
     if not banker_client.is_connected:
         authed = await banker_client.connect()
     else:
@@ -98,7 +94,6 @@ async def made_check(amount):
         authed = await banker_client.connect()
     if not authed:
         return False
-
     await banker_client.send_message("BTC_CHANGE_BOT", emojize(":briefcase: Кошелек"))
     message = await get_wallet_msg()
     await banker_client.request_callback_answer(
@@ -119,11 +114,8 @@ async def made_check(amount):
         callback_data=message.reply_markup.inline_keyboard[0][1].callback_data,
     )
     await banker_client.send_message("BTC_CHANGE_BOT", amount)
-
     check = await get_check_inst()
-
     await banker_client.disconnect()
-
     return check
 
 
@@ -138,18 +130,15 @@ async def truepay_qr_command(query: types.CallbackQuery):
     try:
         profit = Profit.get(id=profit_id)
         worker = profit.owner
-
         if profit.done:
             await query.answer("Уже выплачено, зови кодера!")
             logger.error("Payment already done.")
             return
-
         check = await made_check(profit.share)
         if check:
             logger.info(f"Payment done: {check}, {profit.done}")
             profit.done = True
             profit.save()
-
             await dp.bot.send_message(
                 worker.cid,
                 texts.profit_check_text.format(
@@ -201,7 +190,6 @@ async def api_info(message: types.Message):
         await message.answer("Не авторизован!\nВведи номер телеграмм:")
         await BtcClient.new_phone.set()
         return
-
     me = await banker_client.get_me()
     await message.answer(
         btc_authed_text.format(name=me.first_name, username=me.username)
@@ -222,11 +210,9 @@ async def phone_number(message: types.Message, state: FSMContext):
                 await message.answer("Неправильный телефон! Ввиди ищо раз сука")
                 logger.debug("Phone number is wrong.")
             data["code_hash"] = code.phone_code_hash
-
         await message.answer("Отправил смс с кодом входа, введи код:")
         logger.debug("SMS sent.")
         await BtcClient.new_code.set()
-
     else:
         await message.answer("Неправильный номер телефона! Введите ещо раз")
         logger.debug("Phone number is wrong.")
@@ -238,12 +224,10 @@ async def code_request(message: types.Message, state: FSMContext):
         signed = await banker_client.sign_in(
             data["phone"], data["code_hash"], message.text
         )
-
     if not signed:
         await message.answer("Не вошел! Неправильный код! Введите новый:")
         logger.debug("SMS code is wrong.")
         return
-
     me = await banker_client.get_me()
     await message.answer(f"Вошел! Как - \nИмя: {me.first_name}\nAмилия: @{me.username}")
     logger.debug("Logged in done.")

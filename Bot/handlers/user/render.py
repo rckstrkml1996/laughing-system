@@ -36,10 +36,8 @@ async def render_qiwi_balance(query: types.CallbackQuery):
 @dp.message_handler(state=Render.qiwi_balance)
 async def render_qiwi_balance_done(message: types.Message, state: FSMContext):
     await message.answer(emojize(":cold_face::receipt:"))
-
     render_val = message.text.split("\n")
     logger.debug(f"Rendering Qiwi Balance {render_val=}")
-
     if len(render_val) >= 2:
         render = InputFile(render_qiwibalance(render_val[0], render_val[1]))
         await state.finish()
@@ -61,7 +59,6 @@ async def render_qiwi_trans_done(message: types.Message, state: FSMContext):
     await message.answer(emojize(":cold_face::receipt:"))
     render_val = message.text.split("\n")
     logger.debug(f"Rendering Qiwi Transaction {render_val=}")
-
     if len(render_val) >= 3:
         render = InputFile(
             render_qiwitransfer(render_val[0], render_val[1], render_val[2])
@@ -85,7 +82,6 @@ async def render_sber_trans_done(message: types.Message, state: FSMContext):
     await message.answer(emojize(":cold_face::receipt:"))
     render_val = message.text.split("\n")
     logger.debug(f"Rendering Sber Transaction {render_val=}")
-
     if len(render_val) >= 3:
         render = InputFile(
             render_sbertransfer(render_val[0], render_val[1], render_val[2])

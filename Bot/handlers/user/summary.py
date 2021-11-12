@@ -15,9 +15,10 @@ from data.keyboards import (
 
 
 async def new_request(message: types.Message):
-    await message.answer(texts.new_summary_text.format(
-        team_name=config.team_name.upper()
-    ), reply_markup=summary_start_keyboard)
+    await message.answer(
+        texts.new_summary_text.format(team_name=config.team_name.upper()),
+        reply_markup=summary_start_keyboard,
+    )
 
 
 @dp.callback_query_handler(text="summary", send_summary=False)
@@ -40,7 +41,6 @@ async def summary_agree(query: types.CallbackQuery):
 async def summary_experience(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["where"] = message.text.replace(";", " ")
-
     await message.answer(texts.summary_exp_text)
     await Summary.experience.set()
 
@@ -49,7 +49,6 @@ async def summary_experience(message: types.Message, state: FSMContext):
 async def summary_final(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["exp"] = message.text.replace(";", " ")
-
         await message.answer(
             texts.summary_final.format(
                 where=data["where"],
@@ -57,7 +56,6 @@ async def summary_final(message: types.Message, state: FSMContext):
             ),
             reply_markup=summary_send_keyboard,
         )
-
     await Summary.final.set()
 
 
@@ -66,7 +64,6 @@ async def summary_send(query: types.CallbackQuery, state: FSMContext):
     try:
         worker = Worker.get(cid=query.message.chat.id)
         worker.send_summary = True  # cant send new summary
-
         async with state.proxy() as data:
             await query.message.edit_text(  # message to user
                 texts.summary_sended_text.format(
@@ -74,12 +71,9 @@ async def summary_send(query: types.CallbackQuery, state: FSMContext):
                     experience=data["exp"],
                 )
             )
-
             worker.summary_info = f"{data['where']};{data['exp']}"
             worker.save()
-
             username = f"@{worker.username} " if worker.username else " "
-
             await dp.bot.send_message(  # message to admins chat
                 config.admins_chat,
                 texts.summary_check_text().format(
@@ -94,11 +88,16 @@ async def summary_send(query: types.CallbackQuery, state: FSMContext):
             logger.debug(f"{query.message.chat.id} send a summary")
     except Worker.DoesNotExist:
         logger.debug(f"{query.message.chat.id} - doen't exist")
-
     await state.finish()
 
 
-@dp.callback_query_handler(text="fuckurself")
+@dp.callback_query_handler(text="new_summary", state=Summary.final)
+async def new_summary(query: types.CallbackQuery):
+    await query.message.edit_text(texts.summary_where_text)
+    await Summary.where.set()
+
+
+@dp.callback_query_handler(text="fuckurself", state="*")
 async def fuck_ur_self(query: types.CallbackQuery):
     await query.answer("Идем...")  # chob chlen sosali
     await query.message.edit_text(texts.summary_blockfin_text)

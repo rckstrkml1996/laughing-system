@@ -19,17 +19,13 @@ async def ban(chat_id: int, user_id: int):  # tg ids
     if user_id == me.id:
         await bot.send_message(chat_id, "Ты что-то попутал, да?")
         return
-
     try:
         worker = Worker.get(cid=user_id)
-
         if worker.status >= 4:
             await bot.send_message(chat_id, "У юзера высокий статус!")
             return
-
         worker.status = 1  # banned
         worker.save()
-
         # notify about kick
         await bot.send_message(
             chat_id,
@@ -61,18 +57,14 @@ async def kick(chat_id: int, user_id: int):
     if user_id == me.id:
         await bot.send_message(chat_id, "Ты что-то попутал, да?")
         return
-
     try:
         worker = Worker.get(cid=user_id)
-
         if worker.status >= 4:
             await bot.send_message(chat_id, "У юзера высокий статус!")
             return
-
         worker.send_summary = False  # can send summary!
         worker.status = 0  # not user
         worker.save()
-
         # notify about kick
         await bot.send_message(
             chat_id,
@@ -105,18 +97,15 @@ async def kick(chat_id: int, user_id: int):
 async def warn(chat_id: int, user_id: int):
     try:
         worker = Worker.get(cid=user_id)
-
         if worker.status <= 2:  # just worker
             worker.warns += 1
             worker.save()
-
             await bot.send_message(
                 chat_id,
                 worker_warn_text.format(
                     cid=worker.cid, name=worker.name, warns=worker.warns
                 ),
             )
-
             if worker.warns >= 3:
                 await kick(chat_id, user_id)
         else:
@@ -132,7 +121,6 @@ async def unwarn(chat_id: int, user_id: int):
             # if worker.warns > 0: # ahahahahaahahahahahh
             worker.warns -= 1
             worker.save()
-
             await bot.send_message(
                 chat_id,
                 worker_unwarn_text.format(

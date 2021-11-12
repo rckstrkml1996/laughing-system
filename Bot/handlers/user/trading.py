@@ -21,14 +21,11 @@ async def trading_info(message: types.Message, worker: Worker, state: FSMContext
     if current_state is not None:
         logger.debug(f"Cancelling state {current_state} in bot start")
         await state.finish()
-
     logger.debug(f"Worker [{message.chat.id}] want get trading info")
-
     await message.answer(
         get_trading_info(worker.uniq_key),
         disable_web_page_preview=True,
     )
-
     # await TradingAlert.commands.set() # old deleted from states.py
     logger.debug(f"Worker [{message.chat.id}] get trading info succesfully")
 
@@ -42,9 +39,7 @@ async def accept_pay(query: types.CallbackQuery):
         pay = TradingPayment.get(id=pay_id)
         check_time = config.qiwi_check_time * 2  # - 3 just for somethink)
         exact_time = (datetime_local_now() - pay.created).seconds
-
         logger.debug(f"{check_time=} (qiwi_check_time * 2), {exact_time=}")
-
         if pay.done == 1:
             await query.message.edit_text(
                 query.message.parse_entities() + "\n\n<b>Мамонт уже оплатил заявку!</b>"
@@ -59,7 +54,6 @@ async def accept_pay(query: types.CallbackQuery):
         else:
             await query.answer(f"Зови кодера)")
             return
-
         await query.message.edit_text(
             query.message.parse_entities() + "\n\n<i>Вы оплатили заявку</i>"
         )
@@ -76,17 +70,14 @@ async def accept_out(query: types.CallbackQuery):
     user_id = int(query.data.split("_")[1])  # must be int! - TradingUser.id
     try:
         user = TradingUser.get(id=user_id)
-
         await trading_bot.send_message(
             user.cid,
             exact_out_text.format(
                 amount=user.balance,
             ),
         )
-
         user.balance = 0
         user.save()
-
         await query.message.edit_text(
             query.message.parse_entities() + "\n\n<i>Успешный вывод!</i>"
         )

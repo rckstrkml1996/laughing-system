@@ -5,8 +5,6 @@ from aiogram.dispatcher.filters.builtin import Text
 from aiogram.dispatcher import FSMContext
 from loguru import logger
 
-from qiwiapi import Qiwi
-from qiwiapi.exceptions import InvalidProxy
 from models import CasinoUser, CasinoUserHistory, CasinoPayment
 from loader import config, dp, main_bot
 from data import texts, keyboards
@@ -86,14 +84,7 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
         logger.error(f"{config.qiwi_tokens=}")
         return  # no tokens!
 
-    qiwi = Qiwi(**config.qiwi_tokens[0])
-
-    try:
-        profile = await qiwi.get_profile()
-    except InvalidProxy as ex:
-        logger.warning(f"InvalidProxy: {ex}")
-
-    account = profile.contractInfo.contractId
+    account = config.qiwi_tokens[0]["wallet"]
     comment = random.randint(1000000, 9999999)
     pay = CasinoPayment.create(owner=user, comment=comment, amount=amount)
 

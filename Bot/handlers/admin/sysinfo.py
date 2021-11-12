@@ -16,11 +16,9 @@ async def system_info_command(message: types.Message):
     memory = psutil.virtual_memory()
     memory_percent = memory.percent
     memory_amount = "{:.2f}".format(memory.total / 1024 / 1024)
-
     work_time = get_correct_str(
         round((time() - psutil.boot_time()) / 60 / 60, 1), "час", "часа", "часов"
     )
-
     await message.answer(
         texts.sys_info_text.format(
             cpu_count=psutil.cpu_count(),
@@ -38,11 +36,9 @@ async def update_system_info(query: types.CallbackQuery):
     memory = psutil.virtual_memory()
     memory_percent = memory.percent
     memory_amount = "{:.2f}".format(memory.total / 1024 / 1024)
-
     work_time = get_correct_str(
         round((time() - psutil.boot_time()) / 60 / 60, 2), "час", "часа", "часов"
     )
-
     try:
         await query.message.edit_text(
             texts.sys_info_text.format(

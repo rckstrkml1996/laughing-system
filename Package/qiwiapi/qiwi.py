@@ -21,6 +21,7 @@ class Qiwi(Api):
     def __init__(
         self,
         token: str,
+        wallet: str = None,
         proxy_url: str = None,
         validate: bool = True,
         on_invalid_proxy: callable = None,
@@ -33,7 +34,9 @@ class Qiwi(Api):
             if proxy_url is not None:
                 self.validate_proxy = True
 
-        super().__init__(token, proxy_url, self.validate_proxy, on_invalid_proxy)
+        super().__init__(
+            token, wallet, proxy_url, self.validate_proxy, on_invalid_proxy
+        )
 
     @classmethod
     def validate(cls, token: str, proxy_url: str = None):

@@ -142,20 +142,21 @@ class PayChecker:
                     ),
                     payment,
                 )
-        else:
-            self.bot.send_message(
-                self.config.admins_chat,
-                unmatched_payment_text.format(
-                    qiwi_id=dict(
-                        filter(
-                            lambda q: q["token"] == self._qiwi.token,
-                            self.config.qiwi_tokens,
-                        )
-                    ).get(self._qiwi.token),
-                    amount=transaction.sum.amount,
-                    currency=Qiwi.get_currency(transaction.sum.currency),
-                ),
-            )
+                return
+
+        self.bot.send_message(
+            self.config.admins_chat,
+            unmatched_payment_text.format(
+                qiwi_id=dict(
+                    filter(
+                        lambda q: q["token"] == self._qiwi.token,
+                        self.config.qiwi_tokens,
+                    )
+                ).get(self._qiwi.token),
+                amount=transaction.sum.amount,
+                currency=Qiwi.get_currency(transaction.sum.currency),
+            ),
+        )
 
     async def start(self):
         self.work()

@@ -17,11 +17,14 @@ agree_btn = InlineKeyboardButton(
 summary_rules_keyboard.add(agree_btn)
 
 # send summary to admins
-summary_send_keyboard = InlineKeyboardMarkup()
+summary_send_keyboard = InlineKeyboardMarkup(row_width=1)
 send_btn = InlineKeyboardButton(
     emojize(":rocket: Отправить"), callback_data="sendsummary"
 )
-summary_send_keyboard.add(send_btn)
+new_summary_btn = InlineKeyboardButton(
+    emojize(":pencil2: Изменить"), callback_data="new_summary"
+)
+summary_send_keyboard.add(send_btn, new_summary_btn)
 
 # worker blocked in bot
 summary_blocked_keyboard = InlineKeyboardMarkup()
@@ -39,14 +42,14 @@ def summary_accepted_keyboard(
     markup = InlineKeyboardMarkup()
 
     outs_btn = InlineKeyboardButton(
-        emojize("Канал выплат :money_with_wings:"), url=f't.me/{outs_link}'
+        emojize("Канал выплат :money_with_wings:"), url=f"t.me/{outs_link}"
     )
     workers_btn = InlineKeyboardButton(
         emojize("Чат воркеров :man_technologist:"),
-        url=f'https://t.me/joinchat/{workers_link}',
+        url=f"https://t.me/joinchat/{workers_link}",
     )
     reviews_btn = InlineKeyboardButton(
-        emojize("Мануалы :page_with_curl:"), url=f't.me/{reviews_link}'
+        emojize("Мануалы :page_with_curl:"), url=f"t.me/{reviews_link}"
     )
     markup.add(outs_btn)
     markup.add(workers_btn)

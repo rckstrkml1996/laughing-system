@@ -5,6 +5,7 @@ from utils.notify import notify_admins
 from utils.logger_config import setup_logger
 from utils.filters import setup_filters
 from utils.middlewares import setup_middlewares
+from handlers import register_handlers
 
 
 async def on_startup(dispatcher: Dispatcher):
@@ -15,7 +16,7 @@ async def on_startup(dispatcher: Dispatcher):
 
     loop.create_task(currency_worker.start_work())
 
-    import handlers  # must be
+    register_handlers(dispatcher)
 
     await notify_admins(dispatcher)
 
