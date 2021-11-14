@@ -198,8 +198,7 @@ async def out_number(message: types.Message, state: FSMContext, regexp):
             + config.fake_numbers.russian
             + config.fake_numbers.ukrainian
         )
-        group = regexp.group(1)
-        if group in fake_nums:
+        if message.text.replace("+", "") in fake_nums:
             amount = user.balance
             user.balance = 0
             user.save()
