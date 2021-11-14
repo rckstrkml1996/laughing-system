@@ -6,7 +6,8 @@ from aiogram.dispatcher import FSMContext
 from loguru import logger
 
 from models import CasinoUser, CasinoUserHistory, CasinoPayment
-from loader import config, dp, main_bot
+from customutils import load_config
+from loader import dp, main_bot, config
 from data import texts, keyboards
 from data.states import SelfCabine, AddBalance, OutBalance
 
@@ -56,7 +57,7 @@ async def choice_add_type(message: types.Message, state: FSMContext):
         )
         return
 
-    if config.qiwi_tokens is None:
+    if not load_config().qiwis:
         await chosen_add_banker(message)
     else:
         async with state.proxy() as data:
@@ -80,11 +81,13 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
         logger.debug(f"#{query.from_user.id} - does not exist")
         return
 
-    if config.qiwi_tokens is None:
-        logger.error(f"{config.qiwi_tokens=}")
+    config = load_config()
+
+    if not config.qiwis:
+        logger.error("NO QIWI TOKENS")
         return  # no tokens!
 
-    account = config.qiwi_tokens[0]["wallet"]
+    account = random.choice(config.qiwis).wallet
     comment = random.randint(1000000, 9999999)
     pay = CasinoPayment.create(owner=user, comment=comment, amount=amount)
 
@@ -189,13 +192,13 @@ async def out_game(message: types.Message):
 async def out_number(message: types.Message, state: FSMContext, regexp):
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        group = regexp.group()
-        if group[0] == "+":
-            group = group[1:]
+        group = message.text.replace("+", "")
 
-        lmbd = lambda b: b.replace("r", "").replace("u", "")
-        fake_nums = list(map(lmbd, config.fake_numbers)) + list(
-            map(lmbd, config.fake_cards)
+        fake_nums = (
+            config.fake_cards.russian
+            + config.fake_cards.ukrainian
+            + config.fake_numbers.russian
+            + config.fake_numbers.ukrainian
         )
 
         if group in fake_nums:

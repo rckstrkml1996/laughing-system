@@ -319,3 +319,13 @@ def workers_today() -> ModelSelect:
         Worker.registered.month == date.month,
         Worker.registered.year == date.year,
     )
+
+
+def set_status(worker_cid: int, status: int):
+    try:
+        worker = Worker.get(cid=worker_cid)
+        worker.status = status
+        worker.send_summary = True
+        worker.save()
+    except Worker.DoesNotExist:
+        pass

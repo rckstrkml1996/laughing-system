@@ -7,8 +7,7 @@ from aiogram.utils.exceptions import MessageToEditNotFound
 from loguru import logger
 
 from data.texts import mention_text
-from customutils.config import BotsConfig
-from customutils import datetime_local_now
+from customutils import Config, save_config, datetime_local_now
 from utils import basefunctional
 from models import CasinoUser, TradingUser, EscortUser
 
@@ -16,15 +15,15 @@ from models import CasinoUser, TradingUser, EscortUser
 class DynamicPinner:
     STANDART_TEXT = emojize("Стандартный закреп, {time} :sparkle:")
 
-    def __init__(self, bot: Bot, config: BotsConfig):
+    def __init__(self, bot: Bot, config: Config):
         if not isinstance(bot, Bot):
             raise TypeError(
                 f"Argument 'bot' must be an instance of Bot, not '{type(bot).__name__}'"
             )
 
-        if not isinstance(config, BotsConfig):
+        if not isinstance(config, Config):
             raise TypeError(
-                f"Argument 'config' must be an instance of BotsConfig, not '{type(config).__name__}'"
+                f"Argument 'config' must be an instance of Config, not '{type(config).__name__}'"
             )
 
         self.bot = bot
@@ -48,7 +47,8 @@ class DynamicPinner:
         await self.bot.pin_chat_message(
             self.config.workers_chat, msg.message_id, disable_notification=True
         )
-        self.config.pinned_msg_id = msg.message_id
+        self.config.pin_msg_id = msg.message_id
+        save_config(self.config)
         logger.info(f"Pinned new message with id:{msg.message_id}")
 
     def get_formatted_pin_text(self, text):
@@ -86,14 +86,12 @@ class DynamicPinner:
             text = self.get_pin_text()
             formatted = self.get_formatted_pin_text(text)
 
-            if self.config.pinned_msg_id is not None:
+            if self.config.pin_msg_id is not None:
                 try:
                     await self.bot.edit_message_text(
-                        formatted, self.config.workers_chat, self.config.pinned_msg_id
+                        formatted, self.config.workers_chat, self.config.pin_msg_id
                     )
-                    logger.debug(
-                        f"Edited pinned message id:{self.config.pinned_msg_id}"
-                    )
+                    logger.debug(f"Edited pinned message id:{self.config.pin_msg_id}")
                 except MessageToEditNotFound:
                     await self.pin_message(formatted)
                 except Exception as ex:

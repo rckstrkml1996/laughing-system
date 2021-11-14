@@ -9,7 +9,7 @@ from aiogram.types import ParseMode
 from utils.status import StatusNames
 from utils.pinner import DynamicPinner
 from utils.payments_checker import PayChecker
-from customutils.config import BotsConfig
+from customutils.config import load_config
 
 """
     bot settings:
@@ -19,8 +19,7 @@ from customutils.config import BotsConfig
         workers and outs and admins chats   -   make bot admin!
 """
 
-config = BotsConfig()
-
+config = load_config()
 
 status_names = StatusNames()
 # for aiohttp connection by proxy, too slow for windows :(

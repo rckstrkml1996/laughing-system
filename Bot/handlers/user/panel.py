@@ -48,7 +48,7 @@ async def worker_profile(message: types.Message, state: FSMContext):
 
 @dp.callback_query_handler(text="menu", is_worker=True, state="*")
 async def worker_profile_callback(query: types.CallbackQuery, worker: Worker):
-    logger.debug(f"Worker - {query.from_user.id}, wants back to profile")
+    logger.debug(f"Worker [{query.from_user.id}], wants back to profile")
     # worker.username = query.from_user.username
     # worker.save()  # update worker username
     in_team = datetime_local_now() - worker.registered
@@ -58,7 +58,7 @@ async def worker_profile_callback(query: types.CallbackQuery, worker: Worker):
     if len_profits:
         middle_profits = int(all_balance / len_profits)
     logger.debug(
-        f"Worker - {query.from_user.id} get profile, {all_balance=} {len_profits=} {middle_profits=}"
+        f"Worker [{query.from_user.id}] get profile, {all_balance=} {len_profits=} {middle_profits=}"
     )
     profile_photo = await get_profile_photo(query.from_user.id)
     if config.casino_work:
@@ -83,9 +83,10 @@ async def worker_profile_callback(query: types.CallbackQuery, worker: Worker):
         reply_markup=panel_keyboard(worker.username_hide),
     )
 
+
 async def worker_welcome(message: types.Message):
     a = time()
-    logger.debug(f"Worker - {message.chat.id}, wants get profile")
+    logger.debug(f"Worker [{message.chat.id}], wants get profile")
     worker = Worker.get(cid=message.chat.id)
     worker.username = message.chat.username
     worker.save()  # update worker username
@@ -96,7 +97,7 @@ async def worker_welcome(message: types.Message):
     if len_profits:
         middle_profits = int(all_balance / len_profits)
     logger.debug(
-        f"Worker - {message.chat.id} get profile, profits all: {all_balance} len: {len_profits} middle: {middle_profits}"
+        f"Worker [{message.chat.id}] get profile, profits all: {all_balance} len: {len_profits} middle: {middle_profits}"
     )
     await message.answer(zap_text, reply_markup=menu_keyboard)
     profile_photo = await get_profile_photo(message.chat.id)
@@ -145,7 +146,7 @@ async def project_info(message: types.Message, state: FSMContext):
             config.outs_link, config.reviews_link, config.workers_link
         ),
     )
-    logger.debug(f"Worker - {message.chat.id}, get project info")
+    logger.debug(f"Worker [{message.chat.id}], get project info")
 
 
 @dp.callback_query_handler(text="toggleusername", is_worker=True)
@@ -156,7 +157,7 @@ async def toggle_username(query: types.CallbackQuery):
         in_team = datetime_local_now() - worker.registered
         worker.save()
         logger.debug(
-            f"Worker - {worker.cid}:{worker.id}, change username hide status to {worker.username_hide}"
+            f"Worker [{worker.cid}]:{worker.id}, change username hide status to {worker.username_hide}"
         )
         len_profits = worker.profits.count()
         all_balance = basefunctional.get_profits_sum(worker.id)

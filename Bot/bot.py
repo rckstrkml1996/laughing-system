@@ -1,19 +1,25 @@
+from re import I
 import threading
 
 from aiogram import Dispatcher, executor
 from loguru import logger
 
 from models import connect, disconnect
-from loader import config, dp, dynapinner, payments_checker
+from loader import config, dp, dynapinner, payments_checker, status_names
 from utils.notify import on_startup_notify
 from utils.logger_config import setup_logger
 from utils.systeminfo import update_cpu_usage, exit_event
 from utils.updaterepo import check_on_update
 from utils.config_usernames import update_bot_usernames
+from utils.basefunctional import set_status
 
 
 async def on_startup(dispatcher: Dispatcher):
     connect()
+
+    for admin_id in config.admins_id:
+        set_status(admin_id, len(status_names.VALUES) - 1)
+
     setup_logger(level="DEBUG")
 
     from utils import filters, middlewares

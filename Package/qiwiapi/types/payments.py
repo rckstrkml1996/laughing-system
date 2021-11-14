@@ -6,7 +6,7 @@ from .main import SumData
 
 
 class TransactionInfo(BaseModel):
-    providerId: int = Field(alias='id')
+    info_id: int = Field(alias="id")
     shortName: str = None
     longName: str = None
     logoUrl: str = None
@@ -21,12 +21,12 @@ class Transaction(BaseModel):
     date: datetime
     errorCode: int
     error: str = None
-    trnsType: str = Field(alias='type')  # in api 'type'
+    trnsType: str = Field(alias="type")  # in api 'type'
     status: str
     statusText: str
     trmTxnld: str = None
     account: str
-    sum: SumData
+    trns_sum: SumData = Field(alias="sum")
     commision: SumData = None
     total: SumData
     provider: TransactionInfo = None

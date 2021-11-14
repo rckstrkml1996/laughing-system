@@ -5,12 +5,14 @@ from aiogram import Dispatcher
 from loguru import logger
 
 from loader import config
+from customutils import save_config
 from data.texts import startup_text, updated_startup_text
 
 
 async def on_startup_notify(dp: Dispatcher):
     if config.updated:
         config.updated = False
+        save_config(config)
         text = updated_startup_text
     else:
         text = startup_text

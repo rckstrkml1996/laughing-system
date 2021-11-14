@@ -2,11 +2,9 @@ from datetime import datetime
 
 import pytz
 
-from .config import BotsConfig
+from .config import load_config
 
-config = BotsConfig()
-
-
+config = load_config()
 local_tz = pytz.timezone(config.time_zone)
 
 

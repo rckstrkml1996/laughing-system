@@ -58,22 +58,19 @@ class Qiwi(Api):
     ):
         """Check if new payments"""
         payments = await self.get_payments(rows=rows, operation=operation)
-        if self.last_payments is None:
-            self.last_payments = payments
+        if payments.data:
+            if self.last_payments is None:
+                self.last_payments = payments
 
-        # print(
-        #     len(payments.data),
-        #     len(self.last_payments.data),
-        #     payments.data[0].txnId,
-        #     self.last_payments.data[0].txnId,
-        # )  # debugging
+            last_txnid = self.last_payments.data[0].txnId
 
-        last_txnid = self.last_payments.data[0].txnId
+            if payments.data[0].txnId != last_txnid:
+                for transaction in payments.data:
+                    if transaction.txnId == last_txnid:
+                        break
 
-        if payments.data[0].txnId != last_txnid:
-            for transaction in filter(lambda p: p.txnId > last_txnid, payments.data):
-                await on_transaction(transaction)
-                await sleep(0.05)
+                    await on_transaction(transaction)
+                    await sleep(0.05)
 
         self.last_payments = payments
 

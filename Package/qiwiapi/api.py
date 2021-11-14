@@ -81,13 +81,6 @@ class Api:
         return str(int(time() * 1000))
 
     async def get_accounts(self) -> Accounts:
-        if self.validate_proxy:
-            if not await self.check_proxy():
-                if self.on_invalid_proxy is not None:
-                    await self.on_invalid_proxy(self)
-
-                raise InvalidProxy(f"'{self.proxy}' is invalid!")
-
         if self.wallet is None:
             profile = await self.get_profile()
             self.wallet = profile.contractInfo.contractId
@@ -157,6 +150,7 @@ class Api:
         if self.wallet is None:
             profile = await self.get_profile()
             self.wallet = profile.contractInfo.contractId
+
         url = f"https://edge.qiwi.com/payment-history/v2/persons/{self.wallet}/payments/total"
 
         params = {
@@ -211,23 +205,23 @@ class Api:
         except ValidationError:
             return json
 
-    async def check_proxy(self, url: str = "https://example.com") -> bool:
-        answer = True
-
+    async def check_proxy(
+        self, timeout: int = 3, url: str = "https://example.com"
+    ) -> bool:
         if self.proxy is None:
-            return answer  # return if proxy not setuped!
-
-        try:  # maybe implement async with ??
-            await self.session.get(url, proxy=self.proxy, ssl=False)
-        except TimeoutError:  # this is for different log
+            return True
+        session = aiohttp.ClientSession()
+        answer = True
+        try:
+            await session.get(url, proxy=self.proxy, ssl=False, timeout=timeout)
+        except TimeoutError:
             answer = False
         except ClientProxyConnectionError:
-            answer = False  # this is for different log
+            answer = False
         except ClientHttpProxyError:
             answer = False
-        # finally:
-        # await self.session.close()
-
+        finally:
+            await session.close()
         return answer
 
     async def close(self):  # WARN DEPRECATED

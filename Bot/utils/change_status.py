@@ -55,7 +55,6 @@ async def ban(chat_id: int, user_id: int):  # tg ids
 async def kick(chat_id: int, user_id: int):
     me = await bot.get_me()
     if user_id == me.id:
-        await bot.send_message(chat_id, "Ты что-то попутал, да?")
         return
     try:
         worker = Worker.get(cid=user_id)

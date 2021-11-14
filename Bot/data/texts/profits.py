@@ -31,9 +31,7 @@ admins_profit_complete_text = emojize(
 )
 
 unmatched_payment_text = emojize(
-    "Qiwi - <b>id{qiwi_id}</b>\n"
-    "Неизвестная транзакция.\n"
-    "Сумма: <b>{amount} {currency}</b>\n"
+    "Неизвестная транзакция.\n" "Сумма: <b>{amount} {currency}</b>\n"
 )
 
 make_profit_text = emojize(
@@ -51,10 +49,17 @@ profit_check_text = emojize(
 )
 
 
-# profit_worker_text = emojize(
-#     ":white_check_mark: У тебя новый профит! (<i>{service}</i>)\n\n"
-#     ":money_with_wings: Мамонт закинул: <b>{amount} RUB</b>\n"
-#     ":gem: Твоя доля: <b>{share} RUB</b>\n\n"
-#     "ID Мамонта: /c{mid}\n\n"
-#     "Cпасибо за ворк! :green_heart:"
-# )
+worker_profit_text = emojize(
+    ":green_heart: У тебя новый <a href='{profit_link}'>профит</a>! (<i>{service}</i>)\n\n"
+    ":money_with_wings: Мамонт пополнил: <b>{amount} RUB</b>\n"
+    ":gem: Ты получишь: <b>{share} RUB</b>\n\n"
+    "ID Мамонта: /c{mid}\n\n"
+    "Cпасибо за ворк! :tada:"
+)
+
+worker_manual_profit_text = emojize(
+    ":green_heart: Тебе создали <a href='{profit_link}'>профит</a>! (<i>{service}</i>)\n\n"
+    ":money_with_wings: Сумма: <b>{amount} RUB</b>\n"
+    ":gem: Доля: <b>{share} RUB</b>\n\n"
+    "Спасибо за работу!! :tada:"
+)

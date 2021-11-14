@@ -1,12 +1,12 @@
-class InvalidAccount(Exception):
-    pass
-
-
-class InvalidToken(Exception):
-    pass
-
-
 class UnexpectedResponse(Exception):
+    pass
+
+
+class InvalidAccount(UnexpectedResponse):
+    pass
+
+
+class InvalidToken(UnexpectedResponse):
     pass
 
 

@@ -58,7 +58,7 @@ async def me_command(message: types.Message):
         worker = Worker.get(cid=message.from_user.id)
         text = get_info_about_worker(worker)
         await message.reply(text)
-        logger.debug(f"Worker - {message.from_user.id}, /me in chat, succesful.")
+        logger.debug(f"Worker [{message.from_user.id}], /me in chat, succesful.")
     except Worker.DoesNotExist:
         await message.reply("Ты не Воркер!")
         logger.debug(f"Chat [{message.from_user.id}], /me and he does not worker")

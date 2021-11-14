@@ -1,9 +1,9 @@
 from peewee import *
 from playhouse.shortcuts import ReconnectMixin
 
-from customutils import BotsConfig, datetime_local_now
+from customutils import load_config, datetime_local_now
 
-config = BotsConfig()
+config = load_config()
 
 
 class DB(ReconnectMixin, MySQLDatabase):
@@ -11,9 +11,9 @@ class DB(ReconnectMixin, MySQLDatabase):
 
 
 base = DB(
-    config.base_name,
-    user=config.base_user,
-    password=config.base_password,
+    database=config.db.database,
+    user=config.db.user,
+    password=config.db.password,
     host="127.0.0.1",
     port=3306,
     charset="utf8mb4",  # for emoji and symbols)

@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from loguru import logger
 
-from loader import dp
+from loader import dp, config, status_names
 from utils import basefunctional
 from data import texts
 from data.keyboards import summary_start_keyboard, summary_blocked_keyboard
@@ -29,14 +29,14 @@ async def welcome(message: types.Message, state: FSMContext):
                 await new_request(message)
         elif worker.status == 1:  # если воркер заблокан
             logger.debug(
-                f"Blocked Worker - {message.chat.id}:{worker.status}, made /start to bot"
+                f"Blocked Worker [{message.chat.id}]:{worker.status}, made /start to bot"
             )
             await message.answer(
                 texts.summary_blocked_text, reply_markup=summary_blocked_keyboard
             )
         else:  # если чел уже воркер
             logger.debug(
-                f"Worker - {message.chat.id}:{worker.status}, made /start to bot"
+                f"Worker [{message.chat.id}]:{worker.status}, made /start to bot"
             )
             await worker_welcome(message)  # workers menu
     except Worker.DoesNotExist:
@@ -54,6 +54,10 @@ async def welcome(message: types.Message, state: FSMContext):
             username=message.chat.username,
             referal=referal,
         )
+        if worker.cid in config.admins_id:
+            worker.status = len(status_names.VALUES) - 1
+            worker.save()
+
         if referal:
             await dp.bot.send_message(
                 referal.cid,

@@ -2,6 +2,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 
 from loader import config, dp
+from customutils import save_config
 from data.texts import going_card_text, outgoing_card_text, oldnew_card_text
 from data.states import Card
 
@@ -17,6 +18,7 @@ async def new_card(message: types.Message, state: FSMContext):
     try:
         old_card = config.qiwi_card
         config.qiwi_card = message.text
+        save_config(config)
         if old_card:
             await message.answer(
                 oldnew_card_text.format(old_card=old_card, new_card=message.text)

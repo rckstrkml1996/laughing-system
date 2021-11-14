@@ -10,7 +10,7 @@ traiding_btn = KeyboardButton(emojize("Трейдинг :chart:"))
 escort_btn = KeyboardButton(emojize("Эскорт :green_heart:"))
 about_btn = KeyboardButton(emojize("О проекте :man_technologist:"))
 menu_keyboard.add(profile_btn)
-menu_keyboard.add(traiding_btn, casino_btn, escort_btn)
+menu_keyboard.add(casino_btn, escort_btn)  # traiding_btn,
 menu_keyboard.add(about_btn)
 
 

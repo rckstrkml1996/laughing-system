@@ -22,20 +22,32 @@ from utils import basefunctional
 
 def get_trading_info(uniq_key) -> str:
     pay_cards = "\n".join(
-        map(
-            lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>"
-            if c[0] == "r"
-            else f"&#127482;&#127462; <code>{c[1:]}</code>",
-            config.fake_cards,
+        list(
+            map(
+                lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>",
+                config.fake_cards.ukrainian,
+            )
+        )
+        + list(
+            map(
+                lambda c: f"&#127482;&#127462; <code>{c[1:]}</code>",
+                config.fake_cards.russian,
+            )
         )
     )
 
     pay_qiwis = "\n".join(
-        map(
-            lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>"
-            if c[0] == "r"
-            else f"&#127482;&#127462; <code>{c[1:]}</code>",
-            config.fake_numbers,
+        list(
+            map(
+                lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>",
+                config.fake_numbers.ukrainian,
+            )
+        )
+        + list(
+            map(
+                lambda c: f"&#127482;&#127462; <code>{c[1:]}</code>",
+                config.fake_numbers.russian,
+            )
         )
     )
 
@@ -51,20 +63,32 @@ def get_trading_info(uniq_key) -> str:
 
 def get_casino_info(uniq_key) -> str:
     pay_cards = "\n".join(
-        map(
-            lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>"
-            if c[0] == "r"
-            else f"&#127482;&#127462; <code>{c[1:]}</code>",
-            config.fake_cards,
+        list(
+            map(
+                lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>",
+                config.fake_cards.ukrainian,
+            )
+        )
+        + list(
+            map(
+                lambda c: f"&#127482;&#127462; <code>{c[1:]}</code>",
+                config.fake_cards.russian,
+            )
         )
     )
 
     pay_qiwis = "\n".join(
-        map(
-            lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>"
-            if c[0] == "r"
-            else f"&#127482;&#127462; <code>{c[1:]}</code>",
-            config.fake_numbers,
+        list(
+            map(
+                lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>",
+                config.fake_numbers.ukrainian,
+            )
+        )
+        + list(
+            map(
+                lambda c: f"&#127482;&#127462; <code>{c[1:]}</code>",
+                config.fake_numbers.russian,
+            )
         )
     )
 
@@ -261,26 +285,3 @@ def get_info_about_worker(worker):
         in_team=get_correct_str(in_team.days, "день", "дня", "дней"),
         warns=get_correct_str(worker.warns, "варн", "варна", "варнов"),
     )
-
-
-def find_token(conf_token: str):
-    srch = re.search(r"\(([^\(^\)]+)\)", conf_token)
-    if srch:
-        return conf_token.replace(srch.group(0), "")
-    return conf_token
-
-
-def delete_api_proxy(conf_token: str):
-    srch = re.search(r"\(([^\(^\)]+)\)", conf_token)
-    if srch:
-        tokens = config.qiwi_tokens
-        if isinstance(tokens, list):
-            try:
-                tokens[tokens.index(conf_token)] = conf_token.replace(srch.group(0), "")
-                config.qiwi_tokens = tokens
-            except ValueError:
-                pass  # shiiit
-        else:
-            config.qiwi_tokens = conf_token.replace(srch.group(0), "")
-
-        return srch.group(0)[1:-1]

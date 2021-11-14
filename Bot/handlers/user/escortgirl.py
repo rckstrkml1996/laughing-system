@@ -71,6 +71,12 @@ async def delete_form_escort(query: types.CallbackQuery, worker: Worker):
     await query.message.edit_caption(query.message.caption, reply_markup=None)
 
 
+@dp.callback_query_handler(text="create_form_esc", state="*", is_worker=True)
+async def create_escort_form(query: types.CallbackQuery):
+    await query.message.edit_text(esc_create_name_text)
+    await EscortNewForm.name.set()
+
+
 @dp.message_handler(commands=["newgirl"], state="*", is_admin=True)
 async def admin_create_escort_form(message: types.Message, worker: Worker):
     if worker.status == 7:

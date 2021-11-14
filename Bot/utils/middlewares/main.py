@@ -20,7 +20,7 @@ class KickMiddleware(BaseMiddleware):
             try:
                 worker = Worker.get(cid=message.from_user.id)
                 if worker.status < 2:  # not worker
-                    await change_status.kick(self.chat, message.from_user.id)
+                    await change_status.kick(self.workers_chat, message.from_user.id)
                     logger.info(
                         f"Kick user [{message.from_user.id}], user not autorized!"
                     )
@@ -28,7 +28,7 @@ class KickMiddleware(BaseMiddleware):
                 logger.debug(
                     f"KickMiddleware - Worker [{message.from_user.id}] not found in base."
                 )  # by bot logic user must be in base!
-                await change_status.kick(self.chat, message.from_user.id)
+                await change_status.kick(self.workers_chat, message.from_user.id)
                 logger.info(f"Kick user [{message.from_user.id}], user not autorized!")
 
 

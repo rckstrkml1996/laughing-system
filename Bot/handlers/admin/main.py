@@ -2,6 +2,7 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from loguru import logger
 
+from customutils import save_config
 from loader import dp, config
 from data import texts
 from data.states import SetProfitStick
@@ -58,6 +59,7 @@ async def sticker_command(message: types.Message):
 )
 async def set_profit_sticker(message: types.Message, state: FSMContext):
     config.profit_sticker_id = message.sticker.file_id
+    save_config(config)
     await state.finish()
     await message.answer("Сохранил!")
 

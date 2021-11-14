@@ -2,10 +2,12 @@ from git import Repo
 from loguru import logger
 
 from loader import config
+from customutils import save_config
 
 
 def check_on_update():
     config.updated = check_repo_on_update("../.git")
+    save_config(config)
 
 
 def check_repo_on_update(path: str) -> bool:
@@ -14,8 +16,7 @@ def check_repo_on_update(path: str) -> bool:
     current = str(repo.head.commit)  # repo class to string
     last_commit = config.last_commit
     config.last_commit = current
-
-    logger.debug(f"Curr = {current:.15}, Last = {last_commit:.15}")
+    save_config(config)
 
     if current != last_commit:
         logger.warning(f"Repo updated!")

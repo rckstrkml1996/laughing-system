@@ -1,0 +1,116 @@
+import os
+import json
+from typing import List, Optional, get_origin
+
+from pydantic import BaseModel, root_validator
+
+
+class JsonModel(BaseModel):
+    @root_validator(pre=True)
+    def set_default(cls, values):
+        """Make not defined values by default types"""
+        for key, field in cls.__fields__.items():
+            if key not in values:
+                if field.default is not None:
+                    values[key] = field.default
+                else:
+                    origin = get_origin(field.outer_type_)
+                    if origin is not None:
+                        default_type = origin
+                    else:
+                        default_type = field.outer_type_
+                    values[key] = default_type()
+        return values
+
+
+class Database(JsonModel):
+    database: str
+    user: str
+    password: str
+
+
+class Qiwi(JsonModel):
+    token: str
+    proxy_url: Optional[str]
+    wallet: Optional[str]
+
+
+class FakeRequisites(JsonModel):
+    russian: List[str]
+    ukrainian: List[str]
+
+
+class Config(JsonModel):
+    db: Database
+
+    api_token: str
+    casino_api_token: str
+    escort_api_token: str
+    trading_api_token: str
+
+    api_hash: str
+    api_id: int
+
+    admins_id: List[int]
+    admins_chat: int
+
+    workers_chat: int
+    workers_link: str
+
+    outs_chat: int
+    outs_link: str
+
+    reviews_link: str
+    esc_otz_link: str
+
+    qiwis: Optional[List[Qiwi]]
+    qiwi_card: str = "qiwi card"
+    qiwi_check_time: int = 90
+
+    casino_work: bool = False
+    escort_work: bool = False
+    trading_work: bool = False
+
+    casino_sup_username: str = "support"
+    escort_sup_username: str = "support"
+    trading_sup_username: str = "support"
+
+    casino_username: str
+    escort_username: str
+    trading_username: str
+
+    fake_cards: FakeRequisites
+    fake_numbers: FakeRequisites
+    min_deposit: int = 300
+
+    time_zone: str = "Europe/Moscow"
+    skip_updates: bool = True
+    updated: bool = False
+    notify: bool = True
+    html_style_url: str = "https://telegra.ph/file/0e91498d70cfc4d87afba.png"
+    last_commit: Optional[str]
+    profit_sticker_id: str
+
+    pin_path: str = "pin.txt"
+    pin_update_time: int = 10
+    pin_msg_id: Optional[int]
+
+    team_start: str
+    team_name: str = "Team Name"
+
+
+def load_config() -> Config:
+    if os.path.exists("../settings.json"):
+        with open("../settings.json", "r") as f:
+            return Config(**json.load(f))
+    else:
+        with open("../settings.json", "w") as f:
+            cfg = Config()
+            json.dump(cfg.dict(), f, indent=4)
+            print("Blank config created!")
+            exit(1)
+
+
+def save_config(config: Config):
+    with open("../settings.json", "w") as f:
+        json.dump(config.dict(), f, indent=4)

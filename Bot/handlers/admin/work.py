@@ -4,6 +4,7 @@ from aiogram.utils.exceptions import MessageNotModified
 from loguru import logger
 
 from loader import dp, config
+from customutils import save_config
 from data.texts import (
     adm_work_command,
     services_status,
@@ -53,38 +54,26 @@ async def work_command(message: types.Message):
 
 @dp.callback_query_handler(text="toggle_status", admins_chat=True, is_admin=True)
 async def toggle_work_status(query: types.CallbackQuery):
-    casino_work = config.casino_work  # return bool values
-    escort_work = config.escort_work
-    trading_work = config.trading_work
-    all_work = casino_work and escort_work and trading_work
-    if all_work:
-        casino_work = False
-        escort_work = False
-        trading_work = False
-        all_work = False
-    else:
-        casino_work = True
-        escort_work = True
-        trading_work = True
-        all_work = True
-    config.casino_work = casino_work
-    config.escort_work = escort_work
-    config.trading_work = trading_work
+    all_work = config.casino_work and config.escort_work and config.trading_work
+    config.casino_work = not all_work
+    config.escort_work = not all_work
+    config.trading_work = not all_work
+    save_config(config)
     text = adm_work_command.format(
         services_status=emojize(
             services_status.format(
                 casino_status=f":full_moon: Казино СКАМ"
-                if casino_work
+                if config.casino_work
                 else f":new_moon: <del>Казино СКАМ</del>",
                 escort_status=f":full_moon: Эскорт СКАМ"
-                if escort_work
+                if config.escort_work
                 else f":new_moon: <del>Эскорт СКАМ</del>",
                 trading_status=f":full_moon: Трейдинг СКАМ"
-                if trading_work
+                if config.trading_work
                 else f":new_moon: <del>Трейдинг СКАМ</del>",
-                team_status=":full_moon: Общий статус: <b>Ворк</b>"
+                team_status=":new_moon: Общий статус: <b>Не ворк</b>"
                 if all_work
-                else ":new_moon: Общий статус: <b>Не ворк</b>",
+                else ":full_moon: Общий статус: <b>Ворк</b>",
             )
         )
     )
@@ -92,10 +81,10 @@ async def toggle_work_status(query: types.CallbackQuery):
         await query.message.edit_text(
             text,
             reply_markup=admworkstatus_keyboard(
-                all_work,
-                casino_work,
-                escort_work,
-                trading_work,
+                not all_work,
+                config.casino_work,
+                config.escort_work,
+                config.trading_work,
             ),
         )
         logger.debug(f"Admin [{query.message.from_user.id}] changed work status.")
@@ -103,29 +92,27 @@ async def toggle_work_status(query: types.CallbackQuery):
         pass
     await dp.bot.send_message(
         config.workers_chat,
-        setwork_text if all_work else setdontwork_text,
+        setwork_text if not all_work else setdontwork_text,
     )
 
 
 # toggle_casino_status
 @dp.callback_query_handler(text="toggle_casino_status", admins_chat=True, is_admin=True)
 async def toggle_work_status(query: types.CallbackQuery):
-    casino_work = not config.casino_work  # return bool values
-    escort_work = config.escort_work
-    trading_work = config.trading_work
-    config.casino_work = casino_work
-    all_work = casino_work and escort_work and trading_work
+    config.casino_work = not config.casino_work  # return bool values
+    save_config(config)
+    all_work = config.casino_work and config.escort_work and config.trading_work
     text = adm_work_command.format(
         services_status=emojize(
             services_status.format(
                 casino_status=f":full_moon: Казино СКАМ"
-                if casino_work
+                if config.casino_work
                 else f":new_moon: <del>Казино СКАМ</del>",
                 escort_status=f":full_moon: Эскорт СКАМ"
-                if escort_work
+                if config.escort_work
                 else f":new_moon: <del>Эскорт СКАМ</del>",
                 trading_status=f":full_moon: Трейдинг СКАМ"
-                if trading_work
+                if config.trading_work
                 else f":new_moon: <del>Трейдинг СКАМ</del>",
                 team_status=":full_moon: Общий статус: <b>Ворк</b>"
                 if all_work
@@ -138,9 +125,9 @@ async def toggle_work_status(query: types.CallbackQuery):
             text,
             reply_markup=admworkstatus_keyboard(
                 all_work,
-                casino_work,
-                escort_work,
-                trading_work,
+                config.casino_work,
+                config.escort_work,
+                config.trading_work,
             ),
         )
         logger.debug(f"Admin [{query.message.from_user.id=}] changed work status.")
@@ -148,32 +135,27 @@ async def toggle_work_status(query: types.CallbackQuery):
         logger.warning("Change work status, MessageNotModified")
     await dp.bot.send_message(
         config.workers_chat,
-        casino_setwork_text if casino_work else casino_setdontwork_text,
+        casino_setwork_text if config.casino_work else casino_setdontwork_text,
     )
 
 
 # toggle_escort_status
 @dp.callback_query_handler(text="toggle_escort_status", admins_chat=True, is_admin=True)
 async def toggle_work_status(query: types.CallbackQuery):
-    casino_work = config.casino_work  # return bool values
-    escort_work = not config.escort_work
-    trading_work = config.trading_work
-
-    config.escort_work = escort_work
-
-    all_work = casino_work and escort_work and trading_work
-
+    config.escort_work = not config.escort_work
+    save_config(config)
+    all_work = config.casino_work and config.escort_work and config.trading_work
     text = adm_work_command.format(
         services_status=emojize(
             services_status.format(
                 casino_status=f":full_moon: Казино СКАМ"
-                if casino_work
+                if config.casino_work
                 else f":new_moon: <del>Казино СКАМ</del>",
                 escort_status=f":full_moon: Эскорт СКАМ"
-                if escort_work
+                if config.escort_work
                 else f":new_moon: <del>Эскорт СКАМ</del>",
                 trading_status=f":full_moon: Трейдинг СКАМ"
-                if trading_work
+                if config.trading_work
                 else f":new_moon: <del>Трейдинг СКАМ</del>",
                 team_status=":full_moon: Общий статус: <b>Ворк</b>"
                 if all_work
@@ -181,15 +163,14 @@ async def toggle_work_status(query: types.CallbackQuery):
             )
         )
     )
-
     try:
         await query.message.edit_text(
             text,
             reply_markup=admworkstatus_keyboard(
                 all_work,
-                casino_work,
-                escort_work,
-                trading_work,
+                config.casino_work,
+                config.escort_work,
+                config.trading_work,
             ),
         )
         logger.debug(f"Admin [{query.message.from_user.id=}] changed work status.")
@@ -197,7 +178,7 @@ async def toggle_work_status(query: types.CallbackQuery):
         logger.warning("Change work status, MessageNotModified")
     await dp.bot.send_message(
         config.workers_chat,
-        escort_setwork_text if escort_work else escort_setdontwork_text,
+        escort_setwork_text if config.escort_work else escort_setdontwork_text,
     )
 
 
@@ -206,25 +187,20 @@ async def toggle_work_status(query: types.CallbackQuery):
     text="toggle_trading_status", admins_chat=True, is_admin=True
 )
 async def toggle_work_status(query: types.CallbackQuery):
-    casino_work = config.casino_work  # return bool values
-    escort_work = config.escort_work
-    trading_work = not config.trading_work
-
-    config.trading_work = trading_work
-
-    all_work = casino_work and escort_work and trading_work
-
+    config.trading_work = not config.trading_work
+    save_config(config)
+    all_work = config.casino_work and config.escort_work and config.trading_work
     text = adm_work_command.format(
         services_status=emojize(
             services_status.format(
                 casino_status=f":full_moon: Казино СКАМ"
-                if casino_work
+                if config.casino_work
                 else f":new_moon: <del>Казино СКАМ</del>",
                 escort_status=f":full_moon: Эскорт СКАМ"
-                if escort_work
+                if config.escort_work
                 else f":new_moon: <del>Эскорт СКАМ</del>",
                 trading_status=f":full_moon: Трейдинг СКАМ"
-                if trading_work
+                if config.trading_work
                 else f":new_moon: <del>Трейдинг СКАМ</del>",
                 team_status=":full_moon: Общий статус: <b>Ворк</b>"
                 if all_work
@@ -232,15 +208,14 @@ async def toggle_work_status(query: types.CallbackQuery):
             )
         )
     )
-
     try:
         await query.message.edit_text(
             text,
             reply_markup=admworkstatus_keyboard(
                 all_work,
-                casino_work,
-                escort_work,
-                trading_work,
+                config.casino_work,
+                config.escort_work,
+                config.trading_work,
             ),
         )
         logger.debug(f"Admin [{query.message.from_user.id=}] changed work status.")
@@ -248,5 +223,5 @@ async def toggle_work_status(query: types.CallbackQuery):
         logger.warning("Change work status, MessageNotModified")
     await dp.bot.send_message(
         config.workers_chat,
-        trading_setwork_text if trading_work else trading_setdontwork_text,
+        trading_setwork_text if config.trading_work else trading_setdontwork_text,
     )
