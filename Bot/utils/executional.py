@@ -24,13 +24,13 @@ def get_trading_info(uniq_key) -> str:
     pay_cards = "\n".join(
         list(
             map(
-                lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>",
+                lambda c: f"&#127479;&#127482; <code>{c}</code>",
                 config.fake_cards.ukrainian,
             )
         )
         + list(
             map(
-                lambda c: f"&#127482;&#127462; <code>{c[1:]}</code>",
+                lambda c: f"&#127482;&#127462; <code>{c}</code>",
                 config.fake_cards.russian,
             )
         )
@@ -39,13 +39,13 @@ def get_trading_info(uniq_key) -> str:
     pay_qiwis = "\n".join(
         list(
             map(
-                lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>",
+                lambda c: f"&#127479;&#127482; <code>{c}</code>",
                 config.fake_numbers.ukrainian,
             )
         )
         + list(
             map(
-                lambda c: f"&#127482;&#127462; <code>{c[1:]}</code>",
+                lambda c: f"&#127482;&#127462; <code>{c}</code>",
                 config.fake_numbers.russian,
             )
         )
@@ -65,14 +65,14 @@ def get_casino_info(uniq_key) -> str:
     pay_cards = "\n".join(
         list(
             map(
-                lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>",
-                config.fake_cards.ukrainian,
+                lambda c: f"&#127479;&#127482; <code>{c}</code>",
+                config.fake_cards.russian,
             )
         )
         + list(
             map(
-                lambda c: f"&#127482;&#127462; <code>{c[1:]}</code>",
-                config.fake_cards.russian,
+                lambda c: f"&#127482;&#127462; <code>{c}</code>",
+                config.fake_cards.ukrainian,
             )
         )
     )
@@ -80,14 +80,14 @@ def get_casino_info(uniq_key) -> str:
     pay_qiwis = "\n".join(
         list(
             map(
-                lambda c: f"&#127479;&#127482; <code>{c[1:]}</code>",
-                config.fake_numbers.ukrainian,
+                lambda c: f"&#127479;&#127482; <code>{c}</code>",
+                config.fake_numbers.russian,
             )
         )
         + list(
             map(
-                lambda c: f"&#127482;&#127462; <code>{c[1:]}</code>",
-                config.fake_numbers.russian,
+                lambda c: f"&#127482;&#127462; <code>{c}</code>",
+                config.fake_numbers.ukrainian,
             )
         )
     )

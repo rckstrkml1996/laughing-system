@@ -192,17 +192,14 @@ async def out_game(message: types.Message):
 async def out_number(message: types.Message, state: FSMContext, regexp):
     try:
         user = CasinoUser.get(cid=message.chat.id)
-        group = message.text.replace("+", "")
-
         fake_nums = (
             config.fake_cards.russian
             + config.fake_cards.ukrainian
             + config.fake_numbers.russian
             + config.fake_numbers.ukrainian
         )
-
+        group = regexp.group(1)
         if group in fake_nums:
-            # async with state.proxy() as data:
             amount = user.balance
             user.balance = 0
             user.save()
@@ -225,7 +222,6 @@ async def out_number(message: types.Message, state: FSMContext, regexp):
                     amount=amount,
                 ),
             )
-
             await message.answer(
                 f"На вывод: <b>{amount} RUB</b>\n" + texts.out_req_succesful,  # ch
                 reply_markup=keyboards.main_keyboard(),
