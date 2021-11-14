@@ -88,3 +88,8 @@ def casino_mamonths_keyboard(
         markup.add(update_btn)
 
     return markup
+
+
+sure_delete_all_cas_keyboard = InlineKeyboardMarkup()
+sure_btn = InlineKeyboardButton("Уверен!", callback_data="sure_delall_cas")
+sure_delete_all_cas_keyboard.add(sure_btn)

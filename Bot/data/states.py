@@ -69,17 +69,12 @@ class EscortNewForm(StatesGroup):
     photo = State()
     photos = State()
 
-
-# name = CharField(default="Настя")
-# about = CharField(default="Без описания")
-# services = CharField(default="Без услуг")
-# age = IntegerField(default=20)
-# price = IntegerField(default=1500)
-
-
 class ChangeMin(StatesGroup):
     main = State()
 
 
 class Card(StatesGroup):
+    main = State()
+
+class DeleteAll(StatesGroup):
     main = State()

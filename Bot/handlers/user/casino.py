@@ -9,7 +9,7 @@ from models import CasinoUser, CasinoPayment, Worker
 from customutils import datetime_local_now
 from loader import config, dp, casino_bot, MinDepositValues
 from data import texts
-from data.states import CasinoAlert, ChangeMin
+from data.states import CasinoAlert, ChangeMin, DeleteAll
 from data.keyboards import *
 from utils.alert import alert_users
 from utils.executional import get_correct_str, get_casino_mamonth_info, get_casino_info
@@ -239,7 +239,11 @@ async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
     if mamonths_count == 0:
         await query.message.edit_text(texts.no_mamonths_text)
     else:  # format mamonth its a def on 176 line mb not()
-        cusers = list(worker.cas_users)[::-1]
+        cusers = (
+            CasinoUser.select()
+            .where(CasinoUser.visible == True, CasinoUser.owner == worker)
+            .order_by(CasinoUser.id.desc())
+        )
         mamonths = cusers[page * row_width - row_width : page * row_width]
         if not mamonths:
             await query.message.answer(texts.no_mamonths_text)
@@ -373,3 +377,18 @@ async def minimal_deposit_casino(query: types.CallbackQuery, worker: Worker):
     )
     logger.debug(f"Worker [{worker.cid}] update min casino deposit succesfully")
     await query.answer("Изменил!")
+
+
+@dp.callback_query_handler(text="delete_all_cas", is_worker=True, state="*")
+async def delete_all_cas(query: types.CallbackQuery):
+    await DeleteAll.main.set()
+    await query.message.answer("Ты уверен?", reply_markup=sure_delete_all_cas_keyboard)
+
+
+@dp.callback_query_handler(text="sure_delall_cas", state=DeleteAll.main, is_worker=True)
+async def sure_delete_all_cas(
+    query: types.CallbackQuery, worker: Worker, state: FSMContext
+):
+    CasinoUser.update(visible=False).where(CasinoUser.owner == worker).execute()
+    await query.message.edit_text("Удалил!")
+    await state.finish()
