@@ -94,6 +94,7 @@ class CasinoUser(BaseModel):
     fullname = CharField(null=True)
     min_deposit = IntegerField(default=config.min_deposit)
     stopped = BooleanField(default=False)  # stopwork status for single user
+    visible = BooleanField(default=True)
 
     def __str__(self):
         return f"#{self.id} [{self.cid}] {self.balance} RUB, @{self.username} {self.fullname}"
