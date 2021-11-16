@@ -18,7 +18,7 @@ from data.texts import (
 )
 
 
-@dp.message_handler(regexp=BTC_REGEX, admins_chat=True, is_admin=True)
+@dp.message_handler(regexp=BTC_REGEX, admins_chat=True)
 async def new_btc_check(message: types.Message, regexp):
     if not banker_client.is_connected:
         authed = await banker_client.connect()
@@ -155,7 +155,7 @@ async def truepay_qr_command(query: types.CallbackQuery):
                     amount=profit.amount,
                     service=profit.service_name,
                     share=profit.share,
-                    moll=int(profit.share / profit.amount),
+                    moll=int(profit.share * 100 / profit.amount),
                     # created_date ..
                     # payed_date ..
                 ),

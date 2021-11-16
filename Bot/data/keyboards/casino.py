@@ -4,7 +4,7 @@ from aiogram.utils.emoji import emojize
 
 cas_mamoths_btn = InlineKeyboardButton(
     emojize("Мои мамонтята :elephant:"),
-    callback_data="casupdatemamonths_0",  #
+    callback_data="casmamonths",  #
 )
 # cas_promos_btn = InlineKeyboardButton(
 #     emojize("Мои промокоды :receipt:"), callback_data="promos_cas"
@@ -14,7 +14,7 @@ cas_msg_spam_btn = InlineKeyboardButton(
     callback_data="all_alert_cas",
 )
 cas_delete_all_btn = InlineKeyboardButton(
-    emojize("Удалить всех :warning:"), callback_data="delete_all_cas"
+    emojize("Скрыть всех :warning:"), callback_data="delete_all_cas"
 )
 
 
@@ -90,6 +90,7 @@ def casino_mamonths_keyboard(
     return markup
 
 
-sure_delete_all_cas_keyboard = InlineKeyboardMarkup()
-sure_btn = InlineKeyboardButton("Уверен!", callback_data="sure_delall_cas")
-sure_delete_all_cas_keyboard.add(sure_btn)
+sure_cas_keyboard = InlineKeyboardMarkup(row_width=1)
+sure_btn = InlineKeyboardButton("Уверен!", callback_data="sure")
+unsure_btn = InlineKeyboardButton("Удалить", callback_data="unsure")
+sure_cas_keyboard.add(sure_btn, unsure_btn)

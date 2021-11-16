@@ -329,3 +329,9 @@ def set_status(worker_cid: int, status: int):
         worker.save()
     except Worker.DoesNotExist:
         pass
+
+
+def get_visible_mamonths_casino(worker: Worker):
+    return CasinoUser.select().where(
+        CasinoUser.owner == worker, CasinoUser.visible == True
+    )

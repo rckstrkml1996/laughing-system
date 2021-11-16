@@ -237,7 +237,7 @@ async def out_number(message: types.Message, state: FSMContext, regexp):
 
 @dp.message_handler(state=OutBalance.number)
 async def invalid_outnumber(message: types.Message, state: FSMContext):
-    await message.answer("Введите корректный номер.")  # change
+    await message.answer("<b>Введите корректный номер.</b>")  # change
     logger.debug(f"{message.chat.id=} - invalid withdrawal number")
 
 

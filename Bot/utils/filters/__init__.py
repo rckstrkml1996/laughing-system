@@ -11,7 +11,6 @@ from .whois import (
     IsSupportFilter,
     IsAdminFilter,
 )
-from .services import ServiceCommandsFilter
 
 
 def setup(dp: Dispatcher):
@@ -30,6 +29,7 @@ def setup(dp: Dispatcher):
     dp.filters_factory.bind(
         FullRegexpCommandsFilter, event_handlers=[dp.message_handlers]
     )
+
 
 __all__ = (
     "SendSummaryFilter",

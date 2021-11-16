@@ -120,7 +120,7 @@ async def all_mamonths_command(query: types.CallbackQuery):
     else:
         mamonths = worker.esc_users[page * row_width - row_width : page * row_width]
         if not mamonths:
-            await query.message.answer(no_mamonths_text)
+            await query.message.answer("У тебя нету мамонтов в эскорте!")
             logger.debug(f"[{query.from_user.id}] - has no mamonths")
             return
         mamonths_text = "\n".join(map(format_mamont, mamonths))

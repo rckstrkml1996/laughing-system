@@ -29,7 +29,7 @@ summary_send_keyboard.add(send_btn, new_summary_btn)
 # worker blocked in bot
 summary_blocked_keyboard = InlineKeyboardMarkup()
 fuckurself_btn = InlineKeyboardButton(
-    emojize(":speak_no_evil: Пойти нахуй!"), callback_data="fuckurself"
+    emojize(":speak_no_evil: Пойти н*хуй!"), callback_data="fuckurself"
 )
 summary_blocked_keyboard.add(fuckurself_btn)
 

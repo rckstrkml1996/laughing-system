@@ -2,17 +2,18 @@ from asyncio import sleep
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.dispatcher.filters import Text, RegexpCommandsFilter
+from aiogram.dispatcher.filters import Text
 from loguru import logger
 
 from models import CasinoUser, CasinoPayment, Worker
 from customutils import datetime_local_now
 from loader import config, dp, casino_bot, MinDepositValues
 from data import texts
-from data.states import CasinoAlert, ChangeMin, DeleteAll
+from data.states import CasinoAlert, DeleteAll
 from data.keyboards import *
 from utils.alert import alert_users
 from utils.executional import get_correct_str, get_casino_mamonth_info, get_casino_info
+from utils import basefunctional
 
 
 @dp.message_handler(
@@ -31,71 +32,6 @@ async def casino_info(message: types.Message, worker: Worker, state: FSMContext)
     )
     # await CasinoAlert.commands.set() # old deleted from states.py
     logger.debug(f"Worker [{message.chat.id}] get casino info succesfully")
-
-
-@dp.message_handler(commands=["casino_min"], state="*", is_worker=True)
-async def change_casino_minimal_dep(message: types.Message):
-    await message.answer(
-        "Введите новою сумму депозита для всех ваших новых мамонтов.\n"
-        f"От <b>{config.min_deposit} RUB</b>"
-    )
-    await ChangeMin.main.set()
-
-
-@dp.message_handler(
-    lambda msg: not msg.text.isdigit(), state=ChangeMin.main, is_worker=True
-)
-async def invalid_cas_dep_amount(message: types.Message):
-    await message.answer(
-        f"Сумма должна быть числом от <b>{config.min_deposit} RUB</b>! Введи ещё раз:"
-    )
-
-
-@dp.message_handler(state=ChangeMin.main, is_worker=True)
-async def cas_dep_amount(message: types.Message, state: FSMContext, worker: Worker):
-    amount = int(message.text)
-    if amount >= config.min_deposit:
-        worker.casino_min = amount
-        worker.save()
-        await message.answer(
-            f"Теперь для всех твоих новых мамонтов сумма пополнения от <b>{amount} RUB</b>"
-        )
-        await state.finish()
-    else:
-        await message.answer(
-            f"Сумма слишком маленькая, введи сумму от <b>{config.min_deposit} RUB</b>"
-        )
-
-
-@dp.message_handler(  # ru and en - C word
-    RegexpCommandsFilter(regexp_commands=["c(\d+)", "с(\d+)"]),
-    state="*",
-    is_worker=True,
-)
-async def casino_command(message: types.Message, worker: Worker, regexp_command):
-    mb_id = regexp_command.group(1)
-    try:
-        user = CasinoUser.get(id=mb_id)  # can get by str
-    except CasinoUser.DoesNotExist:
-        await message.reply("Такого мамонта не существует!")
-        logger.debug(
-            f"Mamonth [{mb_id}] that worker [{message.chat.id}] want see does not exist."
-        )
-        return
-    if user.owner == worker:
-        logger.debug(f"/c Worker [{message.chat.id}] get mamonth info.")
-    elif user.status >= 4:  # if user support and upper
-        logger.debug(
-            f"/c Admin:{user.status} [{message.chat.id}] get not self mamonth info"
-        )
-    else:
-        logger.warning(f"/c Worker [{message.chat.id}] try get different mamonth!")
-        return
-    text, markup = get_casino_mamonth_info(user)
-    await message.answer(
-        text,
-        reply_markup=markup,
-    )
 
 
 @dp.callback_query_handler(
@@ -228,51 +164,62 @@ def format_mamont(user: CasinoUser) -> str:
 @dp.callback_query_handler(
     lambda cb: cb.data.split("_")[0] == "casupdatemamonths", state="*", is_worker=True
 )
-async def cas_mamonths_info(query: types.CallbackQuery, worker: Worker):
-    q_page = int(query.data.split("_")[1])  # raise if shit
-    page = q_page if q_page != 0 else 1
-    row_width = 20
-    # worker = Worker.get(cid=query.from_user.id)
-    mamonths_count = worker.cas_users.count()
-    localnow = datetime_local_now()
-    timenow = localnow.strftime("%H:%M, %S Сек.")
-    if mamonths_count == 0:
+async def update_cas_mamonths(query: types.CallbackQuery, worker: Worker):
+    page = int(query.data.split("_")[1])
+    visible = basefunctional.get_visible_mamonths_casino(worker)
+    count = visible.count()
+    if count == 0:
         await query.message.edit_text(texts.no_mamonths_text)
-    else:  # format mamonth its a def on 176 line mb not()
-        cusers = (
-            CasinoUser.select()
-            .where(CasinoUser.visible == True, CasinoUser.owner == worker)
-            .order_by(CasinoUser.id.desc())
-        )
-        mamonths = cusers[page * row_width - row_width : page * row_width]
-        if not mamonths:
-            await query.message.answer(texts.no_mamonths_text)
-            return  # logg plz
-        mamonths_text = "\n".join(
+    else:
+        all_mamonths = "\n".join(
             map(
-                format_mamont,
-                mamonths,
+                lambda v: texts.cas_mamonth_info_text.format(
+                    mid=v.id,
+                    cid=v.cid,
+                    name=v.fullname,
+                    balance=v.balance,
+                    fortune=v.fort_chance,
+                ),
+                visible.limit(20),
             )
         )
-        data = {
-            "text": texts.all_cas_mamonths_text.format(
-                mamonths_plur=get_correct_str(
-                    mamonths_count, "Мамонт", "Мамонта", "Мамонтов"
+        await query.message.edit_text(
+            texts.all_cas_mamonths_text.format(
+                mamonths_plur=get_correct_str(count, "мамонт", "мамонта", "мамонтов"),
+                all_mamonths=all_mamonths,
+                time=datetime_local_now().strftime("%H:%M:%S"),
+            ),
+            reply_markup=casino_mamonths_keyboard(count, page, 20),
+        )
+
+
+@dp.callback_query_handler(text="casmamonths", state="*", is_worker=True)
+async def cas_mamonths(query: types.CallbackQuery, worker: Worker):
+    visible = basefunctional.get_visible_mamonths_casino(worker)
+    count = visible.count()
+    if count == 0:
+        await query.answer(texts.no_mamonths_alert)
+    else:
+        all_mamonths = "\n".join(
+            map(
+                lambda v: texts.cas_mamonth_info_text.format(
+                    mid=v.id,
+                    cid=v.cid,
+                    name=v.fullname,
+                    balance=v.balance,
+                    fortune=v.fort_chance,
                 ),
-                all_mamonths=mamonths_text,
-                time=timenow,
+                visible.limit(20),
+            )
+        )
+        await query.message.edit_text(
+            texts.all_cas_mamonths_text.format(
+                mamonths_plur=get_correct_str(count, "мамонт", "мамонта", "мамонтов"),
+                all_mamonths=all_mamonths,
+                time=datetime_local_now().strftime("%H:%M:%S"),
             ),
-            "reply_markup": casino_mamonths_keyboard(
-                mamonths_count, page=page, row_width=row_width
-            ),
-        }
-        if q_page == 0:
-            await query.message.answer(**data)
-            await sleep(0.25)
-            await query.answer("Лови!")
-        else:
-            await query.message.edit_text(**data)
-        logger.debug("Got mamonths list.")
+            reply_markup=casino_mamonths_keyboard(count, 1, 20),
+        )
 
 
 @dp.callback_query_handler(text="all_alert_cas", state="*", is_worker=True)
@@ -382,13 +329,22 @@ async def minimal_deposit_casino(query: types.CallbackQuery, worker: Worker):
 @dp.callback_query_handler(text="delete_all_cas", is_worker=True, state="*")
 async def delete_all_cas(query: types.CallbackQuery):
     await DeleteAll.main.set()
-    await query.message.answer("Ты уверен?", reply_markup=sure_delete_all_cas_keyboard)
+    await query.message.answer(
+        "Ты уверен, что хочешь скрыть мамонтов?", reply_markup=sure_cas_keyboard
+    )
 
 
-@dp.callback_query_handler(text="sure_delall_cas", state=DeleteAll.main, is_worker=True)
+@dp.callback_query_handler(text="unsure", state=DeleteAll.main)
+async def unsure_delete_all_cas(query: types.CallbackQuery, state: FSMContext):
+    await query.answer("Отменено!")
+    await query.message.delete()
+    await state.finish()
+
+
+@dp.callback_query_handler(text="sure", state=DeleteAll.main, is_worker=True)
 async def sure_delete_all_cas(
     query: types.CallbackQuery, worker: Worker, state: FSMContext
 ):
     CasinoUser.update(visible=False).where(CasinoUser.owner == worker).execute()
-    await query.message.edit_text("Удалил!")
+    await query.message.edit_text("Скрыл!")
     await state.finish()

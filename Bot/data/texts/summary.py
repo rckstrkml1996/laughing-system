@@ -33,19 +33,10 @@ def rules_text(agreed=False):
     return emojize(text)
 
 
-summary_where_text = emojize(
-    "<b>Откуда Вы узнали о нас?</b> :seedling:\n\n"
-    "Пожалуйста отправьте <b>линк</b> на источник."
-)
+summary_where_text = "<b>Откуда Вы узнали о нас?</b>"
 
-summary_exp_text = emojize(
-    "<b>У вас есть опыт работы в такой сфере?</b> :dragon:\n"
-    "Приложите доказательства:\n\n"
-    "• <code>Скрины выплат из команд где вы работали</code>\n"
-    "• <code>Скриншот 'Мой профиль' (если имеется в боте)</code>\n"
-    "• <code>Общая сумма оплат</code>\n\n"
-    "Можно отправить ссылку из [@imgurbot_bot]."
-)
+
+summary_exp_text = "<b>У вас есть опыт работы в такой сфере?</b> :dragon:"
 
 summary_final = emojize(
     ":love_letter: <b>Ваша заявка готова к отправке на проверку!</b>\n\n"
@@ -96,11 +87,11 @@ summary_accepted_text = emojize(
 
 summary_blocked_text = emojize(
     ":no_entry_sign: <b>Администрация проекта заблокировала Вас!</b>\n\n"
-    ":hatched_chick: <b>Ты идешь НАХУЙ!</b>"
+    ":hatched_chick: <b>Ты идешь н*хуй!</b>"
 )
 
 summary_blockfin_text = emojize(
-    ":shrimp: <b>Вы пришли нахуй!</b>\n"
+    ":shrimp: <b>Вы пришли н*хуй!</b>\n"
     "Кодер вас не любит. :angry:\n\n"
     "<code>Иди отсоси себе)</code>"
 )

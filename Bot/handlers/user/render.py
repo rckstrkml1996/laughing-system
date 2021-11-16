@@ -87,6 +87,6 @@ async def render_sber_trans_done(message: types.Message, state: FSMContext):
             render_sbertransfer(render_val[0], render_val[1], render_val[2])
         )
         await state.finish()
-        await message.answer_photo(render, caption=emojize("Сбер нахуй :snake:"))
+        await message.answer_photo(render, caption=emojize("Сбер н*хуй :snake:"))
     else:
         await message.answer(render_sber_trans_text, reply_markup=to_menu_keyboard)

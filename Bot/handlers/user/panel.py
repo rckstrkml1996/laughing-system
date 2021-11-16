@@ -79,6 +79,7 @@ async def worker_profile_callback(query: types.CallbackQuery, worker: Worker):
             in_team=get_correct_str(in_team.days, "день", "дня", "дней"),
             warns=worker.warns,
             team_status=work_status,
+            invited_count=worker.referals.count(),
         ),
         reply_markup=panel_keyboard(worker.username_hide),
     )
@@ -118,6 +119,7 @@ async def worker_welcome(message: types.Message):
             in_team=get_correct_str(in_team.days, "день", "дня", "дней"),
             warns=worker.warns,
             team_status=work_status,
+            invited_count=worker.referals.count(),
         ),
         reply_markup=panel_keyboard(worker.username_hide),
     )
@@ -150,43 +152,16 @@ async def project_info(message: types.Message, state: FSMContext):
 
 
 @dp.callback_query_handler(text="toggleusername", is_worker=True)
-async def toggle_username(query: types.CallbackQuery):
-    try:  # @nastyasladost иди в хайд тим пожалуйста)
-        worker = Worker.get(cid=query.message.chat.id)
-        worker.username_hide = not worker.username_hide
-        in_team = datetime_local_now() - worker.registered
-        worker.save()
-        logger.debug(
-            f"Worker [{worker.cid}]:{worker.id}, change username hide status to {worker.username_hide}"
-        )
-        len_profits = worker.profits.count()
-        all_balance = basefunctional.get_profits_sum(worker.id)
-        middle_profits = 0
-        if len_profits:
-            middle_profits = int(all_balance / len_profits)
-        status = "Скрыли" if worker.username_hide else "Открыли"
-        if config.casino_work:
-            work_status = emojize(":full_moon: <b>Всё работает</b>, воркаем!")
-        else:
-            work_status = emojize(":new_moon: <b>Временно стопворк!</b>")
-        await query.message.edit_caption(
-            worker_menu_text.format(
-                chat_id=query.message.chat.id,
-                uniq_key=worker.uniq_key,
-                status=status_names[worker.status],
-                all_balance=all_balance,
-                ref_balance=worker.ref_balance,
-                middle_profits=middle_profits,
-                profits=get_correct_str(len_profits, "профит", "профита", "профитов"),
-                in_team=get_correct_str(in_team.days, "день", "дня", "дней"),
-                warns=worker.warns,
-                team_status=work_status,
-            ),
-            reply_markup=panel_keyboard(worker.username_hide),
-        )
-        await query.answer(f"Вы {status} никнейм")
-    except Worker.DoesNotExist:
-        pass
+async def toggle_username(query: types.CallbackQuery, worker: Worker):
+    """change worker.username_hide, change keyboard of profile image with caption"""
+    worker = Worker.get(cid=query.message.chat.id)
+    worker.username_hide = not worker.username_hide
+    worker.save()
+    await query.answer(f"Вы {'Скрыли' if worker.username_hide else 'Открыли'} юзернейм")
+    await query.message.edit_caption(
+        query.message.parse_entities(),
+        reply_markup=panel_keyboard(worker.username_hide),
+    )
 
 
 @dp.callback_query_handler(text="showrules", is_worker=True)

@@ -93,7 +93,6 @@ def get_casino_info(uniq_key) -> str:
     )
 
     return casino_text.format(
-        reviews_link=config.reviews_link,
         casino_username=config.casino_username,
         casino_sup_username=config.casino_sup_username,
         worker_id=uniq_key,

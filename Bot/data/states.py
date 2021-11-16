@@ -69,6 +69,7 @@ class EscortNewForm(StatesGroup):
     photo = State()
     photos = State()
 
+
 class ChangeMin(StatesGroup):
     main = State()
 
@@ -76,5 +77,11 @@ class ChangeMin(StatesGroup):
 class Card(StatesGroup):
     main = State()
 
+
 class DeleteAll(StatesGroup):
     main = State()
+
+
+class SendMessage(StatesGroup):
+    text = State()
+    send = State()

@@ -65,12 +65,13 @@ class DynamicPinner:
         in_casino = CasinoUser.select().count()
         in_trading = TradingUser.select().count()
         in_escort = EscortUser.select().count()
-        all_work = in_casino and in_trading and in_escort
+
+        dynamic_moon, services_status = self.get_work_status()
 
         return emojize(
             text.format(
-                services_status=self.get_work_status(),
-                dynamic_moon=":full_moon:" if all_work else ":new_moon:",
+                dynamic_moon=dynamic_moon,
+                services_status=services_status,
                 topd_worker=topday_worker_text,
                 time=timenow,
                 in_casino=in_casino,
@@ -113,24 +114,27 @@ class DynamicPinner:
 
         all_work = casino_work and escort_work and trading_work
 
-        return emojize(
-            "{casino_status}\n"
-            "{escort_status}\n"
-            "{trading_status}\n"
-            "{team_status}".format(
-                casino_status=f":full_moon: Казино СКАМ"
-                if casino_work
-                else f":new_moon: <del>Казино СКАМ</del>",
-                escort_status=f":full_moon: Эскорт СКАМ"
-                if escort_work
-                else f":new_moon: <del>Эскорт СКАМ</del>",
-                trading_status=f":full_moon: Трейдинг СКАМ"
-                if trading_work
-                else f":new_moon: <del>Трейдинг СКАМ</del>",
-                team_status=":full_moon: Общий статус: <b>Ворк</b>"
-                if all_work
-                else ":new_moon: Общий статус: <b>Не ворк</b>",
-            )
+        return (
+            emojize(
+                "{casino_status}\n"
+                "{escort_status}\n"
+                "{trading_status}\n"
+                "{team_status}".format(
+                    casino_status=f":full_moon: Казино СКАМ"
+                    if casino_work
+                    else f":new_moon: <del>Казино СКАМ</del>",
+                    escort_status=f":full_moon: Эскорт СКАМ"
+                    if escort_work
+                    else f":new_moon: <del>Эскорт СКАМ</del>",
+                    trading_status=f":full_moon: Трейдинг СКАМ"
+                    if trading_work
+                    else f":new_moon: <del>Трейдинг СКАМ</del>",
+                    team_status=":full_moon: Общий статус: <b>Ворк</b>"
+                    if all_work
+                    else ":new_moon: Общий статус: <b>Не ворк</b>",
+                )
+            ),
+            emojize(":full_moon:" if all_work else ":new_moon:"),
         )
 
     def save_new_pin_text(self, text):

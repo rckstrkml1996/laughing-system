@@ -71,4 +71,4 @@ async def set_profit_sticker(message: types.Message, state: FSMContext):
 )
 async def close_profit_sticker(message: types.Message, state: FSMContext):
     await state.finish()
-    await message.answer("Ну и иди нахуй со своим стиком :(")
+    await message.answer("Ну и иди н*хуй со своим стиком :(")

@@ -31,7 +31,8 @@ async def play_game(message: types.Message):
     try:
         user = CasinoUser.get(cid=message.chat.id)
         await message.answer(  ####
-            "Выберите интересующую Вас игру", reply_markup=keyboards.games_keyboard
+            "<b>Выберите интересующую Вас игру</b>",
+            reply_markup=keyboards.games_keyboard,
         )
         await Game.chose_game.set()
     except CasinoUser.DoesNotExist:
@@ -234,7 +235,11 @@ async def casino_bet(message: types.Message, state: FSMContext, regexp):
                     owner=user, amount=amount, balance=user.balance, editor=2
                 )
 
-            await message.answer(f"Победа! Выпало число {number}")
+            await message.answer(
+                emojize(
+                    f"<b>Вы победили!</b> :four_leaf_clover: Выпало число - <b>{number}</b>"
+                )
+            )
         else:
             if bet[0] == ">":
                 number = randint(1, 49)
@@ -256,7 +261,7 @@ async def casino_bet(message: types.Message, state: FSMContext, regexp):
                 )
 
             await message.answer(
-                emojize(f"Вы проиграли :confused: Выпало число {number}")
+                emojize(f"<b>Вы проиграли</b> :confused: Выпало число <b>{number}</b>")
             )
 
         await casino_any(message)
@@ -426,6 +431,6 @@ async def graph_stake(message: types.Message, state: FSMContext):
         logger.debug(f"{message.chat.id} - not enough money")
 
 
-@dp.message_handler(regexp="остан", state=Game.graph_set_stop)
-async def graph_stop():
+@dp.message_handler(regexp="остановить", state=Game.graph_set_stop)
+async def graph_stop(_):
     await Game.graph_stop.set()  # just set it stopped;
