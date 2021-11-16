@@ -66,12 +66,12 @@ class DynamicPinner:
         in_trading = TradingUser.select().count()
         in_escort = EscortUser.select().count()
 
-        dynamic_moon, services_status = self.get_work_status()
+        services_status, dynamic_moon = self.get_work_status()
 
         return emojize(
             text.format(
-                dynamic_moon=dynamic_moon,
                 services_status=services_status,
+                dynamic_moon=dynamic_moon,
                 topd_worker=topday_worker_text,
                 time=timenow,
                 in_casino=in_casino,
