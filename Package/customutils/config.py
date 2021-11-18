@@ -33,6 +33,7 @@ class Qiwi(JsonModel):
     token: str
     proxy_url: Optional[str]
     wallet: Optional[str]
+    public_key: str
 
 
 class FakeRequisites(JsonModel):
@@ -97,6 +98,8 @@ class Config(JsonModel):
 
     team_start: str
     team_name: str = "Team Name"
+
+    trading_min_out: int = 1000
 
 
 def load_config() -> Config:

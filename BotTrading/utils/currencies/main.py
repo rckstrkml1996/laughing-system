@@ -72,9 +72,9 @@ class CurrencyWorker(MessariApi):
                     await sleep(30)
                 except BadRequest as ex:
                     logger.error(ex)
-                await sleep(3)
+                await sleep(1)
 
-            await sleep(60)
+            await sleep(600)
 
     def stop_work(self):
         self._working = False

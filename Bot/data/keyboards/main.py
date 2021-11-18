@@ -6,11 +6,11 @@ from aiogram.utils.emoji import emojize
 menu_keyboard = ReplyKeyboardMarkup(one_time_keyboard=False, resize_keyboard=True)
 profile_btn = KeyboardButton(emojize("Профиль :cold_face:"))
 casino_btn = KeyboardButton(emojize("Казик :slot_machine:"))
-traiding_btn = KeyboardButton(emojize("Трейдинг :chart:"))
+trading_btn = KeyboardButton(emojize("Трейдинг :chart:"))
 escort_btn = KeyboardButton(emojize("Эскорт :green_heart:"))
 about_btn = KeyboardButton(emojize("О проекте :man_technologist:"))
 menu_keyboard.add(profile_btn)
-menu_keyboard.add(casino_btn, escort_btn)  # traiding_btn,
+menu_keyboard.add(trading_btn, casino_btn, escort_btn)
 menu_keyboard.add(about_btn)
 
 

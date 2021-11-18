@@ -1,3 +1,4 @@
+from secrets import token_hex
 import random
 
 from aiogram import types
@@ -87,17 +88,17 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
         logger.error("NO QIWI TOKENS")
         return  # no tokens!
 
-    account = random.choice(config.qiwis).wallet
-    comment = random.randint(1000000, 9999999)
+    public_key = random.choice(config.qiwis).public_key
+    comment = token_hex(8)
     pay = CasinoPayment.create(owner=user, comment=comment, amount=amount)
 
     await query.message.edit_text(
         texts.add_req.format(
+            public_key=public_key,
             amount=amount,
-            account=account,
             comment=comment,
         ),
-        reply_markup=keyboards.add_req_keyboard(amount, comment, account),
+        reply_markup=keyboards.add_req_keyboard(amount, comment, public_key),
     )
     await main_bot.send_message(
         user.owner.cid,

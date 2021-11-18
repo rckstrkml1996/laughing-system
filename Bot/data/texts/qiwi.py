@@ -18,15 +18,17 @@ qiwi_to_bot_text = "Введите все необходимые данные <b
 wanna_add_qiwi_text = "Введем новый киви?"
 
 add_qiwi_text = emojize(
-    ":rugby_football: Введите <b>Токен</b>, и <b>По желанию</b> Прокси, пример\n\n"
+    ":rugby_football: Введите <b>Токен</b> <b>Публичный ключ</b>, и <b>По желанию</b> Прокси, пример\n\n"
     "<code>f420543a9430065db1264535ff4eb1ae</code>\n"
+    "<code>48e7qUxn9T...P5L49YSCM</code>\n"
     "<code>http://user:pass@100.255.3.52:6666</code>"
 )
 
 invalid_newqiwi_text = emojize(
     ":x: <b>Допущена ошибка</b> при вводе!\n"
-    "Введите <b>Токен</b> и Прокси <b>(Не обяз.)</b>, пример:\n\n"
+    "Введите <b>Токен</b> <b>Публичный ключ</b> и Прокси <b>(Не обяз.)</b>, пример:\n\n"
     "<code>f420543a9430065db1264535ff4eb1ae</code>\n"
+    "<code>48e7qUxn9T...P5L49YSCM</code>\n"
     "<code>http://user:pass@100.255.3.52:6666</code> (По желанию)"
 )
 

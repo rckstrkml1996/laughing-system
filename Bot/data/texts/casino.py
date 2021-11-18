@@ -32,8 +32,8 @@ invalid_match_text = emojize(":warning: Неправильно введены д
 
 cas_mamonth_info_text = "(/c{mid}) - <a href='tg://user?id={cid}'>{name}</a> - <b>{balance} RUB</b>, фарт - {fortune}"
 
-balance_changed_text = emojize(
-    ":ok_hand: Баланс мамонта /c{user_id} - <b>{amount} RUB</b>"
+cas_balance_changed_text = emojize(
+    ":slot_machine: Баланс мамонта /c{user_id} - <b>{amount} RUB</b>"
 )
 
 no_mamonths_text = emojize(":slot_machine: <b>У тебя ещё нету мамонтов!</b>")

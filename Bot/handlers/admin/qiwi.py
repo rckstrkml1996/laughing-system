@@ -151,7 +151,14 @@ async def qiwi_add_cancel(query: types.CallbackQuery, state: FSMContext):
 @dp.message_handler(state=NewQiwi.main, is_admin=True)
 async def qiwi_add_value(message: types.Message, state: FSMContext):
     payload = message.text.split("\n")
+    if len(payload) < 2:
+        await message.answer(
+            texts.invalid_newqiwi_text, reply_markup=keyboards.qiwi_add_cancel_keyboard
+        )
+
     token = payload[0]
+    public_key = payload[1]
+
     if token in map(lambda qw: qw.token, config.qiwis):
         await message.answer(
             texts.qiwi_already_exists_text,
@@ -160,8 +167,8 @@ async def qiwi_add_value(message: types.Message, state: FSMContext):
         return
 
     proxy_url = None
-    if len(payload) >= 2:
-        proxy_url = payload[1]
+    if len(payload) >= 3:
+        proxy_url = payload[2]
 
     try:
         Qiwi.validate(token, proxy_url)
@@ -188,7 +195,11 @@ async def qiwi_add_value(message: types.Message, state: FSMContext):
         await qiwi.close()
 
         wallet = profile.contractInfo.contractId
-        config.qiwis.append(ConfigQiwi(token=token, proxy_url=proxy_url, wallet=wallet))
+        config.qiwis.append(
+            ConfigQiwi(
+                token=token, proxy_url=proxy_url, wallet=wallet, public_key=public_key
+            )
+        )
         save_config(config)
         await message.answer(texts.valid_newqiwi_text.format(number=wallet))
         text, markup = await qiwi_command_wrapper()

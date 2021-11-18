@@ -37,23 +37,13 @@ async def accept_pay(query: types.CallbackQuery):
     pay_id = query.data.split("_")[1]
     try:
         pay = TradingPayment.get(id=pay_id)
-        check_time = config.qiwi_check_time * 2  # - 3 just for somethink)
-        exact_time = (datetime_local_now() - pay.created).seconds
-        logger.debug(f"{check_time=} (qiwi_check_time * 2), {exact_time=}")
         if pay.done == 1:
             await query.message.edit_text(
                 query.message.parse_entities() + "\n\n<b>Мамонт уже оплатил заявку!</b>"
             )
             return
-        elif exact_time >= check_time:
-            pay.done = 2
-            pay.save()
-        elif exact_time <= check_time:
-            await query.answer(f"Жди еще {check_time - exact_time} секунд!")
-            return
-        else:
-            await query.answer(f"Зови кодера)")
-            return
+        pay.done = 2
+        pay.save()
         await query.message.edit_text(
             query.message.parse_entities() + "\n\n<i>Вы оплатили заявку</i>"
         )

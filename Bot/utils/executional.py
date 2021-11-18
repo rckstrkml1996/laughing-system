@@ -20,78 +20,49 @@ from data.keyboards import cas_info_keyboard, esc_info_keyboard
 from utils import basefunctional
 
 
-def get_trading_info(uniq_key) -> str:
-    pay_cards = "\n".join(
+def get_cards_qiwis():
+    return "\n".join(
         list(
             map(
                 lambda c: f"&#127479;&#127482; <code>{c}</code>",
-                config.fake_cards.ukrainian,
-            )
-        )
-        + list(
-            map(
-                lambda c: f"&#127482;&#127462; <code>{c}</code>",
                 config.fake_cards.russian,
             )
         )
-    )
-
-    pay_qiwis = "\n".join(
+        + list(
+            map(
+                lambda c: f"&#127482;&#127462; <code>{c}</code>",
+                config.fake_cards.ukrainian,
+            )
+        )
+    ), "\n".join(
         list(
             map(
                 lambda c: f"&#127479;&#127482; <code>{c}</code>",
-                config.fake_numbers.ukrainian,
+                config.fake_numbers.russian,
             )
         )
         + list(
             map(
                 lambda c: f"&#127482;&#127462; <code>{c}</code>",
-                config.fake_numbers.russian,
+                config.fake_numbers.ukrainian,
             )
         )
     )
 
+
+def get_trading_info(uniq_key) -> str:
+    pay_cards, pay_qiwis = get_cards_qiwis()
     return trading_text.format(
-        reviews_link=config.reviews_link,
-        trading_username=config.casino_username,
-        trading_sup_username=config.casino_sup_username,
-        worker_id=uniq_key,
-        pay_cards=pay_cards,
+        uniq_key=uniq_key,
+        bot_username=config.trading_username,
+        support_username=config.trading_sup_username,
         pay_qiwis=pay_qiwis,
+        pay_cards=pay_cards,
     )
 
 
 def get_casino_info(uniq_key) -> str:
-    pay_cards = "\n".join(
-        list(
-            map(
-                lambda c: f"&#127479;&#127482; <code>{c}</code>",
-                config.fake_cards.russian,
-            )
-        )
-        + list(
-            map(
-                lambda c: f"&#127482;&#127462; <code>{c}</code>",
-                config.fake_cards.ukrainian,
-            )
-        )
-    )
-
-    pay_qiwis = "\n".join(
-        list(
-            map(
-                lambda c: f"&#127479;&#127482; <code>{c}</code>",
-                config.fake_numbers.russian,
-            )
-        )
-        + list(
-            map(
-                lambda c: f"&#127482;&#127462; <code>{c}</code>",
-                config.fake_numbers.ukrainian,
-            )
-        )
-    )
-
+    pay_cards, pay_qiwis = get_cards_qiwis()
     return casino_text.format(
         casino_username=config.casino_username,
         casino_sup_username=config.casino_sup_username,
@@ -104,7 +75,6 @@ def get_casino_info(uniq_key) -> str:
 def get_escort_mamonth_info(user: CasinoUser) -> str:
     localnow = datetime_local_now()
     timenow = localnow.strftime("%H:%M, %S cек")
-
     return (
         escort_mamonth_info.format(
             smile=random_heart(),
@@ -125,10 +95,8 @@ def get_casino_mamonth_info(user: CasinoUser) -> str:
     pays_amount = basefunctional.casino_history_sum(user.id)  # editor == 0
     # pays_amount = basefunctional.casino_pays_sum(user.id)  # done == 2
     games_lose = user.history.where(CasinoUserHistory.editor == 3).count()
-
     localnow = datetime_local_now()
     timenow = localnow.strftime("%H:%M, %S cек")
-
     return (
         casino_mamonth_info.format(
             smile=random_heart(),
@@ -232,9 +200,7 @@ def get_work_moon():
     casino_work = config.casino_work
     escort_work = config.escort_work
     trading_work = config.trading_work
-
     all_work = casino_work and escort_work and trading_work
-
     return ":full_moon:" if all_work else ":new_moon:"
 
 
@@ -242,9 +208,7 @@ def get_work_status():
     casino_work = config.casino_work
     escort_work = config.escort_work
     trading_work = config.trading_work
-
     all_work = casino_work and escort_work and trading_work
-
     return emojize(
         services_status.format(
             casino_status=f":full_moon: Казино СКАМ"
@@ -265,15 +229,12 @@ def get_work_status():
 
 def get_info_about_worker(worker):
     in_team = datetime_local_now() - worker.registered
-
     len_profits = worker.profits.count()
     sum_profits = basefunctional.get_profits_sum(worker.id)
-
     try:
         middle_profits = int(sum_profits / len_profits)
     except ZeroDivisionError:
         middle_profits = 0
-
     return me_text.format(
         mention=mention_text.format(user_id=worker.cid, text=worker.name),
         cid=worker.cid,

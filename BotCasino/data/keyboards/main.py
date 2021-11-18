@@ -3,7 +3,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.emoji import emojize
 
 
-# 
+#
 
 # cancel button
 cancel_button = KeyboardButton(emojize("Назад"))
@@ -35,9 +35,8 @@ def welcome_keyboard(ref_id: int):
     return welcome_keyboard
 
 
-def add_req_keyboard(amount: int, comment: int, number):
-    url = f"https://qiwi.com/payment/form/99?currency=RUB&amountInteger={amount}\
-	&amountFraction=0&extra['account']={number}&extra['comment']={comment}"
+def add_req_keyboard(amount: int, comment: str, public_key: str):
+    url = f"https://oplata.qiwi.com/create?publicKey={public_key}&amount={amount}&comment={comment}&successUrl=https://t.me/olimprucasino_bot"
 
     markup = InlineKeyboardMarkup(
         one_time_keyboard=True, resize_keyboard=True, row_width=1

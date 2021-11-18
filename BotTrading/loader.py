@@ -4,11 +4,11 @@ import asyncio
 
 from aiogram.types import ParseMode
 
-from customutils import Config
+from customutils import load_config
 from utils.currencies.main import CurrencyWorker
 
 
-config = Config()
+config = load_config()
 
 currency_worker = CurrencyWorker("791fdf77-aeae-4a9c-a270-b6f5f29c7b88")
 

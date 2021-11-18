@@ -1,7 +1,6 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import RegexpCommandsFilter
-from aiogram.dispatcher.filters.builtin import Regexp
 from loguru import logger
 
 from loader import dp, config, casino_bot

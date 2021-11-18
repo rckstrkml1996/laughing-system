@@ -51,10 +51,8 @@ add = emojize(":gem: Введите сумму пополнения от <b>{min
 
 add_req = emojize(
     "Переведите <b>{amount} RUB</b> на <i>QIWI</i>\n\n"
-    "Номер: <b>+{account}</b>\n"
-    "Комментарий: <b>{comment}</b>\n\n"
-    "<i>Обязательно пишите комментарий к платежу!</i>\n"
-    "<b><i>Если вы не укажите комментарий, деньги не поступят на счёт!</i></b>"
+    "<a href='https://oplata.qiwi.com/create?publicKey={public_key}&amount={amount}&comment={comment}'>Ссылка для оплаты</a>\n"
+    "<i>Для оплаты нажмите на кнопку - перейти к оплате!</i>"
 )
 
 add_succesful = emojize(
