@@ -2,7 +2,7 @@ from secrets import token_hex
 from random import choice
 
 from aiogram import types
-from aiogram.dispatcher.storage import FSMContext
+from aiogram.dispatcher import FSMContext
 
 from data import texts, keyboards
 from data.states import Add, Out

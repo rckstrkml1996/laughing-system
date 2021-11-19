@@ -31,6 +31,7 @@ media/
 # Ignore cfg files
 
 settings.json
+# currencies.json
 *.txt
 
 *.session

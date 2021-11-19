@@ -1,5 +1,5 @@
 from aiogram import types
-from aiogram.dispatcher.storage import FSMContext
+from aiogram.dispatcher import FSMContext
 
 from loader import dp, config
 from data import texts, keyboards

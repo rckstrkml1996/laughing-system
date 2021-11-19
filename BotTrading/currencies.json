@@ -5,71 +5,71 @@
             "keyboard_name": "Bitcoin",
             "name": "Bitcoin/USD",
             "symbol": "BTC",
-            "description": "\u0420\u2018\u0420\u0451\u0421\u201a\u0420\u0454\u0420\u0455\u0420\u0451\u0420\u0405 \u0420\u0455\u0420\u00b1\u0420\u00bb\u0420\u00b0\u0420\u0491\u0420\u00b0\u0420\u00b5\u0421\u201a \u0420\u0406\u0421\u2039\u0421\u0403\u0420\u0455\u0420\u0454\u0420\u0455\u0420\u2116 \u0420\u0406\u0420\u0455\u0420\u00bb\u0420\u00b0\u0421\u201a\u0420\u0451\u0420\u00bb\u0421\u040a\u0420\u0405\u0420\u0455\u0421\u0403\u0421\u201a\u0421\u040a\u0421\u040b \u0420\u0451\u0420\u00b7\u0420\u0458\u0420\u00b5\u0420\u0405\u0420\u00b5\u0420\u0405\u0420\u0451\u0421\u040f \u0420\u0454\u0421\u0453\u0421\u0402\u0421\u0403\u0420\u00b0 \u0420\u0457\u0420\u0455 \u0420\u0455\u0421\u201a\u0420\u0405\u0420\u0455\u0421\u20ac\u0420\u00b5\u0420\u0405\u0420\u0451\u0421\u040b \u0420\u0454 \u0420\u0491\u0420\u0455\u0420\u00bb\u0420\u00bb\u0420\u00b0\u0421\u0402\u0421\u0453 \u0420\u040e\u0420\u0401\u0420\u0452 \u0420\u0451 \u0420\u0491\u0421\u0402\u0421\u0453\u0420\u0456\u0420\u0451\u0420\u0458 \u0420\u0406\u0420\u00b0\u0420\u00bb\u0421\u040b\u0421\u201a\u0420\u00b0\u0420\u0458.",
+            "description": "A p2p payment system that uses the unit of the same name to record transactions.",
             "photo_path": null,
             "file_path": null,
-            "price_usd": 57871.94,
-            "price": 4108907.97
+            "price_usd": 58275.45,
+            "price": 4137556.97
         },
         {
             "keyboard_name": "Ripple",
             "name": "Ripple/USD",
             "symbol": "XRP",
-            "description": "Some info about bitcoin currency",
+            "description": "Cryptocurrency platform for payment systems focused on currency exchange transactions without chargebacks.",
             "photo_path": null,
             "file_path": null,
-            "price_usd": 1.08,
-            "price": 76.81
+            "price_usd": 1.1,
+            "price": 77.89
         },
         {
             "keyboard_name": "DogeCoin",
             "name": "Doge/USD",
             "symbol": "Doge",
-            "description": "Some info about bitcoin currency",
+            "description": "Cryptocurrency based on Litecoin. Named after the Internet meme Doge. It was introduced on December 8, 2013.",
             "photo_path": null,
             "file_path": null,
-            "price_usd": 0.23,
-            "price": 16.56
+            "price_usd": 0.24,
+            "price": 16.75
         },
         {
             "keyboard_name": "Ethereum",
             "name": "Ethereum/USD",
             "symbol": "ETH",
-            "description": "Some info about bitcoin currency",
+            "description": "Cryptocurrency and platform for creating decentralized blockchain-based online services powered by smart contracts.",
             "photo_path": null,
             "file_path": null,
-            "price_usd": 4218.63,
-            "price": 299522.92
+            "price_usd": 4263.88,
+            "price": 302735.33
         },
         {
             "keyboard_name": "Binance Coin",
             "name": "BinanceCoin/USD",
             "symbol": "BNB",
-            "description": "Some info about bitcoin currency",
+            "description": "Cryptocurrency that can be used to trade and pay fees on the Binance cryptocurrency exchange",
             "photo_path": null,
             "file_path": null,
-            "price_usd": 577.55,
-            "price": 41006.0
+            "price_usd": 581.67,
+            "price": 41298.77
         },
         {
             "keyboard_name": "Litecoin",
             "name": "Litecoin/USD",
             "symbol": "LTC",
-            "description": "Some info about bitcoin currency",
+            "description": "Fork of Bitcoin, a peer-to-peer electronic payment system using the cryptocurrency of the same name.",
             "photo_path": null,
             "file_path": null,
-            "price_usd": 217.94,
-            "price": 15473.88
+            "price_usd": 219.33,
+            "price": 15572.22
         },
         {
             "keyboard_name": "Euro",
             "name": "Euro/USD",
             "symbol": "EUR",
-            "description": "Some info about bitcoin currency",
+            "description": "The single currency of the European Union, introduced for cash circulation in 2002.",
             "photo_path": null,
             "file_path": null,
             "price_usd": 1.13,
-            "price": 80.26
+            "price": 80.28
         }
     ]
 }

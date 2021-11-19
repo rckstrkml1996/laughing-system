@@ -1,5 +1,5 @@
 from aiogram.types import Message
-from aiogram.dispatcher.storage import FSMContext
+from aiogram.dispatcher import FSMContext
 
 from models import Profit, Worker
 from loader import dp, payments_checker

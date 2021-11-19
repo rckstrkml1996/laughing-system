@@ -1,4 +1,5 @@
-from aiogram import types
+from aiogram import Dispatcher, types
+from aiogram.dispatcher import FSMContext
 
 from loader import currency_worker
 from models import TradingUser
@@ -52,6 +53,7 @@ async def bet_handler(query: types.CallbackQuery, user: TradingUser):
         )
     )
     await Bet.amount.set()
+    await Dispatcher.get_current().current_state().update_data(curr_id=curr_id)
 
 
 async def non_digit_bet_amount(message: types.Message):
@@ -67,6 +69,9 @@ async def bet_amount(message: types.Message, user: TradingUser):
     await Bet.time.set()
 
 
-async def time_selected(query: types.CallbackQuery):
+async def time_selected(query: types.CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    currency = currency_worker.get_currency(data["curr_id"])
+    print(currency)
     seconds = int(query.data.split("_")[1])
     await query.message.edit_text(f"chice - {seconds}")
