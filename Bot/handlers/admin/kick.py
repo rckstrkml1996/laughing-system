@@ -46,6 +46,7 @@ async def kick_all_users(message: types.Message):
                     await sleep(0.6)
             except Exception as ex:
                 logger.exception(ex)
+            await sleep(0.2)
         offset += 1
         await sleep(0.1)
     await msg.reply("Закончил емае!")

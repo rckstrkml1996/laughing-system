@@ -33,17 +33,16 @@ add_amount_small = emojize(
 add_go = emojize(
     "<i>Переведите</i> <b>{amount} RUB</b> на Qiwi\n"
     f"{':wavy_dash:' * 10}\n\n"
-    "Номер: <i>+{account}</i>\n"
-    "Комментарий: <code>{comment}</code>\n\n"
+    "<a href='https://oplata.qiwi.com/create?publicKey={public_key}&amount={amount}&comment={comment}'>"
+    "Ссылка на оплату для друга</a>\n\n"
     f"{':wavy_dash:' * 10}\n"
-    "<i>Без комментария ваш платёж не будет замечен!</i>"
+    "<i>Воспользуйтесь клавиатурой для оплаты!</i>"
 )
 
 pay_card_alert = emojize(
     ":grey_exclamation: Для пополнения картой, "
     "нажмите на кнопку «Перейти к оплате», "
-    "затем перейдя по ссылке, "
-    "пролистайте страницу вниз, выберите способ оплаты «Картой без регистрации»"
+    "затем перейдя по ссылке, выберите способ оплаты «Банковская карта»"
 )
 
 rules = emojize(
@@ -90,7 +89,7 @@ out_invalid = emojize(
 out_request = emojize(
     ":money_with_wings: <b>Заявка</b> на вывод создана\n"
     f"{':wavy_dash:' * 10}\n\n"
-    "Номер: {number}\n"
+    "Номер: <b>{number}</b>\n"
     "Сумма: <b>{amount} RUB</b>\n\n"
     f"{':wavy_dash:' * 10}\n"
     "Мы <b>оповестим</b> вас, когда заявка будет выплачена"

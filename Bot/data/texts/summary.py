@@ -24,19 +24,17 @@ def rules_text(agreed=False):
         "• <code>Мануалы по ворку не продавать!</code>\n\n"
         "• <code>Кодира не бить по ебалу</code>\n\n"
     )
-
     if agreed:
         text += "<b>Вы ознакомились и согласились с правилами проекта</b> :white_check_mark:"
     else:
         text += ":grey_question: <b>Вы подтверждаете, что ознакомились и согласны с условиями и правилами нашего проекта?</b>"
-
     return emojize(text)
 
 
 summary_where_text = "<b>Откуда Вы узнали о нас?</b>"
 
 
-summary_exp_text = "<b>У вас есть опыт работы в такой сфере?</b> :dragon:"
+summary_exp_text = emojize("<b>У вас есть опыт работы в такой сфере?</b> :dragon:")
 
 summary_final = emojize(
     ":love_letter: <b>Ваша заявка готова к отправке на проверку!</b>\n\n"
@@ -52,7 +50,7 @@ summary_sended_text = emojize(
 )
 
 summary_reviewing_text = emojize(
-    ":warning: <b>Ошибка!</b>\n" ":information_source: Ваша заявка уже рассматривается)"
+    ":warning: <b>Ошибка!</b>\n:information_source: Ваша заявка уже рассматривается)"
 )
 
 
@@ -61,16 +59,13 @@ def summary_check_text(status="Ожидает проверки"):
         text = emojize(":envelope: <b>Поступила заявка на вступление</b>\n\n")
     else:
         text = ""
-
     text += emojize(
         "<b>{name}</b> {username}[<code>{chat_id}</code>]\n\n"
         ":one: Откуда Вы узнали о нас: <b>{where}</b>\n"
         ":two: Ваш опыт работы: <b>{experience}</b>\n\n"
         "<b>Статус:</b> "
     )
-
     text += status
-
     return text
 
 

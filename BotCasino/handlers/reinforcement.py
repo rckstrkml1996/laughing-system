@@ -89,7 +89,7 @@ async def add_by_qiwi(query: types.CallbackQuery, state: FSMContext):
         return  # no tokens!
 
     public_key = random.choice(config.qiwis).public_key
-    comment = token_hex(8)
+    comment = "cn" + token_hex(8)
     pay = CasinoPayment.create(owner=user, comment=comment, amount=amount)
 
     await query.message.edit_text(

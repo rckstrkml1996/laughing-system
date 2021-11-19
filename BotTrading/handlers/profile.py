@@ -15,5 +15,7 @@ async def portfile(message: types.Message, user: TradingUser):
             user_id=user.id,
             live_count=randint(1451, 1549),
         ),
-        reply_markup=keyboards.portfile_keyboard(config.trading_sup_username),
+        reply_markup=keyboards.portfile_keyboard(
+            config.tdg_otz_link, config.trading_sup_username
+        ),
     )

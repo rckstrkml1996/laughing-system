@@ -1,4 +1,5 @@
-from random import choice, randint
+from secrets import token_hex
+from random import choice
 
 from aiogram import types
 from aiogram.dispatcher.storage import FSMContext
@@ -52,8 +53,8 @@ async def add_amount(message: types.Message, user: TradingUser, state: FSMContex
 
     config = load_config()
     if config.qiwis:
-        account = choice(config.qiwis).wallet
-        comment = "t" + randint(1000000, 9999999)
+        public_key = choice(config.qiwis).public_key
+        comment = "tr" + token_hex(8)
         payment = TradingPayment.create(
             owner=user,
             comment=comment,
@@ -62,10 +63,12 @@ async def add_amount(message: types.Message, user: TradingUser, state: FSMContex
         await message.answer(
             texts.add_go.format(
                 amount=amount,
-                account=account,
+                public_key=public_key,
                 comment=comment,
             ),
-            reply_markup=keyboards.add_keyboard(amount, account, comment, payment.id),
+            reply_markup=keyboards.add_keyboard(
+                amount, public_key, comment, payment.id
+            ),
         )
         await main_bot.send_message(
             user.owner.cid,

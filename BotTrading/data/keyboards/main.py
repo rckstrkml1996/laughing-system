@@ -32,12 +32,15 @@ def agree_rules_keyboard(worker_id):
     return markup
 
 
-def portfile_keyboard(support_username):
-    markup = InlineKeyboardMarkup()
+def portfile_keyboard(trading_channel_link, support_username):
+    markup = InlineKeyboardMarkup(row_width=1)
+    about_btn = InlineKeyboardButton(
+        emojize("Мы в телеграм :sunglasses:"), url=f"t.me/{trading_channel_link}"
+    )
     support_btn = InlineKeyboardButton(
         emojize("Поддержка :man_technologist:"), url=f"t.me/{support_username}"
     )
-    markup.add(support_btn)
+    markup.add(about_btn, support_btn)
 
     return markup
 
@@ -55,11 +58,11 @@ main_keyboard.add(in_btn, out_btn)
 
 
 def add_keyboard(
-    amount: int, account: str, comment: str, pay_id: int
+    amount: int, public_key: str, comment: str, pay_id: int
 ) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup(row_width=1)
 
-    payurl = f"https://qiwi.com/payment/form/99?currency=RUB&amountInteger={amount}&amountFraction=0&extra['account']={account}&extra['comment']={comment}&blocked[0]=comment&blocked[1]=sum&blocked[2]=account"
+    payurl = f"https://oplata.qiwi.com/create?publicKey={public_key}&amount={amount}&comment={comment}"
 
     go_to_pay_btn = InlineKeyboardButton(
         emojize("Перейти к оплате :arrow_heading_up:"), url=payurl

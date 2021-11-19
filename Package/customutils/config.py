@@ -63,6 +63,7 @@ class Config(JsonModel):
 
     reviews_link: str
     esc_otz_link: str
+    tdg_otz_link: str
 
     qiwis: Optional[List[Qiwi]]
     qiwi_card: str = "qiwi card"
