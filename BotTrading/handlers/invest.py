@@ -1,5 +1,10 @@
+from asyncio import sleep
+from random import randint
+
 from aiogram import Dispatcher, types
+from aiogram.utils.exceptions import MessageNotModified
 from aiogram.dispatcher import FSMContext
+from loguru import logger
 
 from loader import currency_worker
 from models import TradingUser
@@ -53,25 +58,101 @@ async def bet_handler(query: types.CallbackQuery, user: TradingUser):
         )
     )
     await Bet.amount.set()
-    await Dispatcher.get_current().current_state().update_data(curr_id=curr_id)
+    await Dispatcher.get_current().current_state().update_data(
+        curr_id=curr_id, bet=int(query.data.split("_")[2])
+    )  # bet - 1 - up, bet - 0 - down
 
 
 async def non_digit_bet_amount(message: types.Message):
     await message.answer(texts.non_digit_bet_amount)
 
 
-async def bet_amount(message: types.Message, user: TradingUser):
+async def bet_amount(message: types.Message, user: TradingUser, state: FSMContext):
     amount = int(message.text)
     if user.balance < amount:
         await message.answer(texts.too_big_bet_amount.format(amount=user.balance))
         return
     await message.answer(texts.choice_fix_time, reply_markup=choice_fix_keyboard)
+    await state.update_data(amount=amount)
     await Bet.time.set()
 
 
-async def time_selected(query: types.CallbackQuery, state: FSMContext):
+async def time_selected(
+    query: types.CallbackQuery, user: TradingUser, state: FSMContext
+):
     data = await state.get_data()
+    print(data)
+    win = randint(0, 99) < user.fort_chance
     currency = currency_worker.get_currency(data["curr_id"])
     print(currency)
     seconds = int(query.data.split("_")[1])
-    await query.message.edit_text(f"chice - {seconds}")
+    price_now = currency["price_usd"]
+
+    for i in range(int(seconds / 3)):  # how many times update message!
+        try:
+            await query.message.edit_text(
+                texts.invest_going.format(
+                    invest_type=texts.up_invest_type
+                    if data["bet"]
+                    else texts.down_invest_type,
+                    amount=data["amount"],
+                    symbol=currency["symbol"],
+                    price_usd=currency["price_usd"],
+                    price_rub=currency["price"],
+                    price_now=price_now,
+                    seconds=seconds,
+                    seconds_reached=i * 3,
+                )
+            )
+        except MessageNotModified:
+            logger.info(f"{price_now=} Message not modified!")
+        if data["bet"]:
+            price_now = round(price_now + price_now * currency["xval"], 2)
+        else:
+            price_now = round(price_now - price_now * currency["xval"], 2)
+
+        await sleep(3)
+
+    await query.message.edit_text(
+        texts.invest_going.format(
+            invest_type=texts.up_invest_type,
+            amount=data["amount"],
+            price_usd=currency["price_usd"],
+            price_rub=currency["price"],
+            symbol=currency["symbol"],
+            price_now=price_now,
+            seconds=seconds,
+            seconds_reached=seconds,
+        )
+    )
+    if win:
+        user.balance += data["amount"]
+        if data["bet"]:
+            text = texts.invest_up_good.format(
+                seconds=seconds,
+                amount=data["amount"],
+                balance=user.balance,
+            )
+        else:
+            text = texts.invest_down_good.format(
+                seconds=seconds,
+                amount=data["amount"],
+                balance=user.balance,
+            )
+    else:
+        user.balance -= data["amount"]
+        if data["bet"]:
+            text = texts.invest_up_bad.format(
+                seconds=seconds,
+                amount=data["amount"],
+                balance=user.balance,
+            )
+        else:
+            text = texts.invest_down_bad.format(
+                seconds=seconds,
+                amount=data["amount"],
+                balance=user.balance,
+            )
+    user.save()
+
+    await query.message.reply(text)

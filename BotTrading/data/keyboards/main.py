@@ -92,10 +92,10 @@ def bet_keyboard(currency_id: int) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup(row_width=1)
 
     bet_up_btn = InlineKeyboardButton(
-        emojize("Повышение :arrow_up_small:"), callback_data=f"bet_{currency_id}_up"
+        emojize("Повышение :arrow_up_small:"), callback_data=f"bet_{currency_id}_1"
     )
     bet_down_btn = InlineKeyboardButton(
-        emojize("Понижение :arrow_down_small:"), callback_data=f"bet_{currency_id}_down"
+        emojize("Понижение :arrow_down_small:"), callback_data=f"bet_{currency_id}_0"
     )
 
     markup.add(bet_up_btn, bet_down_btn)

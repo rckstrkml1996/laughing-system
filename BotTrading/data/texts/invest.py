@@ -30,3 +30,39 @@ too_big_bet_amount = emojize(
 choice_fix_time = emojize(
     ":stopwatch: <b>Выберите</b>, через сколько времени должна произойти фиксация"
 )
+
+up_invest_type = emojize("Повышение :arrow_up_small:")
+down_invest_type = emojize("Понижение :arrow_down_small:")
+
+invest_going = emojize(
+    "<b>{invest_type}</b>\n\n"  # понижение/повышение
+    ":currency_exchange: Валюта: {symbol}\n"
+    ":moneybag: Сумма ставки: <b>{amount} RUB</b>\n"
+    ":money_with_wings: Цена в начале ставки: <b>{price_usd} USD</b> (~ <i>{price_rub} RUB</i>)\n\n"
+    ":dollar: Цена сейчас: <b>{price_now} USD</b>\n\n"
+    ":alarm_clock: Время: <b>{seconds}:{seconds_reached} <i>Секунд</i></b>"
+)
+
+invest_up_good = emojize(
+    ":arrow_up_small: <b>За {seconds} секунд цена выросла!</b>\n\n"
+    ":white_check_mark: Ваша ставка удачная, <b>+{amount} RUB</b>\n"
+    ":money_with_wings: Баланс: <b>{balance} RUB</b>"
+)
+
+invest_up_bad = emojize(
+    ":arrow_up_small: <b>За {seconds} секунд цена выросла!</b>\n\n"
+    ":x: Ваша ставка неудачная, <b>-{amount} RUB</b>\n"
+    ":money_with_wings: Баланс: <b>{balance} RUB</b>"
+)
+
+invest_down_good = emojize(
+    ":arrow_down_small: <b>За {seconds} секунд цена упала!</b>\n\n"
+    ":white_check_mark: Ваша ставка удачная, <b>+{amount} RUB</b>\n"
+    ":money_with_wings: Баланс: <b>{balance} RUB</b>"
+)
+
+invest_down_bad = emojize(
+    ":arrow_down_small: <b>За {seconds} секунд цена упала!</b>\n\n"
+    ":x: Ваша ставка неудачная, <b>-{amount} RUB</b>\n"
+    ":money_with_wings: Баланс: <b>{balance} RUB</b>"
+)
