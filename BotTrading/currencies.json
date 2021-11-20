@@ -1,82 +1,67 @@
 {
-    "convertion": 71,
     "currencies": [
         {
             "keyboard_name": "Bitcoin",
             "name": "Bitcoin/USD",
             "symbol": "BTC",
             "description": "A p2p payment system that uses the unit of the same name to record transactions.",
-            "photo_path": null,
-            "file_path": null,
-            "price_usd": 57907.32,
-            "price": 4111419.93,
-            "xval": 0.0003
+            "photo_link": "https://telegra.ph/file/fc7c90983c2b07242c36d.png",
+            "price_usd": 58019.49,
+            "price": 4158865.69
         },
         {
             "keyboard_name": "Ripple",
             "name": "Ripple/USD",
             "symbol": "XRP",
             "description": "Cryptocurrency platform for payment systems focused on currency exchange transactions without chargebacks.",
-            "photo_path": null,
-            "file_path": null,
-            "price_usd": 1.09,
-            "price": 77.51,
-            "xval": 0.003
+            "photo_link": "https://telegra.ph/file/6369d6c942136af0a4a75.png",
+            "price_usd": 1.07,
+            "price": 76.83
         },
         {
             "keyboard_name": "DogeCoin",
             "name": "Doge/USD",
             "symbol": "Doge",
             "description": "Cryptocurrency based on Litecoin. Named after the Internet meme Doge. It was introduced on December 8, 2013.",
-            "photo_path": null,
-            "file_path": null,
+            "photo_link": "https://telegra.ph/file/a972cb4398140214d6ba7.png",
             "price_usd": 0.23,
-            "price": 16.46,
-            "xval": 0.01
+            "price": 16.39
         },
         {
             "keyboard_name": "Ethereum",
             "name": "Ethereum/USD",
             "symbol": "ETH",
             "description": "Cryptocurrency and platform for creating decentralized blockchain-based online services powered by smart contracts.",
-            "photo_path": null,
-            "file_path": null,
-            "price_usd": 4272.53,
-            "price": 303349.49,
-            "xval": 0.0005
+            "photo_link": "https://telegra.ph/file/fe79d0fdac3258215f027.png",
+            "price_usd": 4258.9,
+            "price": 305279.71
         },
         {
             "keyboard_name": "Binance Coin",
             "name": "BinanceCoin/USD",
             "symbol": "BNB",
             "description": "Cryptocurrency that can be used to trade and pay fees on the Binance cryptocurrency exchange",
-            "photo_path": null,
-            "file_path": null,
-            "price_usd": 581.6,
-            "price": 41293.89,
-            "xval": 0.005
+            "photo_link": "https://telegra.ph/file/1d1bc2b835399ad647ad2.png",
+            "price_usd": 590.93,
+            "price": 42358.26
         },
         {
             "keyboard_name": "Litecoin",
             "name": "Litecoin/USD",
             "symbol": "LTC",
             "description": "Fork of Bitcoin, a peer-to-peer electronic payment system using the cryptocurrency of the same name.",
-            "photo_path": null,
-            "file_path": null,
-            "price_usd": 217.13,
-            "price": 15416.22,
-            "xval": 0.005
+            "photo_link": "https://telegra.ph/file/2a8012085df97c335a770.png",
+            "price_usd": 217.42,
+            "price": 15584.84
         },
         {
             "keyboard_name": "Euro",
             "name": "Euro/USD",
             "symbol": "EUR",
             "description": "The single currency of the European Union, introduced for cash circulation in 2002.",
-            "photo_path": null,
-            "file_path": null,
+            "photo_link": "https://telegra.ph/file/133a46da24fb6868368f3.png",
             "price_usd": 1.13,
-            "price": 80.25,
-            "xval": 0.003
+            "price": 80.73
         }
     ]
 }

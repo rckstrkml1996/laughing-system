@@ -4,6 +4,7 @@ from json import JSONDecodeError
 from asyncio import sleep
 
 from loguru import logger
+from currency_converter import CurrencyConverter
 
 from .messari import MessariApi
 from .exceptions import BadRequest, NoCurrenciesError, RateLimit
@@ -13,17 +14,21 @@ class CurrencyWorker(MessariApi):
     FILE_PATH = "currencies.json"
 
     def __init__(self, api_key: str = None):
-        self.convertion = 75  # rub
+        self.convertor = CurrencyConverter()
         self.currencies = []
         self._working = False
         self.restrict_json()
 
         super().__init__(api_key)
 
+    @property
+    def convertion(self):
+        return self.convertor.convert(1, "USD", "RUB")
+
     def save_json(self):
         with open(self.FILE_PATH, "w", encoding="utf-8") as f:
             json.dump(
-                {"convertion": self.convertion, "currencies": self.currencies},
+                {"currencies": self.currencies},
                 f,
                 indent=4,
             )
@@ -37,7 +42,6 @@ class CurrencyWorker(MessariApi):
         try:
             with open(self.FILE_PATH, "r") as f:
                 settings = json.load(f)
-                self.convertion = settings.get("convertion", self.convertion)
                 self.currencies = settings.get("currencies", None)
                 if self.currencies is None:
                     raise NoCurrenciesError(

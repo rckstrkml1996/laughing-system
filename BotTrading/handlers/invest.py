@@ -1,5 +1,6 @@
+from time import monotonic
 from asyncio import sleep
-from random import randint
+from random import randint, uniform
 
 from aiogram import Dispatcher, types
 from aiogram.utils.exceptions import MessageNotModified
@@ -40,6 +41,7 @@ async def get_currency_info(query: types.CallbackQuery):
     await query.message.edit_text(
         texts.currency_info.format(
             currency_name=currency["name"],
+            photo_url=currency["photo_link"],
             symbol=currency["symbol"],
             price_usd=currency["price_usd"],
             price_rub=currency["price"],
@@ -81,14 +83,22 @@ async def time_selected(
     query: types.CallbackQuery, user: TradingUser, state: FSMContext
 ):
     data = await state.get_data()
-    print(data)
     win = randint(0, 99) < user.fort_chance
     currency = currency_worker.get_currency(data["curr_id"])
-    print(currency)
     seconds = int(query.data.split("_")[1])
     price_now = currency["price_usd"]
+    moll = price_now * uniform(0.01, 0.02) / seconds
+    go_up = (data["bet"] and win) or (not data["bet"] and not win)
+    user.balance -= data["amount"]
+    user.save()
+    oldtime = monotonic()
+    working = True
+    while working:  # how many times update message!
+        delta = round(monotonic() - oldtime, 2)
+        if delta > seconds:
+            delta = seconds
+            working = False
 
-    for i in range(int(seconds / 3)):  # how many times update message!
         try:
             await query.message.edit_text(
                 texts.invest_going.format(
@@ -99,34 +109,24 @@ async def time_selected(
                     symbol=currency["symbol"],
                     price_usd=currency["price_usd"],
                     price_rub=currency["price"],
-                    price_now=price_now,
+                    price_now_usd=price_now,
+                    price_now_rub=price_now * currency_worker.convertion,
                     seconds=seconds,
-                    seconds_reached=i * 3,
+                    seconds_reached=delta,
                 )
             )
         except MessageNotModified:
             logger.info(f"{price_now=} Message not modified!")
-        if data["bet"]:
-            price_now = round(price_now + price_now * currency["xval"], 2)
+        if go_up:
+            price_now += moll
         else:
-            price_now = round(price_now - price_now * currency["xval"], 2)
+            price_now -= moll
 
         await sleep(3)
 
-    await query.message.edit_text(
-        texts.invest_going.format(
-            invest_type=texts.up_invest_type,
-            amount=data["amount"],
-            price_usd=currency["price_usd"],
-            price_rub=currency["price"],
-            symbol=currency["symbol"],
-            price_now=price_now,
-            seconds=seconds,
-            seconds_reached=seconds,
-        )
-    )
     if win:
-        user.balance += data["amount"]
+        user.balance += data["amount"] * 2
+        user.save()
         if data["bet"]:
             text = texts.invest_up_good.format(
                 seconds=seconds,
@@ -140,7 +140,6 @@ async def time_selected(
                 balance=user.balance,
             )
     else:
-        user.balance -= data["amount"]
         if data["bet"]:
             text = texts.invest_up_bad.format(
                 seconds=seconds,
@@ -153,6 +152,5 @@ async def time_selected(
                 amount=data["amount"],
                 balance=user.balance,
             )
-    user.save()
 
     await query.message.reply(text)

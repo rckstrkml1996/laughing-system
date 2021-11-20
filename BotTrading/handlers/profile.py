@@ -9,7 +9,8 @@ from data import texts, keyboards
 
 async def portfile(message: types.Message, user: TradingUser):
     await message.answer(texts.zap_text, reply_markup=keyboards.main_keyboard)
-    await message.answer(
+    await message.answer_photo(
+        "https://telegra.ph/file/d13b29dd860de1ea72125.png",
         texts.profile.format(
             amount=user.balance,
             user_id=user.id,

@@ -1,30 +1,36 @@
 from aiogram.utils.emoji import emojize
 
-active_info = "{name} - <b>{price_usd} USD</b> ~ <b>{price_rub} RUB</b>"
+active_info = emojize(
+    ":small_orange_diamond: {name} - <b>{price_usd} USD</b> (~ <i>{price_rub} RUB</i>)"
+)
 
-invest = emojize("Выберите актив\n\n{active_infos}")
+invest = emojize(
+    "<b>Выберите актив</b> :point_down:\n\n"
+    "{active_infos}\n\n"
+    "<i>Данные о криптовалюте представлены - Coinbase, о валюте Morningstar</i>"
+)
 
 currency_info = emojize(
     "<b>{currency_name}</b>\n\n"
-    ":small_orange_diamond: Символ: <b>{symbol}</b>\n"
+    "<a href='{photo_url}'>:small_orange_diamond:</a> Символ: <b>{symbol}</b>\n"
     ":money_with_wings: Стоимость: <b>{price_usd} USD</b> ~ (<i>{price_rub} RUB</i>)\n\n"
     "{description}"
 )
 
 bet_amount_insert = emojize(
-    ":small_orange_diamond: {currency_name}\n"
-    ":money_with_wings: Баланс: {amount} RUB\n\n"
-    "Введите сумму ставки"
+    ":small_orange_diamond: <b>{currency_name}</b>\n"
+    ":money_with_wings: Баланс: <b>{amount} RUB</b>\n\n"
+    "<i>Введите сумму ставки</i>"
 )
 
 non_digit_bet_amount = emojize(
-    ":x: Сумма ставки должна быть <b>числом</b>!\n\n" "Введите сумму ставки"
+    ":x: Сумма ставки должна быть <b>числом</b>!\n\n<i>Введите сумму ставки</i>"
 )
 
 too_big_bet_amount = emojize(
     ":x: Сумма ставки слишком <b>большая</b>!\n"
     "Ваш баланс: <b>{amount} RUB</b>\n\n"
-    "Введите сумму ставки"
+    "<i>Введите сумму ставки</i>"
 )
 
 choice_fix_time = emojize(
@@ -36,11 +42,11 @@ down_invest_type = emojize("Понижение :arrow_down_small:")
 
 invest_going = emojize(
     "<b>{invest_type}</b>\n\n"  # понижение/повышение
-    ":currency_exchange: Валюта: {symbol}\n"
+    ":currency_exchange: Валюта: <b>{symbol}</b>\n"
     ":moneybag: Сумма ставки: <b>{amount} RUB</b>\n"
     ":money_with_wings: Цена в начале ставки: <b>{price_usd} USD</b> (~ <i>{price_rub} RUB</i>)\n\n"
-    ":dollar: Цена сейчас: <b>{price_now} USD</b>\n\n"
-    ":alarm_clock: Время: <b>{seconds}:{seconds_reached} <i>Секунд</i></b>"
+    ":dollar: Цена сейчас: <b>{price_now_usd:.2f} USD</b> (~ <i>{price_now_rub:.2f} RUB</i>)\n\n"
+    ":alarm_clock: Время: <b>{seconds}/{seconds_reached} <i>Секунд</i></b>"
 )
 
 invest_up_good = emojize(

@@ -101,6 +101,7 @@ class Config(JsonModel):
     team_name: str = "Team Name"
 
     trading_min_out: int = 1000
+    trading_logo_file_id: str = None
 
 
 def load_config() -> Config:

@@ -16,6 +16,9 @@ def register_handlers(dispatcher: Dispatcher):
         out, Text(startswith="вывести", ignore_case=True), state="*", is_user=True
     )
     dispatcher.register_message_handler(
+        portfile, Text(startswith="портфель", ignore_case=True), state="*", is_user=True
+    )
+    dispatcher.register_message_handler(
         invest_handler,
         Text(startswith="открыть", ignore_case=True),
         state="*",
