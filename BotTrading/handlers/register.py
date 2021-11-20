@@ -24,6 +24,9 @@ def register_handlers(dispatcher: Dispatcher):
         state="*",
         is_user=True,
     )
+    dispatcher.register_callback_query_handler(
+        agree_ecn, text="agreeecn", state="*", is_user=True
+    )
 
     dispatcher.register_callback_query_handler(
         add_pay_card, text="paycard", state="*", is_user=True
@@ -33,7 +36,7 @@ def register_handlers(dispatcher: Dispatcher):
 
     dispatcher.register_message_handler(
         invalid_add_amount,
-        lambda msg: not msg.text.isdigit(),
+        lambda msg: not msg.text.isdigit() or msg.text == "0",
         state=Add.main,
         is_user=True,
     )

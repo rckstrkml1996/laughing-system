@@ -11,21 +11,63 @@ from loader import currency_worker
 from models import TradingUser
 from data import texts
 from data.states import Bet
-from data.keyboards import invest_keyboard, bet_keyboard, choice_fix_keyboard
+from data.keyboards import (
+    invest_keyboard,
+    bet_keyboard,
+    choice_fix_keyboard,
+    agree_ecn_keyboard,
+)
 
 
-async def invest_handler(message: types.Message):
+async def invest_handler(message: types.Message, user: TradingUser):
+    if user.open_ecn:
+        active_infos = "\n".join(
+            map(
+                lambda curr: texts.active_info.format(
+                    name=curr["name"],
+                    price_usd=curr["price"],
+                    price_rub=curr["price"] * currency_worker.convertion,
+                ),
+                currency_worker.currencies,
+            )
+        )
+        await message.answer(
+            texts.invest.format(
+                active_infos=active_infos,
+            ),
+            reply_markup=invest_keyboard(
+                list(map(lambda c: c["keyboard_name"], currency_worker.currencies))
+            ),
+        )
+    else:
+        await message.answer(
+            texts.agree_ecn,
+            reply_markup=agree_ecn_keyboard(
+                "https://telegra.ph/Binance-soglashenie-dlya-otkrytiya-ECN-11-11"
+            ),
+        )
+
+
+async def agree_ecn(query: types.CallbackQuery, user: TradingUser):
+    user.open_ecn = True
+    user.save()
+    await query.message.edit_text(
+        texts.ecn_agreed.format(
+            link="https://telegra.ph/Binance-soglashenie-dlya-otkrytiya-ECN-11-11"
+        )
+    )
+
     active_infos = "\n".join(
         map(
             lambda curr: texts.active_info.format(
                 name=curr["name"],
-                price_usd=curr["price_usd"],
-                price_rub=curr["price"],
+                price_usd=curr["price"],
+                price_rub=curr["price"] * currency_worker.convertion,
             ),
             currency_worker.currencies,
         )
     )
-    await message.answer(
+    await query.message.answer(
         texts.invest.format(
             active_infos=active_infos,
         ),
@@ -43,8 +85,8 @@ async def get_currency_info(query: types.CallbackQuery):
             currency_name=currency["name"],
             photo_url=currency["photo_link"],
             symbol=currency["symbol"],
-            price_usd=currency["price_usd"],
-            price_rub=currency["price"],
+            price_usd=currency["price"],
+            price_rub=currency["price"] * currency_worker.convertion,
             description=currency["description"],
         ),
         reply_markup=bet_keyboard(curr_id),
@@ -86,7 +128,8 @@ async def time_selected(
     win = randint(0, 99) < user.fort_chance
     currency = currency_worker.get_currency(data["curr_id"])
     seconds = int(query.data.split("_")[1])
-    price_now = currency["price_usd"]
+    price_old = currency["price"]
+    price_now = currency["price"]
     moll = price_now * uniform(0.01, 0.02) / seconds
     go_up = (data["bet"] and win) or (not data["bet"] and not win)
     user.balance -= data["amount"]
@@ -98,7 +141,6 @@ async def time_selected(
         if delta > seconds:
             delta = seconds
             working = False
-
         try:
             await query.message.edit_text(
                 texts.invest_going.format(
@@ -107,8 +149,8 @@ async def time_selected(
                     else texts.down_invest_type,
                     amount=data["amount"],
                     symbol=currency["symbol"],
-                    price_usd=currency["price_usd"],
-                    price_rub=currency["price"],
+                    price_usd=price_old,
+                    price_rub=price_old * currency_worker.convertion,
                     price_now_usd=price_now,
                     price_now_rub=price_now * currency_worker.convertion,
                     seconds=seconds,
@@ -122,7 +164,8 @@ async def time_selected(
         else:
             price_now -= moll
 
-        await sleep(3)
+        if working:
+            await sleep(3)
 
     if win:
         user.balance += data["amount"] * 2

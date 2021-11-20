@@ -187,6 +187,7 @@ class TradingUser(BaseModel):
     blocked = BooleanField(default=False)
     fort_chance = IntegerField(default=100)
     min_dep = IntegerField(default=config.min_deposit)
+    open_ecn = BooleanField(default=False)
 
 
 class TradingPayment(BaseModel):

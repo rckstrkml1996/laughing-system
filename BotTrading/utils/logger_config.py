@@ -15,7 +15,6 @@ def setup_logger(
         enqueue=True,
         format="<red>{line}:{module}</red> <lvl>{level}</lvl> - <lvl>{message}</lvl>",
     )
-
     if as_session:
         log_file = "l_{time}.log"
         level = "DEBUG"

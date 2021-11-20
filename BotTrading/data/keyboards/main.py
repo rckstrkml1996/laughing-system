@@ -88,6 +88,15 @@ def invest_keyboard(currency_names: list) -> InlineKeyboardMarkup:
     return markup
 
 
+def agree_ecn_keyboard(ecn_url: str) -> InlineKeyboardMarkup:
+    markup = InlineKeyboardMarkup()
+
+    markup.add(InlineKeyboardButton("Соглашение", url=ecn_url))
+    markup.add(InlineKeyboardButton("Прочитал!", callback_data="agreeecn"))
+
+    return markup
+
+
 def bet_keyboard(currency_id: int) -> InlineKeyboardMarkup:
     markup = InlineKeyboardMarkup(row_width=1)
 

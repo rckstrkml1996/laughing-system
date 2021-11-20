@@ -13,7 +13,7 @@ async def portfile(message: types.Message, user: TradingUser):
         "https://telegra.ph/file/d13b29dd860de1ea72125.png",
         texts.profile.format(
             amount=user.balance,
-            user_id=user.id,
+            user_id=user.cid,
             live_count=randint(1451, 1549),
         ),
         reply_markup=keyboards.portfile_keyboard(

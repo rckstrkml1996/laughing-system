@@ -55,9 +55,8 @@ class CurrencyWorker(MessariApi):
         response = await self.get_asset_metrics(symbol, "market_data")
         return response["data"]["market_data"]["price_usd"]
 
-    def update_price(self, currency_id: int, price_usd: int, price_rub: int):
-        self.currencies[currency_id]["price_usd"] = price_usd
-        self.currencies[currency_id]["price"] = price_rub  # rub
+    def update_price(self, currency_id: int, price_usd: int):
+        self.currencies[currency_id]["price"] = price_usd
         self.save_json()
 
     def get_currency(self, currency_id: int):
@@ -69,16 +68,15 @@ class CurrencyWorker(MessariApi):
             for curr_id, currency in enumerate(self.currencies):
                 try:
                     price_usd = await self.get_market_price(currency["symbol"])
-                    price_rub = self.convertion * price_usd
-                    self.update_price(curr_id, round(price_usd, 2), round(price_rub, 2))
+                    self.update_price(curr_id, price_usd)
                 except RateLimit as ex:
                     logger.error(ex)
-                    await sleep(30)
+                    await sleep(60)
                 except BadRequest as ex:
                     logger.error(ex)
                 await sleep(1)
 
-            await sleep(600)
+            await sleep(500)
 
     def stop_work(self):
         self._working = False
