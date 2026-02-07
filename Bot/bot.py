@@ -1,9 +1,15 @@
 from re import I
 import threading
+import sys
+import os
 
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Говорим питону искать модули еще и в папке Package
+sys.path.append(os.path.join(project_root, "Package"))
+import os
+print(f"DEBUG: Ищу конфиг здесь: {os.path.abspath('../settings.json')}")
 from aiogram import Dispatcher, executor
 from loguru import logger
-
 from models import connect, disconnect
 from loader import config, dp, dynapinner, payments_checker, status_names
 from utils.notify import on_startup_notify
