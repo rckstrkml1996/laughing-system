@@ -2,41 +2,35 @@ import os
 import subprocess
 
 def run_git_push():
-    # 1. Запрашиваем ссылку на репозиторий и сообщение к коммиту
-    repo_url = input("Введите ссылку на GitHub репозиторий (или нажмите Enter, если уже привязано): ").strip()
-    commit_message = input("Введите описание изменений (по умолчанию 'Quick update'): ").strip() or "Quick update"
+    repo_url = input("Ссылка на GitHub: ").strip()
+    commit_message = input("Описание (Enter для 'Quick update'): ").strip() or "Quick update"
 
     try:
-        # Проверяем, инициализирован ли git
         if not os.path.exists(".git"):
-            print("📦 Инициализация Git...")
             subprocess.run(["git", "init"], check=True)
-            subprocess.run(["git", "branch", "-M", "main"], check=True)
 
-        # Добавляем изменения
+        # Переименовываем ветку в main, чтобы избежать конфликтов
+        subprocess.run(["git", "branch", "-M", "main"], check=True)
+
         subprocess.run(["git", "add", "."], check=True)
 
-        # Делаем коммит
-        subprocess.run(["git", "commit", "-m", commit_message], check=True)
+        # Коммит может не сработать, если нет изменений
+        subprocess.run(["git", "commit", "-m", commit_message])
 
-        # Если введена ссылка, привязываем удаленный репозиторий
         if repo_url:
-            # Пытаемся добавить origin, если не получится — меняем существующий
-            try:
-                subprocess.run(["git", "remote", "add", "origin", repo_url], check=True)
-            except subprocess.CalledProcessError:
-                subprocess.run(["git", "remote", "set-url", "origin", repo_url], check=True)
+            # Обновляем URL репозитория (даже если он уже существует)
+            subprocess.run(["git", "remote", "set-url", "origin", repo_url], check=False)
+            # Если set-url не сработал (репозитория еще нет), пробуем add
+            subprocess.run(["git", "remote", "add", "origin", repo_url], check=False)
 
-        # Отправляем данные
-        print("🚀 Отправка файлов на GitHub...")
+        print("🚀 Отправка на GitHub...")
+        # Принудительно отправляем текущую ветку main
         subprocess.run(["git", "push", "-u", "origin", "main"], check=True)
 
-        print("✅ Готово! Проект на GitHub.")
+        print("✅ Успешно!")
 
     except subprocess.CalledProcessError as e:
-        print(f"❌ Ошибка при выполнении команды: {e}")
-    except Exception as e:
-        print(f"❓ Что-то пошло не так: {e}")
+        print(f"❌ Ошибка Git: {e}")
 
 if __name__ == "__main__":
     run_git_push()
